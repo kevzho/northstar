@@ -1,0 +1,201 @@
+export type TraitKey =
+  | "builder"
+  | "analyst"
+  | "riskTolerance"
+  | "ambiguityComfort"
+  | "collaboration"
+  | "executionTempo";
+
+export type TraitDeltas = Partial<Record<TraitKey, number>>;
+
+export type AssessmentChoice = {
+  id: string;
+  label: string;
+  traits: TraitDeltas;
+};
+
+export type AssessmentQuestion = {
+  id: string;
+  prompt: string;
+  choices: AssessmentChoice[];
+};
+
+export const traitLabels: Record<TraitKey, string> = {
+  builder: "Builder",
+  analyst: "Analyst",
+  riskTolerance: "Risk tolerance",
+  ambiguityComfort: "Ambiguity comfort",
+  collaboration: "Collaboration",
+  executionTempo: "Execution tempo",
+};
+
+export const assessmentQuestions: AssessmentQuestion[] = [
+  {
+    id: "q1-free-afternoon",
+    prompt: "You have one free afternoon. What do you choose?",
+    choices: [
+      {
+        id: "build-project",
+        label: "Build a small project and ship something tangible.",
+        traits: { builder: 2, executionTempo: 1 },
+      },
+      {
+        id: "research-topic",
+        label: "Research a complicated topic until the pattern clicks.",
+        traits: { analyst: 2, ambiguityComfort: 1 },
+      },
+      {
+        id: "gather-team",
+        label: "Pull a few friends together and test an idea as a group.",
+        traits: { collaboration: 2, builder: 1 },
+      },
+    ],
+  },
+  {
+    id: "q2-unclear-assignment",
+    prompt: "A teacher gives you an open-ended project with few rules. You...",
+    choices: [
+      {
+        id: "define-scope",
+        label: "Define a clear scope, make milestones, and start building.",
+        traits: { builder: 1, executionTempo: 2 },
+      },
+      {
+        id: "explore-angles",
+        label: "Explore several possible angles before choosing a direction.",
+        traits: { analyst: 1, ambiguityComfort: 2 },
+      },
+      {
+        id: "ask-feedback",
+        label: "Talk through early ideas with classmates and mentors.",
+        traits: { collaboration: 2, ambiguityComfort: 1 },
+      },
+    ],
+  },
+  {
+    id: "q3-competition-choice",
+    prompt: "You can enter one competition. Which one sounds most energizing?",
+    choices: [
+      {
+        id: "hackathon",
+        label: "A weekend hackathon where speed and demos matter.",
+        traits: { builder: 2, executionTempo: 2, riskTolerance: 1 },
+      },
+      {
+        id: "research-fair",
+        label: "A research fair where depth and evidence matter.",
+        traits: { analyst: 2, ambiguityComfort: 1 },
+      },
+      {
+        id: "pitch-contest",
+        label: "A pitch contest where persuasion and uncertainty matter.",
+        traits: { riskTolerance: 2, collaboration: 1 },
+      },
+    ],
+  },
+  {
+    id: "q4-stuck-moment",
+    prompt: "You get stuck on a hard problem. Your first move is to...",
+    choices: [
+      {
+        id: "debug-alone",
+        label: "Break it into smaller pieces and debug by yourself.",
+        traits: { analyst: 2, executionTempo: 1 },
+      },
+      {
+        id: "prototype-around",
+        label: "Try a rough workaround so the project keeps moving.",
+        traits: { builder: 2, riskTolerance: 1 },
+      },
+      {
+        id: "find-helper",
+        label: "Ask someone sharper in that area and compare approaches.",
+        traits: { collaboration: 2, ambiguityComfort: 1 },
+      },
+    ],
+  },
+  {
+    id: "q5-summer-plan",
+    prompt: "You are choosing a summer focus. You would rather...",
+    choices: [
+      {
+        id: "launch-app",
+        label: "Launch an app, even if the first version is imperfect.",
+        traits: { builder: 2, riskTolerance: 2, executionTempo: 1 },
+      },
+      {
+        id: "deep-study",
+        label: "Study a demanding field and produce a serious writeup.",
+        traits: { analyst: 2, ambiguityComfort: 1 },
+      },
+      {
+        id: "community-program",
+        label: "Run a small program that helps people in your community.",
+        traits: { collaboration: 2, builder: 1 },
+      },
+    ],
+  },
+  {
+    id: "q6-feedback",
+    prompt: "When someone critiques your work, you usually...",
+    choices: [
+      {
+        id: "revise-fast",
+        label: "Revise quickly and test whether the change improves it.",
+        traits: { executionTempo: 2, builder: 1 },
+      },
+      {
+        id: "inspect-logic",
+        label: "Inspect the logic behind the critique before changing direction.",
+        traits: { analyst: 2, ambiguityComfort: 1 },
+      },
+      {
+        id: "discuss-tradeoffs",
+        label: "Discuss tradeoffs so everyone agrees on the next version.",
+        traits: { collaboration: 2, ambiguityComfort: 1 },
+      },
+    ],
+  },
+  {
+    id: "q7-risk",
+    prompt: "A risky opportunity appears, but the upside is meaningful. You...",
+    choices: [
+      {
+        id: "take-shot",
+        label: "Take the shot and learn from the result.",
+        traits: { riskTolerance: 2, executionTempo: 1 },
+      },
+      {
+        id: "model-outcomes",
+        label: "Model the downside, upside, and decision criteria first.",
+        traits: { analyst: 2, riskTolerance: 1 },
+      },
+      {
+        id: "pilot-small",
+        label: "Run a small pilot with collaborators before committing.",
+        traits: { collaboration: 1, builder: 1, ambiguityComfort: 1 },
+      },
+    ],
+  },
+  {
+    id: "q8-team-role",
+    prompt: "On a team, the role you naturally drift toward is...",
+    choices: [
+      {
+        id: "maker",
+        label: "The maker who turns ideas into something usable.",
+        traits: { builder: 2, executionTempo: 1 },
+      },
+      {
+        id: "strategist",
+        label: "The strategist who clarifies the problem and evidence.",
+        traits: { analyst: 2, ambiguityComfort: 1 },
+      },
+      {
+        id: "connector",
+        label: "The connector who keeps people aligned and moving.",
+        traits: { collaboration: 2, executionTempo: 1 },
+      },
+    ],
+  },
+];

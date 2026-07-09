@@ -1,0 +1,25 @@
+# Render Blueprint for the Meridian FastAPI backend.
+# Validate with: python3 -c "import yaml; yaml.safe_load(open('backend/render.yaml'))"
+# Docs: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: meridian-api
+    runtime: python
+    region: oregon
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SECRET_KEY
+        sync: false
+      - key: SUPABASE_JWT_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        sync: false

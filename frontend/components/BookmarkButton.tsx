@@ -1,0 +1,65 @@
+"use client";
+
+/**
+ * Bookmark toggle button for an opportunity.
+ *
+ * Checks existing bookmarks on mount, then toggles via POST /bookmarks or
+ * DELETE /bookmarks/:id. Renders a filled label when bookmarked, an outline
+ * label when not. Errors are swallowed so a network hiccup never bricks the
+ * detail page — the student can retry on the next visit.
+ */
+
+import { useEffect, useState } from "react";
+import { fetchBookmarks, bookmarkOpportunity, removeBookmark } from "@/lib/api";
+
+export function BookmarkButton({ opportunityId }: { opportunityId: string }) {
+  const [bookmarked, setBookmarked] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const list = await fetchBookmarks();
+        if (!cancelled) {
+          setBookmarked(list.some((b) => b.opportunity_id === opportunityId));
+        }
+      } catch {
+        // Network error — default to un-bookmarked; user can still toggle.
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [opportunityId]);
+
+  async function toggle() {
+    if (loading) return;
+    const was = bookmarked;
+    setBookmarked(!was); // optimistic flip
+    try {
+      if (was) {
+        await removeBookmark(opportunityId);
+      } else {
+        await bookmarkOpportunity(opportunityId);
+      }
+    } catch {
+      setBookmarked(was); // revert on failure
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      disabled={loading}
+      className={
+        bookmarked
+          ? "inline-flex h-12 items-center justify-center rounded-md bg-[var(--northstar)] px-6 text-sm font-semibold text-white transition hover:bg-[var(--northstar-dark)]"
+          : "inline-flex h-12 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--panel)] px-6 text-sm font-semibold text-[var(--northstar-dark)] transition hover:border-[var(--northstar)]"
+      }
+    >
+      {loading ? "..." : bookmarked ? "Bookmarked" : "Bookmark"}
+    </button>
+  );
+}

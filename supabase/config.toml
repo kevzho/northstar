@@ -1,0 +1,49 @@
+# Supabase CLI project config for Meridian.
+# Run `supabase start` to spin up the local stack (requires Docker + the CLI).
+# See https://supabase.com/docs/guides/local-development/cli/getting-started
+
+project_id = "meridian"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "extensions"]
+extra_search_path = ["extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+[db.extensions]
+# pgvector is required for semantic mentor matching (Day 5) and any future
+# embedding work. Enabling here ensures the local stack has it ready before
+# the Day 2 "pgvector is enabled" checkbox flips.
+"vector" = { enabled = true }
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["http://localhost:3000/**"]
+jwt_expiry = 3600
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = true
+enable_confirmations = true
+
+[auth.external.google]
+enabled = true
+client_id = "env(SUPABASE_AUTH_GOOGLE_CLIENT_ID)"
+secret = "env(SUPABASE_AUTH_GOOGLE_SECRET)"
+redirect_uri = "http://localhost:3000/auth/callback"
+
+[studio]
+enabled = true
+port = 54323
+
+[inbucket]
+enabled = true
+port = 54324
