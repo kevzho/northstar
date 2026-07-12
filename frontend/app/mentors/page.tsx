@@ -41,7 +41,7 @@ export default function MentorsPage() {
             href="/dashboard"
             className="text-lg font-semibold tracking-tight text-[var(--northstar-dark)]"
           >
-            Meridian
+            Northstar
           </Link>
           <Link
             href="/dashboard"

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Meridian",
+  title: "Northstar",
   description:
     "A personalized opportunity map that starts with Northstar's behavioral assessment.",
 };

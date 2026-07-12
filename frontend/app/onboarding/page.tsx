@@ -82,7 +82,7 @@ export default function OnboardingPage() {
             href="/"
             className="text-lg font-semibold tracking-tight text-[var(--northstar-dark)]"
           >
-            Meridian
+            Northstar
           </Link>
           <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[var(--muted)]">
             Step {step} of 3
@@ -94,7 +94,7 @@ export default function OnboardingPage() {
             Onboarding
           </p>
           <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[var(--northstar-dark)]">
-            Tell Meridian where you are.
+            Tell Northstar where you are.
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--muted)]">
             A short intake that powers your opportunity recommendations. You can
@@ -214,7 +214,7 @@ export default function OnboardingPage() {
                   className="mt-1 h-4 w-4 rounded border-[var(--northstar)]"
                 />
                 <span className="text-sm leading-6 text-[var(--foreground)]">
-                  I consent to Meridian storing my profile and assessment
+                  I consent to Northstar storing my profile and assessment
                   responses to personalize recommendations, in line with the
                   the IRB-style data policy for this project.
                 </span>

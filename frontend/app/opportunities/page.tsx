@@ -68,7 +68,7 @@ export default function OpportunitiesPage() {
             href="/dashboard"
             className="text-lg font-semibold tracking-tight text-[var(--northstar-dark)]"
           >
-            Meridian
+            Northstar
           </Link>
           <Link
             href="/dashboard"
@@ -86,7 +86,7 @@ export default function OpportunitiesPage() {
             Opportunities for you
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--muted)]">
-            Ranked by the Meridian TF-IDF match engine against your profile.
+            Ranked by the Northstar TF-IDF match engine against your profile.
             Filter by field and type to focus the list.
           </p>
         </header>

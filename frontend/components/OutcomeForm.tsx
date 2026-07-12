@@ -58,7 +58,7 @@ export function OutcomeForm({ opportunityId }: { opportunityId: string }) {
         Log your outcome
       </h3>
       <p className="mt-1 text-xs text-[var(--muted)]">
-        Let Meridian know what happened — it improves future matches.
+        Let Northstar know what happened — it improves future matches.
       </p>
 
       <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">

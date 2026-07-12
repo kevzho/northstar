@@ -2,7 +2,7 @@
 Hermes-wired mentor matching engine.
 
 For the MVP we reuse the same TF-IDF / cosine machinery as
-``app/match.py`` so the two ranking surfaces in Meridian feel consistent.
+``app/match.py`` so the two ranking surfaces in Northstar feel consistent.
 Production can swap the sparse TF-IDF for real sentence-transformer
 embeddings once the bio_embedding column is populated (the schema +
 SQL functions already support the vector(384) column).

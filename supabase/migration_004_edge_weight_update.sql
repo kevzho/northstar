@@ -1,4 +1,4 @@
--- Meridian migration 004: outcome-triggered edge-weight update
+-- Northstar migration 004: outcome-triggered edge-weight update
 --
 -- When a student logs an outcome (accepted/completed/rejected/withdrew), we
 -- nudge the weights of pathway_edges that connect nodes with shared tags,

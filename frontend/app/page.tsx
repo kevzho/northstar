@@ -27,7 +27,7 @@ export default function Home() {
             href="/"
             className="text-lg font-semibold tracking-tight text-[var(--northstar-dark)]"
           >
-            Meridian
+            Northstar
           </Link>
           <div className="flex items-center gap-3">
             <Link
@@ -51,13 +51,13 @@ export default function Home() {
               YouthCodeX AI MVP
             </p>
             <h1 className="max-w-3xl text-5xl font-semibold leading-[1.02] tracking-tight text-[var(--northstar-dark)] sm:text-6xl lg:text-7xl">
-              Meridian
+              Northstar
             </h1>
             <p className="mt-5 max-w-2xl text-2xl leading-9 text-[var(--foreground)]">
-              Every student deserves a meridian.
+              Every student deserves a northstar.
             </p>
             <p className="mt-6 max-w-2xl text-base leading-8 text-[var(--muted)] sm:text-lg">
-              Meridian is a personalized opportunity map for high school
+              Northstar is a personalized opportunity map for high school
               students. It begins with Northstar, a behavioral assessment that
               translates how students think, work, and choose into plausible
               futures and concrete next actions.

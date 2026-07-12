@@ -1,9 +1,9 @@
-# Render Blueprint for the Meridian FastAPI backend.
+# Render Blueprint for the Northstar FastAPI backend.
 # Validate with: python3 -c "import yaml; yaml.safe_load(open('backend/render.yaml'))"
 # Docs: https://render.com/docs/blueprint-spec
 services:
   - type: web
-    name: meridian-api
+    name: northstar-api
     runtime: python
     region: oregon
     plan: free

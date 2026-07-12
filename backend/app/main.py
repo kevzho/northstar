@@ -1,5 +1,5 @@
 """
-FastAPI app factory for Meridian.
+FastAPI app factory for Northstar.
 
 Keep this module's surface tiny so that ``uvicorn backend.main:app`` keeps
 working unchanged; the original top-level ``backend/main.py`` is rewritten as a
@@ -22,7 +22,7 @@ from .match import score_opportunities
 
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="Meridian API")
+    app = FastAPI(title="Northstar API")
 
     app.add_middleware(
         CORSMiddleware,
@@ -34,7 +34,7 @@ def create_app() -> FastAPI:
 
     @app.get("/")
     def root() -> dict[str, str]:
-        return {"message": "Meridian API running"}
+        return {"message": "Northstar API running"}
 
     @app.get("/health")
     def health() -> dict[str, str]:
@@ -304,7 +304,7 @@ def create_app() -> FastAPI:
 
     @app.get("/pathways")
     def pathways(user: CurrentUser = RequireUser) -> dict:
-        """Return nodes + edges for the Meridian pathway map.
+        """Return nodes + edges for the Northstar pathway map.
 
         Nodes are the student's matched opportunities (from /match scores).
         Edges are derived from shared tags + same field between nodes — a

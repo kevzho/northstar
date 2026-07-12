@@ -1,9 +1,9 @@
--- Meridian opportunity seed data
+-- Northstar opportunity seed data
 -- 35 real STEM programs, scholarships, competitions for the CAC demo.
 -- Idempotent: each INSERT uses ON CONFLICT (title, host) DO NOTHING, relying
 -- on the unique index uq_opportunities_title_host (migration_005).
 -- Re-running never duplicates rows.
--- Run after migration_002_meridian_schema.sql + migration_005_opportunities_unique.sql.
+-- Run after migration_002_northstar_schema.sql + migration_005_opportunities_unique.sql.
 
 -- ============================================================================
 -- Chunk 1: CS + Biology opportunities (rows 1-10)

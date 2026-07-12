@@ -1,4 +1,4 @@
--- Meridian core schema migration
+-- Northstar core schema migration
 -- Adds the domain tables required for the CAC demo path beyond the Northstar V1 schema.
 -- Run this in Supabase SQL Editor after schema.sql (Northstar V1) or via supabase db push.
 

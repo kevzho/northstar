@@ -3,7 +3,7 @@
 /**
  * Top-level not-found UI. Renders for any unmatched route or for a route that
  * calls notFound() (e.g. /opportunities/[id] when the opportunity doesn't
- * exist or fails to load). The page uses the same Meridian header chrome as
+ * exist or fails to load). The page uses the same Northstar header chrome as
  * the rest of the app.
  */
 
@@ -18,7 +18,7 @@ export default function NotFound() {
             href="/"
             className="text-lg font-semibold tracking-tight text-[var(--northstar-dark)]"
           >
-            Meridian
+            Northstar
           </Link>
         </div>
 

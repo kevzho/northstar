@@ -46,7 +46,7 @@ export default function LoginPage() {
       return;
     }
 
-    setStatus("Check your email for a Meridian sign-in link.");
+    setStatus("Check your email for a Northstar sign-in link.");
   }
 
   return (
@@ -57,7 +57,7 @@ export default function LoginPage() {
             href="/"
             className="text-lg font-semibold tracking-tight text-[var(--northstar-dark)]"
           >
-            Meridian
+            Northstar
           </Link>
           <Link
             href="/"

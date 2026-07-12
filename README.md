@@ -1,4 +1,4 @@
-# Meridian
+# Northstar
 
 Personalized opportunity map for high school students.
 

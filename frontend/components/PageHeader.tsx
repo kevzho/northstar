@@ -1,5 +1,5 @@
 /**
- * Small, token-driven Meridian header used across the in-app routes. Kept
+ * Small, token-driven Northstar header used across the in-app routes. Kept
  * dependency-free (no icon library) so the shell works before any vendor
  * styling is added.
  */
@@ -27,7 +27,7 @@ export function PageHeader({
           href="/"
           className="text-lg font-semibold tracking-tight text-[var(--northstar-dark)]"
         >
-          Meridian
+          Northstar
         </Link>
         {backHref && backLabel ? (
           <Link

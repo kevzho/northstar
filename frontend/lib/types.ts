@@ -1,7 +1,7 @@
 /**
- * Shared domain types for Meridian.
+ * Shared domain types for Northstar.
  *
- * These intentionally mirror the Meridian Supabase schema (Day 2 migration)
+ * These intentionally mirror the Northstar Supabase schema (Day 2 migration)
  * rather than the interim Northstar V1 schema, so the UI is already typed
  * against the shape the backend will serve. No runtime data exists for any of
  * these types yet; they are compile-time contracts only.

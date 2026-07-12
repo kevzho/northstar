@@ -35,7 +35,7 @@ export default async function Page(
             href="/opportunities"
             className="text-lg font-semibold tracking-tight text-[var(--northstar-dark)]"
           >
-            Meridian
+            Northstar
           </Link>
           <Link
             href="/opportunities"

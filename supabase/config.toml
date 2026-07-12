@@ -1,8 +1,8 @@
-# Supabase CLI project config for Meridian.
+# Supabase CLI project config for Northstar.
 # Run `supabase start` to spin up the local stack (requires Docker + the CLI).
 # See https://supabase.com/docs/guides/local-development/cli/getting-started
 
-project_id = "meridian"
+project_id = "northstar"
 
 [api]
 enabled = true

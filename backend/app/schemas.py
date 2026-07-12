@@ -1,5 +1,5 @@
 """
-Pydantic models that mirror the Meridian domain types in
+Pydantic models that mirror the Northstar domain types in
 ``frontend/lib/types.ts``. They serve as the single source of truth for the
 ``FastAPI`` request/response shapes that the frontend consumes. Backend routers
 import from here; the frontend keeps its duplicate TS definition in sync via

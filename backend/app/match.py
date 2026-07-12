@@ -176,7 +176,7 @@ def score_opportunities(student: dict, opportunities: Iterable[dict]) -> list[di
     """Score an iterable of opportunities for one student.
 
     Each opportunity dict is expected to have the columns described in
-    migration_002_meridian_schema.sql (title, host, opportunity_field or
+    migration_002_northstar_schema.sql (title, host, opportunity_field or
     field, type, blurb, description, cost, grade_min, grade_max, tags, url).
 
     Returns a list of dict with keys ``opportunity``, ``score`` where

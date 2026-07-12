@@ -1,4 +1,4 @@
--- Meridian mentor seed data
+-- Northstar mentor seed data
 -- 25 real-style STEM mentor profiles representing industry and academia.
 -- Idempotent: each INSERT uses WHERE NOT EXISTS keyed on (email) so re-running
 -- never duplicates rows. Run after supabase/schema.sql + migration_002.

@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Meridian pathway map — D3 force-directed graph.
+ * Northstar pathway map — D3 force-directed graph.
  *
  * Nodes are the student's top matched opportunities (sized by score,
  * colored by field). Edges connect opportunities that share a field or
@@ -178,7 +178,7 @@ export default function MapPage() {
             href="/dashboard"
             className="text-lg font-semibold tracking-tight text-[var(--northstar-dark)]"
           >
-            Meridian
+            Northstar
           </Link>
           <Link
             href="/dashboard"
@@ -193,7 +193,7 @@ export default function MapPage() {
             Pathway map
           </p>
           <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[var(--northstar-dark)]">
-            Your Meridian map
+            Your Northstar map
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--muted)]">
             Each node is an opportunity matched to your profile. Edges connect

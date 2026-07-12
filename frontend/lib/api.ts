@@ -1,7 +1,7 @@
 /**
  * Frontend API client.
  *
- * This module is the single place that talks to the Meridian FastAPI backend
+ * This module is the single place that talks to the Northstar FastAPI backend
  * and (for auth) to Supabase. Every function here is currently a typed stub
  * because the backend routers do not exist yet. When a real endpoint lands
  * (Day 3 for /match, Day 5 for mentors), replace the TODO body with the fetch

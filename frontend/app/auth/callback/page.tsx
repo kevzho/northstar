@@ -43,7 +43,7 @@ export default function AuthCallbackPage() {
     <main className="flex min-h-screen items-center justify-center px-6 py-8">
       <div className="w-full max-w-md rounded-lg border border-[var(--border)] bg-[var(--panel)] p-6 text-center shadow-sm">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--amber)]">
-          Meridian
+          Northstar
         </p>
         <h1 className="mt-3 text-3xl font-semibold tracking-tight text-[var(--northstar-dark)]">
           Auth callback

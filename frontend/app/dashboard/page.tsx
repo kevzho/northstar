@@ -71,7 +71,7 @@ export default function DashboardPage() {
     return (
       <main className="flex min-h-screen items-center justify-center px-6">
         <p className="text-sm font-semibold text-[var(--muted)]">
-          {checking ? "Checking your profile..." : "Loading Meridian..."}
+          {checking ? "Checking your profile..." : "Loading Northstar..."}
         </p>
       </main>
     );
@@ -85,7 +85,7 @@ export default function DashboardPage() {
             Sign in required
           </h1>
           <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
-            You need a Meridian session before opening the dashboard.
+            You need a Northstar session before opening the dashboard.
           </p>
           <Link
             href="/login"
@@ -106,7 +106,7 @@ export default function DashboardPage() {
             href="/"
             className="text-lg font-semibold tracking-tight text-[var(--northstar-dark)]"
           >
-            Meridian
+            Northstar
           </Link>
           <button
             type="button"
