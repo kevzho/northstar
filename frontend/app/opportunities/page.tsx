@@ -9,8 +9,9 @@
  * and falls through to an empty state when no matches exist.
  */
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { OpportunityCard } from "@/components/OpportunityCard";
 import { fetchMatches } from "@/lib/api";
 import type { MatchResult, OpportunityField, OpportunityType } from "@/lib/types";
@@ -33,10 +34,53 @@ const typeFilters: { value: OpportunityType | "all"; label: string }[] = [
   { value: "mentorship", label: "Mentorship" },
 ];
 
-export default function OpportunitiesPage() {
+const fieldValues = new Set(fieldFilters.map((f) => f.value));
+const typeValues = new Set(typeFilters.map((f) => f.value));
+
+/**
+ * Read a filter out of the query string, falling back to "all" for anything
+ * that is not a value we render — a hand-edited or stale URL must not produce
+ * a select with no matching option.
+ */
+function readParam<T extends string>(
+  params: URLSearchParams,
+  key: string,
+  allowed: Set<T | "all">,
+): T | "all" {
+  const raw = params.get(key);
+  return raw && allowed.has(raw as T) ? (raw as T) : "all";
+}
+
+function OpportunitiesList() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const [matches, setMatches] = useState<MatchResult[]>([]);
-  const [field, setField] = useState<OpportunityField | "all">("all");
-  const [type, setType] = useState<OpportunityType | "all">("all");
+
+  // Filters live in the URL so a reload, a back button, or a shared link keeps
+  // the same view. Useful in the demo: the filtered list is linkable.
+  const field = readParam<OpportunityField>(
+    new URLSearchParams(searchParams.toString()),
+    "field",
+    fieldValues,
+  );
+  const type = readParam<OpportunityType>(
+    new URLSearchParams(searchParams.toString()),
+    "type",
+    typeValues,
+  );
+
+  function setFilter(key: "field" | "type", value: string) {
+    const next = new URLSearchParams(searchParams.toString());
+    if (value === "all") {
+      next.delete(key);
+    } else {
+      next.set(key, value);
+    }
+    const query = next.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+  }
 
   useEffect(() => {
     let mounted = true;
@@ -45,8 +89,8 @@ export default function OpportunitiesPage() {
         if (mounted) setMatches(result);
       })
       .catch(() => {
-        // Stub returns []; future backend errors fall through to the empty
-        // state below. The decoder never re-throws here today.
+        // No profile, no seed data, or backend down — fall through to the
+        // empty state below rather than throwing at the route boundary.
         if (mounted) setMatches([]);
       });
     return () => {
@@ -94,7 +138,8 @@ export default function OpportunitiesPage() {
         <section className="mt-6 flex flex-wrap gap-3">
           <select
             value={field}
-            onChange={(event) => setField(event.target.value as OpportunityField | "all")}
+            aria-label="Filter by field"
+            onChange={(event) => setFilter("field", event.target.value)}
             className="h-11 rounded-md border border-[var(--border)] bg-white px-4 text-sm font-semibold text-[var(--foreground)] outline-none focus:border-[var(--northstar)]"
           >
             {fieldFilters.map((filter) => (
@@ -105,7 +150,8 @@ export default function OpportunitiesPage() {
           </select>
           <select
             value={type}
-            onChange={(event) => setType(event.target.value as OpportunityType | "all")}
+            aria-label="Filter by type"
+            onChange={(event) => setFilter("type", event.target.value)}
             className="h-11 rounded-md border border-[var(--border)] bg-white px-4 text-sm font-semibold text-[var(--foreground)] outline-none focus:border-[var(--northstar)]"
           >
             {typeFilters.map((filter) => (
@@ -126,6 +172,26 @@ export default function OpportunitiesPage() {
                 </p>
               </div>
             ))}
+          </section>
+        ) : matches.length > 0 ? (
+          // Results exist but the current filters exclude all of them. Saying
+          // "finish onboarding" here would send the student down the wrong path.
+          <section className="mt-10 rounded-lg border border-[var(--border)] bg-[var(--panel)] p-8 text-center shadow-sm">
+            <h2 className="text-xl font-semibold text-[var(--foreground)]">
+              Nothing matches these filters
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+              You have {matches.length} ranked{" "}
+              {matches.length === 1 ? "opportunity" : "opportunities"}, but none
+              in this field and type combination.
+            </p>
+            <button
+              type="button"
+              onClick={() => router.replace(pathname, { scroll: false })}
+              className="mt-6 inline-flex h-11 items-center justify-center rounded-md bg-[var(--northstar)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--northstar-dark)]"
+            >
+              Clear filters
+            </button>
           </section>
         ) : (
           <section className="mt-10 rounded-lg border border-[var(--border)] bg-[var(--panel)] p-8 text-center shadow-sm">
@@ -154,5 +220,26 @@ export default function OpportunitiesPage() {
         )}
       </div>
     </main>
+  );
+}
+
+/**
+ * useSearchParams() opts the subtree into client-side rendering, so Next
+ * requires a Suspense boundary above it for the route to keep prerendering
+ * its shell (node_modules/next/dist/docs/.../use-search-params.md).
+ */
+export default function OpportunitiesPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="flex min-h-screen items-center justify-center px-6">
+          <p className="text-sm font-semibold text-[var(--muted)]">
+            Loading your recommendations...
+          </p>
+        </main>
+      }
+    >
+      <OpportunitiesList />
+    </Suspense>
   );
 }

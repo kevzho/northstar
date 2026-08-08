@@ -14,6 +14,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import * as d3 from "d3";
 
 type GraphNode = {
@@ -47,6 +48,7 @@ const fieldColors: Record<string, string> = {
 };
 
 export default function MapPage() {
+  const router = useRouter();
   const svgRef = useRef<SVGSVGElement>(null);
   const [data, setData] = useState<GraphData>(null);
   const [loading, setLoading] = useState(true);
@@ -86,8 +88,15 @@ export default function MapPage() {
     const svg = d3
       .select(svgRef.current)
       .attr("viewBox", `0 0 ${width} ${height}`)
-      .style("max-width", "100%")
-      .style("height", "auto");
+      .attr("preserveAspectRatio", "xMidYMid meet")
+      .style("width", "100%")
+      .style("height", "auto")
+      // Let the zoom/drag handlers own the gestures instead of the page
+      // scroller, so pinch-zoom on the graph does not scroll the phone.
+      .style("touch-action", "none");
+
+    // Everything renders inside this group so zoom/pan is a single transform.
+    const viewport = svg.append("g");
 
     // Build link/target refs for d3-force
     const nodes = data.nodes.map((n) => ({ ...n }));
@@ -104,7 +113,7 @@ export default function MapPage() {
       .force("charge", d3.forceManyBody().strength(-200))
       .force("center", d3.forceCenter(width / 2, height / 2));
 
-    const link = svg
+    const link = viewport
       .append("g")
       .selectAll("line")
       .data(links)
@@ -114,7 +123,7 @@ export default function MapPage() {
       .attr("stroke-width", (d) => Math.max(1, d.weight * 4))
       .attr("stroke-opacity", 0.5);
 
-    const node = svg
+    const node = viewport
       .append("g")
       .selectAll("circle")
       .data(nodes)
@@ -126,7 +135,7 @@ export default function MapPage() {
       .attr("stroke-width", 1.5)
       .style("cursor", "pointer");
 
-    const labels = svg
+    const labels = viewport
       .append("g")
       .selectAll("text")
       .data(nodes)
@@ -145,11 +154,46 @@ export default function MapPage() {
         `${(d as GraphNode).title}\nScore: ${Math.round((d as GraphNode).score * 100)}%\nField: ${(d as GraphNode).field}`,
     );
 
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+
+    // Pinch/scroll to zoom, drag the background to pan. The viewBox is a fixed
+    // 800x600, so on a phone the graph is scaled down to ~40% and labels are
+    // unreadable without this.
+    const zoom = d3
+      .zoom<SVGSVGElement, unknown>()
+      .scaleExtent([0.4, 4])
+      .on("zoom", (event) => viewport.attr("transform", event.transform));
+    svg.call(zoom as any);
+
+    // Drag individual nodes. `dragged` distinguishes a drag from a tap so
+    // repositioning a node does not also navigate away from the map.
+    let dragged = false;
+    node.call(
+      d3
+        .drag<SVGCircleElement, any>()
+        .on("start", (event, d) => {
+          dragged = false;
+          if (!event.active) sim.alphaTarget(0.3).restart();
+          d.fx = d.x;
+          d.fy = d.y;
+        })
+        .on("drag", (event, d) => {
+          dragged = true;
+          d.fx = event.x;
+          d.fy = event.y;
+        })
+        .on("end", (event, d) => {
+          if (!event.active) sim.alphaTarget(0);
+          d.fx = null;
+          d.fy = null;
+        }) as any,
+    );
+
     node.on("click", (_event, d) => {
-      window.location.href = `/opportunities/${(d as GraphNode).id}`;
+      if (dragged) return;
+      router.push(`/opportunities/${(d as GraphNode).id}`);
     });
 
-    /* eslint-disable @typescript-eslint/no-explicit-any */
     sim.on("tick", () => {
       link
         .attr("x1", (d: any) => (d.source as unknown as { x: number }).x)
@@ -168,7 +212,7 @@ export default function MapPage() {
     return () => {
       sim.stop();
     };
-  }, [data]);
+  }, [data, router]);
 
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
@@ -241,7 +285,11 @@ export default function MapPage() {
           </section>
         ) : (
           <section className="mt-8 rounded-lg border border-[var(--border)] bg-[var(--panel)] p-4 shadow-sm">
-            <svg ref={svgRef} />
+            <svg ref={svgRef} className="block w-full" />
+            <p className="mt-3 text-xs leading-5 text-[var(--muted)]">
+              Scroll or pinch to zoom, drag the background to pan, drag a node to
+              reposition it. Tap a node to open the opportunity.
+            </p>
           </section>
         )}
       </div>

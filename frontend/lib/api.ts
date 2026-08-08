@@ -2,19 +2,26 @@
  * Frontend API client.
  *
  * This module is the single place that talks to the Northstar FastAPI backend
- * and (for auth) to Supabase. Every function here is currently a typed stub
- * because the backend routers do not exist yet. When a real endpoint lands
- * (Day 3 for /match, Day 5 for mentors), replace the TODO body with the fetch
- * call and keep the same return type so components do not change.
+ * and (for auth) to Supabase. Every function here is wired to a live route in
+ * backend/app/main.py.
  *
  * Conventions:
- *   - All endpoints live under NEXT_PUBLIC_API_URL (set in .env.local).
+ *   - All endpoints live under NEXT_PUBLIC_API_URL (set in .env.local). Every
+ *     caller must run in the browser: the access token comes from the Supabase
+ *     session, which supabase-js keeps in localStorage. Calling these from a
+ *     server component sends an anonymous request and gets a 401 back.
  *   - The Supabase access token is attached as `Authorization: Bearer ...`
  *     by a small helper that pulls the live session from lib/supabase.
  */
 
 import { supabase } from "./supabase";
-import type { MatchResult, Opportunity, Bookmark, StudentProfile } from "./types";
+import type {
+  MatchResult,
+  Opportunity,
+  Bookmark,
+  StudentProfile,
+  Outcome,
+} from "./types";
 
 export type Mentor = {
   id: string;
@@ -132,6 +139,17 @@ export async function removeBookmark(opportunityId: string): Promise<void> {
  */
 export async function fetchMentors(): Promise<MentorMatch[]> {
   return (await authedFetch("/mentors")).json();
+}
+
+/**
+ * List the outcomes this student has already logged, newest first.
+ *
+ * Calls GET /outcomes. Used to show outcome history so the feedback loop
+ * (outcomes → pathway_edges weights, migration_004) is visible in the demo
+ * rather than silent.
+ */
+export async function fetchOutcomes(): Promise<Outcome[]> {
+  return (await authedFetch("/outcomes")).json();
 }
 
 /**

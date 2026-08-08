@@ -64,6 +64,22 @@ export type Bookmark = {
   created_at: string;
 };
 
+export type OutcomeStatus =
+  | "accepted"
+  | "rejected"
+  | "waitlisted"
+  | "withdrew"
+  | "completed";
+
+/** A student-reported result, mirroring backend/app/schemas.py Outcome. */
+export type Outcome = {
+  id: string;
+  opportunity_id: string;
+  status: OutcomeStatus;
+  impact_notes: string | null;
+  created_at: string | null;
+};
+
 export type StudentProfile = {
   id: string;
   name: string | null;

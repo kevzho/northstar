@@ -7,8 +7,20 @@ set every field explicitly. Sensitive values are loaded lazily and never logged.
 """
 
 import os
+from pathlib import Path
 
 from pydantic import BaseModel
+
+# Load ``backend/.env`` before the settings snapshot is taken. The docs tell
+# students to put SUPABASE_* there; without this the file was read by nothing
+# and the backend fell back to defaults (→ 500 "missing SUPABASE_JWT_SECRET").
+# ``override=False`` keeps real process env (Render, Railway, CI) authoritative.
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv(Path(__file__).resolve().parents[1] / ".env", override=False)
+except ImportError:  # python-dotenv absent → process env only, still valid
+    pass
 
 
 class Settings(BaseModel):

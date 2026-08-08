@@ -22,13 +22,33 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npx tsc --noEmit
+      # `tsc --noEmit` does not exercise the App Router build. `next build` is
+      # what catches a client-only import pulled into a server component, a
+      # bad route export, or a page that crashes while prerendering.
+      - run: npx next build
+        env:
+          # Build-time placeholders: lib/supabase.ts throws at import when these
+          # are absent, which would fail the build for the wrong reason. Real
+          # values live in Vercel's project settings.
+          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: placeholder-anon-key
+          NEXT_PUBLIC_API_URL: http://localhost:8000
 
   backend:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install -r backend/requirements.txt
-      - run: python -m py_compile backend/main.py
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+      - run: pip install -r requirements.txt
+      - run: python -m py_compile main.py
+      # The suite runs without Supabase credentials: it covers the JWT layer,
+      # both ranking engines, the auth gate on every route, and static guards
+      # over the SQL migrations and PostgREST query chains.
+      - run: python -m pytest -q

@@ -4,14 +4,23 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/use-auth";
-import { authedFetch, saveStudentProfile, fetchMatches } from "@/lib/api";
-import type { MatchResult } from "@/lib/types";
+import { authedFetch, saveStudentProfile, fetchMatches, fetchOutcomes } from "@/lib/api";
+import type { MatchResult, Outcome } from "@/lib/types";
+
+const outcomeLabels: Record<Outcome["status"], string> = {
+  accepted: "Accepted",
+  rejected: "Rejected",
+  waitlisted: "Waitlisted",
+  withdrew: "Withdrew",
+  completed: "Completed",
+};
 
 export default function DashboardPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const [checking, setChecking] = useState(false);
   const [matches, setMatches] = useState<MatchResult[] | null>(null);
+  const [outcomes, setOutcomes] = useState<Outcome[]>([]);
 
   // On first sign-in without a profile: create a minimal students row,
   // then redirect to onboarding so the student fills in the real fields.
@@ -33,6 +42,13 @@ export default function DashboardPage() {
           } catch {
             // No catalog yet (no seed data run) — just skip.
             if (!cancelled) setMatches(null);
+          }
+          try {
+            const logged = await fetchOutcomes();
+            if (!cancelled) setOutcomes(logged);
+          } catch {
+            // Outcome history is additive; its absence must not block the page.
+            if (!cancelled) setOutcomes([]);
           }
         }
         return;
@@ -179,7 +195,70 @@ export default function DashboardPage() {
           </section>
         )}
 
+        {/* Outcome history makes the feedback loop visible: each logged result
+            fires the migration_004 trigger that re-weights pathway_edges. */}
+        {outcomes.length > 0 ? (
+          <section className="mb-10">
+            <h2 className="text-lg font-semibold tracking-tight text-[var(--northstar-dark)]">
+              Your logged outcomes
+            </h2>
+            <p className="mt-1 text-sm text-[var(--muted)]">
+              Each result you log re-weights the pathway graph behind your
+              recommendations.
+            </p>
+            <ul className="mt-4 grid gap-2">
+              {outcomes.slice(0, 5).map((outcome) => {
+                const match = matches?.find(
+                  (m) => m.opportunity.id === outcome.opportunity_id,
+                );
+                return (
+                  <li
+                    key={outcome.id}
+                    className="flex flex-wrap items-center gap-3 rounded-md border border-[var(--border)] bg-[var(--panel)] px-4 py-3"
+                  >
+                    <span className="inline-flex h-6 items-center rounded bg-[var(--amber)] px-2 text-xs font-semibold text-white">
+                      {outcomeLabels[outcome.status] ?? outcome.status}
+                    </span>
+                    {match ? (
+                      <Link
+                        href={`/opportunities/${outcome.opportunity_id}`}
+                        className="text-sm font-semibold text-[var(--northstar-dark)] transition hover:text-[var(--northstar)]"
+                      >
+                        {match.opportunity.title}
+                      </Link>
+                    ) : (
+                      <span className="text-sm font-semibold text-[var(--foreground)]">
+                        Logged opportunity
+                      </span>
+                    )}
+                    {outcome.impact_notes ? (
+                      <span className="text-xs text-[var(--muted)]">
+                        {outcome.impact_notes}
+                      </span>
+                    ) : null}
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        ) : null}
+
+        {/* Every in-app route reachable from one place. /map and /mentors had
+            no inbound link anywhere in the app before this — the pathway map is
+            the judge-facing centerpiece, so it cannot be URL-only. */}
         <section className="grid gap-4 md:grid-cols-2">
+          <Link
+            href="/map"
+            className="rounded-lg border border-[var(--border)] bg-[var(--panel)] p-5 shadow-sm transition hover:border-[var(--northstar)]"
+          >
+            <h2 className="text-xl font-semibold text-[var(--foreground)]">
+              Your pathway map
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+              See your matches as a force-directed graph — programs that share a
+              field or tags are connected.
+            </p>
+          </Link>
           <Link
             href="/opportunities"
             className="rounded-lg border border-[var(--border)] bg-[var(--panel)] p-5 shadow-sm transition hover:border-[var(--northstar)]"
@@ -190,6 +269,17 @@ export default function DashboardPage() {
             <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
               See your full ranked opportunity list with scores and
               explanations.
+            </p>
+          </Link>
+          <Link
+            href="/mentors"
+            className="rounded-lg border border-[var(--border)] bg-[var(--panel)] p-5 shadow-sm transition hover:border-[var(--northstar)]"
+          >
+            <h2 className="text-xl font-semibold text-[var(--foreground)]">
+              Mentor matches
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+              Mentors ranked by how their expertise lines up with your profile.
             </p>
           </Link>
           <Link

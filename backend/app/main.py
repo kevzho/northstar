@@ -56,9 +56,9 @@ def create_app() -> FastAPI:
         sb = get_supabase()
         row = (
             sb.table("students")
-            .select("id, name, email, grade, interests, goals, consented_at")
+            .select("id, name, email, grade, interests, goals, onboarded, consented_at")
             .eq("id", user.id)
-            .maybesingle()
+            .maybe_single()
             .execute()
         )
         if not row.data:
@@ -125,7 +125,7 @@ def create_app() -> FastAPI:
             sb.table("students")
             .select("id, name, email, grade, interests, goals")
             .eq("id", user.id)
-            .maybesingle()
+            .maybe_single()
             .execute()
         )
         student = prof.data
@@ -191,7 +191,7 @@ def create_app() -> FastAPI:
             sb.table("opportunities")
             .select("*")
             .eq("id", opp_id)
-            .maybesingle()
+            .maybe_single()
             .execute()
         )
         if not row.data:
@@ -321,7 +321,7 @@ def create_app() -> FastAPI:
             sb.table("students")
             .select("id, name, email, grade, interests, goals")
             .eq("id", user.id)
-            .maybesingle()
+            .maybe_single()
             .execute()
         )
         student = prof.data
@@ -388,7 +388,7 @@ def create_app() -> FastAPI:
             sb.table("students")
             .select("id, name, email, grade, interests, goals")
             .eq("id", user.id)
-            .maybesingle()
+            .maybe_single()
             .execute()
         )
         student = prof.data
