@@ -54,9 +54,7 @@ export function BookmarkButton({ opportunityId }: { opportunityId: string }) {
       onClick={toggle}
       disabled={loading}
       className={
-        bookmarked
-          ? "inline-flex h-12 items-center justify-center rounded-md bg-[var(--northstar)] px-6 text-sm font-semibold text-white transition hover:bg-[var(--northstar-dark)]"
-          : "inline-flex h-12 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--panel)] px-6 text-sm font-semibold text-[var(--northstar-dark)] transition hover:border-[var(--northstar)]"
+        bookmarked ? "btn-primary h-12 px-6" : "btn-secondary h-12 px-6"
       }
     >
       {loading ? "..." : bookmarked ? "Bookmarked" : "Bookmark"}

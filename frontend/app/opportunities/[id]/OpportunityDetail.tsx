@@ -44,27 +44,27 @@ export function OpportunityDetail({ id }: { id: string }) {
         <div className="flex items-center justify-between border-b border-[var(--border)] pb-5">
           <Link
             href="/opportunities"
-            className="text-lg font-semibold tracking-tight text-[var(--northstar-dark)]"
+            className="h-display text-xl text-[var(--foreground)]"
           >
             Northstar
           </Link>
           <Link
             href="/opportunities"
-            className="text-sm font-semibold text-[var(--northstar)]"
+            className="text-sm font-semibold text-[var(--aurora)]"
           >
             Back to opportunities
           </Link>
         </div>
 
         {loading ? (
-          <section className="mt-10 rounded-lg border border-[var(--border)] bg-[var(--panel)] p-8 text-center shadow-sm">
-            <p className="text-sm font-semibold text-[var(--muted)]">
+          <section className="card mt-10 p-8 text-center">
+            <p className="font-mono text-sm text-[var(--muted)]">
               Loading opportunity...
             </p>
           </section>
         ) : !opportunity ? (
-          <section className="mt-10 rounded-lg border border-[var(--border)] bg-[var(--panel)] p-8 text-center shadow-sm">
-            <h1 className="text-2xl font-semibold tracking-tight text-[var(--northstar-dark)]">
+          <section className="card mt-10 p-8 text-center">
+            <h1 className="h-display text-3xl text-[var(--foreground)]">
               Opportunity not found
             </h1>
             <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
@@ -72,26 +72,18 @@ export function OpportunityDetail({ id }: { id: string }) {
               in again and reopen it from your recommendations.
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
-              <Link
-                href="/opportunities"
-                className="inline-flex h-11 items-center justify-center rounded-md bg-[var(--northstar)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--northstar-dark)]"
-              >
+              <Link href="/opportunities" className="btn-primary h-11 px-5">
                 Back to opportunities
               </Link>
-              <Link
-                href="/login"
-                className="inline-flex h-11 items-center justify-center rounded-md border border-[var(--border)] bg-white px-5 text-sm font-semibold text-[var(--northstar-dark)] transition hover:border-[var(--northstar)]"
-              >
+              <Link href="/login" className="btn-secondary h-11 px-5">
                 Sign in
               </Link>
             </div>
           </section>
         ) : (
           <article className="mt-10">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--amber)]">
-              {opportunity.host}
-            </p>
-            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[var(--northstar-dark)]">
+            <p className="eyebrow">{opportunity.host}</p>
+            <h1 className="h-display mt-3 text-4xl text-[var(--foreground)]">
               {opportunity.title}
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-8 text-[var(--foreground)]">
@@ -99,8 +91,8 @@ export function OpportunityDetail({ id }: { id: string }) {
             </p>
 
             <dl className="mt-8 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-md border border-[var(--border)] bg-[var(--panel)] p-4">
-                <dt className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--muted)]">
+              <div className="card p-4">
+                <dt className="font-mono text-xs uppercase tracking-[0.16em] text-[var(--muted)]">
                   Deadline
                 </dt>
                 <dd className="mt-2 text-sm text-[var(--foreground)]">
@@ -113,16 +105,16 @@ export function OpportunityDetail({ id }: { id: string }) {
                     : "Rolling deadline"}
                 </dd>
               </div>
-              <div className="rounded-md border border-[var(--border)] bg-[var(--panel)] p-4">
-                <dt className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--muted)]">
+              <div className="card p-4">
+                <dt className="font-mono text-xs uppercase tracking-[0.16em] text-[var(--muted)]">
                   Grade range
                 </dt>
                 <dd className="mt-2 text-sm text-[var(--foreground)]">
                   {opportunity.grade_min}–{opportunity.grade_max}
                 </dd>
               </div>
-              <div className="rounded-md border border-[var(--border)] bg-[var(--panel)] p-4">
-                <dt className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--muted)]">
+              <div className="card p-4">
+                <dt className="font-mono text-xs uppercase tracking-[0.16em] text-[var(--muted)]">
                   Cost
                 </dt>
                 <dd className="mt-2 text-sm text-[var(--foreground)]">
@@ -131,8 +123,8 @@ export function OpportunityDetail({ id }: { id: string }) {
                     : `$${opportunity.cost.toLocaleString()}`}
                 </dd>
               </div>
-              <div className="rounded-md border border-[var(--border)] bg-[var(--panel)] p-4">
-                <dt className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--muted)]">
+              <div className="card p-4">
+                <dt className="font-mono text-xs uppercase tracking-[0.16em] text-[var(--muted)]">
                   Tags
                 </dt>
                 <dd className="mt-2 text-sm text-[var(--foreground)]">
@@ -147,7 +139,7 @@ export function OpportunityDetail({ id }: { id: string }) {
                 href={opportunity.url}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-12 items-center justify-center rounded-md bg-[var(--northstar)] px-6 text-sm font-semibold text-white transition hover:bg-[var(--northstar-dark)]"
+                className="btn-primary h-12 px-6"
               >
                 Apply
               </a>

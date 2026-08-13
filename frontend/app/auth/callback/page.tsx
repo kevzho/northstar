@@ -41,18 +41,13 @@ export default function AuthCallbackPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center px-6 py-8">
-      <div className="w-full max-w-md rounded-lg border border-[var(--border)] bg-[var(--panel)] p-6 text-center shadow-sm">
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--amber)]">
-          Northstar
-        </p>
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-[var(--northstar-dark)]">
-          Auth callback
+      <div className="card w-full max-w-md p-6 text-center">
+        <p className="eyebrow">Northstar</p>
+        <h1 className="h-display mt-3 text-3xl text-[var(--foreground)]">
+          Signing you in
         </h1>
         <p className="mt-4 text-sm leading-6 text-[var(--muted)]">{message}</p>
-        <Link
-          href="/login"
-          className="mt-6 inline-flex h-11 items-center justify-center rounded-md bg-[var(--northstar)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--northstar-dark)]"
-        >
+        <Link href="/login" className="btn-secondary mt-6 h-11 px-5">
           Back to login
         </Link>
       </div>

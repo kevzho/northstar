@@ -86,7 +86,7 @@ export default function DashboardPage() {
   if (loading || checking) {
     return (
       <main className="flex min-h-screen items-center justify-center px-6">
-        <p className="text-sm font-semibold text-[var(--muted)]">
+        <p className="font-mono text-sm text-[var(--muted)]">
           {checking ? "Checking your profile..." : "Loading Northstar..."}
         </p>
       </main>
@@ -96,17 +96,14 @@ export default function DashboardPage() {
   if (!user) {
     return (
       <main className="flex min-h-screen items-center justify-center px-6">
-        <div className="w-full max-w-md rounded-lg border border-[var(--border)] bg-[var(--panel)] p-6 text-center shadow-sm">
-          <h1 className="text-3xl font-semibold tracking-tight text-[var(--northstar-dark)]">
+        <div className="card w-full max-w-md p-6 text-center">
+          <h1 className="h-display text-3xl text-[var(--foreground)]">
             Sign in required
           </h1>
           <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
             You need a Northstar session before opening the dashboard.
           </p>
-          <Link
-            href="/login"
-            className="mt-6 inline-flex h-11 items-center justify-center rounded-md bg-[var(--northstar)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--northstar-dark)]"
-          >
+          <Link href="/login" className="btn-primary mt-6 h-11 px-5">
             Go to login
           </Link>
         </div>
@@ -118,26 +115,21 @@ export default function DashboardPage() {
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
         <nav className="flex flex-col gap-4 border-b border-[var(--border)] pb-5 sm:flex-row sm:items-center sm:justify-between">
-          <Link
-            href="/"
-            className="text-lg font-semibold tracking-tight text-[var(--northstar-dark)]"
-          >
+          <Link href="/" className="h-display text-xl text-[var(--foreground)]">
             Northstar
           </Link>
           <button
             type="button"
             onClick={signOut}
-            className="h-10 rounded-md border border-[var(--border)] bg-[var(--panel)] px-4 text-sm font-semibold text-[var(--northstar-dark)] transition hover:border-[var(--northstar)]"
+            className="btn-secondary h-10 px-4"
           >
             Sign out
           </button>
         </nav>
 
         <header className="py-10">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--amber)]">
-            Signed in
-          </p>
-          <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[var(--northstar-dark)]">
+          <p className="eyebrow">Signed in</p>
+          <h1 className="h-display mt-3 text-4xl text-[var(--foreground)]">
             Welcome{user.email ? `, ${user.email}` : ""}.
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--muted)]">
@@ -148,14 +140,14 @@ export default function DashboardPage() {
 
         {/* Recommendations preview — top 4 matches */}
         {matches === null ? (
-          <section className="mb-10 rounded-lg border border-[var(--border)] bg-[var(--panel)] p-6 text-center shadow-sm">
-            <p className="text-sm font-semibold text-[var(--muted)]">
+          <section className="card mb-10 p-6 text-center">
+            <p className="font-mono text-sm text-[var(--muted)]">
               Fetching your recommendations...
             </p>
           </section>
         ) : matches.length === 0 ? (
-          <section className="mb-10 rounded-lg border border-[var(--border)] bg-[var(--panel)] p-6 text-center shadow-sm">
-            <h2 className="text-xl font-semibold text-[var(--northstar-dark)]">
+          <section className="card mb-10 p-6 text-center">
+            <h2 className="text-xl font-semibold text-[var(--foreground)]">
               No recommendations yet
             </h2>
             <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
@@ -164,7 +156,7 @@ export default function DashboardPage() {
           </section>
         ) : (
           <section className="mb-10">
-            <h2 className="text-lg font-semibold tracking-tight text-[var(--northstar-dark)]">
+            <h2 className="h-display text-2xl text-[var(--foreground)]">
               Top matches
             </h2>
             <p className="mt-1 text-sm text-[var(--muted)]">
@@ -175,18 +167,18 @@ export default function DashboardPage() {
                 <Link
                   key={opportunity.id}
                   href={`/opportunities/${opportunity.id}`}
-                  className="rounded-lg border border-[var(--border)] bg-[var(--panel)] p-4 shadow-sm transition hover:border-[var(--northstar)]"
+                  className="card card-hover p-4"
                 >
-                  <div className="mb-2 inline-flex h-6 items-center rounded bg-[var(--northstar)] px-2 text-xs font-semibold text-white">
-                    {Math.round(score.score * 100)}%
-                  </div>
+                  <span className="badge-fit mb-2">
+                    {Math.round(score.score * 100)}% fit
+                  </span>
                   <h3 className="text-base font-semibold text-[var(--foreground)] truncate">
                     {opportunity.title}
                   </h3>
                   <p className="mt-1 text-xs leading-5 text-[var(--muted)] line-clamp-2">
                     {opportunity.blurb}
                   </p>
-                  <p className="mt-2 text-[11px] font-medium text-[var(--amber)] uppercase tracking-wider">
+                  <p className="mt-2 font-mono text-[11px] uppercase tracking-wider text-[var(--aurora)]">
                     {opportunity.field} · {opportunity.type}
                   </p>
                 </Link>
@@ -199,7 +191,7 @@ export default function DashboardPage() {
             fires the migration_004 trigger that re-weights pathway_edges. */}
         {outcomes.length > 0 ? (
           <section className="mb-10">
-            <h2 className="text-lg font-semibold tracking-tight text-[var(--northstar-dark)]">
+            <h2 className="h-display text-2xl text-[var(--foreground)]">
               Your logged outcomes
             </h2>
             <p className="mt-1 text-sm text-[var(--muted)]">
@@ -214,15 +206,15 @@ export default function DashboardPage() {
                 return (
                   <li
                     key={outcome.id}
-                    className="flex flex-wrap items-center gap-3 rounded-md border border-[var(--border)] bg-[var(--panel)] px-4 py-3"
+                    className="card flex flex-wrap items-center gap-3 px-4 py-3"
                   >
-                    <span className="inline-flex h-6 items-center rounded bg-[var(--amber)] px-2 text-xs font-semibold text-white">
+                    <span className="inline-flex h-6 items-center rounded border border-[var(--aurora-dim)] bg-[rgba(125,211,200,0.1)] px-2 font-mono text-xs text-[var(--aurora)]">
                       {outcomeLabels[outcome.status] ?? outcome.status}
                     </span>
                     {match ? (
                       <Link
                         href={`/opportunities/${outcome.opportunity_id}`}
-                        className="text-sm font-semibold text-[var(--northstar-dark)] transition hover:text-[var(--northstar)]"
+                        className="text-sm font-semibold text-[var(--star)] transition hover:text-[var(--star-bright)]"
                       >
                         {match.opportunity.title}
                       </Link>
@@ -247,10 +239,7 @@ export default function DashboardPage() {
             no inbound link anywhere in the app before this — the pathway map is
             the judge-facing centerpiece, so it cannot be URL-only. */}
         <section className="grid gap-4 md:grid-cols-2">
-          <Link
-            href="/map"
-            className="rounded-lg border border-[var(--border)] bg-[var(--panel)] p-5 shadow-sm transition hover:border-[var(--northstar)]"
-          >
+          <Link href="/map" className="card card-hover p-5">
             <h2 className="text-xl font-semibold text-[var(--foreground)]">
               Your pathway map
             </h2>
@@ -259,10 +248,7 @@ export default function DashboardPage() {
               field or tags are connected.
             </p>
           </Link>
-          <Link
-            href="/opportunities"
-            className="rounded-lg border border-[var(--border)] bg-[var(--panel)] p-5 shadow-sm transition hover:border-[var(--northstar)]"
-          >
+          <Link href="/opportunities" className="card card-hover p-5">
             <h2 className="text-xl font-semibold text-[var(--foreground)]">
               All recommendations
             </h2>
@@ -271,10 +257,7 @@ export default function DashboardPage() {
               explanations.
             </p>
           </Link>
-          <Link
-            href="/mentors"
-            className="rounded-lg border border-[var(--border)] bg-[var(--panel)] p-5 shadow-sm transition hover:border-[var(--northstar)]"
-          >
+          <Link href="/mentors" className="card card-hover p-5">
             <h2 className="text-xl font-semibold text-[var(--foreground)]">
               Mentor matches
             </h2>
@@ -282,10 +265,7 @@ export default function DashboardPage() {
               Mentors ranked by how their expertise lines up with your profile.
             </p>
           </Link>
-          <Link
-            href="/onboarding"
-            className="rounded-lg border border-[var(--border)] bg-[var(--panel)] p-5 shadow-sm transition hover:border-[var(--northstar)]"
-          >
+          <Link href="/onboarding" className="card card-hover p-5">
             <h2 className="text-xl font-semibold text-[var(--foreground)]">
               Edit profile
             </h2>

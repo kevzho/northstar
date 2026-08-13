@@ -110,23 +110,21 @@ function OpportunitiesList() {
         <div className="flex items-center justify-between border-b border-[var(--border)] pb-5">
           <Link
             href="/dashboard"
-            className="text-lg font-semibold tracking-tight text-[var(--northstar-dark)]"
+            className="h-display text-xl text-[var(--foreground)]"
           >
             Northstar
           </Link>
           <Link
             href="/dashboard"
-            className="text-sm font-semibold text-[var(--northstar)]"
+            className="text-sm font-semibold text-[var(--aurora)]"
           >
             Back to dashboard
           </Link>
         </div>
 
         <header className="mt-10">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--amber)]">
-            Recommendations
-          </p>
-          <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[var(--northstar-dark)]">
+          <p className="eyebrow">Recommendations</p>
+          <h1 className="h-display mt-3 text-4xl text-[var(--foreground)]">
             Opportunities for you
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--muted)]">
@@ -140,7 +138,7 @@ function OpportunitiesList() {
             value={field}
             aria-label="Filter by field"
             onChange={(event) => setFilter("field", event.target.value)}
-            className="h-11 rounded-md border border-[var(--border)] bg-white px-4 text-sm font-semibold text-[var(--foreground)] outline-none focus:border-[var(--northstar)]"
+            className="input-field h-11 px-4 text-sm font-semibold"
           >
             {fieldFilters.map((filter) => (
               <option key={filter.value} value={filter.value}>
@@ -152,7 +150,7 @@ function OpportunitiesList() {
             value={type}
             aria-label="Filter by type"
             onChange={(event) => setFilter("type", event.target.value)}
-            className="h-11 rounded-md border border-[var(--border)] bg-white px-4 text-sm font-semibold text-[var(--foreground)] outline-none focus:border-[var(--northstar)]"
+            className="input-field h-11 px-4 text-sm font-semibold"
           >
             {typeFilters.map((filter) => (
               <option key={filter.value} value={filter.value}>
@@ -168,7 +166,10 @@ function OpportunitiesList() {
               <div key={opportunity.id} className="grid gap-2">
                 <OpportunityCard opportunity={opportunity} />
                 <p className="px-1 text-xs text-[var(--muted)]">
-                  Match score {Math.round(score.score * 100)} · {score.explanation}
+                  <span className="font-mono text-[var(--star)]">
+                    {Math.round(score.score * 100)}% fit
+                  </span>{" "}
+                  · {score.explanation}
                 </p>
               </div>
             ))}
@@ -176,7 +177,7 @@ function OpportunitiesList() {
         ) : matches.length > 0 ? (
           // Results exist but the current filters exclude all of them. Saying
           // "finish onboarding" here would send the student down the wrong path.
-          <section className="mt-10 rounded-lg border border-[var(--border)] bg-[var(--panel)] p-8 text-center shadow-sm">
+          <section className="card mt-10 p-8 text-center">
             <h2 className="text-xl font-semibold text-[var(--foreground)]">
               Nothing matches these filters
             </h2>
@@ -188,13 +189,13 @@ function OpportunitiesList() {
             <button
               type="button"
               onClick={() => router.replace(pathname, { scroll: false })}
-              className="mt-6 inline-flex h-11 items-center justify-center rounded-md bg-[var(--northstar)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--northstar-dark)]"
+              className="btn-primary mt-6 h-11 px-5"
             >
               Clear filters
             </button>
           </section>
         ) : (
-          <section className="mt-10 rounded-lg border border-[var(--border)] bg-[var(--panel)] p-8 text-center shadow-sm">
+          <section className="card mt-10 p-8 text-center">
             <h2 className="text-xl font-semibold text-[var(--foreground)]">
               No recommendations yet
             </h2>
@@ -203,16 +204,10 @@ function OpportunitiesList() {
               engine has a profile to rank from.
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
-              <Link
-                href="/onboarding"
-                className="inline-flex h-11 items-center justify-center rounded-md bg-[var(--northstar)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--northstar-dark)]"
-              >
+              <Link href="/onboarding" className="btn-primary h-11 px-5">
                 Finish onboarding
               </Link>
-              <Link
-                href="/assessment"
-                className="inline-flex h-11 items-center justify-center rounded-md border border-[var(--border)] bg-white px-5 text-sm font-semibold text-[var(--northstar-dark)] transition hover:border-[var(--northstar)]"
-              >
+              <Link href="/assessment" className="btn-secondary h-11 px-5">
                 Take assessment
               </Link>
             </div>
@@ -233,7 +228,7 @@ export default function OpportunitiesPage() {
     <Suspense
       fallback={
         <main className="flex min-h-screen items-center justify-center px-6">
-          <p className="text-sm font-semibold text-[var(--muted)]">
+          <p className="font-mono text-sm text-[var(--muted)]">
             Loading your recommendations...
           </p>
         </main>

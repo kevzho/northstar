@@ -6,10 +6,6 @@
  * Step 1: identity basics (name, grade).
  * Step 2: interests (multi-select chips) + open-ended goal statement.
  * Step 3: background + IRB-style consent checkbox.
- *
- * The form state below is local-only and intentionally not submitted anywhere
- * yet. Day 2 wires the backend POST /students upsert and Day 3 swaps the
- * local submit handler for the real saveStudentProfile() call.
  */
 
 import Link from "next/link";
@@ -78,22 +74,17 @@ export default function OnboardingPage() {
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-3xl">
         <div className="flex items-center justify-between border-b border-[var(--border)] pb-5">
-          <Link
-            href="/"
-            className="text-lg font-semibold tracking-tight text-[var(--northstar-dark)]"
-          >
+          <Link href="/" className="h-display text-xl text-[var(--foreground)]">
             Northstar
           </Link>
-          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[var(--muted)]">
+          <p className="font-mono text-sm uppercase tracking-[0.16em] text-[var(--muted)]">
             Step {step} of 3
           </p>
         </div>
 
         <div className="mt-10">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--amber)]">
-            Onboarding
-          </p>
-          <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[var(--northstar-dark)]">
+          <p className="eyebrow">Onboarding</p>
+          <h1 className="h-display mt-3 text-4xl text-[var(--foreground)]">
             Tell Northstar where you are.
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--muted)]">
@@ -102,7 +93,7 @@ export default function OnboardingPage() {
           </p>
         </div>
 
-        <section className="mt-8 rounded-lg border border-[var(--border)] bg-[var(--panel)] p-6 shadow-sm">
+        <section className="card mt-8 p-6">
           {step === 1 ? (
             <div className="grid gap-5">
               <label className="grid gap-2">
@@ -114,7 +105,7 @@ export default function OnboardingPage() {
                   required
                   value={name}
                   onChange={(event) => setName(event.target.value)}
-                  className="h-12 rounded-md border border-[var(--border)] bg-white px-4 text-base text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--northstar)]"
+                  className="input-field h-12 px-4 text-base"
                   placeholder="Your name"
                 />
               </label>
@@ -126,7 +117,7 @@ export default function OnboardingPage() {
                   required
                   value={grade}
                   onChange={(event) => setGrade(event.target.value)}
-                  className="h-12 rounded-md border border-[var(--border)] bg-white px-4 text-base text-[var(--foreground)] outline-none transition focus:border-[var(--northstar)]"
+                  className="input-field h-12 px-4 text-base"
                 >
                   <option value="">Select your grade</option>
                   {[
@@ -161,11 +152,12 @@ export default function OnboardingPage() {
                       <button
                         type="button"
                         key={subject}
+                        aria-pressed={selected}
                         onClick={() => toggleInterest(subject)}
                         className={
                           selected
-                            ? "rounded-md border border-[var(--northstar)] bg-[var(--northstar)] px-4 py-2 text-sm font-semibold text-white"
-                            : "rounded-md border border-[var(--border)] bg-white px-4 py-2 text-sm font-semibold text-[var(--foreground)] transition hover:border-[var(--northstar)]"
+                            ? "rounded-md border border-[var(--star)] bg-[var(--star)] px-4 py-2 text-sm font-semibold text-[var(--on-star)]"
+                            : "rounded-md border border-[var(--border-bright)] bg-[var(--panel-raised)] px-4 py-2 text-sm font-semibold text-[var(--foreground)] transition hover:border-[var(--star)]"
                         }
                       >
                         {subject}
@@ -183,7 +175,7 @@ export default function OnboardingPage() {
                   value={goals}
                   onChange={(event) => setGoals(event.target.value)}
                   rows={3}
-                  className="rounded-md border border-[var(--border)] bg-white px-4 py-3 text-base text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--northstar)]"
+                  className="input-field px-4 py-3 text-base"
                   placeholder="e.g. I want to do computational biology research that helps patients."
                 />
               </label>
@@ -201,7 +193,7 @@ export default function OnboardingPage() {
                   value={background}
                   onChange={(event) => setBackground(event.target.value)}
                   rows={3}
-                  className="rounded-md border border-[var(--border)] bg-white px-4 py-3 text-base text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--northstar)]"
+                  className="input-field px-4 py-3 text-base"
                   placeholder="e.g. First-generation student at a public high school with no STEM club."
                 />
               </label>
@@ -211,7 +203,7 @@ export default function OnboardingPage() {
                   required
                   checked={consent}
                   onChange={(event) => setConsent(event.target.checked)}
-                  className="mt-1 h-4 w-4 rounded border-[var(--northstar)]"
+                  className="mt-1 h-4 w-4 rounded accent-[var(--star)]"
                 />
                 <span className="text-sm leading-6 text-[var(--foreground)]">
                   I consent to Northstar storing my profile and assessment
@@ -226,7 +218,7 @@ export default function OnboardingPage() {
             <button
               type="button"
               onClick={() => setStep((current) => (current > 1 ? (current - 1) as 1 | 2 | 3 : current))}
-              className="text-sm font-semibold text-[var(--northstar)]"
+              className="text-sm font-semibold text-[var(--aurora)] disabled:opacity-50"
               disabled={step === 1}
             >
               Back
@@ -237,7 +229,7 @@ export default function OnboardingPage() {
                 type="button"
                 onClick={() => setStep((current) => (current + 1) as 2 | 3)}
                 disabled={!canContinue}
-                className="inline-flex h-11 items-center justify-center rounded-md bg-[var(--northstar)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--northstar-dark)] disabled:cursor-not-allowed disabled:opacity-60"
+                className="btn-primary h-11 px-5"
               >
                 Continue
               </button>
@@ -246,7 +238,7 @@ export default function OnboardingPage() {
                 type="button"
                 onClick={handleSubmit}
                 disabled={!canContinue || isSubmitting}
-                className="inline-flex h-11 items-center justify-center rounded-md bg-[var(--northstar)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--northstar-dark)] disabled:cursor-not-allowed disabled:opacity-60"
+                className="btn-primary h-11 px-5"
               >
                 {isSubmitting ? "Saving..." : "Finish onboarding"}
               </button>

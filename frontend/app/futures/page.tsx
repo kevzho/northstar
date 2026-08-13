@@ -32,12 +32,12 @@ export default function FuturesPage() {
           <div>
             <Link
               href="/profile"
-              className="text-sm font-semibold text-[var(--northstar)]"
+              className="text-sm font-semibold text-[var(--aurora)]"
             >
               Back to profile
             </Link>
-            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[var(--northstar-dark)]">
-              Future Paths
+            <h1 className="h-display mt-3 text-4xl text-[var(--foreground)]">
+              Future paths
             </h1>
             <p className="mt-3 max-w-2xl text-base leading-7 text-[var(--muted)]">
               Northstar compares the trait profile to archetypes and returns
@@ -45,52 +45,39 @@ export default function FuturesPage() {
               plausible direction.
             </p>
           </div>
-          <Link
-            href="/plan"
-            className="inline-flex h-11 shrink-0 items-center justify-center rounded-md bg-[var(--northstar)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--northstar-dark)]"
-          >
+          <Link href="/plan" className="btn-primary h-11 shrink-0 px-5">
             Choose a path
           </Link>
         </header>
 
         {paths === null ? (
-          <section className="mt-8 rounded-lg border border-[var(--border)] bg-[var(--panel)] p-8 text-center shadow-sm">
-            <h2 className="text-xl font-semibold text-[var(--northstar-dark)]">
+          <section className="card mt-8 p-8 text-center">
+            <h2 className="text-xl font-semibold text-[var(--foreground)]">
               No trait profile yet
             </h2>
             <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
               Future paths are ranked against your six trait scores. Take the
               eight-question assessment first — it takes about five minutes.
             </p>
-            <Link
-              href="/assessment"
-              className="mt-6 inline-flex h-11 items-center justify-center rounded-md bg-[var(--northstar)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--northstar-dark)]"
-            >
+            <Link href="/assessment" className="btn-primary mt-6 h-11 px-5">
               Take the assessment
             </Link>
           </section>
         ) : (
           <section className="mt-8 grid gap-4 lg:grid-cols-3">
             {paths.map((path) => (
-              <article
-                key={path.archetype.id}
-                className="flex flex-col rounded-lg border border-[var(--border)] bg-[var(--panel)] p-5 shadow-sm"
-              >
+              <article key={path.archetype.id} className="card flex flex-col p-5">
                 <div className="flex items-center justify-between gap-3">
-                  <p className="text-sm font-semibold text-[var(--amber)]">
-                    {pathLabel(path.kind)}
-                  </p>
-                  <span className="inline-flex h-6 items-center rounded bg-[var(--northstar)] px-2 text-xs font-semibold text-white">
-                    {path.fit}% fit
-                  </span>
+                  <p className="eyebrow">{pathLabel(path.kind)}</p>
+                  <span className="badge-fit">{path.fit}% fit</span>
                 </div>
-                <h2 className="mt-3 text-2xl font-semibold tracking-tight text-[var(--foreground)]">
+                <h2 className="h-display mt-3 text-3xl text-[var(--foreground)]">
                   {path.archetype.label}
                 </h2>
                 <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
                   {path.archetype.summary}
                 </p>
-                <p className="mt-4 text-xs leading-5 text-[var(--northstar-dark)] italic">
+                <p className="mt-4 text-xs leading-5 text-[var(--aurora)] italic">
                   {path.rationale}
                 </p>
               </article>
@@ -98,8 +85,8 @@ export default function FuturesPage() {
           </section>
         )}
 
-        <section className="mt-8 rounded-lg border border-[var(--border)] bg-[var(--panel)] p-5">
-          <h2 className="text-lg font-semibold text-[var(--foreground)]">
+        <section className="card mt-8 p-5">
+          <h2 className="h-display text-2xl text-[var(--foreground)]">
             Archetype library
           </h2>
           <p className="mt-1 text-sm text-[var(--muted)]">
@@ -112,14 +99,14 @@ export default function FuturesPage() {
               (entry) => (
                 <div
                   key={entry.archetype.id}
-                  className="rounded-md border border-[var(--border)] bg-white/70 p-4"
+                  className="rounded-md border border-[var(--border)] bg-[var(--panel-raised)] p-4"
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <p className="font-semibold text-[var(--northstar-dark)]">
+                    <p className="font-semibold text-[var(--foreground)]">
                       {entry.archetype.label}
                     </p>
                     {entry.fit !== null ? (
-                      <span className="shrink-0 text-xs font-semibold text-[var(--northstar)]">
+                      <span className="shrink-0 font-mono text-xs text-[var(--star)]">
                         {entry.fit}%
                       </span>
                     ) : null}

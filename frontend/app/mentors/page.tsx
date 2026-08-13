@@ -39,23 +39,21 @@ export default function MentorsPage() {
         <div className="flex items-center justify-between border-b border-[var(--border)] pb-5">
           <Link
             href="/dashboard"
-            className="text-lg font-semibold tracking-tight text-[var(--northstar-dark)]"
+            className="h-display text-xl text-[var(--foreground)]"
           >
             Northstar
           </Link>
           <Link
             href="/dashboard"
-            className="text-sm font-semibold text-[var(--northstar)]"
+            className="text-sm font-semibold text-[var(--aurora)]"
           >
             Back to dashboard
           </Link>
         </div>
 
         <header className="mt-10">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--amber)]">
-            Mentors
-          </p>
-          <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[var(--northstar-dark)]">
+          <p className="eyebrow">Mentors</p>
+          <h1 className="h-display mt-3 text-4xl text-[var(--foreground)]">
             Mentor recommendations
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--muted)]">
@@ -65,14 +63,14 @@ export default function MentorsPage() {
         </header>
 
         {loading ? (
-          <section className="mt-10 rounded-lg border border-[var(--border)] bg-[var(--panel)] p-8 text-center shadow-sm">
-            <p className="text-sm font-semibold text-[var(--muted)]">
+          <section className="card mt-10 p-8 text-center">
+            <p className="font-mono text-sm text-[var(--muted)]">
               Finding mentors that match your profile...
             </p>
           </section>
         ) : error ? (
-          <section className="mt-10 rounded-lg border border-[var(--border)] bg-[var(--panel)] p-8 text-center shadow-sm">
-            <h2 className="text-xl font-semibold text-[var(--northstar-dark)]">
+          <section className="card mt-10 p-8 text-center">
+            <h2 className="text-xl font-semibold text-[var(--foreground)]">
               Could not load mentors
             </h2>
             <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
@@ -81,8 +79,8 @@ export default function MentorsPage() {
             </p>
           </section>
         ) : mentors.length === 0 ? (
-          <section className="mt-10 rounded-lg border border-[var(--border)] bg-[var(--panel)] p-8 text-center shadow-sm">
-            <h2 className="text-xl font-semibold text-[var(--northstar-dark)]">
+          <section className="card mt-10 p-8 text-center">
+            <h2 className="text-xl font-semibold text-[var(--foreground)]">
               No mentors yet
             </h2>
             <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
@@ -93,19 +91,16 @@ export default function MentorsPage() {
         ) : (
           <section className="mt-8 grid gap-4">
             {mentors.slice(0, 5).map(({ mentor, score }) => (
-              <article
-                key={mentor.id}
-                className="rounded-lg border border-[var(--border)] bg-[var(--panel)] p-5 shadow-sm"
-              >
+              <article key={mentor.id} className="card p-5">
                 <div className="flex items-center gap-3">
-                  <div className="inline-flex h-10 items-center rounded bg-[var(--northstar)] px-3 text-xs font-semibold text-white">
-                    {Math.round(score.score * 100)}%
-                  </div>
+                  <span className="badge-fit">
+                    {Math.round(score.score * 100)}% fit
+                  </span>
                   <div>
                     <h2 className="text-lg font-semibold text-[var(--foreground)]">
                       {mentor.name}
                     </h2>
-                    <p className="text-xs font-medium text-[var(--muted)]">
+                    <p className="font-mono text-xs text-[var(--muted)]">
                       {mentor.email}
                     </p>
                   </div>
@@ -117,7 +112,7 @@ export default function MentorsPage() {
                   {mentor.expertise.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded border border-[var(--border)] bg-white px-2 py-0.5 text-xs font-medium text-[var(--northstar-dark)]"
+                      className="rounded border border-[var(--border-bright)] bg-[var(--panel-raised)] px-2 py-0.5 text-xs font-medium text-[var(--aurora)]"
                     >
                       {tag}
                     </span>

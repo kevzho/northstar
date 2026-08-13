@@ -38,11 +38,11 @@ export default function AssessmentPage() {
           <div>
             <Link
               href="/"
-              className="text-sm font-semibold text-[var(--northstar)]"
+              className="text-sm font-semibold text-[var(--aurora)]"
             >
               Northstar
             </Link>
-            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[var(--northstar-dark)]">
+            <h1 className="h-display mt-3 text-4xl text-[var(--foreground)]">
               Assessment
             </h1>
             <p className="mt-3 max-w-2xl text-base leading-7 text-[var(--muted)]">
@@ -55,27 +55,24 @@ export default function AssessmentPage() {
             type="button"
             disabled={!complete}
             onClick={() => router.push("/profile")}
-            className="inline-flex h-11 shrink-0 items-center justify-center rounded-md bg-[var(--northstar)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--northstar-dark)] disabled:cursor-not-allowed disabled:opacity-60"
+            className="btn-primary h-11 shrink-0 px-5"
           >
             {complete ? "See your profile" : `${answered} of ${total} answered`}
           </button>
         </header>
 
-        <div className="mt-6 h-2 overflow-hidden rounded-full bg-[#e6e1d8]">
+        <div className="mt-6 h-2 overflow-hidden rounded-full bg-[var(--panel-raised)]">
           <div
-            className="h-full rounded-full bg-[var(--northstar)] transition-all"
+            className="h-full rounded-full bg-[var(--star)] transition-all"
             style={{ width: `${(answered / total) * 100}%` }}
           />
         </div>
 
         <section className="mt-8 grid gap-4">
           {assessmentQuestions.map((question, index) => (
-            <article
-              key={question.id}
-              className="rounded-lg border border-[var(--border)] bg-[var(--panel)] p-5 shadow-sm"
-            >
-              <p className="text-sm font-semibold text-[var(--amber)]">
-                Question {index + 1} of {assessmentQuestions.length}
+            <article key={question.id} className="card p-5">
+              <p className="font-mono text-xs tracking-[0.2em] text-[var(--star)]">
+                {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
               </p>
               <h2 className="mt-2 text-xl font-semibold text-[var(--foreground)]">
                 {question.prompt}
@@ -96,8 +93,8 @@ export default function AssessmentPage() {
                       onClick={() => choose(question.id, choice.id)}
                       className={
                         selected
-                          ? "rounded-md border-2 border-[var(--northstar)] bg-[#e4f3f2] p-4 text-left transition"
-                          : "rounded-md border-2 border-[var(--border)] bg-white/70 p-4 text-left transition hover:border-[var(--northstar)]"
+                          ? "rounded-md border-2 border-[var(--star)] bg-[rgba(239,185,92,0.1)] p-4 text-left transition"
+                          : "rounded-md border-2 border-[var(--border)] bg-[var(--panel)] p-4 text-left transition hover:border-[var(--border-bright)]"
                       }
                     >
                       <p className="text-sm leading-6 text-[var(--foreground)]">
@@ -112,7 +109,7 @@ export default function AssessmentPage() {
         </section>
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-[var(--muted)]">
+          <p className="font-mono text-sm text-[var(--muted)]">
             {complete
               ? "All eight answered — your trait profile is ready."
               : `${left} ${left === 1 ? "question" : "questions"} left.`}
@@ -121,7 +118,7 @@ export default function AssessmentPage() {
             type="button"
             disabled={!complete}
             onClick={() => router.push("/profile")}
-            className="inline-flex h-11 items-center justify-center rounded-md bg-[var(--northstar)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--northstar-dark)] disabled:cursor-not-allowed disabled:opacity-60"
+            className="btn-primary h-11 px-5"
           >
             Continue to profile
           </button>

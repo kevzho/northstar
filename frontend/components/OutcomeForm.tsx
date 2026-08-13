@@ -41,31 +41,33 @@ export function OutcomeForm({ opportunityId }: { opportunityId: string }) {
 
   if (done) {
     return (
-      <div className="mt-6 rounded-md border border-[var(--northstar)] bg-[var(--panel)] p-4">
-        <p className="text-sm font-semibold text-[var(--northstar-dark)]">
+      <div className="mt-6 rounded-md border border-[var(--success-border)] bg-[var(--success-bg)] p-4">
+        <p className="text-sm font-semibold text-[var(--success-text)]">
           Outcome logged.
         </p>
         <p className="mt-1 text-xs text-[var(--muted)]">
-          Your result helps the pathway engine tune future recommendations.
+          Your result re-weights the pathway graph behind future
+          recommendations.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="mt-6 rounded-lg border border-[var(--border)] bg-[var(--panel)] p-4">
+    <div className="card mt-6 p-4">
       <h3 className="text-sm font-semibold text-[var(--foreground)]">
         Log your outcome
       </h3>
       <p className="mt-1 text-xs text-[var(--muted)]">
-        Let Northstar know what happened — it improves future matches.
+        Tell Northstar what happened — it improves future matches.
       </p>
 
       <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
         <select
           value={status}
+          aria-label="Outcome status"
           onChange={(e) => setStatus(e.target.value)}
-          className="h-10 rounded-md border border-[var(--border)] bg-white px-3 text-sm font-semibold text-[var(--foreground)] outline-none focus:border-[var(--northstar)]"
+          className="input-field h-10 px-3 text-sm font-semibold"
         >
           <option value="">Select status</option>
           {statuses.map((s) => (
@@ -78,24 +80,25 @@ export function OutcomeForm({ opportunityId }: { opportunityId: string }) {
         <input
           type="text"
           placeholder="Impact notes (optional)"
+          aria-label="Impact notes"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          className="h-10 flex-1 rounded-md border border-[var(--border)] bg-white px-3 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--northstar)]"
+          className="input-field h-10 flex-1 px-3 text-sm"
         />
 
         <button
           type="button"
           onClick={handleLog}
           disabled={submitting || !status}
-          className="h-10 rounded-md bg-[var(--northstar)] px-4 text-sm font-semibold text-white transition hover:bg-[var(--northstar-dark)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="btn-primary h-10 px-4"
         >
-          {submitting ? "Saving..." : "Log"}
+          {submitting ? "Saving..." : "Log outcome"}
         </button>
       </div>
 
       {error ? (
-        <p className="mt-2 text-xs font-medium text-[var(--amber)]">
-          Could not save outcome. Try again?
+        <p className="mt-2 text-xs font-medium text-[var(--error-text)]">
+          Could not save the outcome. Try again.
         </p>
       ) : null}
     </div>

@@ -38,13 +38,14 @@ type GraphEdge = {
 
 type GraphData = { nodes: GraphNode[]; edges: GraphEdge[] } | null;
 
+/* Luminous star colors — tuned to read against the night-sky background. */
 const fieldColors: Record<string, string> = {
-  cs: "#2563eb",
-  biology: "#16a34a",
-  math: "#9333ea",
-  physics: "#ea580c",
-  engineering: "#0891b2",
-  interdisciplinary: "#ca8a04",
+  cs: "#6c9ef8",
+  biology: "#56d394",
+  math: "#c08bf5",
+  physics: "#f09a62",
+  engineering: "#55c7de",
+  interdisciplinary: "#e7c868",
 };
 
 export default function MapPage() {
@@ -119,9 +120,9 @@ export default function MapPage() {
       .data(links)
       .enter()
       .append("line")
-      .attr("stroke", "#cbd5e1")
+      .attr("stroke", "#3b4a78")
       .attr("stroke-width", (d) => Math.max(1, d.weight * 4))
-      .attr("stroke-opacity", 0.5);
+      .attr("stroke-opacity", 0.7);
 
     const node = viewport
       .append("g")
@@ -130,8 +131,8 @@ export default function MapPage() {
       .enter()
       .append("circle")
       .attr("r", (d) => 8 + (d as GraphNode).score * 20)
-      .attr("fill", (d) => fieldColors[(d as GraphNode).field] ?? "#64748b")
-      .attr("stroke", "#fff")
+      .attr("fill", (d) => fieldColors[(d as GraphNode).field] ?? "#8b97b8")
+      .attr("stroke", "#0a1020")
       .attr("stroke-width", 1.5)
       .style("cursor", "pointer");
 
@@ -143,7 +144,7 @@ export default function MapPage() {
       .append("text")
       .text((d) => (d as GraphNode).title.slice(0, 20))
       .attr("font-size", 10)
-      .attr("fill", "#1e293b")
+      .attr("fill", "#c7d0e8")
       .attr("dx", 12)
       .attr("dy", 4)
       .style("pointer-events", "none");
@@ -220,24 +221,22 @@ export default function MapPage() {
         <div className="flex items-center justify-between border-b border-[var(--border)] pb-5">
           <Link
             href="/dashboard"
-            className="text-lg font-semibold tracking-tight text-[var(--northstar-dark)]"
+            className="h-display text-xl text-[var(--foreground)]"
           >
             Northstar
           </Link>
           <Link
             href="/dashboard"
-            className="text-sm font-semibold text-[var(--northstar)]"
+            className="text-sm font-semibold text-[var(--aurora)]"
           >
             Back to dashboard
           </Link>
         </div>
 
         <header className="mt-10">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--amber)]">
-            Pathway map
-          </p>
-          <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[var(--northstar-dark)]">
-            Your Northstar map
+          <p className="eyebrow">Pathway map</p>
+          <h1 className="h-display mt-3 text-4xl text-[var(--foreground)]">
+            Your night sky
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--muted)]">
             Each node is an opportunity matched to your profile. Edges connect
@@ -254,7 +253,7 @@ export default function MapPage() {
                 className="inline-block h-3 w-3 rounded-full"
                 style={{ backgroundColor: color }}
               />
-              <span className="text-xs font-semibold capitalize text-[var(--muted)]">
+              <span className="font-mono text-xs capitalize text-[var(--muted)]">
                 {field}
               </span>
             </div>
@@ -262,29 +261,26 @@ export default function MapPage() {
         </section>
 
         {loading ? (
-          <section className="mt-10 rounded-lg border border-[var(--border)] bg-[var(--panel)] p-8 text-center shadow-sm">
-            <p className="text-sm font-semibold text-[var(--muted)]">
+          <section className="card mt-10 p-8 text-center">
+            <p className="font-mono text-sm text-[var(--muted)]">
               Building your pathway map...
             </p>
           </section>
         ) : !data || data.nodes.length === 0 ? (
-          <section className="mt-10 rounded-lg border border-[var(--border)] bg-[var(--panel)] p-8 text-center shadow-sm">
-            <h2 className="text-xl font-semibold text-[var(--northstar-dark)]">
+          <section className="card mt-10 p-8 text-center">
+            <h2 className="text-xl font-semibold text-[var(--foreground)]">
               No map yet
             </h2>
             <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
               Complete onboarding and run the seed data to populate your
               pathway graph.
             </p>
-            <Link
-              href="/onboarding"
-              className="mt-6 inline-flex h-11 items-center justify-center rounded-md bg-[var(--northstar)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--northstar-dark)]"
-            >
+            <Link href="/onboarding" className="btn-primary mt-6 h-11 px-5">
               Go to onboarding
             </Link>
           </section>
         ) : (
-          <section className="mt-8 rounded-lg border border-[var(--border)] bg-[var(--panel)] p-4 shadow-sm">
+          <section className="card mt-8 p-4">
             <svg ref={svgRef} className="block w-full" />
             <p className="mt-3 text-xs leading-5 text-[var(--muted)]">
               Scroll or pinch to zoom, drag the background to pan, drag a node to

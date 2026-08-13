@@ -39,12 +39,12 @@ export default function ProfilePage() {
           <div>
             <Link
               href="/assessment"
-              className="text-sm font-semibold text-[var(--northstar)]"
+              className="text-sm font-semibold text-[var(--aurora)]"
             >
               Back to assessment
             </Link>
-            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[var(--northstar-dark)]">
-              Trait Profile
+            <h1 className="h-display mt-3 text-4xl text-[var(--foreground)]">
+              Trait profile
             </h1>
             <p className="mt-3 max-w-2xl text-base leading-7 text-[var(--muted)]">
               {isReal
@@ -52,21 +52,18 @@ export default function ProfilePage() {
                 : "This preview shows the six interpretable signals Northstar computes from assessment choices."}
             </p>
           </div>
-          <Link
-            href="/futures"
-            className="inline-flex h-11 shrink-0 items-center justify-center rounded-md bg-[var(--northstar)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--northstar-dark)]"
-          >
+          <Link href="/futures" className="btn-primary h-11 shrink-0 px-5">
             Generate futures
           </Link>
         </header>
 
         {!isReal ? (
-          <section className="mt-6 rounded-md border border-[var(--amber)] bg-[#fdf6e8] p-4">
+          <section className="mt-6 rounded-md border border-[var(--star)] bg-[rgba(239,185,92,0.08)] p-4">
             <p className="text-sm leading-6 text-[var(--foreground)]">
-              These are sample numbers. {" "}
+              These are sample numbers.{" "}
               <Link
                 href="/assessment"
-                className="font-semibold text-[var(--northstar-dark)] underline"
+                className="font-semibold text-[var(--star)] underline"
               >
                 Take the assessment
               </Link>{" "}
@@ -75,7 +72,7 @@ export default function ProfilePage() {
           </section>
         ) : null}
 
-        <section className="mt-8 rounded-lg border border-[var(--border)] bg-[var(--panel)] p-5 shadow-sm">
+        <section className="card mt-8 p-5">
           <div className="grid gap-5">
             {ordered.map((trait) => (
               <div key={trait}>
@@ -83,13 +80,13 @@ export default function ProfilePage() {
                   <span className="text-sm font-semibold text-[var(--foreground)]">
                     {traitLabels[trait]}
                   </span>
-                  <span className="text-sm text-[var(--muted)]">
+                  <span className="font-mono text-sm text-[var(--star)]">
                     {scores[trait]}/100
                   </span>
                 </div>
-                <div className="h-3 overflow-hidden rounded-full bg-[#e6e1d8]">
+                <div className="h-3 overflow-hidden rounded-full bg-[var(--panel-raised)]">
                   <div
-                    className="h-full rounded-full bg-[var(--northstar)] transition-all"
+                    className="h-full rounded-full bg-[var(--star)] transition-all"
                     style={{ width: `${scores[trait]}%` }}
                   />
                 </div>

@@ -53,15 +53,12 @@ export default function LoginPage() {
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-5xl flex-col">
         <nav className="flex items-center justify-between border-b border-[var(--border)] pb-5">
-          <Link
-            href="/"
-            className="text-lg font-semibold tracking-tight text-[var(--northstar-dark)]"
-          >
+          <Link href="/" className="h-display text-xl text-[var(--foreground)]">
             Northstar
           </Link>
           <Link
             href="/"
-            className="text-sm font-semibold text-[var(--northstar)]"
+            className="text-sm font-semibold text-[var(--aurora)]"
           >
             Back home
           </Link>
@@ -69,10 +66,8 @@ export default function LoginPage() {
 
         <section className="grid flex-1 items-center gap-10 py-12 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--amber)]">
-              Student sign in
-            </p>
-            <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[var(--northstar-dark)] sm:text-5xl">
+            <p className="eyebrow">Student sign in</p>
+            <h1 className="h-display mt-4 text-4xl text-[var(--foreground)] sm:text-5xl">
               Start with Northstar.
             </h1>
             <p className="mt-5 max-w-xl text-base leading-8 text-[var(--muted)]">
@@ -81,18 +76,18 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <div className="rounded-lg border border-[var(--border)] bg-[var(--panel)] p-5 shadow-sm sm:p-6">
+          <div className="card p-5 sm:p-6">
             <button
               type="button"
               onClick={signInWithGoogle}
-              className="flex h-12 w-full items-center justify-center rounded-md bg-[var(--northstar)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--northstar-dark)]"
+              className="btn-primary h-12 w-full px-5"
             >
               Continue with Google
             </button>
 
             <div className="my-6 flex items-center gap-3">
               <div className="h-px flex-1 bg-[var(--border)]" />
-              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--muted)]">
+              <span className="font-mono text-xs uppercase tracking-[0.16em] text-[var(--muted)]">
                 or
               </span>
               <div className="h-px flex-1 bg-[var(--border)]" />
@@ -112,25 +107,25 @@ export default function LoginPage() {
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="you@example.com"
-                className="h-12 rounded-md border border-[var(--border)] bg-white px-4 text-base text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--northstar)]"
+                className="input-field h-12 px-4 text-base"
               />
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="mt-2 flex h-12 items-center justify-center rounded-md border border-[var(--border)] bg-white px-5 text-sm font-semibold text-[var(--northstar-dark)] transition hover:border-[var(--northstar)] disabled:cursor-not-allowed disabled:opacity-60"
+                className="btn-secondary mt-2 h-12 px-5"
               >
                 {isSubmitting ? "Sending..." : "Send magic link"}
               </button>
             </form>
 
             {status ? (
-              <p className="mt-4 rounded-md border border-[#b7d8c0] bg-[#edf8ef] p-3 text-sm leading-6 text-[#315f2a]">
+              <p className="mt-4 rounded-md border border-[var(--success-border)] bg-[var(--success-bg)] p-3 text-sm leading-6 text-[var(--success-text)]">
                 {status}
               </p>
             ) : null}
 
             {error ? (
-              <p className="mt-4 rounded-md border border-[#e6b8a8] bg-[#fff2ed] p-3 text-sm leading-6 text-[#7a2f16]">
+              <p className="mt-4 rounded-md border border-[var(--error-border)] bg-[var(--error-bg)] p-3 text-sm leading-6 text-[var(--error-text)]">
                 {error}
               </p>
             ) : null}
