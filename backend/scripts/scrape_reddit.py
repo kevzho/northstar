@@ -1,18 +1,23 @@
 """
 Reddit opportunity scraper — candidate STEM opportunities from student subreddits.
 
-Pulls recent posts from a small list of subreddits where real programs,
-competitions, internships, and scholarships get posted, filters them down to
-opportunity-shaped posts, and writes them to a review file. It deliberately
-does NOT insert into the database: scraped posts are candidates, not catalog
-entries — the maintainer reviews `scraped/reddit_candidates.json`, fixes
-fields the heuristics guessed (field, type, deadline), and only then adds the
-keepers to scripts/seed_opportunities.sql.
+Harvests posts from subreddits where real programs, competitions, internships,
+and scholarships get posted, filters them down to opportunity-shaped posts,
+and MERGES them into a growing review pool. It deliberately does NOT insert
+into the database: scraped posts are candidates, not catalog entries — the
+maintainer reviews `scraped/reddit_candidates.json`, fixes fields the
+heuristics guessed, and only then adds keepers to the seed catalog.
+
+Designed to be run repeatedly: each run paginates several pages deep per
+subreddit, runs targeted searches on top of the /new listings, and merges
+into the existing pool keyed by URL — entries you have already reviewed
+keep whatever fields you added to them (e.g. "review": "keep" / "drop"),
+and re-runs only append genuinely unseen posts.
 
 Politeness / terms:
 - Uses Reddit's official OAuth API (app-only grant) with a descriptive
-  User-Agent and one request every ~1.5 seconds. Only public subreddit
-  listings, no user pages. Run occasionally by hand, not on a schedule.
+  User-Agent and one request every ~1.5 seconds — far inside the free
+  tier's 100 queries/minute. Only public subreddit listings and searches.
 
 Setup (one time):
     1. https://www.reddit.com/prefs/apps -> create app -> type "script"
@@ -22,6 +27,7 @@ Setup (one time):
            REDDIT_CLIENT_SECRET=<the secret>
 
 Usage:
+    cd backend && .venv/bin/python scripts/train_als.py   # unrelated
     cd backend && .venv/bin/python scripts/scrape_reddit.py
 """
 
@@ -44,7 +50,7 @@ try:
 except ImportError:
     pass
 
-USER_AGENT = "northstar-opportunity-scraper/0.1 (student project; contact: dev.thorfinn@gmail.com)"
+USER_AGENT = "northstar-opportunity-scraper/0.2 (student project; contact: dev.thorfinn@gmail.com)"
 
 SUBREDDITS = [
     "summerprograms",
@@ -52,9 +58,25 @@ SUBREDDITS = [
     "internships",
     "highschool",
     "ApplyingToCollege",
+    "csMajors",
+    "premed",
 ]
 
-LISTING = "https://oauth.reddit.com/r/{sub}/new?limit=75"
+# Targeted searches sweep further back than /new can reach.
+SEARCHES = [
+    "high school summer program",
+    "high school research program",
+    "scholarship deadline",
+    "STEM competition high school",
+    "high school internship",
+]
+SEARCH_SUBREDDITS = ["summerprograms", "scholarships", "ApplyingToCollege"]
+
+PAGES_PER_LISTING = 4  # 4 x 75 = up to 300 posts per subreddit per run
+REQUEST_DELAY_S = 1.5
+
+LISTING = "https://oauth.reddit.com/r/{sub}/new"
+SEARCH = "https://oauth.reddit.com/r/{sub}/search"
 TOKEN_URL = "https://www.reddit.com/api/v1/access_token"
 
 
@@ -76,6 +98,7 @@ def get_token() -> str:
     )
     response.raise_for_status()
     return response.json()["access_token"]
+
 
 # A post has to look like an opportunity, not a question about one.
 INCLUDE = re.compile(
@@ -112,24 +135,55 @@ def classify(pattern_list: list[tuple[str, re.Pattern[str]]], text: str, default
     return default
 
 
-def fetch_listing(sub: str, token: str) -> list[dict]:
+def fetch_page(
+    url: str, token: str, params: dict
+) -> tuple[list[dict], str | None]:
     response = requests.get(
-        LISTING.format(sub=sub),
+        url,
+        params=params,
         headers={"User-Agent": USER_AGENT, "Authorization": f"bearer {token}"},
         timeout=20,
     )
     response.raise_for_status()
-    children = response.json().get("data", {}).get("children", [])
-    return [child["data"] for child in children if child.get("kind") == "t3"]
+    data = response.json().get("data", {})
+    posts = [c["data"] for c in data.get("children", []) if c.get("kind") == "t3"]
+    return posts, data.get("after")
 
 
-def to_candidate(post: dict, sub: str) -> dict:
+def harvest_listing(sub: str, token: str) -> list[dict]:
+    """Paginate /r/{sub}/new several pages deep."""
+    posts: list[dict] = []
+    after: str | None = None
+    for _ in range(PAGES_PER_LISTING):
+        params = {"limit": 75}
+        if after:
+            params["after"] = after
+        page, after = fetch_page(LISTING.format(sub=sub), token, params)
+        posts.extend(page)
+        time.sleep(REQUEST_DELAY_S)
+        if not after:
+            break
+    return posts
+
+
+def harvest_search(sub: str, query: str, token: str) -> list[dict]:
+    """One page of subreddit-restricted search, sorted newest, past year."""
+    posts, _ = fetch_page(
+        SEARCH.format(sub=sub),
+        token,
+        {"q": query, "restrict_sr": 1, "sort": "new", "t": "year", "limit": 75},
+    )
+    time.sleep(REQUEST_DELAY_S)
+    return posts
+
+
+def to_candidate(post: dict, source: str) -> dict:
     title = post.get("title", "").strip()
     text = f"{title}\n{post.get('selftext', '')[:2000]}"
     blurb = re.sub(r"\s+", " ", post.get("selftext", "")).strip()[:220]
     external = post.get("url_overridden_by_dest") or ""
     return {
-        "source": f"r/{sub}",
+        "source": source,
         "reddit_permalink": f"https://www.reddit.com{post.get('permalink', '')}",
         "posted_utc": datetime.fromtimestamp(
             post.get("created_utc", 0), tz=timezone.utc
@@ -144,43 +198,72 @@ def to_candidate(post: dict, sub: str) -> dict:
     }
 
 
+def looks_like_opportunity(post: dict) -> bool:
+    title = post.get("title", "")
+    body = post.get("selftext", "")[:2000]
+    return bool(INCLUDE.search(f"{title}\n{body}")) and not EXCLUDE.search(title)
+
+
 def main() -> None:
     token = get_token()
-    seen_urls: set[str] = set()
-    candidates: list[dict] = []
-
-    for sub in SUBREDDITS:
-        try:
-            posts = fetch_listing(sub, token)
-        except requests.RequestException as error:
-            print(f"r/{sub}: skipped ({error})")
-            time.sleep(1.5)
-            continue
-
-        kept = 0
-        for post in posts:
-            title = post.get("title", "")
-            body = post.get("selftext", "")[:2000]
-            haystack = f"{title}\n{body}"
-            if not INCLUDE.search(haystack) or EXCLUDE.search(title):
-                continue
-            candidate = to_candidate(post, sub)
-            if candidate["url"] in seen_urls:
-                continue
-            seen_urls.add(candidate["url"])
-            candidates.append(candidate)
-            kept += 1
-        print(f"r/{sub}: {len(posts)} posts, kept {kept}")
-        time.sleep(1.5)
-
-    candidates.sort(key=lambda c: c["score"], reverse=True)
 
     out_dir = pathlib.Path(__file__).parent / "scraped"
     out_dir.mkdir(exist_ok=True)
     out_path = out_dir / "reddit_candidates.json"
-    out_path.write_text(json.dumps(candidates, indent=2))
-    print(f"\n{len(candidates)} candidates -> {out_path}")
-    print("Review them, fix guessed fields, then add keepers to scripts/seed_opportunities.sql.")
+
+    # The pool is cumulative: reviewed entries keep every field the reviewer
+    # added; re-runs only append URLs the pool has never seen.
+    pool: dict[str, dict] = {}
+    if out_path.exists():
+        try:
+            for entry in json.loads(out_path.read_text()):
+                pool[entry["url"]] = entry
+        except (ValueError, KeyError):
+            print(f"warning: could not parse existing {out_path}; starting fresh")
+
+    known = len(pool)
+    new_count = 0
+
+    def consider(post: dict, source: str) -> None:
+        nonlocal new_count
+        if not looks_like_opportunity(post):
+            return
+        candidate = to_candidate(post, source)
+        if candidate["url"] in pool:
+            return
+        pool[candidate["url"]] = candidate
+        new_count += 1
+
+    for sub in SUBREDDITS:
+        try:
+            posts = harvest_listing(sub, token)
+        except requests.RequestException as error:
+            print(f"r/{sub}: skipped ({error})")
+            continue
+        before = new_count
+        for post in posts:
+            consider(post, f"r/{sub}")
+        print(f"r/{sub}: {len(posts)} posts, {new_count - before} new candidates")
+
+    for sub in SEARCH_SUBREDDITS:
+        for query in SEARCHES:
+            try:
+                posts = harvest_search(sub, query, token)
+            except requests.RequestException as error:
+                print(f"r/{sub} search '{query}': skipped ({error})")
+                continue
+            before = new_count
+            for post in posts:
+                consider(post, f"r/{sub} search:{query}")
+            if new_count > before:
+                print(f"r/{sub} search '{query}': {new_count - before} new")
+
+    ordered = sorted(pool.values(), key=lambda c: c.get("score", 0), reverse=True)
+    out_path.write_text(json.dumps(ordered, indent=2))
+
+    print(f"\npool: {known} known + {new_count} new = {len(ordered)} candidates")
+    print(f"-> {out_path}")
+    print("Review them, fix guessed fields, then add keepers to the seed catalog.")
 
 
 if __name__ == "__main__":
