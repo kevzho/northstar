@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { MotionConfig, motion, useScroll, useTransform } from "motion/react";
@@ -59,6 +60,26 @@ function Planet({ kind }: { kind: "moon" | "ringed" | "giant" }) {
         />
       ) : null}
     </div>
+  );
+}
+
+/* Line-art rocket, nose down — it rides the waypoint pathway with scroll. */
+function Ship({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 32"
+      aria-hidden="true"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinejoin="round"
+      strokeLinecap="round"
+    >
+      <path d="M12 30c3-2.6 4.8-6.2 4.8-10.2V12L12 3 7.2 12v7.8C7.2 23.8 9 27.4 12 30Z" />
+      <circle cx="12" cy="14" r="2.2" />
+      <path d="M7.2 17.5 3.5 21.5M16.8 17.5l3.7 4" />
+    </svg>
   );
 }
 
@@ -208,6 +229,12 @@ export default function Home() {
   const { resolvedTheme } = useTheme();
   const ink = resolvedTheme === "light";
   const { scrollY } = useScroll();
+  const pathwayRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: pathwayProgress } = useScroll({
+    target: pathwayRef,
+    offset: ["start 0.75", "end 0.75"],
+  });
+  const shipTop = useTransform(pathwayProgress, [0, 1], ["0%", "94%"]);
   const constellationY = useTransform(scrollY, [0, 600], [0, -70]);
   const constellationOpacity = useTransform(scrollY, [0, 600], [1, 0.3]);
 
@@ -284,11 +311,18 @@ export default function Home() {
           </h2>
           {/* The pathway: three worlds along a dashed course, revealed on
               scroll — the same shape as the product itself. */}
-          <div className="relative mt-12">
+          <div ref={pathwayRef} className="relative mt-12">
             <div
               aria-hidden
               className="absolute bottom-4 left-7 top-4 border-l border-dashed border-border"
             />
+            <motion.div
+              aria-hidden
+              style={{ top: shipTop }}
+              className="absolute left-7 z-10 -translate-x-1/2"
+            >
+              <Ship className="h-7 w-5 text-star" />
+            </motion.div>
             {waypoints.map((waypoint, index) => (
               <InView
                 key={waypoint.mark}

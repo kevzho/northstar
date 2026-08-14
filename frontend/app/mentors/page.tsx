@@ -10,13 +10,19 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { fetchMentors } from "@/lib/api";
+import { Button } from "@/components/ui/button";
+import { authedFetch, fetchMentors } from "@/lib/api";
 import type { MentorMatch } from "@/lib/api";
+import { buildIntroEmail, mailtoHref } from "@/lib/outreach";
+import type { StudentProfile } from "@/lib/types";
 
 export default function MentorsPage() {
   const [mentors, setMentors] = useState<MentorMatch[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [profile, setProfile] = useState<StudentProfile | null>(null);
+  const [draftFor, setDraftFor] = useState<string | null>(null);
+  const [copied, setCopied] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -29,9 +35,27 @@ export default function MentorsPage() {
       } finally {
         if (!cancelled) setLoading(false);
       }
+      // The profile personalizes email drafts; its absence only means the
+      // draft keeps its [EDIT] placeholders.
+      try {
+        const response = await authedFetch("/me");
+        const me = (await response.json()) as StudentProfile;
+        if (!cancelled) setProfile(me);
+      } catch {
+        if (!cancelled) setProfile(null);
+      }
     })();
     return () => { cancelled = true; };
   }, []);
+
+  async function copyDraft(mentorId: string, text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(mentorId);
+    } catch {
+      // Clipboard unavailable — the draft is still selectable text.
+    }
+  }
 
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
@@ -121,6 +145,61 @@ export default function MentorsPage() {
                 <p className="mt-3 text-xs leading-5 text-muted-foreground italic">
                   {score.explanation}
                 </p>
+                <div className="mt-4">
+                  <Button
+                    variant="outline"
+                    className="h-9 px-4 font-semibold"
+                    aria-expanded={draftFor === mentor.id}
+                    onClick={() =>
+                      setDraftFor(draftFor === mentor.id ? null : mentor.id)
+                    }
+                  >
+                    {draftFor === mentor.id ? "Hide draft" : "Draft intro email"}
+                  </Button>
+                </div>
+                {draftFor === mentor.id
+                  ? (() => {
+                      const draft = buildIntroEmail({ mentor, score }, profile);
+                      return (
+                        <div className="mt-4 rounded-md border border-border bg-panel-raised p-4">
+                          <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                            Subject
+                          </p>
+                          <p className="mt-1 text-sm font-semibold text-foreground">
+                            {draft.subject}
+                          </p>
+                          <p className="mt-3 font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                            Body — fill in every [EDIT] before sending
+                          </p>
+                          <pre className="mt-1 whitespace-pre-wrap font-sans text-sm leading-6 text-foreground">
+                            {draft.body}
+                          </pre>
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            <Button
+                              className="h-9 px-4 font-semibold"
+                              onClick={() =>
+                                copyDraft(
+                                  mentor.id,
+                                  `Subject: ${draft.subject}\n\n${draft.body}`,
+                                )
+                              }
+                            >
+                              {copied === mentor.id ? "Copied" : "Copy draft"}
+                            </Button>
+                            <Button
+                              variant="outline"
+                              render={
+                                <a href={mailtoHref(mentor.email, draft)} />
+                              }
+                              className="h-9 px-4 font-semibold"
+                            >
+                              Open in email app
+                            </Button>
+                          </div>
+                        </div>
+                      );
+                    })()
+                  : null}
               </article>
             ))}
           </section>
