@@ -139,7 +139,20 @@ def create_app() -> FastAPI:
         cat = sb.table("opportunities").select("*").execute()
         opportunities = cat.data or []
 
-        results = score_opportunities(student, opportunities)
+        # The student's own outcomes feed the collaborative term. Additive
+        # signal only — its absence must never block matching.
+        try:
+            logged = (
+                sb.table("outcomes")
+                .select("opportunity_id, status")
+                .eq("student_id", user.id)
+                .execute()
+            )
+            outcome_rows = logged.data or []
+        except Exception:
+            outcome_rows = []
+
+        results = score_opportunities(student, opportunities, outcome_rows)
         # Sanitize the opportunity dict to the shape the frontend expects.
         # DB uses ``opportunity_field``; TS expects ``field``.
         for r in results:

@@ -16,7 +16,11 @@ Design summary (selected by the student, see chat):
       - +0.10 when the student's grade is in ``[grade_min, grade_max]``
       - +0.10 for tag overlap (intersection of tags)
       - +0.05 for free opportunities (cost == 0)
-  4.  ``score = clip(0.5*tfidf + boosters, 0, 1)``
+  4.  ``score = clip(0.5*tfidf + boosters + collab, 0, 1)`` where
+      ``collab`` is a small centered collaborative term from app/collab.py
+      (ALS over logged outcomes): ``COLLAB_WEIGHT * (cf - 0.5)`` for
+      students who have logged outcomes, at most ±0.075. No outcomes or
+      no trained model → the term is exactly zero.
   5.  Generate a one-line ``explanation`` from the boosters that fired.
 
 Pure stdlib, no external NLP deps. ``math`` and ``collections`` only.
@@ -26,6 +30,8 @@ import math
 import re
 from collections import Counter
 from typing import Iterable
+
+from .collab import COLLAB_WEIGHT, collaborative_scores
 
 # Field-keyword mapping (student interest strings → opportunity_field enum)
 INTEREST_TO_FIELD = {
@@ -151,7 +157,7 @@ def _cosine(v1: dict[str, float], v2: dict[str, float]) -> float:
 
 
 def _explain(status_tf: float, field_match: bool, grade_fit: bool,
-             tag_overlap: int, free: bool) -> str:
+             tag_overlap: int, free: bool, collab_lift: bool = False) -> str:
     bits: list[str] = []
     if status_tf > 0.3:
         bits.append("strong semantic match")
@@ -165,6 +171,8 @@ def _explain(status_tf: float, field_match: bool, grade_fit: bool,
         bits.append(f"overlaps on {tag_overlap} tag(s)")
     if free:
         bits.append("fully funded")
+    if collab_lift:
+        bits.append("students with outcomes like yours did well here")
     if not bits:
         return "Ranked as a default suggestion."
     first = bits[0].capitalize()
@@ -172,12 +180,20 @@ def _explain(status_tf: float, field_match: bool, grade_fit: bool,
     return first + ((" — " + rest) if rest else ".")
 
 
-def score_opportunities(student: dict, opportunities: Iterable[dict]) -> list[dict]:
+def score_opportunities(
+    student: dict,
+    opportunities: Iterable[dict],
+    outcomes: list[dict] | None = None,
+) -> list[dict]:
     """Score an iterable of opportunities for one student.
 
     Each opportunity dict is expected to have the columns described in
     migration_002_northstar_schema.sql (title, host, opportunity_field or
     field, type, blurb, description, cost, grade_min, grade_max, tags, url).
+
+    ``outcomes`` is the student's own logged outcome rows
+    (``opportunity_id`` + ``status``); when present and a trained ALS
+    artifact exists, a small centered collaborative term joins the score.
 
     Returns a list of dict with keys ``opportunity``, ``score`` where
     score itself is a dict with ``opportunity_id``, ``score``, ``explanation``.
@@ -209,6 +225,13 @@ def score_opportunities(student: dict, opportunities: Iterable[dict]) -> list[di
         if mapped:
             student_fields.add(mapped)
 
+    # Collaborative signal: {} unless the student has logged outcomes AND a
+    # trained artifact exists — so the engine behaves identically to the
+    # pure TF-IDF version for brand-new students.
+    collab = collaborative_scores(
+        outcomes or [], [o.get("id") for o in opps if o.get("id")]
+    )
+
     results: list[dict] = []
     for opp, doc_v in zip(opps, doc_vectors):
         tfidf = _cosine(doc_v, qv)
@@ -235,13 +258,21 @@ def score_opportunities(student: dict, opportunities: Iterable[dict]) -> list[di
         if grade_fit:   boost += 0.10
         if tag_overlap: boost += 0.10
         if free:        boost += 0.05
-        score = min(0.5 * tfidf + boost, 1.0)
+
+        # Centered collaborative nudge: cf 0.5 means "no opinion" → 0.0.
+        cf = collab.get(opp.get("id"))
+        collab_term = COLLAB_WEIGHT * (cf - 0.5) if cf is not None else 0.0
+
+        score = max(0.0, min(0.5 * tfidf + boost + collab_term, 1.0))
         # Zero-out scores below a small noise floor so we don't surface
         # nothing-then-random entries at the very long tail.
         if tfidf == 0.0 and not field_match and not tag_overlap:
             score = min(score, 0.05)
 
-        explanation = _explain(tfidf, field_match, grade_fit, tag_overlap, free)
+        explanation = _explain(
+            tfidf, field_match, grade_fit, tag_overlap, free,
+            collab_lift=collab_term > 0.02,
+        )
         results.append({
             "opportunity": opp,
             "score": {
