@@ -8,6 +8,9 @@ verifies them by hand. Nothing here is done until the box is checked.
   "a judge might ask about this," with what to verify in each.
 - [submission.md](submission.md) — the remaining CAC deliverables
   (smoke test, video, disclosure) and operational tasks.
+- [roadmap.md](roadmap.md) — the post-MVP product direction (longitudinal
+  decision system). New feature ideas get tested against this before
+  they get built.
 
 Convention: when a new feature is added, its review items get appended to
 code-review.md under "Recently added" with the commit hash, then get sorted
