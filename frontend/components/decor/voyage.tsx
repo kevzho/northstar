@@ -4,11 +4,19 @@
  * the "interplanetary journey" reads as one system across pages.
  */
 
-export function Planet({ kind }: { kind: "moon" | "ringed" | "giant" }) {
+export function Planet({
+  kind,
+  className = "",
+}: {
+  kind: "moon" | "ringed" | "giant";
+  className?: string;
+}) {
   const size =
     kind === "moon" ? "h-8 w-8" : kind === "ringed" ? "h-10 w-10" : "h-14 w-14";
   return (
-    <div className="relative flex h-14 w-14 shrink-0 items-center justify-center">
+    <div
+      className={`relative flex h-14 w-14 shrink-0 items-center justify-center ${className}`}
+    >
       <div
         className={`${size} rounded-full bg-[radial-gradient(circle_at_32%_28%,var(--star-bright),var(--aurora-dim))]`}
       />

@@ -276,12 +276,12 @@ export default function Home() {
           <div ref={pathwayRef} className="relative mt-12">
             <div
               aria-hidden
-              className="absolute bottom-4 left-7 top-4 border-l border-dashed border-border"
+              className="absolute bottom-4 left-7 top-4 border-l border-dashed border-border lg:left-1/2"
             />
             <motion.div
               aria-hidden
               style={{ top: shipTop }}
-              className="absolute left-7 z-10 -translate-x-1/2"
+              className="absolute left-7 z-10 -translate-x-1/2 lg:left-1/2"
             >
               <Ship className="h-7 w-5 text-star" />
             </motion.div>
@@ -296,17 +296,30 @@ export default function Home() {
                 transition={{ duration: 0.55, delay: index * 0.1 }}
                 viewOptions={{ margin: "0px 0px -80px 0px" }}
               >
-                <div className="relative flex min-h-[80vh] items-center gap-6 sm:gap-10">
-                  <Planet kind={waypoint.planet} />
-                  <div className="max-w-xl pt-1">
-                    <p className="flex items-center gap-2 font-mono text-xs tracking-[0.2em] text-star">
+                <div className="relative flex min-h-[45vh] items-center gap-6 sm:gap-10 lg:grid lg:grid-cols-[1fr_3.5rem_1fr] lg:gap-x-12">
+                  <Planet
+                    kind={waypoint.planet}
+                    className="lg:col-start-2 lg:row-start-1 lg:justify-self-center"
+                  />
+                  <div
+                    className={
+                      index % 2 === 0
+                        ? "max-w-xl pt-1 lg:col-start-1 lg:row-start-1 lg:justify-self-end lg:text-right"
+                        : "max-w-xl pt-1 lg:col-start-3 lg:row-start-1"
+                    }
+                  >
+                    <p
+                      className={`flex items-center gap-2 font-mono text-xs tracking-[0.2em] text-star ${
+                        index % 2 === 0 ? "lg:justify-end" : ""
+                      }`}
+                    >
                       <StarGlyph className="h-3 w-3" />
                       {waypoint.mark}
                     </p>
-                    <h3 className="mt-2 text-xl font-semibold text-foreground">
+                    <h3 className="mt-3 text-2xl font-semibold text-foreground sm:text-3xl">
                       {waypoint.title}
                     </h3>
-                    <p className="mt-2 text-sm leading-7 text-muted-foreground">
+                    <p className="mt-3 text-base leading-8 text-muted-foreground">
                       {waypoint.description}
                     </p>
                   </div>

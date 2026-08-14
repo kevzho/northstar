@@ -170,6 +170,8 @@ export default function Starfield({
     const galaxySpecs = [
       { x: -46, y: 20, z: -70, scale: 34, tilt: 0.9, opacity: 0.34 },
       { x: 52, y: -18, z: -85, scale: 26, tilt: -0.6, opacity: 0.26 },
+      { x: 10, y: 34, z: -95, scale: 20, tilt: 0.4, opacity: 0.2 },
+      { x: -58, y: -30, z: -100, scale: 30, tilt: -1.1, opacity: 0.16 },
     ];
     for (const spec of galaxySpecs) {
       const geometry = new THREE.PlaneGeometry(spec.scale, spec.scale);
@@ -193,32 +195,108 @@ export default function Starfield({
     scene.add(keyLight);
     scene.add(new THREE.AmbientLight(0xffffff, ink ? 0.7 : 0.25));
 
-    const planetMaterial = new THREE.MeshStandardMaterial({
-      color: ink ? 0xdcdcdc : 0x8a8a8a,
-      roughness: 0.9,
+    // Surface detail is painted, not photographed: latitude bands with
+    // noise for the giant, speckled craters for the rock — still monochrome.
+    function bandedTexture() {
+      const w = 256;
+      const h = 128;
+      const canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        const light = ink ? 235 : 165;
+        ctx.fillStyle = `rgb(${light},${light},${light})`;
+        ctx.fillRect(0, 0, w, h);
+        let y = 0;
+        while (y < h) {
+          const bandHeight = 6 + rand() * 16;
+          const delta = Math.round((rand() - 0.5) * 60);
+          const tone = Math.max(60, Math.min(245, light + delta));
+          ctx.fillStyle = `rgba(${tone},${tone},${tone},0.85)`;
+          ctx.fillRect(0, y, w, bandHeight);
+          // ragged band edges so the stripes read as weather, not printing
+          for (let x = 0; x < w; x += 4) {
+            if (rand() > 0.6) {
+              ctx.fillRect(x, y + bandHeight - 2, 4, 2 + rand() * 3);
+            }
+          }
+          y += bandHeight;
+        }
+      }
+      const texture = new THREE.CanvasTexture(canvas);
+      disposables.push(texture);
+      return texture;
+    }
+
+    function crateredTexture() {
+      const size = 256;
+      const canvas = document.createElement("canvas");
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        const light = ink ? 228 : 150;
+        ctx.fillStyle = `rgb(${light},${light},${light})`;
+        ctx.fillRect(0, 0, size, size);
+        for (let i = 0; i < 90; i += 1) {
+          const radius = 2 + rand() * 10;
+          const x = rand() * size;
+          const y = rand() * size;
+          const tone = light + (rand() - 0.6) * 70;
+          ctx.fillStyle = `rgba(${tone},${tone},${tone},0.55)`;
+          ctx.beginPath();
+          ctx.arc(x, y, radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      const texture = new THREE.CanvasTexture(canvas);
+      disposables.push(texture);
+      return texture;
+    }
+
+    const giantMaterial = new THREE.MeshStandardMaterial({
+      map: bandedTexture(),
+      roughness: 0.85,
       metalness: 0,
     });
-    disposables.push(planetMaterial);
+    const rockMaterial = new THREE.MeshStandardMaterial({
+      map: crateredTexture(),
+      roughness: 0.95,
+      metalness: 0,
+    });
+    disposables.push(giantMaterial, rockMaterial);
 
     const planets: THREE.Mesh[] = [];
 
     const planetA = new THREE.Mesh(
-      new THREE.SphereGeometry(3.2, 40, 40),
-      planetMaterial,
+      new THREE.SphereGeometry(3.2, 48, 48),
+      giantMaterial,
     );
     disposables.push(planetA.geometry);
     planetA.position.set(18, 26, -58);
+    planetA.rotation.z = 0.3;
     scene.add(planetA);
     planets.push(planetA);
 
     const planetB = new THREE.Mesh(
-      new THREE.SphereGeometry(1.9, 36, 36),
-      planetMaterial,
+      new THREE.SphereGeometry(1.9, 40, 40),
+      rockMaterial,
     );
     disposables.push(planetB.geometry);
     planetB.position.set(-60, -36, -60);
     scene.add(planetB);
     planets.push(planetB);
+
+    // A small distant moon keeps the middle distance from feeling empty.
+    const moonlet = new THREE.Mesh(
+      new THREE.SphereGeometry(0.9, 28, 28),
+      rockMaterial,
+    );
+    disposables.push(moonlet.geometry);
+    moonlet.position.set(48, -22, -70);
+    scene.add(moonlet);
+    planets.push(moonlet);
 
     const ringGeometry = new THREE.RingGeometry(2.9, 4.4, 64);
     const ringMaterial = new THREE.MeshBasicMaterial({
@@ -261,8 +339,9 @@ export default function Starfield({
         if (shell.position.z > 40) shell.position.z -= 80;
       }
       // Galaxies rotate on geological time; planets barely turn.
-      galaxies[0].rotation.z += 0.0004;
-      galaxies[1].rotation.z -= 0.0003;
+      for (let i = 0; i < galaxies.length; i += 1) {
+        galaxies[i].rotation.z += (i % 2 === 0 ? 1 : -1) * (0.0004 - i * 0.00006);
+      }
       for (const planet of planets) planet.rotation.y += 0.0008;
       // Pointer lean, eased so it feels like weight rather than tracking.
       camera.rotation.y += (pointerX * -0.03 - camera.rotation.y) * 0.05;
