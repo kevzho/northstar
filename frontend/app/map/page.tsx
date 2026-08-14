@@ -121,7 +121,7 @@ export default function MapPage() {
       .data(links)
       .enter()
       .append("line")
-      .attr("stroke", "#3b4a78")
+      .attr("stroke", "#3f3f3f")
       .attr("stroke-width", (d) => Math.max(1, d.weight * 4))
       .attr("stroke-opacity", 0.7);
 
@@ -132,8 +132,8 @@ export default function MapPage() {
       .enter()
       .append("circle")
       .attr("r", (d) => 8 + (d as GraphNode).score * 20)
-      .attr("fill", (d) => fieldColors[(d as GraphNode).field] ?? "#8b97b8")
-      .attr("stroke", "#0a1020")
+      .attr("fill", (d) => fieldColors[(d as GraphNode).field] ?? "#9e9e9e")
+      .attr("stroke", "#0a0a0a")
       .attr("stroke-width", 1.5)
       .style("cursor", "pointer");
 
@@ -145,7 +145,7 @@ export default function MapPage() {
       .append("text")
       .text((d) => (d as GraphNode).title.slice(0, 20))
       .attr("font-size", 10)
-      .attr("fill", "#c7d0e8")
+      .attr("fill", "#d4d4d4")
       .attr("dx", 12)
       .attr("dy", 4)
       .style("pointer-events", "none");

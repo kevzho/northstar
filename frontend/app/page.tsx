@@ -22,16 +22,19 @@ const waypoints = [
   },
 ];
 
-/* Four-point star — the Northstar glyph used across the app chrome. */
+/* The Northstar mark — a four-point star with a counter-star cut out. */
 function StarGlyph({ className }: { className?: string }) {
   return (
     <svg
-      viewBox="0 0 24 24"
+      viewBox="0 0 100 100"
       aria-hidden="true"
       className={className}
       fill="currentColor"
     >
-      <path d="M12 1.5 14.2 9.8 22.5 12 14.2 14.2 12 22.5 9.8 14.2 1.5 12 9.8 9.8Z" />
+      <path
+        fillRule="evenodd"
+        d="M50 0Q56 40 100 50 56 60 50 100 44 60 0 50 44 40 50 0ZM50 28Q54 46 72 50 54 54 50 72 46 54 28 50 46 46 50 28Z"
+      />
     </svg>
   );
 }
