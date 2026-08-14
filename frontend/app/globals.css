@@ -1,4 +1,8 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
 
 /*
  * Northstar design system — "the night atlas".
@@ -7,25 +11,22 @@
  * night: deep indigo sky (never pure black), starlight gold as the single
  * accent (Polaris), aurora teal for wayfinding links, and mono type for
  * every number so scores read like instrument coordinates.
+ *
+ * shadcn's semantic tokens are mapped directly onto this palette — the app
+ * is permanently dark, so :root is the only theme.
  */
 :root {
   color-scheme: dark;
-  --background: #0a1020;
-  --foreground: #e8ecf8;
-  --muted: #9aa6c3;
-  --panel: #111a31;
-  --panel-raised: #18233f;
-  --border: #283354;
-  --border-bright: #3b4a78;
 
-  /* Polaris — the one accent. Buttons carry dark text for contrast. */
+  /* Night-atlas primitives */
   --star: #efb95c;
   --star-bright: #f7cd80;
   --on-star: #221604;
-
-  /* Aurora — links, secondary highlights, positive states. */
   --aurora: #7dd3c8;
   --aurora-dim: #4c9d93;
+  --panel: #111a31;
+  --panel-raised: #18233f;
+  --border-bright: #3b4a78;
 
   --success-bg: #12281f;
   --success-border: #2c5c42;
@@ -34,10 +35,31 @@
   --error-border: #6b3328;
   --error-text: #f2b8a5;
 
-  /* Back-compat aliases: pages reference these token names throughout. */
-  --northstar: var(--star);
-  --northstar-dark: var(--star-bright);
-  --amber: var(--aurora);
+  /* shadcn semantic tokens, resolved to the atlas palette */
+  --background: #0a1020;
+  --foreground: #e8ecf8;
+  --card: var(--panel);
+  --card-foreground: var(--foreground);
+  --popover: var(--panel-raised);
+  --popover-foreground: var(--foreground);
+  --primary: var(--star);
+  --primary-foreground: var(--on-star);
+  --secondary: var(--panel-raised);
+  --secondary-foreground: var(--foreground);
+  --muted: var(--panel-raised);
+  --muted-foreground: #9aa6c3;
+  --accent: #1e2a4c;
+  --accent-foreground: var(--foreground);
+  --destructive: #f2b8a5;
+  --border: #283354;
+  --input: var(--border-bright);
+  --ring: var(--star);
+  --chart-1: #6c9ef8;
+  --chart-2: #56d394;
+  --chart-3: #c08bf5;
+  --chart-4: #f09a62;
+  --chart-5: #55c7de;
+  --radius: 0.5rem;
 }
 
 @theme inline {
@@ -46,17 +68,57 @@
   --font-sans: var(--font-body), ui-sans-serif, sans-serif;
   --font-mono: var(--font-coords), ui-monospace, monospace;
   --font-display: var(--font-atlas), serif;
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Atlas extras exposed as utilities: text-star, text-aurora, bg-panel-raised… */
+  --color-star: var(--star);
+  --color-star-bright: var(--star-bright);
+  --color-on-star: var(--on-star);
+  --color-aurora: var(--aurora);
+  --color-aurora-dim: var(--aurora-dim);
+  --color-panel: var(--panel);
+  --color-panel-raised: var(--panel-raised);
 }
 
-body {
-  background-color: var(--background);
-  /* A faint nebula glow up top and one low on the horizon. */
-  background-image:
-    radial-gradient(ellipse 90% 50% at 70% -10%, rgba(52, 68, 122, 0.55), transparent 60%),
-    radial-gradient(ellipse 70% 40% at 10% 110%, rgba(30, 58, 66, 0.5), transparent 65%);
-  background-attachment: fixed;
-  color: var(--foreground);
-  font-family: var(--font-body), ui-sans-serif, sans-serif;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+    /* A faint nebula glow up top and one low on the horizon. */
+    background-image:
+      radial-gradient(ellipse 90% 50% at 70% -10%, rgba(52, 68, 122, 0.55), transparent 60%),
+      radial-gradient(ellipse 70% 40% at 10% 110%, rgba(30, 58, 66, 0.5), transparent 65%);
+    background-attachment: fixed;
+  }
 }
 
 a,
@@ -105,53 +167,6 @@ button:disabled {
     color: var(--aurora);
   }
 
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.375rem;
-    background: var(--star);
-    color: var(--on-star);
-    font-weight: 600;
-    font-size: 0.875rem;
-    transition: background-color 200ms ease, transform 200ms ease;
-  }
-  .btn-primary:hover {
-    background: var(--star-bright);
-  }
-  .btn-primary:disabled {
-    opacity: 0.55;
-  }
-
-  .btn-secondary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.375rem;
-    border: 1px solid var(--border-bright);
-    background: var(--panel);
-    color: var(--foreground);
-    font-weight: 600;
-    font-size: 0.875rem;
-    transition: border-color 200ms ease, background-color 200ms ease;
-  }
-  .btn-secondary:hover {
-    border-color: var(--star);
-  }
-
-  .card {
-    border-radius: 0.5rem;
-    border: 1px solid var(--border);
-    background: var(--panel);
-  }
-
-  .card-hover {
-    transition: border-color 200ms ease, transform 200ms ease;
-  }
-  .card-hover:hover {
-    border-color: var(--star);
-  }
-
   /* Fit readings: score badges set in mono, like an instrument dial. */
   .badge-fit {
     display: inline-flex;
@@ -167,21 +182,6 @@ button:disabled {
     letter-spacing: 0.06em;
     color: var(--star-bright);
     white-space: nowrap;
-  }
-
-  .input-field {
-    border-radius: 0.375rem;
-    border: 1px solid var(--border-bright);
-    background: var(--panel-raised);
-    color: var(--foreground);
-    outline: none;
-    transition: border-color 200ms ease;
-  }
-  .input-field::placeholder {
-    color: var(--muted);
-  }
-  .input-field:focus {
-    border-color: var(--star);
   }
 }
 
@@ -240,9 +240,5 @@ button:disabled {
   }
   .polaris-halo {
     animation: none;
-  }
-  .card-hover,
-  .btn-primary {
-    transition: none;
   }
 }

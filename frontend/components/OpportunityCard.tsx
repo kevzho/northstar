@@ -32,29 +32,29 @@ export function OpportunityCard({ opportunity }: { opportunity: Opportunity }) {
     : "Rolling deadline";
 
   return (
-    <article className="card card-hover p-5">
+    <article className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
       <div className="flex items-center justify-between gap-3">
-        <span className="font-mono text-xs uppercase tracking-[0.16em] text-[var(--aurora)]">
+        <span className="font-mono text-xs uppercase tracking-[0.16em] text-aurora">
           {typeLabels[opportunity.type]}
         </span>
-        <span className="font-mono text-xs text-[var(--muted)]">{due}</span>
+        <span className="font-mono text-xs text-muted-foreground">{due}</span>
       </div>
-      <h2 className="mt-3 text-xl font-semibold text-[var(--foreground)]">
+      <h2 className="mt-3 text-xl font-semibold text-foreground">
         {opportunity.title}
       </h2>
-      <p className="mt-1 text-sm font-medium text-[var(--muted)]">
+      <p className="mt-1 text-sm font-medium text-muted-foreground">
         {opportunity.host}
       </p>
-      <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+      <p className="mt-3 text-sm leading-6 text-muted-foreground">
         {opportunity.blurb}
       </p>
       <div className="mt-4 flex items-center justify-between gap-3">
-        <span className="text-xs font-semibold text-[var(--aurora)]">
+        <span className="text-xs font-semibold text-aurora">
           {fieldLabels[opportunity.field]}
         </span>
         <Link
           href={`/opportunities/${opportunity.id}`}
-          className="text-sm font-semibold text-[var(--star)] transition hover:text-[var(--star-bright)]"
+          className="text-sm font-semibold text-star transition hover:text-star-bright"
         >
           View details
         </Link>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const waypoints = [
   {
@@ -164,35 +165,35 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       <section className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-6 py-8 sm:px-8 lg:px-10">
-        <nav className="flex items-center justify-between border-b border-[var(--border)] pb-5">
+        <nav className="flex items-center justify-between border-b border-border pb-5">
           <Link
             href="/"
-            className="flex items-center gap-2 text-lg tracking-tight text-[var(--foreground)]"
+            className="flex items-center gap-2 text-lg tracking-tight text-foreground"
           >
-            <StarGlyph className="h-4 w-4 text-[var(--star)]" />
+            <StarGlyph className="h-4 w-4 text-star" />
             <span className="h-display text-xl">Northstar</span>
           </Link>
           <div className="flex items-center gap-3">
             <Link
               href="/login"
-              className="text-sm font-semibold text-[var(--aurora)]"
+              className="text-sm font-semibold text-aurora"
             >
               Sign in
             </Link>
-            <Link href="/assessment" className="btn-primary px-4 py-2">
+            <Button render={<Link href="/assessment" />} className="px-4 py-2 font-semibold">
               Start assessment
-            </Link>
+            </Button>
           </div>
         </nav>
 
         <div className="grid flex-1 items-center gap-12 py-14 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
             <p className="eyebrow">A student-built opportunity map</p>
-            <h1 className="h-display mt-5 max-w-3xl text-5xl leading-[1.05] text-[var(--foreground)] sm:text-6xl lg:text-7xl">
+            <h1 className="h-display mt-5 max-w-3xl text-5xl leading-[1.05] text-foreground sm:text-6xl lg:text-7xl">
               Every student deserves a{" "}
-              <span className="italic text-[var(--star)]">north star</span>.
+              <span className="italic text-star">north star</span>.
             </h1>
-            <p className="mt-7 max-w-2xl text-base leading-8 text-[var(--muted)] sm:text-lg">
+            <p className="mt-7 max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">
               Most students never hear about the research programs,
               scholarships, and competitions they were qualified for. Northstar
               starts with how you actually think and work — eight behavioral
@@ -200,12 +201,12 @@ export default function Home() {
               opportunities with a reason attached to every one.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <Link href="/login" className="btn-primary h-12 px-6">
+              <Button render={<Link href="/login" />} className="h-12 px-6 font-semibold">
                 Sign in to start
-              </Link>
-              <Link href="/assessment" className="btn-secondary h-12 px-6">
+              </Button>
+              <Button variant="outline" render={<Link href="/assessment" />} className="h-12 px-6 font-semibold">
                 Try the assessment first
-              </Link>
+              </Button>
             </div>
           </div>
 
@@ -213,20 +214,20 @@ export default function Home() {
         </div>
 
         <section aria-label="How Northstar works" className="pb-16">
-          <h2 className="h-display text-2xl text-[var(--foreground)] sm:text-3xl">
+          <h2 className="h-display text-2xl text-foreground sm:text-3xl">
             How you find it
           </h2>
           <div className="mt-6 grid gap-4 lg:grid-cols-3">
             {waypoints.map((waypoint) => (
-              <article key={waypoint.mark} className="card p-5">
-                <p className="flex items-center gap-2 font-mono text-xs tracking-[0.2em] text-[var(--star)]">
+              <article key={waypoint.mark} className="rounded-lg border bg-card p-5">
+                <p className="flex items-center gap-2 font-mono text-xs tracking-[0.2em] text-star">
                   <StarGlyph className="h-3 w-3" />
                   {waypoint.mark}
                 </p>
-                <h3 className="mt-4 text-xl font-semibold text-[var(--foreground)]">
+                <h3 className="mt-4 text-xl font-semibold text-foreground">
                   {waypoint.title}
                 </h3>
-                <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
                   {waypoint.description}
                 </p>
               </article>
@@ -234,8 +235,8 @@ export default function Home() {
           </div>
         </section>
 
-        <footer className="border-t border-[var(--border)] py-6">
-          <p className="font-mono text-xs tracking-wide text-[var(--muted)]">
+        <footer className="border-t border-border py-6">
+          <p className="font-mono text-xs tracking-wide text-muted-foreground">
             Built by a high school student for the Congressional App Challenge.
           </p>
         </footer>

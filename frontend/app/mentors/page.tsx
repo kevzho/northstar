@@ -36,16 +36,16 @@ export default function MentorsPage() {
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-4xl">
-        <div className="flex items-center justify-between border-b border-[var(--border)] pb-5">
+        <div className="flex items-center justify-between border-b border-border pb-5">
           <Link
             href="/dashboard"
-            className="h-display text-xl text-[var(--foreground)]"
+            className="h-display text-xl text-foreground"
           >
             Northstar
           </Link>
           <Link
             href="/dashboard"
-            className="text-sm font-semibold text-[var(--aurora)]"
+            className="text-sm font-semibold text-aurora"
           >
             Back to dashboard
           </Link>
@@ -53,37 +53,37 @@ export default function MentorsPage() {
 
         <header className="mt-10">
           <p className="eyebrow">Mentors</p>
-          <h1 className="h-display mt-3 text-4xl text-[var(--foreground)]">
+          <h1 className="h-display mt-3 text-4xl text-foreground">
             Mentor recommendations
           </h1>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--muted)]">
+          <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
             Ranked by how well their expertise aligns with your profile.
             Reach out to mentors you want to work with.
           </p>
         </header>
 
         {loading ? (
-          <section className="card mt-10 p-8 text-center">
-            <p className="font-mono text-sm text-[var(--muted)]">
+          <section className="rounded-lg border bg-card mt-10 p-8 text-center">
+            <p className="font-mono text-sm text-muted-foreground">
               Finding mentors that match your profile...
             </p>
           </section>
         ) : error ? (
-          <section className="card mt-10 p-8 text-center">
-            <h2 className="text-xl font-semibold text-[var(--foreground)]">
+          <section className="rounded-lg border bg-card mt-10 p-8 text-center">
+            <h2 className="text-xl font-semibold text-foreground">
               Could not load mentors
             </h2>
-            <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">
               The mentor matching engine may not have seed data yet. Run
               scripts/seed_mentors.sql in the Supabase SQL Editor.
             </p>
           </section>
         ) : mentors.length === 0 ? (
-          <section className="card mt-10 p-8 text-center">
-            <h2 className="text-xl font-semibold text-[var(--foreground)]">
+          <section className="rounded-lg border bg-card mt-10 p-8 text-center">
+            <h2 className="text-xl font-semibold text-foreground">
               No mentors yet
             </h2>
-            <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">
               Mentor data has not been seeded. Run scripts/seed_mentors.sql
               to populate the catalog.
             </p>
@@ -91,34 +91,34 @@ export default function MentorsPage() {
         ) : (
           <section className="mt-8 grid gap-4">
             {mentors.slice(0, 5).map(({ mentor, score }) => (
-              <article key={mentor.id} className="card p-5">
+              <article key={mentor.id} className="rounded-lg border bg-card p-5">
                 <div className="flex items-center gap-3">
                   <span className="badge-fit">
                     {Math.round(score.score * 100)}% fit
                   </span>
                   <div>
-                    <h2 className="text-lg font-semibold text-[var(--foreground)]">
+                    <h2 className="text-lg font-semibold text-foreground">
                       {mentor.name}
                     </h2>
-                    <p className="font-mono text-xs text-[var(--muted)]">
+                    <p className="font-mono text-xs text-muted-foreground">
                       {mentor.email}
                     </p>
                   </div>
                 </div>
-                <p className="mt-3 text-sm leading-6 text-[var(--foreground)]">
+                <p className="mt-3 text-sm leading-6 text-foreground">
                   {mentor.bio}
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {mentor.expertise.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded border border-[var(--border-bright)] bg-[var(--panel-raised)] px-2 py-0.5 text-xs font-medium text-[var(--aurora)]"
+                      className="rounded border border-input bg-panel-raised px-2 py-0.5 text-xs font-medium text-aurora"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
-                <p className="mt-3 text-xs leading-5 text-[var(--muted)] italic">
+                <p className="mt-3 text-xs leading-5 text-muted-foreground italic">
                   {score.explanation}
                 </p>
               </article>

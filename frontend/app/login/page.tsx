@@ -1,6 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 
@@ -52,13 +55,13 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-5xl flex-col">
-        <nav className="flex items-center justify-between border-b border-[var(--border)] pb-5">
-          <Link href="/" className="h-display text-xl text-[var(--foreground)]">
+        <nav className="flex items-center justify-between border-b border-border pb-5">
+          <Link href="/" className="h-display text-xl text-foreground">
             Northstar
           </Link>
           <Link
             href="/"
-            className="text-sm font-semibold text-[var(--aurora)]"
+            className="text-sm font-semibold text-aurora"
           >
             Back home
           </Link>
@@ -67,55 +70,55 @@ export default function LoginPage() {
         <section className="grid flex-1 items-center gap-10 py-12 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
             <p className="eyebrow">Student sign in</p>
-            <h1 className="h-display mt-4 text-4xl text-[var(--foreground)] sm:text-5xl">
+            <h1 className="h-display mt-4 text-4xl text-foreground sm:text-5xl">
               Start with Northstar.
             </h1>
-            <p className="mt-5 max-w-xl text-base leading-8 text-[var(--muted)]">
+            <p className="mt-5 max-w-xl text-base leading-8 text-muted-foreground">
               Sign in to save your assessment, trait profile, future paths, and
               30-day plan.
             </p>
           </div>
 
-          <div className="card p-5 sm:p-6">
-            <button
+          <div className="rounded-lg border bg-card p-5 sm:p-6">
+            <Button
               type="button"
               onClick={signInWithGoogle}
-              className="btn-primary h-12 w-full px-5"
+              className="h-12 w-full px-5 font-semibold"
             >
               Continue with Google
-            </button>
+            </Button>
 
             <div className="my-6 flex items-center gap-3">
               <div className="h-px flex-1 bg-[var(--border)]" />
-              <span className="font-mono text-xs uppercase tracking-[0.16em] text-[var(--muted)]">
+              <span className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
                 or
               </span>
               <div className="h-px flex-1 bg-[var(--border)]" />
             </div>
 
             <form onSubmit={sendMagicLink} className="grid gap-3">
-              <label
+              <Label
                 htmlFor="email"
-                className="text-sm font-semibold text-[var(--foreground)]"
+                className="text-sm font-semibold text-foreground"
               >
                 Email address
-              </label>
-              <input
+              </Label>
+              <Input
                 id="email"
                 type="email"
                 required
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="you@example.com"
-                className="input-field h-12 px-4 text-base"
+                className="h-12 bg-panel-raised px-4 text-base"
               />
-              <button
+              <Button variant="outline"
                 type="submit"
                 disabled={isSubmitting}
-                className="btn-secondary mt-2 h-12 px-5"
+                className="mt-2 h-12 px-5 font-semibold"
               >
                 {isSubmitting ? "Sending..." : "Send magic link"}
-              </button>
+              </Button>
             </form>
 
             {status ? (

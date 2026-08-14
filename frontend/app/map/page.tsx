@@ -14,6 +14,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import * as d3 from "d3";
 
@@ -218,16 +219,16 @@ export default function MapPage() {
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
-        <div className="flex items-center justify-between border-b border-[var(--border)] pb-5">
+        <div className="flex items-center justify-between border-b border-border pb-5">
           <Link
             href="/dashboard"
-            className="h-display text-xl text-[var(--foreground)]"
+            className="h-display text-xl text-foreground"
           >
             Northstar
           </Link>
           <Link
             href="/dashboard"
-            className="text-sm font-semibold text-[var(--aurora)]"
+            className="text-sm font-semibold text-aurora"
           >
             Back to dashboard
           </Link>
@@ -235,10 +236,10 @@ export default function MapPage() {
 
         <header className="mt-10">
           <p className="eyebrow">Pathway map</p>
-          <h1 className="h-display mt-3 text-4xl text-[var(--foreground)]">
+          <h1 className="h-display mt-3 text-4xl text-foreground">
             Your night sky
           </h1>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--muted)]">
+          <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
             Each node is an opportunity matched to your profile. Edges connect
             programs that share a field or tags — your pathway through STEM.
             Click any node to see details.
@@ -253,7 +254,7 @@ export default function MapPage() {
                 className="inline-block h-3 w-3 rounded-full"
                 style={{ backgroundColor: color }}
               />
-              <span className="font-mono text-xs capitalize text-[var(--muted)]">
+              <span className="font-mono text-xs capitalize text-muted-foreground">
                 {field}
               </span>
             </div>
@@ -261,28 +262,28 @@ export default function MapPage() {
         </section>
 
         {loading ? (
-          <section className="card mt-10 p-8 text-center">
-            <p className="font-mono text-sm text-[var(--muted)]">
+          <section className="rounded-lg border bg-card mt-10 p-8 text-center">
+            <p className="font-mono text-sm text-muted-foreground">
               Building your pathway map...
             </p>
           </section>
         ) : !data || data.nodes.length === 0 ? (
-          <section className="card mt-10 p-8 text-center">
-            <h2 className="text-xl font-semibold text-[var(--foreground)]">
+          <section className="rounded-lg border bg-card mt-10 p-8 text-center">
+            <h2 className="text-xl font-semibold text-foreground">
               No map yet
             </h2>
-            <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">
               Complete onboarding and run the seed data to populate your
               pathway graph.
             </p>
-            <Link href="/onboarding" className="btn-primary mt-6 h-11 px-5">
+            <Button render={<Link href="/onboarding" />} className="mt-6 h-11 px-5 font-semibold">
               Go to onboarding
-            </Link>
+            </Button>
           </section>
         ) : (
-          <section className="card mt-8 p-4">
+          <section className="rounded-lg border bg-card mt-8 p-4">
             <svg ref={svgRef} className="block w-full" />
-            <p className="mt-3 text-xs leading-5 text-[var(--muted)]">
+            <p className="mt-3 text-xs leading-5 text-muted-foreground">
               Scroll or pinch to zoom, drag the background to pan, drag a node to
               reposition it. Tap a node to open the opportunity.
             </p>

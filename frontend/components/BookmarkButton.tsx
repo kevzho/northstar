@@ -10,6 +10,7 @@
  */
 
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { fetchBookmarks, bookmarkOpportunity, removeBookmark } from "@/lib/api";
 
 export function BookmarkButton({ opportunityId }: { opportunityId: string }) {
@@ -49,15 +50,13 @@ export function BookmarkButton({ opportunityId }: { opportunityId: string }) {
   }
 
   return (
-    <button
-      type="button"
+    <Button
+      variant={bookmarked ? "default" : "outline"}
       onClick={toggle}
       disabled={loading}
-      className={
-        bookmarked ? "btn-primary h-12 px-6" : "btn-secondary h-12 px-6"
-      }
+      className="h-12 px-6 text-sm font-semibold"
     >
       {loading ? "..." : bookmarked ? "Bookmarked" : "Bookmark"}
-    </button>
+    </Button>
   );
 }

@@ -10,6 +10,8 @@
  */
 
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { useRouter } from "next/navigation";
 import { assessmentQuestions } from "@/lib/assessment";
 import { isComplete } from "@/lib/scoring";
@@ -34,47 +36,45 @@ export default function AssessmentPage() {
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
-        <header className="flex flex-col gap-4 border-b border-[var(--border)] pb-6 sm:flex-row sm:items-start sm:justify-between">
+        <header className="flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <Link
               href="/"
-              className="text-sm font-semibold text-[var(--aurora)]"
+              className="text-sm font-semibold text-aurora"
             >
               Northstar
             </Link>
-            <h1 className="h-display mt-3 text-4xl text-[var(--foreground)]">
+            <h1 className="h-display mt-3 text-4xl text-foreground">
               Assessment
             </h1>
-            <p className="mt-3 max-w-2xl text-base leading-7 text-[var(--muted)]">
+            <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
               Eight behavioral prompts that reveal how a student builds,
               analyzes, collaborates, moves through uncertainty, and handles
               risk. Pick the option that fits best — there are no wrong answers.
             </p>
           </div>
-          <button
-            type="button"
+          <Button
             disabled={!complete}
             onClick={() => router.push("/profile")}
-            className="btn-primary h-11 shrink-0 px-5"
+            className="h-11 shrink-0 px-5 font-semibold"
           >
             {complete ? "See your profile" : `${answered} of ${total} answered`}
-          </button>
+          </Button>
         </header>
 
-        <div className="mt-6 h-2 overflow-hidden rounded-full bg-[var(--panel-raised)]">
-          <div
-            className="h-full rounded-full bg-[var(--star)] transition-all"
-            style={{ width: `${(answered / total) * 100}%` }}
-          />
-        </div>
+        <Progress
+          value={(answered / total) * 100}
+          aria-label="Assessment progress"
+          className="mt-6"
+        />
 
         <section className="mt-8 grid gap-4">
           {assessmentQuestions.map((question, index) => (
-            <article key={question.id} className="card p-5">
-              <p className="font-mono text-xs tracking-[0.2em] text-[var(--star)]">
+            <article key={question.id} className="rounded-lg border bg-card p-5">
+              <p className="font-mono text-xs tracking-[0.2em] text-star">
                 {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
               </p>
-              <h2 className="mt-2 text-xl font-semibold text-[var(--foreground)]">
+              <h2 className="mt-2 text-xl font-semibold text-foreground">
                 {question.prompt}
               </h2>
               <div
@@ -93,11 +93,11 @@ export default function AssessmentPage() {
                       onClick={() => choose(question.id, choice.id)}
                       className={
                         selected
-                          ? "rounded-md border-2 border-[var(--star)] bg-[rgba(239,185,92,0.1)] p-4 text-left transition"
-                          : "rounded-md border-2 border-[var(--border)] bg-[var(--panel)] p-4 text-left transition hover:border-[var(--border-bright)]"
+                          ? "rounded-md border-2 border-star bg-star/10 p-4 text-left transition"
+                          : "rounded-md border-2 border-border bg-card p-4 text-left transition hover:border-input"
                       }
                     >
-                      <p className="text-sm leading-6 text-[var(--foreground)]">
+                      <p className="text-sm leading-6 text-foreground">
                         {choice.label}
                       </p>
                     </button>
@@ -109,19 +109,18 @@ export default function AssessmentPage() {
         </section>
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="font-mono text-sm text-[var(--muted)]">
+          <p className="font-mono text-sm text-muted-foreground">
             {complete
               ? "All eight answered — your trait profile is ready."
               : `${left} ${left === 1 ? "question" : "questions"} left.`}
           </p>
-          <button
-            type="button"
+          <Button
             disabled={!complete}
             onClick={() => router.push("/profile")}
-            className="btn-primary h-11 px-5"
+            className="h-11 px-5 font-semibold"
           >
             Continue to profile
-          </button>
+          </Button>
         </div>
       </div>
     </main>

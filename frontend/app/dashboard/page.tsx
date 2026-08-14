@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/use-auth";
 import { authedFetch, saveStudentProfile, fetchMatches, fetchOutcomes } from "@/lib/api";
@@ -86,7 +87,7 @@ export default function DashboardPage() {
   if (loading || checking) {
     return (
       <main className="flex min-h-screen items-center justify-center px-6">
-        <p className="font-mono text-sm text-[var(--muted)]">
+        <p className="font-mono text-sm text-muted-foreground">
           {checking ? "Checking your profile..." : "Loading Northstar..."}
         </p>
       </main>
@@ -96,16 +97,16 @@ export default function DashboardPage() {
   if (!user) {
     return (
       <main className="flex min-h-screen items-center justify-center px-6">
-        <div className="card w-full max-w-md p-6 text-center">
-          <h1 className="h-display text-3xl text-[var(--foreground)]">
+        <div className="rounded-lg border bg-card w-full max-w-md p-6 text-center">
+          <h1 className="h-display text-3xl text-foreground">
             Sign in required
           </h1>
-          <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-3 text-sm leading-6 text-muted-foreground">
             You need a Northstar session before opening the dashboard.
           </p>
-          <Link href="/login" className="btn-primary mt-6 h-11 px-5">
+          <Button render={<Link href="/login" />} className="mt-6 h-11 px-5 font-semibold">
             Go to login
-          </Link>
+          </Button>
         </div>
       </main>
     );
@@ -114,25 +115,25 @@ export default function DashboardPage() {
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
-        <nav className="flex flex-col gap-4 border-b border-[var(--border)] pb-5 sm:flex-row sm:items-center sm:justify-between">
-          <Link href="/" className="h-display text-xl text-[var(--foreground)]">
+        <nav className="flex flex-col gap-4 border-b border-border pb-5 sm:flex-row sm:items-center sm:justify-between">
+          <Link href="/" className="h-display text-xl text-foreground">
             Northstar
           </Link>
-          <button
+          <Button variant="outline"
             type="button"
             onClick={signOut}
-            className="btn-secondary h-10 px-4"
+            className="h-10 px-4 font-semibold"
           >
             Sign out
-          </button>
+          </Button>
         </nav>
 
         <header className="py-10">
           <p className="eyebrow">Signed in</p>
-          <h1 className="h-display mt-3 text-4xl text-[var(--foreground)]">
+          <h1 className="h-display mt-3 text-4xl text-foreground">
             Welcome{user.email ? `, ${user.email}` : ""}.
           </h1>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--muted)]">
+          <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
             Your matches refresh each time you visit — the latest TF-IDF
             scores are always ready below.
           </p>
@@ -140,26 +141,26 @@ export default function DashboardPage() {
 
         {/* Recommendations preview — top 4 matches */}
         {matches === null ? (
-          <section className="card mb-10 p-6 text-center">
-            <p className="font-mono text-sm text-[var(--muted)]">
+          <section className="rounded-lg border bg-card mb-10 p-6 text-center">
+            <p className="font-mono text-sm text-muted-foreground">
               Fetching your recommendations...
             </p>
           </section>
         ) : matches.length === 0 ? (
-          <section className="card mb-10 p-6 text-center">
-            <h2 className="text-xl font-semibold text-[var(--foreground)]">
+          <section className="rounded-lg border bg-card mb-10 p-6 text-center">
+            <h2 className="text-xl font-semibold text-foreground">
               No recommendations yet
             </h2>
-            <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
               Complete onboarding and run the seed data to populate matches.
             </p>
           </section>
         ) : (
           <section className="mb-10">
-            <h2 className="h-display text-2xl text-[var(--foreground)]">
+            <h2 className="h-display text-2xl text-foreground">
               Top matches
             </h2>
-            <p className="mt-1 text-sm text-[var(--muted)]">
+            <p className="mt-1 text-sm text-muted-foreground">
               Ranked by opportunity fit — from your TF-IDF profile.
             </p>
             <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -167,18 +168,18 @@ export default function DashboardPage() {
                 <Link
                   key={opportunity.id}
                   href={`/opportunities/${opportunity.id}`}
-                  className="card card-hover p-4"
+                  className="rounded-lg border bg-card transition-colors hover:border-primary p-4"
                 >
                   <span className="badge-fit mb-2">
                     {Math.round(score.score * 100)}% fit
                   </span>
-                  <h3 className="text-base font-semibold text-[var(--foreground)] truncate">
+                  <h3 className="text-base font-semibold text-foreground truncate">
                     {opportunity.title}
                   </h3>
-                  <p className="mt-1 text-xs leading-5 text-[var(--muted)] line-clamp-2">
+                  <p className="mt-1 text-xs leading-5 text-muted-foreground line-clamp-2">
                     {opportunity.blurb}
                   </p>
-                  <p className="mt-2 font-mono text-[11px] uppercase tracking-wider text-[var(--aurora)]">
+                  <p className="mt-2 font-mono text-[11px] uppercase tracking-wider text-aurora">
                     {opportunity.field} · {opportunity.type}
                   </p>
                 </Link>
@@ -191,10 +192,10 @@ export default function DashboardPage() {
             fires the migration_004 trigger that re-weights pathway_edges. */}
         {outcomes.length > 0 ? (
           <section className="mb-10">
-            <h2 className="h-display text-2xl text-[var(--foreground)]">
+            <h2 className="h-display text-2xl text-foreground">
               Your logged outcomes
             </h2>
-            <p className="mt-1 text-sm text-[var(--muted)]">
+            <p className="mt-1 text-sm text-muted-foreground">
               Each result you log re-weights the pathway graph behind your
               recommendations.
             </p>
@@ -206,25 +207,25 @@ export default function DashboardPage() {
                 return (
                   <li
                     key={outcome.id}
-                    className="card flex flex-wrap items-center gap-3 px-4 py-3"
+                    className="rounded-lg border bg-card flex flex-wrap items-center gap-3 px-4 py-3"
                   >
-                    <span className="inline-flex h-6 items-center rounded border border-[var(--aurora-dim)] bg-[rgba(125,211,200,0.1)] px-2 font-mono text-xs text-[var(--aurora)]">
+                    <span className="inline-flex h-6 items-center rounded border border-aurora-dim bg-aurora/10 px-2 font-mono text-xs text-aurora">
                       {outcomeLabels[outcome.status] ?? outcome.status}
                     </span>
                     {match ? (
                       <Link
                         href={`/opportunities/${outcome.opportunity_id}`}
-                        className="text-sm font-semibold text-[var(--star)] transition hover:text-[var(--star-bright)]"
+                        className="text-sm font-semibold text-star transition hover:text-star-bright"
                       >
                         {match.opportunity.title}
                       </Link>
                     ) : (
-                      <span className="text-sm font-semibold text-[var(--foreground)]">
+                      <span className="text-sm font-semibold text-foreground">
                         Logged opportunity
                       </span>
                     )}
                     {outcome.impact_notes ? (
-                      <span className="text-xs text-[var(--muted)]">
+                      <span className="text-xs text-muted-foreground">
                         {outcome.impact_notes}
                       </span>
                     ) : null}
@@ -239,37 +240,37 @@ export default function DashboardPage() {
             no inbound link anywhere in the app before this — the pathway map is
             the judge-facing centerpiece, so it cannot be URL-only. */}
         <section className="grid gap-4 md:grid-cols-2">
-          <Link href="/map" className="card card-hover p-5">
-            <h2 className="text-xl font-semibold text-[var(--foreground)]">
+          <Link href="/map" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
+            <h2 className="text-xl font-semibold text-foreground">
               Your pathway map
             </h2>
-            <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
               See your matches as a force-directed graph — programs that share a
               field or tags are connected.
             </p>
           </Link>
-          <Link href="/opportunities" className="card card-hover p-5">
-            <h2 className="text-xl font-semibold text-[var(--foreground)]">
+          <Link href="/opportunities" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
+            <h2 className="text-xl font-semibold text-foreground">
               All recommendations
             </h2>
-            <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
               See your full ranked opportunity list with scores and
               explanations.
             </p>
           </Link>
-          <Link href="/mentors" className="card card-hover p-5">
-            <h2 className="text-xl font-semibold text-[var(--foreground)]">
+          <Link href="/mentors" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
+            <h2 className="text-xl font-semibold text-foreground">
               Mentor matches
             </h2>
-            <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
               Mentors ranked by how their expertise lines up with your profile.
             </p>
           </Link>
-          <Link href="/onboarding" className="card card-hover p-5">
-            <h2 className="text-xl font-semibold text-[var(--foreground)]">
+          <Link href="/onboarding" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
+            <h2 className="text-xl font-semibold text-foreground">
               Edit profile
             </h2>
-            <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
               Update your interests and goals to refine your match scores.
             </p>
           </Link>

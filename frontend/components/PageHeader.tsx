@@ -4,6 +4,7 @@
  * styling is added.
  */
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   /** Optional back/out link relative to the site root. */
@@ -21,24 +22,27 @@ export function PageHeader({
   actionLabel,
 }: Props) {
   return (
-    <header className="flex flex-col gap-4 border-b border-[var(--border)] pb-6 sm:flex-row sm:items-center sm:justify-between">
+    <header className="flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-4">
-        <Link href="/" className="h-display text-xl text-[var(--foreground)]">
+        <Link href="/" className="h-display text-xl text-foreground">
           Northstar
         </Link>
         {backHref && backLabel ? (
           <Link
             href={backHref}
-            className="text-sm font-semibold text-[var(--aurora)]"
+            className="text-sm font-semibold text-aurora"
           >
             {backLabel}
           </Link>
         ) : null}
       </div>
       {actionHref && actionLabel ? (
-        <Link href={actionHref} className="btn-primary h-11 px-5">
+        <Button
+          render={<Link href={actionHref} />}
+          className="h-11 px-5 font-semibold"
+        >
           {actionLabel}
-        </Link>
+        </Button>
       ) : null}
     </header>
   );

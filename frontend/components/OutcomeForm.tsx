@@ -8,6 +8,9 @@
  */
 
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { NativeSelect } from "@/components/ui/native-select";
 import { logOutcome } from "@/lib/api";
 
 const statuses = [
@@ -45,7 +48,7 @@ export function OutcomeForm({ opportunityId }: { opportunityId: string }) {
         <p className="text-sm font-semibold text-[var(--success-text)]">
           Outcome logged.
         </p>
-        <p className="mt-1 text-xs text-[var(--muted)]">
+        <p className="mt-1 text-xs text-muted-foreground">
           Your result re-weights the pathway graph behind future
           recommendations.
         </p>
@@ -54,20 +57,20 @@ export function OutcomeForm({ opportunityId }: { opportunityId: string }) {
   }
 
   return (
-    <div className="card mt-6 p-4">
-      <h3 className="text-sm font-semibold text-[var(--foreground)]">
+    <div className="mt-6 rounded-lg border bg-card p-4">
+      <h3 className="text-sm font-semibold text-foreground">
         Log your outcome
       </h3>
-      <p className="mt-1 text-xs text-[var(--muted)]">
+      <p className="mt-1 text-xs text-muted-foreground">
         Tell Northstar what happened — it improves future matches.
       </p>
 
       <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
-        <select
+        <NativeSelect
           value={status}
           aria-label="Outcome status"
           onChange={(e) => setStatus(e.target.value)}
-          className="input-field h-10 px-3 text-sm font-semibold"
+          className="h-10"
         >
           <option value="">Select status</option>
           {statuses.map((s) => (
@@ -75,25 +78,24 @@ export function OutcomeForm({ opportunityId }: { opportunityId: string }) {
               {s.label}
             </option>
           ))}
-        </select>
+        </NativeSelect>
 
-        <input
+        <Input
           type="text"
           placeholder="Impact notes (optional)"
           aria-label="Impact notes"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          className="input-field h-10 flex-1 px-3 text-sm"
+          className="h-10 flex-1 bg-panel-raised"
         />
 
-        <button
-          type="button"
+        <Button
           onClick={handleLog}
           disabled={submitting || !status}
-          className="btn-primary h-10 px-4"
+          className="h-10 px-4 font-semibold"
         >
           {submitting ? "Saving..." : "Log outcome"}
-        </button>
+        </Button>
       </div>
 
       {error ? (

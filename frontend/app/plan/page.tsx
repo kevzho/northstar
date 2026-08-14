@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const actions = [
   {
@@ -24,40 +25,40 @@ export default function PlanPage() {
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
-        <header className="flex flex-col gap-4 border-b border-[var(--border)] pb-6 sm:flex-row sm:items-center sm:justify-between">
+        <header className="flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <Link
               href="/futures"
-              className="text-sm font-semibold text-[var(--aurora)]"
+              className="text-sm font-semibold text-aurora"
             >
               Back to futures
             </Link>
-            <h1 className="h-display mt-3 text-4xl text-[var(--foreground)]">
+            <h1 className="h-display mt-3 text-4xl text-foreground">
               30-day plan
             </h1>
-            <p className="mt-3 max-w-2xl text-base leading-7 text-[var(--muted)]">
+            <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
               A concrete action list that turns a future path into visible
               progress within one month.
             </p>
           </div>
-          <Link href="/" className="btn-primary h-11 px-5">
+          <Button render={<Link href="/" />} className="h-11 px-5 font-semibold">
             Return home
-          </Link>
+          </Button>
         </header>
 
         <section className="mt-8 grid gap-4 lg:grid-cols-2">
           {actions.map((group) => (
-            <article key={group.timeframe} className="card p-5">
-              <h2 className="h-display text-2xl text-[var(--foreground)]">
+            <article key={group.timeframe} className="rounded-lg border bg-card p-5">
+              <h2 className="h-display text-2xl text-foreground">
                 {group.timeframe}
               </h2>
               <ul className="mt-5 grid gap-3">
                 {group.items.map((item) => (
                   <li
                     key={item}
-                    className="flex gap-3 rounded-md border border-[var(--border)] bg-[var(--panel-raised)] p-4 text-sm leading-6 text-[var(--foreground)]"
+                    className="flex gap-3 rounded-md border border-border bg-panel-raised p-4 text-sm leading-6 text-foreground"
                   >
-                    <span className="mt-1 h-4 w-4 shrink-0 rounded border border-[var(--star)]" />
+                    <span className="mt-1 h-4 w-4 shrink-0 rounded border border-star" />
                     <span>{item}</span>
                   </li>
                 ))}

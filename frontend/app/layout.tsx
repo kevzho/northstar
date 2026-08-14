@@ -5,6 +5,7 @@ import {
   Spline_Sans_Mono,
 } from "next/font/google";
 import "./globals.css";
+import { cn } from "@/lib/utils";
 
 /* Display face — the atlas voice. Single 400 weight; hierarchy comes from size. */
 const atlas = Instrument_Serif({
@@ -39,7 +40,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`h-full antialiased ${atlas.variable} ${body.variable} ${coords.variable}`}
+      className={cn(
+        "h-full antialiased font-sans",
+        atlas.variable,
+        body.variable,
+        coords.variable,
+      )}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

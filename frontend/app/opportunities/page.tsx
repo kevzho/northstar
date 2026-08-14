@@ -11,6 +11,8 @@
 
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { NativeSelect } from "@/components/ui/native-select";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { OpportunityCard } from "@/components/OpportunityCard";
 import { fetchMatches } from "@/lib/api";
@@ -107,16 +109,16 @@ function OpportunitiesList() {
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
-        <div className="flex items-center justify-between border-b border-[var(--border)] pb-5">
+        <div className="flex items-center justify-between border-b border-border pb-5">
           <Link
             href="/dashboard"
-            className="h-display text-xl text-[var(--foreground)]"
+            className="h-display text-xl text-foreground"
           >
             Northstar
           </Link>
           <Link
             href="/dashboard"
-            className="text-sm font-semibold text-[var(--aurora)]"
+            className="text-sm font-semibold text-aurora"
           >
             Back to dashboard
           </Link>
@@ -124,40 +126,40 @@ function OpportunitiesList() {
 
         <header className="mt-10">
           <p className="eyebrow">Recommendations</p>
-          <h1 className="h-display mt-3 text-4xl text-[var(--foreground)]">
+          <h1 className="h-display mt-3 text-4xl text-foreground">
             Opportunities for you
           </h1>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--muted)]">
+          <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
             Ranked by the Northstar TF-IDF match engine against your profile.
             Filter by field and type to focus the list.
           </p>
         </header>
 
         <section className="mt-6 flex flex-wrap gap-3">
-          <select
+          <NativeSelect
             value={field}
             aria-label="Filter by field"
             onChange={(event) => setFilter("field", event.target.value)}
-            className="input-field h-11 px-4 text-sm font-semibold"
+            className="h-11 px-4 font-semibold"
           >
             {fieldFilters.map((filter) => (
               <option key={filter.value} value={filter.value}>
                 {filter.label}
               </option>
             ))}
-          </select>
-          <select
+          </NativeSelect>
+          <NativeSelect
             value={type}
             aria-label="Filter by type"
             onChange={(event) => setFilter("type", event.target.value)}
-            className="input-field h-11 px-4 text-sm font-semibold"
+            className="h-11 px-4 font-semibold"
           >
             {typeFilters.map((filter) => (
               <option key={filter.value} value={filter.value}>
                 {filter.label}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </section>
 
         {filtered.length > 0 ? (
@@ -165,8 +167,8 @@ function OpportunitiesList() {
             {filtered.map(({ opportunity, score }) => (
               <div key={opportunity.id} className="grid gap-2">
                 <OpportunityCard opportunity={opportunity} />
-                <p className="px-1 text-xs text-[var(--muted)]">
-                  <span className="font-mono text-[var(--star)]">
+                <p className="px-1 text-xs text-muted-foreground">
+                  <span className="font-mono text-star">
                     {Math.round(score.score * 100)}% fit
                   </span>{" "}
                   · {score.explanation}
@@ -177,39 +179,38 @@ function OpportunitiesList() {
         ) : matches.length > 0 ? (
           // Results exist but the current filters exclude all of them. Saying
           // "finish onboarding" here would send the student down the wrong path.
-          <section className="card mt-10 p-8 text-center">
-            <h2 className="text-xl font-semibold text-[var(--foreground)]">
+          <section className="rounded-lg border bg-card mt-10 p-8 text-center">
+            <h2 className="text-xl font-semibold text-foreground">
               Nothing matches these filters
             </h2>
-            <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">
               You have {matches.length} ranked{" "}
               {matches.length === 1 ? "opportunity" : "opportunities"}, but none
               in this field and type combination.
             </p>
-            <button
-              type="button"
+            <Button
               onClick={() => router.replace(pathname, { scroll: false })}
-              className="btn-primary mt-6 h-11 px-5"
+              className="mt-6 h-11 px-5 font-semibold"
             >
               Clear filters
-            </button>
+            </Button>
           </section>
         ) : (
-          <section className="card mt-10 p-8 text-center">
-            <h2 className="text-xl font-semibold text-[var(--foreground)]">
+          <section className="rounded-lg border bg-card mt-10 p-8 text-center">
+            <h2 className="text-xl font-semibold text-foreground">
               No recommendations yet
             </h2>
-            <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">
               Take the 5-minute assessment or finish onboarding so the match
               engine has a profile to rank from.
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
-              <Link href="/onboarding" className="btn-primary h-11 px-5">
+              <Button render={<Link href="/onboarding" />} className="h-11 px-5 font-semibold">
                 Finish onboarding
-              </Link>
-              <Link href="/assessment" className="btn-secondary h-11 px-5">
+              </Button>
+              <Button variant="outline" render={<Link href="/assessment" />} className="h-11 px-5 font-semibold">
                 Take assessment
-              </Link>
+              </Button>
             </div>
           </section>
         )}
@@ -228,7 +229,7 @@ export default function OpportunitiesPage() {
     <Suspense
       fallback={
         <main className="flex min-h-screen items-center justify-center px-6">
-          <p className="font-mono text-sm text-[var(--muted)]">
+          <p className="font-mono text-sm text-muted-foreground">
             Loading your recommendations...
           </p>
         </main>

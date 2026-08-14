@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
@@ -41,15 +42,15 @@ export default function AuthCallbackPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center px-6 py-8">
-      <div className="card w-full max-w-md p-6 text-center">
+      <div className="rounded-lg border bg-card w-full max-w-md p-6 text-center">
         <p className="eyebrow">Northstar</p>
-        <h1 className="h-display mt-3 text-3xl text-[var(--foreground)]">
+        <h1 className="h-display mt-3 text-3xl text-foreground">
           Signing you in
         </h1>
-        <p className="mt-4 text-sm leading-6 text-[var(--muted)]">{message}</p>
-        <Link href="/login" className="btn-secondary mt-6 h-11 px-5">
+        <p className="mt-4 text-sm leading-6 text-muted-foreground">{message}</p>
+        <Button variant="outline" render={<Link href="/login" />} className="mt-6 h-11 px-5 font-semibold">
           Back to login
-        </Link>
+        </Button>
       </div>
     </main>
   );
