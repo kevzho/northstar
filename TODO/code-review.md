@@ -59,6 +59,16 @@ until it sounds like you. Tiers 3–4 are understand/skim.
 
 ## Recently added (sort into tiers after review)
 
+- [ ] TIER 1: `backend/app/collab.py` — the ALS implementation. Be able to
+      derive the ridge solve (Σ v vᵀ + λI)x = Σ r·v and explain fold-in,
+      the rating scale, and why the blend is centered and capped (24e8ded).
+- [ ] TIER 1: the blend in `backend/app/match.py` (COLLAB_WEIGHT 0.15,
+      ±0.075 cap) and the outcomes fetch in `main.py` /match (24e8ded).
+- [ ] TIER 3: `backend/scripts/train_als.py` — synthetic cohort rule and
+      artifact provenance fields (24e8ded).
+- [ ] `backend/tests/test_collab.py` — read what each of the 8 tests
+      proves (24e8ded).
+
 - [ ] TIER 1 candidate: interest-field bonus + localized "ambitious" rule in
       `frontend/lib/scoring.ts` — own the numbers (+4/field, cap +8, top-half
       stretch pool) (016eaf2).

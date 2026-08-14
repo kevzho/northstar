@@ -25,6 +25,14 @@
 
 ## Operational
 
+- [ ] **Seed the live catalog**: run `supabase db push` (applies
+      20260815090000_seed_catalog.sql — the live opportunities table was
+      found EMPTY on 2026-08-15; nothing works signed-in until this runs).
+- [ ] **Train the ALS model**: after seeding, run
+      `cd backend && .venv/bin/python scripts/train_als.py`, review the
+      printed report, and commit `backend/app/data/als_item_factors.json`
+      so the deployed backend ships the model (24e8ded).
+
 - [ ] Reddit scraper credentials: create the script app at
       reddit.com/prefs/apps, add REDDIT_CLIENT_ID / REDDIT_CLIENT_SECRET to
       backend/.env, run one scrape, review candidates.
