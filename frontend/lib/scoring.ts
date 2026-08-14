@@ -25,6 +25,7 @@
 
 import { assessmentQuestions, type TraitKey } from "./assessment";
 import { archetypes, type Archetype } from "./archetypes";
+import type { OpportunityField } from "./types";
 
 export type TraitScores = Record<TraitKey, number>;
 
@@ -110,18 +111,59 @@ function vector(traits: Record<TraitKey, number>): number[] {
 
 export type ScoredArchetype = {
   archetype: Archetype;
-  /** Cosine similarity as a 0-100 percentage. */
+  /** Cosine similarity as a 0-100 percentage (plus any interest bonus). */
   fit: number;
+  /** True when the fit includes an interest-field bonus. */
+  interestAligned: boolean;
 };
 
+/**
+ * Interest bonus: +4 per opportunity field shared between the archetype and
+ * the student's stated interests, capped at +8 and 99 total. Cosine still
+ * dominates — interests break ties and surface professions in the student's
+ * own fields, they never override the trait profile.
+ */
+const INTEREST_BONUS_PER_FIELD = 4;
+const INTEREST_BONUS_CAP = 8;
+
+/** Onboarding interest labels → opportunity field keys. */
+export const INTEREST_TO_FIELD: Record<string, OpportunityField> = {
+  "Computer Science": "cs",
+  Biology: "biology",
+  Mathematics: "math",
+  Physics: "physics",
+  Engineering: "engineering",
+  Interdisciplinary: "interdisciplinary",
+};
+
+export function interestFields(interests: string[]): OpportunityField[] {
+  return interests
+    .map((label) => INTEREST_TO_FIELD[label])
+    .filter((field): field is OpportunityField => Boolean(field));
+}
+
 /** Every archetype scored against the student's trait vector, best first. */
-export function rankArchetypes(traits: TraitScores): ScoredArchetype[] {
+export function rankArchetypes(
+  traits: TraitScores,
+  fields: OpportunityField[] = [],
+): ScoredArchetype[] {
   const student = vector(traits);
   return archetypes
-    .map((archetype) => ({
-      archetype,
-      fit: Math.round(cosine(student, vector(archetype.traits)) * 100),
-    }))
+    .map((archetype) => {
+      const base = cosine(student, vector(archetype.traits)) * 100;
+      const overlap = archetype.fields.filter((field) =>
+        fields.includes(field),
+      ).length;
+      const bonus = Math.min(
+        overlap * INTEREST_BONUS_PER_FIELD,
+        INTEREST_BONUS_CAP,
+      );
+      return {
+        archetype,
+        fit: Math.min(99, Math.round(base + bonus)),
+        interestAligned: bonus > 0,
+      };
+    })
     .sort((a, b) => b.fit - a.fit);
 }
 
@@ -155,8 +197,11 @@ function demand(archetype: Archetype): number {
  * Falls back gracefully when the archetype library is small: with fewer than
  * three archetypes the caller just gets fewer paths rather than duplicates.
  */
-export function selectFuturePaths(traits: TraitScores): FuturePath[] {
-  const ranked = rankArchetypes(traits);
+export function selectFuturePaths(
+  traits: TraitScores,
+  fields: OpportunityField[] = [],
+): FuturePath[] {
+  const ranked = rankArchetypes(traits, fields);
   if (ranked.length === 0) return [];
 
   const paths: FuturePath[] = [];
@@ -167,13 +212,20 @@ export function selectFuturePaths(traits: TraitScores): FuturePath[] {
   paths.push({
     ...safe,
     kind: "safe",
-    rationale: `Closest match to your trait profile at ${safe.fit}% fit.`,
+    rationale: safe.interestAligned
+      ? `Closest match to your trait profile at ${safe.fit}% fit — and in a field you named.`
+      : `Closest match to your trait profile at ${safe.fit}% fit.`,
   });
 
   const rest = ranked.filter((r) => !used.has(r.archetype.id));
 
   if (rest.length > 0) {
-    const ambitious = rest.reduce((best, current) =>
+    // Most demanding archetype among the top half of the student's own
+    // ranking — a stretch that is still plausibly theirs, so "ambitious"
+    // varies by student instead of always being the most demanding
+    // archetype in the library.
+    const plausible = rest.slice(0, Math.max(1, Math.ceil(rest.length / 2)));
+    const ambitious = plausible.reduce((best, current) =>
       demand(current.archetype) > demand(best.archetype) ? current : best,
     );
     used.add(ambitious.archetype.id);

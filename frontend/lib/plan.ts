@@ -73,6 +73,55 @@ const SPINES: Record<
       "Present the prototype to the group it serves and collect their reactions in writing.",
     skill: "accessibility — making the prototype usable by everyone it is for",
   },
+  "research-mathematician": {
+    project:
+      "Pick one competition problem set (AMC, a past olympiad) and write full solutions to five problems — proofs, not answers.",
+    publish:
+      "Write up your cleanest proof and post it where other math students will critique it.",
+    skill: "proof technique — induction and contradiction until they are reflexes",
+  },
+  "experimental-physicist": {
+    project:
+      "Design and run one tabletop experiment with real measurements — pendulum period, diffraction, cooling curves — and compare against theory.",
+    publish:
+      "Write a short lab report: setup, data, error sources, and where theory and measurement disagreed.",
+    skill: "error analysis — knowing how much to trust every number you record",
+  },
+  "robotics-engineer": {
+    project:
+      "Build one mechanism that moves under its own control — a line follower, a sorting arm, a self-balancing something — however rough.",
+    publish:
+      "Record it working (and failing) and post the build log with what broke.",
+    skill: "control basics — why the naive approach oscillates and PID doesn't",
+  },
+  "biomedical-innovator": {
+    project:
+      "Pick one health problem someone you know actually has and prototype the smallest device, tool, or protocol that helps.",
+    publish:
+      "Show it to one person in healthcare — a nurse, a PT, a school counselor — and write down their reaction.",
+    skill: "regulatory literacy — why medical ideas move slowly and what that means for design",
+  },
+  "data-scientist": {
+    project:
+      "Take one public dataset about your own city or school district and answer a question nobody has asked it yet.",
+    publish:
+      "Publish the notebook with three charts and one honest paragraph about what the data cannot say.",
+    skill: "statistical honesty — confounders, base rates, and when a trend is noise",
+  },
+  "science-communicator": {
+    project:
+      "Take one paper or result you love and produce a two-minute explanation a ninth grader would finish.",
+    publish:
+      "Post it publicly and ask three non-STEM friends what they understood — revise until they can repeat it back.",
+    skill: "narrative structure — hook, stakes, one idea, and nothing else",
+  },
+  "field-research-scientist": {
+    project:
+      "Design a four-week observation protocol for something living or changing near you — a creek, a tree line, night sky brightness — and collect real data on schedule.",
+    publish:
+      "Publish the dataset with your protocol so someone else could repeat it.",
+    skill: "sampling discipline — why the boring schedule is the whole experiment",
+  },
 };
 
 const FALLBACK_SPINE = {

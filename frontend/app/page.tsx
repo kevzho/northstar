@@ -335,7 +335,7 @@ export default function Home() {
       <footer className="border-t border-border">
         <div className="mx-auto max-w-6xl px-6 py-6 sm:px-8 lg:px-10">
           <p className="font-mono text-xs tracking-wide text-muted-foreground">
-            Built by a high school student for the Congressional App Challenge.
+            Kevin Zhou © 2026
           </p>
         </div>
       </footer>

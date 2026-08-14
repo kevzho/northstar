@@ -9,17 +9,21 @@
  * lib/scoring.ts#selectFuturePaths, and every archetype shows its fit score.
  */
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { archetypes } from "@/lib/archetypes";
+import { authedFetch } from "@/lib/api";
 import {
+  interestFields,
   pathLabel,
   rankArchetypes,
   scoreTraits,
   selectFuturePaths,
   type FuturePath,
 } from "@/lib/scoring";
+import type { OpportunityField, StudentProfile } from "@/lib/types";
 import { useStoredAnswers } from "@/lib/use-assessment";
 import { useChosenPath, writeChosenPath } from "@/lib/use-chosen-path";
 
@@ -27,9 +31,27 @@ export default function FuturesPage() {
   const router = useRouter();
   const answers = useStoredAnswers();
   const chosen = useChosenPath();
+  // Signed-in interests personalize the ranking (small field bonus in
+  // lib/scoring.ts); signed out, ranking is traits-only.
+  const [fields, setFields] = useState<OpportunityField[]>([]);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const response = await authedFetch("/me");
+        const me = (await response.json()) as StudentProfile;
+        if (!cancelled) setFields(interestFields(me.interests ?? []));
+      } catch {
+        // Signed out — traits-only ranking.
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
   const traits = answers ? scoreTraits(answers) : null;
-  const paths = traits ? selectFuturePaths(traits) : null;
-  const ranked = traits ? rankArchetypes(traits) : null;
+  const paths = traits ? selectFuturePaths(traits, fields) : null;
+  const ranked = traits ? rankArchetypes(traits, fields) : null;
 
   function chart(path: FuturePath) {
     writeChosenPath({ archetypeId: path.archetype.id, kind: path.kind });
