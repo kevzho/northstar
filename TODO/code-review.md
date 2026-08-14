@@ -59,6 +59,13 @@ until it sounds like you. Tiers 3–4 are understand/skim.
 
 ## Recently added (sort into tiers after review)
 
+- [ ] TIER 1 candidate: interest-field bonus + localized "ambitious" rule in
+      `frontend/lib/scoring.ts` — own the numbers (+4/field, cap +8, top-half
+      stretch pool) (016eaf2).
+- [ ] TIER 2 candidate: seven new archetypes and their trait vectors in
+      `frontend/lib/archetypes.ts`, plus their plan spines in
+      `frontend/lib/plan.ts` — every summary and weight should be yours (016eaf2).
+
 - [ ] Alternating landing pathway (grid placement logic in
       `frontend/app/page.tsx`) and textured sky — banded/cratered canvas
       textures, four galaxies, moonlet in
