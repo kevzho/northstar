@@ -1,27 +1,28 @@
 import type { Metadata } from "next";
 import {
-  Instrument_Serif,
-  Hanken_Grotesk,
-  Spline_Sans_Mono,
+  Bricolage_Grotesque,
+  IBM_Plex_Mono,
+  Onest,
 } from "next/font/google";
+import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-/* Display face — the atlas voice. Single 400 weight; hierarchy comes from size. */
-const atlas = Instrument_Serif({
-  weight: "400",
-  style: ["normal", "italic"],
+/* Display face — characterful grotesque for titles; hierarchy from size. */
+const atlas = Bricolage_Grotesque({
   subsets: ["latin"],
   variable: "--font-atlas",
 });
 
-const body = Hanken_Grotesk({
+/* Body face — clean, even, quiet next to the display. */
+const body = Onest({
   subsets: ["latin"],
   variable: "--font-body",
 });
 
 /* Coordinates face — every score, count, and date reads like an instrument. */
-const coords = Spline_Sans_Mono({
+const coords = IBM_Plex_Mono({
+  weight: ["400", "500"],
   subsets: ["latin"],
   variable: "--font-coords",
 });
@@ -40,6 +41,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={cn(
         "h-full antialiased font-sans",
         atlas.variable,
@@ -47,7 +49,16 @@ export default function RootLayout({
         coords.variable,
       )}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

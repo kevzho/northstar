@@ -3,6 +3,8 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { MotionConfig, motion, useScroll, useTransform } from "motion/react";
+import { useTheme } from "next-themes";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { HorizonWaves } from "@/components/decor/horizon-waves";
 import { AnimatedGroup } from "@/components/motion/animated-group";
@@ -17,23 +19,48 @@ const Starfield = dynamic(() => import("@/components/decor/starfield"), {
 const waypoints = [
   {
     mark: "01",
+    planet: "moon" as const,
     title: "Trait profile",
     description:
       "Eight behavioral prompts become six interpretable signals: builder, analyst, risk, ambiguity, collaboration, and tempo. No black box — every score is a sum you can check.",
   },
   {
     mark: "02",
+    planet: "ringed" as const,
     title: "Future paths",
     description:
       "Your traits are compared against archetypes to surface three directions: the steady fit, the stretch, and the one nobody had time to suggest.",
   },
   {
     mark: "03",
+    planet: "giant" as const,
     title: "Real opportunities",
     description:
       "A TF-IDF match engine ranks curated STEM programs against your interests and goals, explains every score, and maps the pathways between them.",
   },
 ];
+
+/*
+ * Minimal planet renderings for the waypoint pathway: a small moon, a ringed
+ * world, and a giant — all monochrome gradients, no imagery.
+ */
+function Planet({ kind }: { kind: "moon" | "ringed" | "giant" }) {
+  const size =
+    kind === "moon" ? "h-8 w-8" : kind === "ringed" ? "h-10 w-10" : "h-14 w-14";
+  return (
+    <div className="relative flex h-14 w-14 shrink-0 items-center justify-center">
+      <div
+        className={`${size} rounded-full bg-[radial-gradient(circle_at_32%_28%,var(--star-bright),var(--aurora-dim))]`}
+      />
+      {kind === "ringed" ? (
+        <div
+          aria-hidden
+          className="absolute h-14 w-14 rounded-full border border-aurora-dim/70 [transform:rotateX(68deg)_rotateZ(-16deg)]"
+        />
+      ) : null}
+    </div>
+  );
+}
 
 /* The Northstar mark — a four-point star with a counter-star cut out. */
 function StarGlyph({ className }: { className?: string }) {
@@ -178,6 +205,8 @@ function Constellation() {
 }
 
 export default function Home() {
+  const { resolvedTheme } = useTheme();
+  const ink = resolvedTheme === "light";
   const { scrollY } = useScroll();
   const constellationY = useTransform(scrollY, [0, 600], [0, -70]);
   const constellationOpacity = useTransform(scrollY, [0, 600], [1, 0.3]);
@@ -185,7 +214,7 @@ export default function Home() {
   return (
     <MotionConfig reducedMotion="user">
     <main className="min-h-screen">
-      <Starfield className="pointer-events-none fixed inset-0 -z-10" />
+      <Starfield ink={ink} className="pointer-events-none fixed inset-0 -z-10" />
       <section className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-6 py-8 sm:px-8 lg:px-10">
         <nav className="sticky top-0 z-40 -mx-2 flex items-center justify-between border-b border-border bg-background/80 px-2 py-4 backdrop-blur">
           <Link
@@ -205,6 +234,7 @@ export default function Home() {
             <Button render={<Link href="/assessment" />} className="px-4 py-2 font-semibold">
               Start assessment
             </Button>
+            <ThemeToggle />
           </div>
         </nav>
 
@@ -224,7 +254,7 @@ export default function Home() {
             </TextEffect>
             <h1 className="h-display mt-5 max-w-3xl text-5xl leading-[1.05] text-foreground sm:text-6xl lg:text-7xl">
               Every student deserves a{" "}
-              <span className="italic text-star">north star</span>.
+              <span className="text-star">north star</span>.
             </h1>
             <p className="mt-7 max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">
               Most students never hear about the research programs,
@@ -252,30 +282,39 @@ export default function Home() {
           <h2 className="h-display text-2xl text-foreground sm:text-3xl">
             How you find it
           </h2>
-          <div className="mt-6 grid gap-4 lg:grid-cols-3">
+          {/* The pathway: three worlds along a dashed course, revealed on
+              scroll — the same shape as the product itself. */}
+          <div className="relative mt-12">
+            <div
+              aria-hidden
+              className="absolute bottom-4 left-7 top-4 border-l border-dashed border-border"
+            />
             {waypoints.map((waypoint, index) => (
               <InView
                 key={waypoint.mark}
                 once
                 variants={{
-                  hidden: { opacity: 0, y: 24 },
-                  visible: { opacity: 1, y: 0 },
+                  hidden: { opacity: 0, scale: 0.6, y: 24 },
+                  visible: { opacity: 1, scale: 1, y: 0 },
                 }}
-                transition={{ duration: 0.5, delay: index * 0.12 }}
+                transition={{ duration: 0.55, delay: index * 0.1 }}
                 viewOptions={{ margin: "0px 0px -80px 0px" }}
               >
-              <article className="h-full rounded-lg border bg-card p-5">
-                <p className="flex items-center gap-2 font-mono text-xs tracking-[0.2em] text-star">
-                  <StarGlyph className="h-3 w-3" />
-                  {waypoint.mark}
-                </p>
-                <h3 className="mt-4 text-xl font-semibold text-foreground">
-                  {waypoint.title}
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  {waypoint.description}
-                </p>
-              </article>
+                <div className="relative flex gap-6 pb-20 last:pb-0 sm:gap-10">
+                  <Planet kind={waypoint.planet} />
+                  <div className="max-w-xl pt-1">
+                    <p className="flex items-center gap-2 font-mono text-xs tracking-[0.2em] text-star">
+                      <StarGlyph className="h-3 w-3" />
+                      {waypoint.mark}
+                    </p>
+                    <h3 className="mt-2 text-xl font-semibold text-foreground">
+                      {waypoint.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-7 text-muted-foreground">
+                      {waypoint.description}
+                    </p>
+                  </div>
+                </div>
               </InView>
             ))}
           </div>
