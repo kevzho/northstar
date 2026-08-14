@@ -11,6 +11,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { AnimatedNumber } from "@/components/motion/animated-number";
 import { traitLabels } from "@/lib/assessment";
 import { TRAIT_KEYS, scoreTraits, type TraitScores } from "@/lib/scoring";
 import { useStoredAnswers } from "@/lib/use-assessment";
@@ -82,7 +83,11 @@ export default function ProfilePage() {
                     {traitLabels[trait]}
                   </span>
                   <span className="font-mono text-sm text-star">
-                    {scores[trait]}/100
+                    <AnimatedNumber
+                      value={scores[trait]}
+                      springOptions={{ bounce: 0, duration: 1200 }}
+                    />
+                    /100
                   </span>
                 </div>
                 <div className="h-3 overflow-hidden rounded-full bg-panel-raised">

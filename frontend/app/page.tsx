@@ -1,5 +1,12 @@
+"use client";
+
 import Link from "next/link";
+import { MotionConfig } from "motion/react";
 import { Button } from "@/components/ui/button";
+import { HorizonWaves } from "@/components/decor/horizon-waves";
+import { AnimatedGroup } from "@/components/motion/animated-group";
+import { InView } from "@/components/motion/in-view";
+import { TextEffect } from "@/components/motion/text-effect";
 
 const waypoints = [
   {
@@ -166,6 +173,7 @@ function Constellation() {
 
 export default function Home() {
   return (
+    <MotionConfig reducedMotion="user">
     <main className="min-h-screen">
       <section className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-6 py-8 sm:px-8 lg:px-10">
         <nav className="flex items-center justify-between border-b border-border pb-5">
@@ -190,8 +198,19 @@ export default function Home() {
         </nav>
 
         <div className="grid flex-1 items-center gap-12 py-14 lg:grid-cols-[1.1fr_0.9fr]">
-          <div>
-            <p className="eyebrow">A student-built opportunity map</p>
+          <AnimatedGroup
+            preset="blur-slide"
+            className="grid gap-0"
+          >
+            <TextEffect
+              per="char"
+              preset="fade"
+              as="p"
+              className="eyebrow"
+              speedReveal={2}
+            >
+              A student-built opportunity map
+            </TextEffect>
             <h1 className="h-display mt-5 max-w-3xl text-5xl leading-[1.05] text-foreground sm:text-6xl lg:text-7xl">
               Every student deserves a{" "}
               <span className="italic text-star">north star</span>.
@@ -211,7 +230,7 @@ export default function Home() {
                 Try the assessment first
               </Button>
             </div>
-          </div>
+          </AnimatedGroup>
 
           <Constellation />
         </div>
@@ -221,8 +240,18 @@ export default function Home() {
             How you find it
           </h2>
           <div className="mt-6 grid gap-4 lg:grid-cols-3">
-            {waypoints.map((waypoint) => (
-              <article key={waypoint.mark} className="rounded-lg border bg-card p-5">
+            {waypoints.map((waypoint, index) => (
+              <InView
+                key={waypoint.mark}
+                once
+                variants={{
+                  hidden: { opacity: 0, y: 24 },
+                  visible: { opacity: 1, y: 0 },
+                }}
+                transition={{ duration: 0.5, delay: index * 0.12 }}
+                viewOptions={{ margin: "0px 0px -80px 0px" }}
+              >
+              <article className="h-full rounded-lg border bg-card p-5">
                 <p className="flex items-center gap-2 font-mono text-xs tracking-[0.2em] text-star">
                   <StarGlyph className="h-3 w-3" />
                   {waypoint.mark}
@@ -234,16 +263,22 @@ export default function Home() {
                   {waypoint.description}
                 </p>
               </article>
+              </InView>
             ))}
           </div>
         </section>
 
-        <footer className="border-t border-border py-6">
+      </section>
+
+      <HorizonWaves className="block h-28 w-full text-foreground" />
+      <footer className="border-t border-border">
+        <div className="mx-auto max-w-6xl px-6 py-6 sm:px-8 lg:px-10">
           <p className="font-mono text-xs tracking-wide text-muted-foreground">
             Built by a high school student for the Congressional App Challenge.
           </p>
-        </footer>
-      </section>
+        </div>
+      </footer>
     </main>
+    </MotionConfig>
   );
 }
