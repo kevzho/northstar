@@ -1,12 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { MotionConfig } from "motion/react";
+import dynamic from "next/dynamic";
+import { MotionConfig, motion, useScroll, useTransform } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { HorizonWaves } from "@/components/decor/horizon-waves";
 import { AnimatedGroup } from "@/components/motion/animated-group";
 import { InView } from "@/components/motion/in-view";
 import { TextEffect } from "@/components/motion/text-effect";
+
+/* three.js stays out of the initial bundle; the sky fades in after mount. */
+const Starfield = dynamic(() => import("@/components/decor/starfield"), {
+  ssr: false,
+});
 
 const waypoints = [
   {
@@ -172,11 +178,16 @@ function Constellation() {
 }
 
 export default function Home() {
+  const { scrollY } = useScroll();
+  const constellationY = useTransform(scrollY, [0, 600], [0, -70]);
+  const constellationOpacity = useTransform(scrollY, [0, 600], [1, 0.3]);
+
   return (
     <MotionConfig reducedMotion="user">
     <main className="min-h-screen">
+      <Starfield className="pointer-events-none fixed inset-0 -z-10" />
       <section className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-6 py-8 sm:px-8 lg:px-10">
-        <nav className="flex items-center justify-between border-b border-border pb-5">
+        <nav className="sticky top-0 z-40 -mx-2 flex items-center justify-between border-b border-border bg-background/80 px-2 py-4 backdrop-blur">
           <Link
             href="/"
             className="flex items-center gap-2 text-lg tracking-tight text-foreground"
@@ -232,7 +243,9 @@ export default function Home() {
             </div>
           </AnimatedGroup>
 
-          <Constellation />
+          <motion.div style={{ y: constellationY, opacity: constellationOpacity }}>
+            <Constellation />
+          </motion.div>
         </div>
 
         <section aria-label="How Northstar works" className="pb-16">

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import {
   Instrument_Serif,
-  Schibsted_Grotesk,
+  Hanken_Grotesk,
   Spline_Sans_Mono,
 } from "next/font/google";
 import "./globals.css";
@@ -15,7 +15,7 @@ const atlas = Instrument_Serif({
   variable: "--font-atlas",
 });
 
-const body = Schibsted_Grotesk({
+const body = Hanken_Grotesk({
   subsets: ["latin"],
   variable: "--font-body",
 });

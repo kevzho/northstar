@@ -12,6 +12,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { ScrollProgress } from "@/components/motion/scroll-progress";
 import { useRouter } from "next/navigation";
 import { assessmentQuestions } from "@/lib/assessment";
 import { isComplete } from "@/lib/scoring";
@@ -35,6 +36,7 @@ export default function AssessmentPage() {
 
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
+      <ScrollProgress className="fixed inset-x-0 top-0 z-50 h-0.5 bg-star" />
       <div className="mx-auto max-w-5xl">
         <header className="flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-start sm:justify-between">
           <div>
