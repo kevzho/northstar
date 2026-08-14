@@ -28,6 +28,12 @@
 - [ ] **Seed the live catalog**: run `supabase db push` (applies
       20260815090000_seed_catalog.sql — the live opportunities table was
       found EMPTY on 2026-08-15; nothing works signed-in until this runs).
+      The migration now also creates the unique indexes that the repaired
+      history claimed but never ran (005's title+host index).
+- [ ] **Verify the edge-weight trigger actually exists** (migration 004 was
+      also only 'repair-marked'): during the authenticated smoke test, log
+      one outcome and confirm a pathway_edges weight changed. If nothing
+      changes, the 004 trigger needs the same treatment as 005.
 - [ ] **Train the ALS model**: after seeding, run
       `cd backend && .venv/bin/python scripts/train_als.py`, review the
       printed report, and commit `backend/app/data/als_item_factors.json`

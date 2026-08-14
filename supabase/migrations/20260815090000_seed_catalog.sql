@@ -4,6 +4,26 @@
 -- Discovered 2026-08-15: the live opportunities table was empty — the
 -- seed SQL had only ever existed in scripts/, outside the migration flow.
 
+-- Prerequisites the repaired migration history claims but the live database
+-- never actually ran (`migration repair --status applied` marks migrations
+-- as applied without executing them — migration 005's index was a casualty).
+-- Both guards are idempotent, so databases that DO have them are untouched.
+create unique index if not exists uq_opportunities_title_host
+    on public.opportunities (title, host);
+
+do $$
+begin
+    if not exists (
+        select 1
+        from pg_constraint c
+        join pg_class t on t.oid = c.conrelid
+        where t.relname = 'mentors' and c.contype = 'u'
+    ) then
+        create unique index if not exists uq_mentors_email
+            on public.mentors (email);
+    end if;
+end $$;
+
 -- Northstar opportunity seed data
 -- 35 real STEM programs, scholarships, competitions for the CAC demo.
 -- Idempotent: each INSERT uses ON CONFLICT (title, host) DO NOTHING, relying
