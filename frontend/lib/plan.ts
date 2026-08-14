@@ -145,9 +145,26 @@ export function generatePlan(
   const strongest = ordered[0];
   const weakest = ordered[ordered.length - 1];
 
-  // Application targets: top three matches by score. Anything due inside the
-  // month is urgent (week one); the rest belong to week four.
-  const targets = (matches ?? []).slice(0, 3);
+  // Application targets: top two matches by score, plus the best-scored
+  // competition or scholarship if the top two didn't include one — every
+  // voyage should have at least one award to compete for. Anything due
+  // inside the month is urgent (week one); the rest belong to week four.
+  const ranked = matches ?? [];
+  const targets = ranked.slice(0, 2);
+  if (
+    ranked.length > 2 &&
+    !targets.some((m) =>
+      ["competition", "scholarship"].includes(m.opportunity.type),
+    )
+  ) {
+    const award = ranked.find((m) =>
+      ["competition", "scholarship"].includes(m.opportunity.type),
+    );
+    if (award) targets.push(award);
+    else targets.push(ranked[2]);
+  } else if (ranked.length > 2) {
+    targets.push(ranked[2]);
+  }
   const urgent = targets.filter(
     (m) =>
       m.opportunity.deadline !== null &&
@@ -157,17 +174,17 @@ export function generatePlan(
   const later = targets.filter((m) => !urgent.includes(m));
 
   const week1: string[] = [
-    `Write three sentences on why ${archetype.label} is your ${
+    `Set your heading: write three sentences on why ${archetype.label} is your ${
       kind === "safe" ? "closest" : kind === "ambitious" ? "stretch" : "wildcard"
-    } path — you will reread this in week four.`,
+    } destination — you will reread this on arrival.`,
     spine.project,
     LEAN_IN[strongest],
   ];
   for (const m of urgent) {
     week1.push(
-      `Deadline alert: ${m.opportunity.title} closes ${formatDeadline(
+      `Launch-window alert: ${m.opportunity.title} closes ${formatDeadline(
         m.opportunity.deadline as string,
-      )} — start the application now, not in week four.`,
+      )} — start the application now, not on arrival.`,
     );
   }
 
@@ -195,14 +212,14 @@ export function generatePlan(
     );
   }
   week4.push(
-    "Reread your week-one note. Keep the path, adjust it, or switch — all three are progress.",
+    "Reread your launch note. Hold course, correct it, or chart a new destination — all three are progress.",
     "Log every application outcome in Northstar — each result re-weights the pathway map for you and the next student.",
   );
 
   return [
-    { timeframe: "Week 1", focus: "Aim", items: week1 },
-    { timeframe: "Weeks 2–3", focus: "Build", items: weeks23 },
-    { timeframe: "Week 4", focus: "Launch", items: week4 },
+    { timeframe: "Leg 1 · Week 1", focus: "Launch", items: week1 },
+    { timeframe: "Leg 2 · Weeks 2–3", focus: "Cruise", items: weeks23 },
+    { timeframe: "Leg 3 · Week 4", focus: "Arrival", items: week4 },
   ];
 }
 

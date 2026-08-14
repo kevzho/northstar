@@ -11,6 +11,7 @@ import { HorizonWaves } from "@/components/decor/horizon-waves";
 import { AnimatedGroup } from "@/components/motion/animated-group";
 import { InView } from "@/components/motion/in-view";
 import { TextEffect } from "@/components/motion/text-effect";
+import { Planet, Ship } from "@/components/decor/voyage";
 
 /* three.js stays out of the initial bundle; the sky fades in after mount. */
 const Starfield = dynamic(() => import("@/components/decor/starfield"), {
@@ -40,48 +41,6 @@ const waypoints = [
       "A TF-IDF match engine ranks curated STEM programs against your interests and goals, explains every score, and maps the pathways between them.",
   },
 ];
-
-/*
- * Minimal planet renderings for the waypoint pathway: a small moon, a ringed
- * world, and a giant — all monochrome gradients, no imagery.
- */
-function Planet({ kind }: { kind: "moon" | "ringed" | "giant" }) {
-  const size =
-    kind === "moon" ? "h-8 w-8" : kind === "ringed" ? "h-10 w-10" : "h-14 w-14";
-  return (
-    <div className="relative flex h-14 w-14 shrink-0 items-center justify-center">
-      <div
-        className={`${size} rounded-full bg-[radial-gradient(circle_at_32%_28%,var(--star-bright),var(--aurora-dim))]`}
-      />
-      {kind === "ringed" ? (
-        <div
-          aria-hidden
-          className="absolute h-14 w-14 rounded-full border border-aurora-dim/70 [transform:rotateX(68deg)_rotateZ(-16deg)]"
-        />
-      ) : null}
-    </div>
-  );
-}
-
-/* Line-art rocket, nose down — it rides the waypoint pathway with scroll. */
-function Ship({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 32"
-      aria-hidden="true"
-      className={className}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinejoin="round"
-      strokeLinecap="round"
-    >
-      <path d="M12 30c3-2.6 4.8-6.2 4.8-10.2V12L12 3 7.2 12v7.8C7.2 23.8 9 27.4 12 30Z" />
-      <circle cx="12" cy="14" r="2.2" />
-      <path d="M7.2 17.5 3.5 21.5M16.8 17.5l3.7 4" />
-    </svg>
-  );
-}
 
 /* The Northstar mark — a four-point star with a counter-star cut out. */
 function StarGlyph({ className }: { className?: string }) {
@@ -234,7 +193,7 @@ export default function Home() {
     target: pathwayRef,
     offset: ["start 0.75", "end 0.75"],
   });
-  const shipTop = useTransform(pathwayProgress, [0, 1], ["0%", "94%"]);
+  const shipTop = useTransform(pathwayProgress, [0, 1], ["2%", "96%"]);
   const constellationY = useTransform(scrollY, [0, 600], [0, -70]);
   const constellationOpacity = useTransform(scrollY, [0, 600], [1, 0.3]);
 
@@ -281,7 +240,10 @@ export default function Home() {
             </TextEffect>
             <h1 className="h-display mt-5 max-w-3xl text-5xl leading-[1.05] text-foreground sm:text-6xl lg:text-7xl">
               Every student deserves a{" "}
-              <span className="text-star">north star</span>.
+              <span className="whitespace-nowrap text-star [text-shadow:0_0_32px_var(--star),0_0_8px_var(--star)]">
+                north star
+                <StarGlyph className="ml-2 inline-block h-[0.45em] w-[0.45em] align-baseline" />
+              </span>.
             </h1>
             <p className="mt-7 max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">
               Most students never hear about the research programs,
@@ -334,7 +296,7 @@ export default function Home() {
                 transition={{ duration: 0.55, delay: index * 0.1 }}
                 viewOptions={{ margin: "0px 0px -80px 0px" }}
               >
-                <div className="relative flex gap-6 pb-20 last:pb-0 sm:gap-10">
+                <div className="relative flex min-h-[80vh] items-center gap-6 sm:gap-10">
                   <Planet kind={waypoint.planet} />
                   <div className="max-w-xl pt-1">
                     <p className="flex items-center gap-2 font-mono text-xs tracking-[0.2em] text-star">

@@ -9,9 +9,11 @@
  * plainly what signing in would add.
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { motion, useScroll, useTransform } from "motion/react";
 import { Button } from "@/components/ui/button";
+import { Planet, Ship } from "@/components/decor/voyage";
 import { fetchMatches } from "@/lib/api";
 import { findArchetype, generatePlan } from "@/lib/plan";
 import { pathLabel, rankArchetypes, scoreTraits } from "@/lib/scoring";
@@ -19,7 +21,15 @@ import type { MatchResult } from "@/lib/types";
 import { useStoredAnswers } from "@/lib/use-assessment";
 import { useChosenPath } from "@/lib/use-chosen-path";
 
+const LEG_PLANETS = ["moon", "ringed", "giant"] as const;
+
 export default function PlanPage() {
+  const voyageRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: voyageRef,
+    offset: ["start 0.7", "end 0.7"],
+  });
+  const shipTop = useTransform(scrollYProgress, [0, 1], ["1%", "97%"]);
   const answers = useStoredAnswers();
   const chosen = useChosenPath();
   const [matches, setMatches] = useState<MatchResult[] | null>(null);
@@ -132,30 +142,46 @@ export default function PlanPage() {
               </p>
             ) : null}
 
-            <section className="mt-8 grid gap-4 lg:grid-cols-3">
-              {plan?.map((group) => (
-                <article
+            {/* The voyage: three legs along a dashed course, the rocket
+                riding scroll from launch to arrival. */}
+            <section ref={voyageRef} className="relative mt-10">
+              <div
+                aria-hidden
+                className="absolute bottom-6 left-7 top-6 border-l border-dashed border-border"
+              />
+              <motion.div
+                aria-hidden
+                style={{ top: shipTop }}
+                className="absolute left-7 z-10 -translate-x-1/2"
+              >
+                <Ship className="h-7 w-5 text-star" />
+              </motion.div>
+              {plan?.map((group, index) => (
+                <div
                   key={group.timeframe}
-                  className="rounded-lg border bg-card p-5"
+                  className="relative flex gap-6 pb-14 last:pb-0 sm:gap-10"
                 >
-                  <p className="font-mono text-xs uppercase tracking-[0.2em] text-star">
-                    {group.timeframe}
-                  </p>
-                  <h2 className="h-display mt-2 text-2xl text-foreground">
-                    {group.focus}
-                  </h2>
-                  <ul className="mt-5 grid gap-3">
-                    {group.items.map((item) => (
-                      <li
-                        key={item}
-                        className="flex gap-3 rounded-md border border-border bg-panel-raised p-4 text-sm leading-6 text-foreground"
-                      >
-                        <span className="mt-1 h-4 w-4 shrink-0 rounded border border-star" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </article>
+                  <Planet kind={LEG_PLANETS[index] ?? "moon"} />
+                  <article className="min-w-0 flex-1 pt-1">
+                    <p className="font-mono text-xs uppercase tracking-[0.2em] text-star">
+                      {group.timeframe}
+                    </p>
+                    <h2 className="h-display mt-1 text-2xl text-foreground">
+                      {group.focus}
+                    </h2>
+                    <ul className="mt-4 grid max-w-3xl gap-3">
+                      {group.items.map((item) => (
+                        <li
+                          key={item}
+                          className="flex gap-3 rounded-md border border-border bg-panel-raised p-4 text-sm leading-6 text-foreground"
+                        >
+                          <span className="mt-1 h-4 w-4 shrink-0 rounded border border-star" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </article>
+                </div>
               ))}
             </section>
           </>
