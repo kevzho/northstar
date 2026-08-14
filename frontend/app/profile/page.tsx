@@ -11,6 +11,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { AnimatedNumber } from "@/components/motion/animated-number";
 import { traitLabels } from "@/lib/assessment";
 import { TRAIT_KEYS, scoreTraits, type TraitScores } from "@/lib/scoring";
@@ -54,9 +55,12 @@ export default function ProfilePage() {
                 : "This preview shows the six interpretable signals Northstar computes from assessment choices."}
             </p>
           </div>
-          <Button render={<Link href="/futures" />} className="h-11 shrink-0 px-5 font-semibold">
-            Generate futures
-          </Button>
+          <div className="flex shrink-0 items-center gap-3">
+            <Button render={<Link href="/futures" />} className="h-11 px-5 font-semibold">
+              Generate futures
+            </Button>
+            <ThemeToggle />
+          </div>
         </header>
 
         {!isReal ? (

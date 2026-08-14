@@ -11,6 +11,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Progress } from "@/components/ui/progress";
 import { ScrollProgress } from "@/components/motion/scroll-progress";
 import { useRouter } from "next/navigation";
@@ -55,13 +56,16 @@ export default function AssessmentPage() {
               risk. Pick the option that fits best — there are no wrong answers.
             </p>
           </div>
-          <Button
-            disabled={!complete}
-            onClick={() => router.push("/profile")}
-            className="h-11 shrink-0 px-5 font-semibold"
-          >
-            {complete ? "See your profile" : `${answered} of ${total} answered`}
-          </Button>
+          <div className="flex shrink-0 items-center gap-3">
+            <Button
+              disabled={!complete}
+              onClick={() => router.push("/profile")}
+              className="h-11 px-5 font-semibold"
+            >
+              {complete ? "See your profile" : `${answered} of ${total} answered`}
+            </Button>
+            <ThemeToggle />
+          </div>
         </header>
 
         <Progress

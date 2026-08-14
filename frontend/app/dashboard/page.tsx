@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/use-auth";
 import { authedFetch, saveStudentProfile, fetchMatches, fetchOutcomes } from "@/lib/api";
@@ -119,13 +120,16 @@ export default function DashboardPage() {
           <Link href="/" className="h-display text-xl text-foreground">
             Northstar
           </Link>
-          <Button variant="outline"
-            type="button"
-            onClick={signOut}
-            className="h-10 px-4 font-semibold"
-          >
-            Sign out
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button variant="outline"
+              type="button"
+              onClick={signOut}
+              className="h-10 px-4 font-semibold"
+            >
+              Sign out
+            </Button>
+            <ThemeToggle />
+          </div>
         </nav>
 
         <header className="py-10">

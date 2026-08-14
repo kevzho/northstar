@@ -60,7 +60,8 @@
   --chart-3: #c08bf5;
   --chart-4: #f09a62;
   --chart-5: #55c7de;
-  --radius: 0.5rem;
+  /* Flat editorial geometry: everything is a rectangle. */
+  --radius: 0rem;
 
   /* Nebula glows behind the body — inverted by the light theme. */
   --glow-a: rgba(255, 255, 255, 0.06);
@@ -211,7 +212,6 @@ button:disabled {
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
-    border-radius: 0.25rem;
     border: 1px solid var(--star);
     background: color-mix(in srgb, var(--star) 9%, transparent);
     padding: 0.125rem 0.5rem;

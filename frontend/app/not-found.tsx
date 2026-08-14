@@ -9,6 +9,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function NotFound() {
   return (
@@ -18,6 +19,7 @@ export default function NotFound() {
           <Link href="/" className="h-display text-xl text-foreground">
             Northstar
           </Link>
+          <ThemeToggle />
         </div>
 
         <section className="rounded-lg border bg-card mt-16 p-8 text-center">

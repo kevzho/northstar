@@ -5,6 +5,7 @@
  */
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 type Props = {
   /** Optional back/out link relative to the site root. */
@@ -36,14 +37,17 @@ export function PageHeader({
           </Link>
         ) : null}
       </div>
-      {actionHref && actionLabel ? (
-        <Button
-          render={<Link href={actionHref} />}
-          className="h-11 px-5 font-semibold"
-        >
-          {actionLabel}
-        </Button>
-      ) : null}
+      <div className="flex items-center gap-3">
+        {actionHref && actionLabel ? (
+          <Button
+            render={<Link href={actionHref} />}
+            className="h-11 px-5"
+          >
+            {actionLabel}
+          </Button>
+        ) : null}
+        <ThemeToggle />
+      </div>
     </header>
   );
 }

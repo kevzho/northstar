@@ -13,6 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "motion/react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Planet, Ship } from "@/components/decor/voyage";
 import { fetchMatches } from "@/lib/api";
 import { findArchetype, generatePlan } from "@/lib/plan";
@@ -86,15 +87,18 @@ export default function PlanPage() {
                 : "A concrete action list that turns a future path into visible progress within one month."}
             </p>
           </div>
-          {archetype ? (
-            <Button
-              variant="outline"
-              render={<Link href="/futures" />}
-              className="h-11 px-5 font-semibold"
-            >
-              Change path
-            </Button>
-          ) : null}
+          <div className="flex shrink-0 items-center gap-3">
+            {archetype ? (
+              <Button
+                variant="outline"
+                render={<Link href="/futures" />}
+                className="h-11 px-5 font-semibold"
+              >
+                Change path
+              </Button>
+            ) : null}
+            <ThemeToggle />
+          </div>
         </header>
 
         {!traits ? (

@@ -10,6 +10,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { NativeSelect } from "@/components/ui/native-select";
@@ -81,9 +82,12 @@ export default function OnboardingPage() {
           <Link href="/" className="h-display text-xl text-foreground">
             Northstar
           </Link>
-          <p className="font-mono text-sm uppercase tracking-[0.16em] text-muted-foreground">
-            Step {step} of 3
-          </p>
+          <div className="flex items-center gap-3">
+            <p className="font-mono text-sm uppercase tracking-[0.16em] text-muted-foreground">
+              Step {step} of 3
+            </p>
+            <ThemeToggle />
+          </div>
         </div>
 
         <div className="mt-10">

@@ -16,6 +16,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { fetchOpportunity } from "@/lib/api";
 import type { Opportunity } from "@/lib/types";
 import { BookmarkButton } from "@/components/BookmarkButton";
@@ -49,12 +50,15 @@ export function OpportunityDetail({ id }: { id: string }) {
           >
             Northstar
           </Link>
-          <Link
-            href="/opportunities"
-            className="text-sm font-semibold text-aurora"
-          >
-            Back to opportunities
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/opportunities"
+              className="text-sm font-semibold text-aurora"
+            >
+              Back to opportunities
+            </Link>
+            <ThemeToggle />
+          </div>
         </div>
 
         {loading ? (

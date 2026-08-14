@@ -11,6 +11,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { authedFetch, fetchMentors } from "@/lib/api";
 import type { MentorMatch } from "@/lib/api";
 import { buildIntroEmail, mailtoHref } from "@/lib/outreach";
@@ -67,12 +68,15 @@ export default function MentorsPage() {
           >
             Northstar
           </Link>
-          <Link
-            href="/dashboard"
-            className="text-sm font-semibold text-aurora"
-          >
-            Back to dashboard
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/dashboard"
+              className="text-sm font-semibold text-aurora"
+            >
+              Back to dashboard
+            </Link>
+            <ThemeToggle />
+          </div>
         </div>
 
         <header className="mt-10">

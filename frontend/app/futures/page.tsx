@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { archetypes } from "@/lib/archetypes";
 import { authedFetch } from "@/lib/api";
 import {
@@ -78,9 +79,12 @@ export default function FuturesPage() {
               plausible direction.
             </p>
           </div>
-          <Button render={<Link href="/plan" />} className="h-11 shrink-0 px-5 font-semibold">
-            Choose a path
-          </Button>
+          <div className="flex shrink-0 items-center gap-3">
+            <Button render={<Link href="/plan" />} className="h-11 px-5 font-semibold">
+              Choose a path
+            </Button>
+            <ThemeToggle />
+          </div>
         </header>
 
         {paths === null ? (

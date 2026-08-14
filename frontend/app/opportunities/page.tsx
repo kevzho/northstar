@@ -12,6 +12,7 @@
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { NativeSelect } from "@/components/ui/native-select";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { OpportunityCard } from "@/components/OpportunityCard";
@@ -116,12 +117,15 @@ function OpportunitiesList() {
           >
             Northstar
           </Link>
-          <Link
-            href="/dashboard"
-            className="text-sm font-semibold text-aurora"
-          >
-            Back to dashboard
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/dashboard"
+              className="text-sm font-semibold text-aurora"
+            >
+              Back to dashboard
+            </Link>
+            <ThemeToggle />
+          </div>
         </div>
 
         <header className="mt-10">

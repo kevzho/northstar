@@ -213,11 +213,11 @@ export default function Home() {
           <div className="flex items-center gap-3">
             <Link
               href="/login"
-              className="text-sm font-semibold text-aurora"
+              className="text-sm font-medium text-foreground hover:underline underline-offset-4"
             >
               Sign in
             </Link>
-            <Button render={<Link href="/assessment" />} className="px-4 py-2 font-semibold">
+            <Button render={<Link href="/assessment" />} className="h-9 px-4">
               Start assessment
             </Button>
             <ThemeToggle />
@@ -240,7 +240,7 @@ export default function Home() {
             </TextEffect>
             <h1 className="h-display mt-5 max-w-3xl text-5xl leading-[1.05] text-foreground sm:text-6xl lg:text-7xl">
               Every student deserves a{" "}
-              <span className="whitespace-nowrap text-star [text-shadow:0_0_32px_var(--star),0_0_8px_var(--star)]">
+              <span className="whitespace-nowrap text-star">
                 north star
                 <StarGlyph className="ml-2 inline-block h-[0.45em] w-[0.45em] align-baseline" />
               </span>.
@@ -253,10 +253,10 @@ export default function Home() {
               opportunities with a reason attached to every one.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <Button render={<Link href="/login" />} className="h-12 px-6 font-semibold">
+              <Button render={<Link href="/login" />} className="h-12 px-7">
                 Sign in to start
               </Button>
-              <Button variant="outline" render={<Link href="/assessment" />} className="h-12 px-6 font-semibold">
+              <Button variant="outline" render={<Link href="/assessment" />} className="h-12 px-7">
                 Try the assessment first
               </Button>
             </div>
