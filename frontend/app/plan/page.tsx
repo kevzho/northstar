@@ -1,71 +1,165 @@
+"use client";
+
+/**
+ * 30-day plan — generated, not hardcoded.
+ *
+ * The plan is assembled by lib/plan.ts from the chosen future path, the trait
+ * profile, and (when signed in) the student's real ranked matches with their
+ * deadlines. Signed out, the plan still generates from path + traits and says
+ * plainly what signing in would add.
+ */
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-
-const actions = [
-  {
-    timeframe: "This week",
-    items: [
-      "Build a tiny portfolio project connected to the chosen future path.",
-      "Write a one-page reflection on what felt energizing and what felt draining.",
-      "Find three examples of students or builders already doing similar work.",
-    ],
-  },
-  {
-    timeframe: "This month",
-    items: [
-      "Publish the project with a short demo note.",
-      "Reach out to two mentors, teachers, or older students for feedback.",
-      "Choose one skill gap and complete a focused 5-hour learning sprint.",
-      "Apply to one program, competition, internship, or community opportunity.",
-    ],
-  },
-];
+import { fetchMatches } from "@/lib/api";
+import { findArchetype, generatePlan } from "@/lib/plan";
+import { pathLabel, rankArchetypes, scoreTraits } from "@/lib/scoring";
+import type { MatchResult } from "@/lib/types";
+import { useStoredAnswers } from "@/lib/use-assessment";
+import { useChosenPath } from "@/lib/use-chosen-path";
 
 export default function PlanPage() {
+  const answers = useStoredAnswers();
+  const chosen = useChosenPath();
+  const [matches, setMatches] = useState<MatchResult[] | null>(null);
+  const [matchesSettled, setMatchesSettled] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const data = await fetchMatches();
+        if (!cancelled) setMatches(data);
+      } catch {
+        // Signed out or backend unreachable — the plan generates without
+        // application targets and the page says what signing in adds.
+        if (!cancelled) setMatches(null);
+      } finally {
+        if (!cancelled) setMatchesSettled(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const traits = answers ? scoreTraits(answers) : null;
+  const archetype = chosen ? findArchetype(chosen.archetypeId) : null;
+  const fit =
+    traits && archetype
+      ? rankArchetypes(traits).find((r) => r.archetype.id === archetype.id)
+          ?.fit ?? null
+      : null;
+
+  const plan =
+    traits && archetype && chosen
+      ? generatePlan(archetype, chosen.kind, traits, matches, new Date())
+      : null;
+
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
         <header className="flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <Link
-              href="/futures"
-              className="text-sm font-semibold text-aurora"
-            >
+            <Link href="/futures" className="text-sm font-semibold text-aurora">
               Back to futures
             </Link>
             <h1 className="h-display mt-3 text-4xl text-foreground">
               30-day plan
             </h1>
             <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
-              A concrete action list that turns a future path into visible
-              progress within one month.
+              {archetype && chosen
+                ? `Built from your ${pathLabel(chosen.kind).toLowerCase()} — ${
+                    archetype.label
+                  }${fit !== null ? ` (${fit}% fit)` : ""} — your trait profile, and your ranked matches.`
+                : "A concrete action list that turns a future path into visible progress within one month."}
             </p>
           </div>
-          <Button render={<Link href="/" />} className="h-11 px-5 font-semibold">
-            Return home
-          </Button>
+          {archetype ? (
+            <Button
+              variant="outline"
+              render={<Link href="/futures" />}
+              className="h-11 px-5 font-semibold"
+            >
+              Change path
+            </Button>
+          ) : null}
         </header>
 
-        <section className="mt-8 grid gap-4 lg:grid-cols-2">
-          {actions.map((group) => (
-            <article key={group.timeframe} className="rounded-lg border bg-card p-5">
-              <h2 className="h-display text-2xl text-foreground">
-                {group.timeframe}
-              </h2>
-              <ul className="mt-5 grid gap-3">
-                {group.items.map((item) => (
-                  <li
-                    key={item}
-                    className="flex gap-3 rounded-md border border-border bg-panel-raised p-4 text-sm leading-6 text-foreground"
-                  >
-                    <span className="mt-1 h-4 w-4 shrink-0 rounded border border-star" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </article>
-          ))}
-        </section>
+        {!traits ? (
+          <section className="mt-8 rounded-lg border bg-card p-8 text-center">
+            <h2 className="text-xl font-semibold text-foreground">
+              No trait profile yet
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">
+              The plan is generated from your traits and chosen path. Take the
+              eight-question assessment first — about five minutes.
+            </p>
+            <Button
+              render={<Link href="/assessment" />}
+              className="mt-6 h-11 px-5 font-semibold"
+            >
+              Take the assessment
+            </Button>
+          </section>
+        ) : !archetype ? (
+          <section className="mt-8 rounded-lg border bg-card p-8 text-center">
+            <h2 className="text-xl font-semibold text-foreground">
+              No path charted yet
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">
+              Pick one of your three future paths and the plan will be built
+              around it — its starter project, your traits, and your deadlines.
+            </p>
+            <Button
+              render={<Link href="/futures" />}
+              className="mt-6 h-11 px-5 font-semibold"
+            >
+              Choose a path
+            </Button>
+          </section>
+        ) : (
+          <>
+            {matchesSettled && matches === null ? (
+              <p className="mt-6 rounded-md border border-border bg-panel-raised p-3 text-sm leading-6 text-muted-foreground">
+                You are signed out, so this plan has no application targets.
+                <Link href="/login" className="ml-1 font-semibold text-aurora">
+                  Sign in
+                </Link>{" "}
+                to weave your ranked opportunities and their real deadlines into
+                weeks one and four.
+              </p>
+            ) : null}
+
+            <section className="mt-8 grid gap-4 lg:grid-cols-3">
+              {plan?.map((group) => (
+                <article
+                  key={group.timeframe}
+                  className="rounded-lg border bg-card p-5"
+                >
+                  <p className="font-mono text-xs uppercase tracking-[0.2em] text-star">
+                    {group.timeframe}
+                  </p>
+                  <h2 className="h-display mt-2 text-2xl text-foreground">
+                    {group.focus}
+                  </h2>
+                  <ul className="mt-5 grid gap-3">
+                    {group.items.map((item) => (
+                      <li
+                        key={item}
+                        className="flex gap-3 rounded-md border border-border bg-panel-raised p-4 text-sm leading-6 text-foreground"
+                      >
+                        <span className="mt-1 h-4 w-4 shrink-0 rounded border border-star" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </section>
+          </>
+        )}
       </div>
     </main>
   );

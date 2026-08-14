@@ -10,6 +10,7 @@
  */
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { archetypes } from "@/lib/archetypes";
 import {
@@ -17,14 +18,23 @@ import {
   rankArchetypes,
   scoreTraits,
   selectFuturePaths,
+  type FuturePath,
 } from "@/lib/scoring";
 import { useStoredAnswers } from "@/lib/use-assessment";
+import { useChosenPath, writeChosenPath } from "@/lib/use-chosen-path";
 
 export default function FuturesPage() {
+  const router = useRouter();
   const answers = useStoredAnswers();
+  const chosen = useChosenPath();
   const traits = answers ? scoreTraits(answers) : null;
   const paths = traits ? selectFuturePaths(traits) : null;
   const ranked = traits ? rankArchetypes(traits) : null;
+
+  function chart(path: FuturePath) {
+    writeChosenPath({ archetypeId: path.archetype.id, kind: path.kind });
+    router.push("/plan");
+  }
 
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
@@ -66,23 +76,40 @@ export default function FuturesPage() {
           </section>
         ) : (
           <section className="mt-8 grid gap-4 lg:grid-cols-3">
-            {paths.map((path) => (
-              <article key={path.archetype.id} className="rounded-lg border bg-card flex flex-col p-5">
-                <div className="flex items-center justify-between gap-3">
-                  <p className="eyebrow">{pathLabel(path.kind)}</p>
-                  <span className="badge-fit">{path.fit}% fit</span>
-                </div>
-                <h2 className="h-display mt-3 text-3xl text-foreground">
-                  {path.archetype.label}
-                </h2>
-                <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                  {path.archetype.summary}
-                </p>
-                <p className="mt-4 text-xs leading-5 text-aurora italic">
-                  {path.rationale}
-                </p>
-              </article>
-            ))}
+            {paths.map((path) => {
+              const isCharted = chosen?.archetypeId === path.archetype.id;
+              return (
+                <article
+                  key={path.archetype.id}
+                  className={`flex flex-col rounded-lg border bg-card p-5 ${
+                    isCharted ? "border-star" : ""
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="eyebrow">{pathLabel(path.kind)}</p>
+                    <span className="badge-fit">{path.fit}% fit</span>
+                  </div>
+                  <h2 className="h-display mt-3 text-3xl text-foreground">
+                    {path.archetype.label}
+                  </h2>
+                  <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                    {path.archetype.summary}
+                  </p>
+                  <p className="mt-4 text-xs leading-5 text-aurora italic">
+                    {path.rationale}
+                  </p>
+                  <div className="mt-auto pt-5">
+                    <Button
+                      variant={isCharted ? "default" : "outline"}
+                      onClick={() => chart(path)}
+                      className="h-10 w-full font-semibold"
+                    >
+                      {isCharted ? "Charted — see your plan" : "Chart this path"}
+                    </Button>
+                  </div>
+                </article>
+              );
+            })}
           </section>
         )}
 
