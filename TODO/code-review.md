@@ -86,3 +86,12 @@ until it sounds like you. Tiers 3–4 are understand/skim.
 - [ ] Landing scroll journey + plan voyage layout (9485943).
 - [ ] Theme system: `next-themes` wiring in `app/layout.tsx`,
       `components/theme-toggle.tsx` (cd9f2a8).
+
+- [ ] TIER 3: flat button variants in `components/ui/button.tsx` — why
+      outline inverts on hover, and the `nativeButton={!props.render}`
+      fix for link-rendered buttons (7e64414).
+- [ ] TIER 3: `--radius: 0` in `app/globals.css` flattens every card,
+      input, and badge — check no component depended on rounding (7e64414).
+- [ ] Know why light mode "didn't work": stale dev server serving CSS
+      from before `.light` existed — restart the dev server after theme
+      CSS changes (7e64414).
