@@ -16,7 +16,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { AppNav } from "@/components/AppNav";
 import { fetchOpportunity } from "@/lib/api";
 import type { Opportunity } from "@/lib/types";
 import { BookmarkButton } from "@/components/BookmarkButton";
@@ -43,23 +43,17 @@ export function OpportunityDetail({ id }: { id: string }) {
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-4xl">
-        <div className="flex items-center justify-between border-b border-border pb-5">
-          <Link
-            href="/opportunities"
-            className="h-display text-xl text-foreground"
-          >
-            Northstar
-          </Link>
-          <div className="flex items-center gap-3">
+        <AppNav
+          homeHref="/opportunities"
+          right={
             <Link
               href="/opportunities"
               className="text-sm font-semibold text-aurora"
             >
               Back to opportunities
             </Link>
-            <ThemeToggle />
-          </div>
-        </div>
+          }
+        />
 
         {loading ? (
           <section className="rounded-lg border bg-card mt-10 p-8 text-center">

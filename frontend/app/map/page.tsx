@@ -15,7 +15,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { AppNav } from "@/components/AppNav";
 import { useRouter } from "next/navigation";
 import * as d3 from "d3";
 
@@ -220,23 +220,17 @@ export default function MapPage() {
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
-        <div className="flex items-center justify-between border-b border-border pb-5">
-          <Link
-            href="/dashboard"
-            className="h-display text-xl text-foreground"
-          >
-            Northstar
-          </Link>
-          <div className="flex items-center gap-3">
+        <AppNav
+          homeHref="/dashboard"
+          right={
             <Link
               href="/dashboard"
               className="text-sm font-semibold text-aurora"
             >
               Back to dashboard
             </Link>
-            <ThemeToggle />
-          </div>
-        </div>
+          }
+        />
 
         <header className="mt-10">
           <p className="eyebrow">Pathway map</p>

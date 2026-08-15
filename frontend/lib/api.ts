@@ -21,6 +21,7 @@ import type {
   Bookmark,
   StudentProfile,
   Outcome,
+  ProjectRec,
 } from "./types";
 
 export type Mentor = {
@@ -76,7 +77,11 @@ export async function authedFetch(
  * supplies the editable fields from the onboarding form.
  */
 export async function saveStudentProfile(
-  profile: Pick<StudentProfile, "name" | "grade" | "interests" | "goals" | "onboarded"> & { consent?: boolean },
+  profile: Pick<StudentProfile, "name" | "grade" | "interests" | "goals" | "onboarded"> & {
+    /** Omitted on stub upserts; the backend defaults to high_school. */
+    audience?: StudentProfile["audience"];
+    consent?: boolean;
+  },
 ): Promise<StudentProfile> {
   return (await authedFetch("/students", {
     method: "POST",
@@ -168,4 +173,44 @@ export async function logOutcome(
       impact_notes: impactNotes ?? null,
     }),
   })).json();
+}
+
+/**
+ * Fetch ranked GitHub project recommendations for the given fields.
+ * The backend caps fields at three and falls back to interdisciplinary.
+ */
+export async function fetchProjects(fields: string[]): Promise<ProjectRec[]> {
+  const query = fields.length ? `?fields=${fields.join(",")}` : "";
+  return (await authedFetch(`/projects${query}`)).json();
+}
+
+/**
+ * Sync the quiz's trait + field scores to the student row so matching can
+ * weight the field boost by interest share. Fire-and-forget from the
+ * caller's perspective; only signed-in students have a row to sync to.
+ */
+export async function syncAssessmentProfile(
+  trait_scores: Record<string, number>,
+  field_scores: Record<string, number>,
+): Promise<void> {
+  await authedFetch("/assessment-profile", {
+    method: "POST",
+    body: JSON.stringify({ trait_scores, field_scores }),
+  });
+}
+
+/** Opportunity ids the student marked "not for me". */
+export async function fetchDismissals(): Promise<{ opportunity_id: string }[]> {
+  return (await authedFetch("/dismissals")).json();
+}
+
+export async function dismissOpportunity(opportunityId: string): Promise<void> {
+  await authedFetch("/dismissals", {
+    method: "POST",
+    body: JSON.stringify({ opportunity_id: opportunityId }),
+  });
+}
+
+export async function undoDismissal(opportunityId: string): Promise<void> {
+  await authedFetch(`/dismissals/${opportunityId}`, { method: "DELETE" });
 }

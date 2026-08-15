@@ -18,8 +18,10 @@ import { archetypes } from "@/lib/archetypes";
 import { authedFetch } from "@/lib/api";
 import {
   interestFields,
+  leadingFields,
   pathLabel,
   rankArchetypes,
+  scoreFieldInterests,
   scoreTraits,
   selectFuturePaths,
   type FuturePath,
@@ -51,8 +53,12 @@ export default function FuturesPage() {
     };
   }, []);
   const traits = answers ? scoreTraits(answers) : null;
-  const paths = traits ? selectFuturePaths(traits, fields) : null;
-  const ranked = traits ? rankArchetypes(traits, fields) : null;
+  // Stated interests (onboarding) plus what the quiz's field-signal
+  // questions revealed — union, so neither source can erase the other.
+  const quizFields = answers ? leadingFields(scoreFieldInterests(answers)) : [];
+  const allFields = [...new Set([...fields, ...quizFields])];
+  const paths = traits ? selectFuturePaths(traits, allFields) : null;
+  const ranked = traits ? rankArchetypes(traits, allFields) : null;
 
   function chart(path: FuturePath) {
     writeChosenPath({ archetypeId: path.archetype.id, kind: path.kind });

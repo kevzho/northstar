@@ -92,6 +92,87 @@ export function scoreTraits(answers: AssessmentAnswers): TraitScores {
   return scores;
 }
 
+// ---------------------------------------------------------------------------
+// Field interest — scored from the field-signal questions (q9-q14).
+// ---------------------------------------------------------------------------
+
+export const FIELD_KEYS: OpportunityField[] = [
+  "cs",
+  "biology",
+  "math",
+  "physics",
+  "engineering",
+  "interdisciplinary",
+];
+
+export type FieldScores = Record<OpportunityField, number>;
+
+const FIELD_ZERO: FieldScores = {
+  cs: 0,
+  biology: 0,
+  math: 0,
+  physics: 0,
+  engineering: 0,
+  interdisciplinary: 0,
+};
+
+/**
+ * Field-interest percentages, summing to exactly 100.
+ *
+ * Raw sums become shares of the total: every point an answer gives one
+ * field is a point no other field gets, so the percentages are forced
+ * apart by construction instead of clustering. Largest-remainder rounding
+ * keeps the sum at 100 without disturbing the ranking.
+ */
+export function scoreFieldInterests(answers: AssessmentAnswers): FieldScores {
+  const raw = { ...FIELD_ZERO };
+  for (const question of assessmentQuestions) {
+    const chosenId = answers[question.id];
+    if (!chosenId) continue;
+    const choice = question.choices.find((c) => c.id === chosenId);
+    if (!choice?.fields) continue;
+    for (const field of FIELD_KEYS) {
+      raw[field] += choice.fields[field] ?? 0;
+    }
+  }
+
+  const total = FIELD_KEYS.reduce((sum, field) => sum + raw[field], 0);
+  if (total === 0) return raw;
+
+  const shares = FIELD_KEYS.map((field) => ({
+    field,
+    share: (raw[field] / total) * 100,
+  }));
+  const scores = { ...FIELD_ZERO };
+  for (const { field, share } of shares) scores[field] = Math.floor(share);
+
+  let leftover = 100 - FIELD_KEYS.reduce((sum, field) => sum + scores[field], 0);
+  const byRemainder = [...shares].sort(
+    (a, b) => (b.share % 1) - (a.share % 1),
+  );
+  for (const { field } of byRemainder) {
+    if (leftover <= 0) break;
+    scores[field] += 1;
+    leftover -= 1;
+  }
+  return scores;
+}
+
+/**
+ * The fields the quiz says clearly lead: top two, but the runner-up only
+ * counts when it holds at least half the leader's share — one dominant
+ * interest should read as one, not be padded into two.
+ */
+export function leadingFields(scores: FieldScores): OpportunityField[] {
+  const ranked = [...FIELD_KEYS]
+    .filter((field) => scores[field] > 0)
+    .sort((a, b) => scores[b] - scores[a]);
+  if (ranked.length === 0) return [];
+  const [first, second] = ranked;
+  if (second && scores[second] * 2 >= scores[first]) return [first, second];
+  return [first];
+}
+
 function cosine(a: number[], b: number[]): number {
   let dot = 0;
   let na = 0;

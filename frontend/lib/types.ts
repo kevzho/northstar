@@ -80,6 +80,8 @@ export type Outcome = {
   created_at: string | null;
 };
 
+export type Audience = "high_school" | "college";
+
 export type StudentProfile = {
   id: string;
   name: string | null;
@@ -87,8 +89,29 @@ export type StudentProfile = {
   grade: string | null;
   interests: string[];
   goals: string | null;
+  /** Which catalog shelf this student browses. */
+  audience: Audience;
+  /** Quiz outputs synced via POST /assessment-profile; null until synced. */
+  trait_scores: Record<string, number> | null;
+  field_scores: Record<string, number> | null;
   onboarded: boolean;
   /** ISO 8601 timestamp when the student accepted the IRB-style data
    * policy during onboarding, or null if consent has not been recorded. */
   consented_at: string | null;
+};
+
+/** A GitHub repository recommendation from GET /projects. */
+export type ProjectRec = {
+  field: OpportunityField;
+  score: number;
+  explanation: string;
+  repo: {
+    full_name: string;
+    html_url: string;
+    description: string;
+    stars: number;
+    language: string;
+    topics: string[];
+    good_first_issues_url: string;
+  };
 };

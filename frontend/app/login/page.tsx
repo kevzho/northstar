@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { AppNav } from "@/components/AppNav";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
@@ -56,20 +56,16 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-5xl flex-col">
-        <nav className="flex items-center justify-between border-b border-border pb-5">
-          <Link href="/" className="h-display text-xl text-foreground">
-            Northstar
-          </Link>
-          <div className="flex items-center gap-3">
+        <AppNav
+          right={
             <Link
               href="/"
               className="text-sm font-semibold text-aurora"
             >
               Back home
             </Link>
-            <ThemeToggle />
-          </div>
-        </nav>
+          }
+        />
 
         <section className="grid flex-1 items-center gap-10 py-12 lg:grid-cols-[0.9fr_1.1fr]">
           <div>

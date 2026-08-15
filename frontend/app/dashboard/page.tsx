@@ -3,10 +3,13 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { AppNav } from "@/components/AppNav";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/use-auth";
 import { authedFetch, saveStudentProfile, fetchMatches, fetchOutcomes } from "@/lib/api";
+import { traitLabels } from "@/lib/assessment";
+import { TRAIT_KEYS, scoreTraits } from "@/lib/scoring";
+import { useStoredAnswers } from "@/lib/use-assessment";
 import type { MatchResult, Outcome } from "@/lib/types";
 
 const outcomeLabels: Record<Outcome["status"], string> = {
@@ -22,7 +25,9 @@ export default function DashboardPage() {
   const router = useRouter();
   const [checking, setChecking] = useState(false);
   const [matches, setMatches] = useState<MatchResult[] | null>(null);
+  const [matchesFailed, setMatchesFailed] = useState(false);
   const [outcomes, setOutcomes] = useState<Outcome[]>([]);
+  const answers = useStoredAnswers();
 
   // On first sign-in without a profile: create a minimal students row,
   // then redirect to onboarding so the student fills in the real fields.
@@ -42,8 +47,12 @@ export default function DashboardPage() {
             const data = await fetchMatches();
             if (!cancelled) setMatches(data);
           } catch {
-            // No catalog yet (no seed data run) — just skip.
-            if (!cancelled) setMatches(null);
+            // Failure is not emptiness — the page says so instead of
+            // showing a permanent spinner.
+            if (!cancelled) {
+              setMatches(null);
+              setMatchesFailed(true);
+            }
           }
           try {
             const logged = await fetchOutcomes();
@@ -113,14 +122,53 @@ export default function DashboardPage() {
     );
   }
 
+  // --- Today strip inputs -------------------------------------------------
+  const closingSoon = (matches ?? [])
+    .map(({ opportunity }) => {
+      if (!opportunity.deadline) return null;
+      const due = new Date(`${opportunity.deadline}T23:59:59`).getTime();
+      if (Number.isNaN(due)) return null;
+      const days = Math.ceil((due - Date.now()) / 86_400_000);
+      return days >= 0 && days <= 30 ? { opportunity, days } : null;
+    })
+    .filter((entry): entry is NonNullable<typeof entry> => entry !== null)
+    .sort((a, b) => a.days - b.days)
+    .slice(0, 3);
+
+  const traitScores = answers ? scoreTraits(answers) : null;
+  const strongestTrait = traitScores
+    ? (() => {
+        const top = [...TRAIT_KEYS].sort(
+          (a, b) => traitScores[b] - traitScores[a],
+        )[0];
+        return { label: traitLabels[top], score: traitScores[top] };
+      })()
+    : null;
+
+  const nextAction = !answers
+    ? {
+        href: "/assessment",
+        label: "Take the assessment",
+        blurb: "Fourteen prompts build the profile everything else runs on.",
+      }
+    : outcomes.length === 0
+      ? {
+          href: "/opportunities",
+          label: "Find one to pursue",
+          blurb:
+            "Bookmark an opportunity and log its outcome — every result you log sharpens your rankings.",
+        }
+      : {
+          href: "/plan",
+          label: "Review your plan",
+          blurb: "Your 30-day plan updates with your profile and matches.",
+        };
+
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
-        <nav className="flex flex-col gap-4 border-b border-border pb-5 sm:flex-row sm:items-center sm:justify-between">
-          <Link href="/" className="h-display text-xl text-foreground">
-            Northstar
-          </Link>
-          <div className="flex items-center gap-3">
+        <AppNav
+          right={
             <Button variant="outline"
               type="button"
               onClick={signOut}
@@ -128,9 +176,8 @@ export default function DashboardPage() {
             >
               Sign out
             </Button>
-            <ThemeToggle />
-          </div>
-        </nav>
+          }
+        />
 
         <header className="py-10">
           <p className="eyebrow">Signed in</p>
@@ -143,8 +190,72 @@ export default function DashboardPage() {
           </p>
         </header>
 
+        {/* Today strip: proof the product knows you, before anything else. */}
+        <section className="mb-10 grid gap-4 md:grid-cols-3">
+          <div className="rounded-lg border bg-card p-5">
+            <p className="eyebrow">Closing soon</p>
+            {closingSoon.length > 0 ? (
+              <ul className="mt-3 grid gap-2">
+                {closingSoon.map(({ opportunity, days }) => (
+                  <li key={opportunity.id} className="flex items-baseline justify-between gap-3">
+                    <Link
+                      href={`/opportunities/${opportunity.id}`}
+                      className="truncate text-sm font-semibold text-foreground hover:underline"
+                    >
+                      {opportunity.title}
+                    </Link>
+                    <span className="shrink-0 font-mono text-xs text-star">
+                      {days === 0 ? "today" : `${days}d`}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                No deadlines in the next 30 days.
+              </p>
+            )}
+          </div>
+          <div className="rounded-lg border bg-card p-5">
+            <p className="eyebrow">Strongest signal</p>
+            {strongestTrait ? (
+              <>
+                <p className="mt-3 text-2xl font-semibold text-foreground">
+                  {strongestTrait.label}
+                </p>
+                <p className="mt-1 font-mono text-sm text-star">
+                  {strongestTrait.score}/100
+                </p>
+              </>
+            ) : (
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                Take the assessment to see your trait profile here.
+              </p>
+            )}
+          </div>
+          <div className="rounded-lg border bg-card p-5">
+            <p className="eyebrow">Next action</p>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">
+              {nextAction.blurb}
+            </p>
+            <Button render={<Link href={nextAction.href} />} className="mt-4 h-10 px-4">
+              {nextAction.label}
+            </Button>
+          </div>
+        </section>
+
         {/* Recommendations preview — top 4 matches */}
-        {matches === null ? (
+        {matchesFailed ? (
+          <section className="rounded-lg border border-destructive/40 bg-card mb-10 p-6 text-center">
+            <h2 className="text-xl font-semibold text-foreground">
+              Could not reach the match engine
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              This is a connection problem, not an empty list — retry in a
+              moment.
+            </p>
+          </section>
+        ) : matches === null ? (
           <section className="rounded-lg border bg-card mb-10 p-6 text-center">
             <p className="font-mono text-sm text-muted-foreground">
               Fetching your recommendations...
@@ -268,6 +379,15 @@ export default function DashboardPage() {
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               Mentors ranked by how their expertise lines up with your profile.
+            </p>
+          </Link>
+          <Link href="/projects" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
+            <h2 className="text-xl font-semibold text-foreground">
+              Projects to join
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              Real open-source repos in your fields with good first issues
+              open right now.
             </p>
           </Link>
           <Link href="/onboarding" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">

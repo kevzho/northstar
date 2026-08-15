@@ -16,7 +16,8 @@ import { Progress } from "@/components/ui/progress";
 import { ScrollProgress } from "@/components/motion/scroll-progress";
 import { useRouter } from "next/navigation";
 import { assessmentQuestions } from "@/lib/assessment";
-import { isComplete } from "@/lib/scoring";
+import { isComplete, scoreFieldInterests, scoreTraits } from "@/lib/scoring";
+import { syncAssessmentProfile } from "@/lib/api";
 import { useStoredAnswers, writeAnswers } from "@/lib/use-assessment";
 
 export default function AssessmentPage() {
@@ -33,6 +34,22 @@ export default function AssessmentPage() {
   const answered = Object.keys(answers).length;
   const total = assessmentQuestions.length;
   const complete = isComplete(answers);
+
+  /**
+   * Best-effort server sync before navigating: signed-in students get
+   * their trait + field scores onto the student row (which makes /match
+   * proportional); signed-out students just proceed — the profile page
+   * works from localStorage either way.
+   */
+  function finishAssessment() {
+    if (complete) {
+      syncAssessmentProfile(
+        scoreTraits(answers),
+        scoreFieldInterests(answers),
+      ).catch(() => {});
+    }
+    router.push("/profile");
+  }
   const left = total - answered;
 
   return (
@@ -51,15 +68,15 @@ export default function AssessmentPage() {
               Assessment
             </h1>
             <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
-              Eight behavioral prompts that reveal how a student builds,
-              analyzes, collaborates, moves through uncertainty, and handles
-              risk. Pick the option that fits best — there are no wrong answers.
+              Fourteen prompts: eight reveal how you build, analyze,
+              collaborate, and handle risk; six reveal which fields actually
+              pull you in. Pick what fits best — there are no wrong answers.
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-3">
             <Button
               disabled={!complete}
-              onClick={() => router.push("/profile")}
+              onClick={finishAssessment}
               className="h-11 px-5 font-semibold"
             >
               {complete ? "See your profile" : `${answered} of ${total} answered`}
@@ -117,12 +134,12 @@ export default function AssessmentPage() {
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="font-mono text-sm text-muted-foreground">
             {complete
-              ? "All eight answered — your trait profile is ready."
+              ? "All fourteen answered — your trait profile is ready."
               : `${left} ${left === 1 ? "question" : "questions"} left.`}
           </p>
           <Button
             disabled={!complete}
-            onClick={() => router.push("/profile")}
+            onClick={finishAssessment}
             className="h-11 px-5 font-semibold"
           >
             Continue to profile

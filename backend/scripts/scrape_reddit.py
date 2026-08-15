@@ -15,19 +15,25 @@ keep whatever fields you added to them (e.g. "review": "keep" / "drop"),
 and re-runs only append genuinely unseen posts.
 
 Politeness / terms:
-- Uses Reddit's official OAuth API (app-only grant) with a descriptive
+- Prefers Reddit's official OAuth API (app-only grant) with a descriptive
   User-Agent and one request every ~1.5 seconds — far inside the free
   tier's 100 queries/minute. Only public subreddit listings and searches.
+- Without working credentials it falls back to the public `.json`
+  endpoints at one request every 6 seconds (~10/minute). Same data,
+  slower run; expect the full sweep to take several minutes.
 
-Setup (one time):
+Setup (one time; optional since the public fallback works without it):
     1. https://www.reddit.com/prefs/apps -> create app -> type "script"
        (name: northstar-scraper, redirect uri: http://localhost:8080)
     2. Add to backend/.env:
            REDDIT_CLIENT_ID=<the string under the app name>
            REDDIT_CLIENT_SECRET=<the secret>
+    3. Since Dec 2025 Reddit's Responsible Builder Policy gates new OAuth
+       access behind a manual approval request (Data API wiki -> contact
+       us -> developer, non-commercial). Until approval lands the token
+       call may 401/403 — the script detects that and uses the fallback.
 
 Usage:
-    cd backend && .venv/bin/python scripts/train_als.py   # unrelated
     cd backend && .venv/bin/python scripts/scrape_reddit.py
 """
 
@@ -40,6 +46,7 @@ import re
 import sys
 import time
 from datetime import datetime, timezone
+from typing import NamedTuple
 
 import requests
 
@@ -52,14 +59,18 @@ except ImportError:
 
 USER_AGENT = "northstar-opportunity-scraper/0.2 (student project; contact: dev.thorfinn@gmail.com)"
 
-SUBREDDITS = [
-    "summerprograms",
-    "scholarships",
-    "internships",
-    "highschool",
-    "ApplyingToCollege",
-    "csMajors",
-    "premed",
+# (subreddit, audience) — the audience seeds each candidate's
+# audience_guess so reviewed keepers land on the right catalog shelf.
+SUBREDDITS: list[tuple[str, str]] = [
+    ("summerprogramresults", "high_school"),
+    ("HSSummerPrograms", "high_school"),
+    ("scholarships", "high_school"),
+    ("highschool", "high_school"),
+    ("ApplyingToCollege", "high_school"),
+    ("internships", "college"),
+    ("csMajors", "college"),
+    ("premed", "college"),
+    ("REU", "college"),
 ]
 
 # Targeted searches sweep further back than /new can reach.
@@ -70,34 +81,78 @@ SEARCHES = [
     "STEM competition high school",
     "high school internship",
 ]
-SEARCH_SUBREDDITS = ["summerprograms", "scholarships", "ApplyingToCollege"]
+SEARCH_SUBREDDITS = ["summerprogramresults", "scholarships", "ApplyingToCollege"]
+
+# The matcher personalizes on opportunity_field, so the pool has to cover
+# every field — /new listings alone skew cs/bio (csMajors, premed) and
+# leave math/physics/engineering underrepresented. These searches also
+# stamp the field onto the candidate when no text hint contradicts it.
+FIELD_SEARCHES: dict[str, list[str]] = {
+    "math": ["math olympiad qualifier", "math summer program"],
+    "physics": ["physics olympiad", "astronomy research high school"],
+    "engineering": ["engineering summer program", "robotics competition high school"],
+    "biology": ["biology research program high school", "medical program high school"],
+    "cs": ["AI research high school", "coding summer program"],
+}
+
+# College sweep — r/REU is literally Research Experiences for
+# Undergraduates; the others carry internship and program threads.
+COLLEGE_SEARCHES = [
+    "REU application",
+    "undergraduate research program",
+    "college internship application",
+    "undergraduate scholarship",
+]
+COLLEGE_SEARCH_SUBREDDITS = ["csMajors", "internships", "REU"]
 
 PAGES_PER_LISTING = 4  # 4 x 75 = up to 300 posts per subreddit per run
-REQUEST_DELAY_S = 1.5
 
-LISTING = "https://oauth.reddit.com/r/{sub}/new"
-SEARCH = "https://oauth.reddit.com/r/{sub}/search"
+OAUTH_BASE = "https://oauth.reddit.com"
+PUBLIC_BASE = "https://www.reddit.com"
 TOKEN_URL = "https://www.reddit.com/api/v1/access_token"
 
 
-def get_token() -> str:
-    """App-only OAuth token; read-only scope, no user context."""
+class Client(NamedTuple):
+    """Where to send requests and how fast; OAuth or public fallback."""
+
+    base: str
+    headers: dict[str, str]
+    delay: float
+
+    @property
+    def suffix(self) -> str:
+        return "" if self.base == OAUTH_BASE else ".json"
+
+
+def build_client() -> Client:
+    """OAuth when credentials work; public .json endpoints otherwise.
+
+    Reddit's Responsible Builder Policy gates new OAuth access behind a
+    manual approval, so a refused token is expected, not fatal.
+    """
     client_id = os.getenv("REDDIT_CLIENT_ID", "")
     client_secret = os.getenv("REDDIT_CLIENT_SECRET", "")
-    if not client_id or not client_secret:
-        sys.exit(
-            "Missing REDDIT_CLIENT_ID / REDDIT_CLIENT_SECRET in backend/.env.\n"
-            "Create a 'script' app at https://www.reddit.com/prefs/apps and add both values."
-        )
-    response = requests.post(
-        TOKEN_URL,
-        auth=(client_id, client_secret),
-        data={"grant_type": "client_credentials"},
-        headers={"User-Agent": USER_AGENT},
-        timeout=20,
-    )
-    response.raise_for_status()
-    return response.json()["access_token"]
+    if client_id and client_secret:
+        try:
+            response = requests.post(
+                TOKEN_URL,
+                auth=(client_id, client_secret),
+                data={"grant_type": "client_credentials"},
+                headers={"User-Agent": USER_AGENT},
+                timeout=20,
+            )
+            response.raise_for_status()
+            token = response.json()["access_token"]
+            return Client(
+                OAUTH_BASE,
+                {"User-Agent": USER_AGENT, "Authorization": f"bearer {token}"},
+                1.5,
+            )
+        except requests.RequestException as error:
+            print(f"OAuth token refused ({error}); using public endpoints.")
+    else:
+        print("No REDDIT_CLIENT_ID/SECRET in backend/.env; using public endpoints.")
+    return Client(PUBLIC_BASE, {"User-Agent": USER_AGENT}, 6.0)
 
 
 # A post has to look like an opportunity, not a question about one.
@@ -136,21 +191,16 @@ def classify(pattern_list: list[tuple[str, re.Pattern[str]]], text: str, default
 
 
 def fetch_page(
-    url: str, token: str, params: dict
+    client: Client, url: str, params: dict
 ) -> tuple[list[dict], str | None]:
-    response = requests.get(
-        url,
-        params=params,
-        headers={"User-Agent": USER_AGENT, "Authorization": f"bearer {token}"},
-        timeout=20,
-    )
+    response = requests.get(url, params=params, headers=client.headers, timeout=20)
     response.raise_for_status()
     data = response.json().get("data", {})
     posts = [c["data"] for c in data.get("children", []) if c.get("kind") == "t3"]
     return posts, data.get("after")
 
 
-def harvest_listing(sub: str, token: str) -> list[dict]:
+def harvest_listing(client: Client, sub: str) -> list[dict]:
     """Paginate /r/{sub}/new several pages deep."""
     posts: list[dict] = []
     after: str | None = None
@@ -158,26 +208,33 @@ def harvest_listing(sub: str, token: str) -> list[dict]:
         params = {"limit": 75}
         if after:
             params["after"] = after
-        page, after = fetch_page(LISTING.format(sub=sub), token, params)
+        url = f"{client.base}/r/{sub}/new{client.suffix}"
+        page, after = fetch_page(client, url, params)
         posts.extend(page)
-        time.sleep(REQUEST_DELAY_S)
+        time.sleep(client.delay)
         if not after:
             break
     return posts
 
 
-def harvest_search(sub: str, query: str, token: str) -> list[dict]:
+def harvest_search(client: Client, sub: str, query: str) -> list[dict]:
     """One page of subreddit-restricted search, sorted newest, past year."""
+    url = f"{client.base}/r/{sub}/search{client.suffix}"
     posts, _ = fetch_page(
-        SEARCH.format(sub=sub),
-        token,
+        client,
+        url,
         {"q": query, "restrict_sr": 1, "sort": "new", "t": "year", "limit": 75},
     )
-    time.sleep(REQUEST_DELAY_S)
+    time.sleep(client.delay)
     return posts
 
 
-def to_candidate(post: dict, source: str) -> dict:
+def to_candidate(
+    post: dict,
+    source: str,
+    field_default: str = "interdisciplinary",
+    audience: str = "high_school",
+) -> dict:
     title = post.get("title", "").strip()
     text = f"{title}\n{post.get('selftext', '')[:2000]}"
     blurb = re.sub(r"\s+", " ", post.get("selftext", "")).strip()[:220]
@@ -192,8 +249,9 @@ def to_candidate(post: dict, source: str) -> dict:
         "title": title,
         "url": external or f"https://www.reddit.com{post.get('permalink', '')}",
         "blurb": blurb or title,
-        "field_guess": classify(FIELD_HINTS, text, "interdisciplinary"),
+        "field_guess": classify(FIELD_HINTS, text, field_default),
         "type_guess": classify(TYPE_HINTS, text, "program"),
+        "audience_guess": audience,
         "needs_review": True,
     }
 
@@ -205,7 +263,7 @@ def looks_like_opportunity(post: dict) -> bool:
 
 
 def main() -> None:
-    token = get_token()
+    client = build_client()
 
     out_dir = pathlib.Path(__file__).parent / "scraped"
     out_dir.mkdir(exist_ok=True)
@@ -223,40 +281,90 @@ def main() -> None:
 
     known = len(pool)
     new_count = 0
+    blocked = 0
 
-    def consider(post: dict, source: str) -> None:
+    def register_error(error: requests.RequestException) -> None:
+        """Stop early when the public endpoints are plainly refusing us."""
+        nonlocal blocked
+        if "403" in str(error):
+            blocked += 1
+        if client.base == PUBLIC_BASE and blocked >= 3:
+            sys.exit(
+                "\nReddit is blocking unauthenticated .json access from this"
+                " network — stopping rather than retrying against a wall.\n"
+                "Next step: create the 'script' app at"
+                " https://www.reddit.com/prefs/apps and put REDDIT_CLIENT_ID /"
+                " REDDIT_CLIENT_SECRET in backend/.env, then re-run.\n"
+                "If the OAuth token is also refused, submit the Data API"
+                " access request (see this file's docstring)."
+            )
+
+    def consider(
+        post: dict,
+        source: str,
+        field_default: str = "interdisciplinary",
+        audience: str = "high_school",
+    ) -> None:
         nonlocal new_count
         if not looks_like_opportunity(post):
             return
-        candidate = to_candidate(post, source)
+        candidate = to_candidate(post, source, field_default, audience)
         if candidate["url"] in pool:
             return
         pool[candidate["url"]] = candidate
         new_count += 1
 
-    for sub in SUBREDDITS:
+    for sub, audience in SUBREDDITS:
         try:
-            posts = harvest_listing(sub, token)
+            posts = harvest_listing(client, sub)
         except requests.RequestException as error:
             print(f"r/{sub}: skipped ({error})")
+            register_error(error)
             continue
         before = new_count
         for post in posts:
-            consider(post, f"r/{sub}")
+            consider(post, f"r/{sub}", audience=audience)
         print(f"r/{sub}: {len(posts)} posts, {new_count - before} new candidates")
 
-    for sub in SEARCH_SUBREDDITS:
-        for query in SEARCHES:
-            try:
-                posts = harvest_search(sub, query, token)
-            except requests.RequestException as error:
-                print(f"r/{sub} search '{query}': skipped ({error})")
-                continue
-            before = new_count
-            for post in posts:
-                consider(post, f"r/{sub} search:{query}")
-            if new_count > before:
-                print(f"r/{sub} search '{query}': {new_count - before} new")
+    def run_searches(
+        queries: list[tuple[str, str]],
+        subs: list[str],
+        audience: str,
+    ) -> None:
+        """queries: (query, field_default) pairs, swept over subs."""
+        for sub in subs:
+            for query, field_default in queries:
+                try:
+                    posts = harvest_search(client, sub, query)
+                except requests.RequestException as error:
+                    print(f"r/{sub} search '{query}': skipped ({error})")
+                    register_error(error)
+                    continue
+                before = new_count
+                for post in posts:
+                    consider(post, f"r/{sub} search:{query}", field_default, audience)
+                if new_count > before:
+                    print(f"r/{sub} search '{query}': {new_count - before} new")
+
+    run_searches(
+        [(query, "interdisciplinary") for query in SEARCHES],
+        SEARCH_SUBREDDITS,
+        "high_school",
+    )
+    run_searches(
+        [
+            (query, field)
+            for field, queries in FIELD_SEARCHES.items()
+            for query in queries
+        ],
+        SEARCH_SUBREDDITS,
+        "high_school",
+    )
+    run_searches(
+        [(query, "interdisciplinary") for query in COLLEGE_SEARCHES],
+        COLLEGE_SEARCH_SUBREDDITS,
+        "college",
+    )
 
     ordered = sorted(pool.values(), key=lambda c: c.get("score", 0), reverse=True)
     out_path.write_text(json.dumps(ordered, indent=2))

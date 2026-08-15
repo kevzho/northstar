@@ -9,18 +9,13 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { AppNav } from "@/components/AppNav";
 
 export default function NotFound() {
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-3xl">
-        <div className="flex items-center justify-between border-b border-border pb-5">
-          <Link href="/" className="h-display text-xl text-foreground">
-            Northstar
-          </Link>
-          <ThemeToggle />
-        </div>
+        <AppNav />
 
         <section className="rounded-lg border bg-card mt-16 p-8 text-center">
           <p className="eyebrow">404 — off the chart</p>

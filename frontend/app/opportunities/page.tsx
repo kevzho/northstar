@@ -12,11 +12,11 @@
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { AppNav } from "@/components/AppNav";
 import { NativeSelect } from "@/components/ui/native-select";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { OpportunityCard } from "@/components/OpportunityCard";
-import { fetchMatches } from "@/lib/api";
+import { dismissOpportunity, fetchMatches, undoDismissal } from "@/lib/api";
 import type { MatchResult, OpportunityField, OpportunityType } from "@/lib/types";
 
 const fieldFilters: { value: OpportunityField | "all"; label: string }[] = [
@@ -60,6 +60,9 @@ function OpportunitiesList() {
   const searchParams = useSearchParams();
 
   const [matches, setMatches] = useState<MatchResult[]>([]);
+  const [loadFailed, setLoadFailed] = useState(false);
+  // Ids dismissed this session, newest last — drives the undo strip.
+  const [dismissedHere, setDismissedHere] = useState<string[]>([]);
 
   // Filters live in the URL so a reload, a back button, or a shared link keeps
   // the same view. Useful in the demo: the filtered list is linkable.
@@ -89,19 +92,40 @@ function OpportunitiesList() {
     let mounted = true;
     fetchMatches()
       .then((result) => {
-        if (mounted) setMatches(result);
+        if (mounted) {
+          setMatches(result);
+          setLoadFailed(false);
+        }
       })
       .catch(() => {
-        // No profile, no seed data, or backend down — fall through to the
-        // empty state below rather than throwing at the route boundary.
-        if (mounted) setMatches([]);
+        // Failure is not emptiness: an unreachable backend or missing
+        // profile renders an honest error card, never "no matches".
+        if (mounted) {
+          setMatches([]);
+          setLoadFailed(true);
+        }
       });
     return () => {
       mounted = false;
     };
   }, []);
 
+  function dismiss(opportunityId: string) {
+    setDismissedHere((current) => [...current, opportunityId]);
+    dismissOpportunity(opportunityId).catch(() =>
+      setDismissedHere((current) => current.filter((id) => id !== opportunityId)),
+    );
+  }
+
+  function undoLastDismiss() {
+    const last = dismissedHere[dismissedHere.length - 1];
+    if (!last) return;
+    setDismissedHere((current) => current.slice(0, -1));
+    undoDismissal(last).catch(() => {});
+  }
+
   const filtered = matches.filter(({ opportunity }) => {
+    if (dismissedHere.includes(opportunity.id)) return false;
     if (field !== "all" && opportunity.field !== field) return false;
     if (type !== "all" && opportunity.type !== type) return false;
     return true;
@@ -110,23 +134,17 @@ function OpportunitiesList() {
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
-        <div className="flex items-center justify-between border-b border-border pb-5">
-          <Link
-            href="/dashboard"
-            className="h-display text-xl text-foreground"
-          >
-            Northstar
-          </Link>
-          <div className="flex items-center gap-3">
+        <AppNav
+          homeHref="/dashboard"
+          right={
             <Link
               href="/dashboard"
               className="text-sm font-semibold text-aurora"
             >
               Back to dashboard
             </Link>
-            <ThemeToggle />
-          </div>
-        </div>
+          }
+        />
 
         <header className="mt-10">
           <p className="eyebrow">Recommendations</p>
@@ -166,11 +184,44 @@ function OpportunitiesList() {
           </NativeSelect>
         </section>
 
-        {filtered.length > 0 ? (
+        {dismissedHere.length > 0 ? (
+          <p className="mt-4 text-sm text-muted-foreground">
+            {dismissedHere.length} marked not for you — future rankings skip
+            {dismissedHere.length === 1 ? " it" : " them"}.{" "}
+            <button
+              type="button"
+              onClick={undoLastDismiss}
+              className="font-semibold text-star underline underline-offset-4"
+            >
+              Undo last
+            </button>
+          </p>
+        ) : null}
+
+        {loadFailed ? (
+          <section className="rounded-lg border border-destructive/40 bg-card mt-10 p-8 text-center">
+            <h2 className="text-xl font-semibold text-foreground">
+              Could not load your recommendations
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">
+              The Northstar backend did not answer — this is a connection
+              problem, not an empty list. Sign in again or retry.
+            </p>
+            <Button
+              onClick={() => window.location.reload()}
+              className="mt-6 h-11 px-5 font-semibold"
+            >
+              Retry
+            </Button>
+          </section>
+        ) : filtered.length > 0 ? (
           <section className="mt-8 grid gap-4 md:grid-cols-2">
             {filtered.map(({ opportunity, score }) => (
               <div key={opportunity.id} className="grid gap-2">
-                <OpportunityCard opportunity={opportunity} />
+                <OpportunityCard
+                  opportunity={opportunity}
+                  onDismiss={() => dismiss(opportunity.id)}
+                />
                 <p className="px-1 text-xs text-muted-foreground">
                   <span className="font-mono text-star">
                     {Math.round(score.score * 100)}% fit

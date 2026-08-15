@@ -28,6 +28,11 @@ class OpportunityType(str, Enum):
     mentorship = "mentorship"
 
 
+class Audience(str, Enum):
+    high_school = "high_school"
+    college = "college"
+
+
 class StudentProfile(BaseModel):
     """Full student row as served by GET /me or POST /students response."""
 
@@ -37,10 +42,41 @@ class StudentProfile(BaseModel):
     grade: Optional[str] = None
     interests: list[str] = Field(default_factory=list)
     goals: Optional[str] = None
+    audience: Audience = Audience.high_school
+    # Quiz outputs synced from the frontend (shapes owned by
+    # frontend/lib/scoring.ts): six 0-100 trait signals; six field shares
+    # summing to 100. None until the student syncs an assessment.
+    trait_scores: Optional[dict[str, float]] = None
+    field_scores: Optional[dict[str, float]] = None
     onboarded: bool = False
     # ISO 8601 timestamp when the student accepted the IRB-style data policy
     # during onboarding. NULL means consent has not been recorded.
     consented_at: Optional[str] = None
+
+
+class AssessmentProfileSync(BaseModel):
+    """Request body for POST /assessment-profile.
+
+    Only these two columns are touched — deliberately not an upsert of the
+    whole profile, so a quiz sync can never clobber onboarding fields.
+    """
+
+    trait_scores: dict[str, float]
+    field_scores: dict[str, float]
+
+
+class Dismissal(BaseModel):
+    """A "not for me" mark on an opportunity."""
+
+    id: str
+    opportunity_id: str
+    created_at: Optional[str] = None
+
+
+class DismissalCreate(BaseModel):
+    """Request body for POST /dismissals."""
+
+    opportunity_id: str
 
 
 class StudentProfileCreate(BaseModel):
@@ -60,6 +96,7 @@ class StudentProfileCreate(BaseModel):
     grade: Optional[str] = None
     interests: list[str] = Field(default_factory=list)
     goals: Optional[str] = None
+    audience: Audience = Audience.high_school
     onboarded: bool = False
     consent: bool = False
 

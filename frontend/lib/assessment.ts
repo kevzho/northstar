@@ -1,3 +1,5 @@
+import type { OpportunityField } from "./types";
+
 export type TraitKey =
   | "builder"
   | "analyst"
@@ -8,10 +10,14 @@ export type TraitKey =
 
 export type TraitDeltas = Partial<Record<TraitKey, number>>;
 
+export type FieldDeltas = Partial<Record<OpportunityField, number>>;
+
 export type AssessmentChoice = {
   id: string;
   label: string;
   traits: TraitDeltas;
+  /** Field-interest weights; only the field-signal questions carry these. */
+  fields?: FieldDeltas;
 };
 
 export type AssessmentQuestion = {
@@ -195,6 +201,153 @@ export const assessmentQuestions: AssessmentQuestion[] = [
         id: "connector",
         label: "The connector who keeps people aligned and moving.",
         traits: { collaboration: 2, executionTempo: 1 },
+      },
+    ],
+  },
+  // Questions 9-14 are field-signal prompts: they still carry light trait
+  // deltas, but their main job is forcing tradeoffs between fields so the
+  // interest percentages come out distinct instead of uniformly mild.
+  {
+    id: "q9-headline",
+    prompt: "Which headline pulls you in first?",
+    choices: [
+      {
+        id: "ai-diagnosis",
+        label: "AI model beats doctors at spotting rare diseases.",
+        traits: { analyst: 1 },
+        fields: { cs: 2, biology: 1 },
+      },
+      {
+        id: "black-hole",
+        label: "New telescope catches a black hole forming in real time.",
+        traits: { analyst: 1, ambiguityComfort: 1 },
+        fields: { physics: 2, math: 1 },
+      },
+      {
+        id: "river-robot",
+        label: "Student-built robot cleans a polluted river.",
+        traits: { builder: 1 },
+        fields: { engineering: 2, interdisciplinary: 1 },
+      },
+    ],
+  },
+  {
+    id: "q10-exhibit",
+    prompt: "Free ticket to one museum exhibit. You pick...",
+    choices: [
+      {
+        id: "gene-lab",
+        label: "The genetics lab: edit DNA in a dish and watch what happens.",
+        traits: { analyst: 1 },
+        fields: { biology: 2 },
+      },
+      {
+        id: "proof-room",
+        label: "The puzzle room: proofs and paradoxes you can touch.",
+        traits: { analyst: 1, ambiguityComfort: 1 },
+        fields: { math: 2 },
+      },
+      {
+        id: "maker-floor",
+        label: "The maker floor: motors, circuits, and 3D printers running.",
+        traits: { builder: 1, executionTempo: 1 },
+        fields: { engineering: 2, cs: 1 },
+      },
+    ],
+  },
+  {
+    id: "q11-series",
+    prompt: "You would actually binge a series about...",
+    choices: [
+      {
+        id: "how-internet-works",
+        label: "How the internet really works, from wires to protocols.",
+        traits: { analyst: 1 },
+        fields: { cs: 2 },
+      },
+      {
+        id: "outbreak",
+        label: "How outbreaks start, spread, and get stopped.",
+        traits: { ambiguityComfort: 1, collaboration: 1 },
+        fields: { biology: 2, interdisciplinary: 1 },
+      },
+      {
+        id: "equations",
+        label: "The handful of equations that predict almost everything.",
+        traits: { analyst: 1 },
+        fields: { math: 2, physics: 1 },
+      },
+    ],
+  },
+  {
+    id: "q12-weekend-pitch",
+    prompt: "A friend pitches a weekend project. Which pitch wins?",
+    choices: [
+      {
+        id: "game-bot",
+        label: "Train a bot to beat us at our favorite game.",
+        traits: { builder: 1 },
+        fields: { cs: 2, math: 1 },
+      },
+      {
+        id: "model-rocket",
+        label: "Build and launch a model rocket from scratch.",
+        traits: { builder: 1, riskTolerance: 1 },
+        fields: { engineering: 2, physics: 1 },
+      },
+      {
+        id: "creek-survey",
+        label: "Test which local creeks are healthiest and map the results.",
+        traits: { collaboration: 1 },
+        fields: { biology: 2, interdisciplinary: 1 },
+      },
+    ],
+  },
+  {
+    id: "q13-fun-class",
+    prompt: "Which hard class would you take just for fun?",
+    choices: [
+      {
+        id: "number-theory",
+        label: "Number theory: pure puzzles, no calculator allowed.",
+        traits: { analyst: 1, ambiguityComfort: 1 },
+        fields: { math: 2 },
+      },
+      {
+        id: "quantum",
+        label: "Quantum mechanics: reality is weirder than fiction.",
+        traits: { ambiguityComfort: 1 },
+        fields: { physics: 2, math: 1 },
+      },
+      {
+        id: "bioengineering",
+        label: "Bioengineering: grow materials instead of manufacturing them.",
+        traits: { builder: 1 },
+        fields: { biology: 2, engineering: 1 },
+      },
+    ],
+  },
+  {
+    id: "q14-career-day",
+    prompt: "At career day, you corner which speaker with questions?",
+    choices: [
+      {
+        id: "game-engineer",
+        label: "The engineer who ships a game millions of people play.",
+        traits: { builder: 1, executionTempo: 1 },
+        fields: { cs: 2 },
+      },
+      {
+        id: "climate-scientist",
+        label: "The climate scientist working across five different fields.",
+        traits: { collaboration: 1, ambiguityComfort: 1 },
+        fields: { interdisciplinary: 2, physics: 1 },
+      },
+      {
+        id: "surgeon-researcher",
+        label: "The surgeon who also runs a research lab.",
+        traits: { executionTempo: 1, analyst: 1 },
+        fields: { biology: 2 },
       },
     ],
   },

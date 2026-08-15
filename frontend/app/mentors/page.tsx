@@ -11,7 +11,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { AppNav } from "@/components/AppNav";
 import { authedFetch, fetchMentors } from "@/lib/api";
 import type { MentorMatch } from "@/lib/api";
 import { buildIntroEmail, mailtoHref } from "@/lib/outreach";
@@ -61,23 +61,17 @@ export default function MentorsPage() {
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-4xl">
-        <div className="flex items-center justify-between border-b border-border pb-5">
-          <Link
-            href="/dashboard"
-            className="h-display text-xl text-foreground"
-          >
-            Northstar
-          </Link>
-          <div className="flex items-center gap-3">
+        <AppNav
+          homeHref="/dashboard"
+          right={
             <Link
               href="/dashboard"
               className="text-sm font-semibold text-aurora"
             >
               Back to dashboard
             </Link>
-            <ThemeToggle />
-          </div>
-        </div>
+          }
+        />
 
         <header className="mt-10">
           <p className="eyebrow">Mentors</p>

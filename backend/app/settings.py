@@ -31,6 +31,10 @@ class Settings(BaseModel):
     supabase_secret_key: str = ""
     supabase_jwt_secret: str = ""
 
+    # Optional: raises the GitHub Search rate limit for /projects from
+    # 10 requests/minute to 30. A classic PAT with no scopes is enough.
+    github_token: str = ""
+
     @classmethod
     def from_env(cls) -> "Settings":
         return cls(
@@ -39,6 +43,7 @@ class Settings(BaseModel):
             supabase_publishable_key=os.getenv("SUPABASE_PUBLISHABLE_KEY", ""),
             supabase_secret_key=os.getenv("SUPABASE_SECRET_KEY", ""),
             supabase_jwt_secret=os.getenv("SUPABASE_JWT_SECRET", ""),
+            github_token=os.getenv("GITHUB_TOKEN", ""),
         )
 
 

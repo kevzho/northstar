@@ -156,15 +156,18 @@ def _cosine(v1: dict[str, float], v2: dict[str, float]) -> float:
     return dot / (n1 * n2)
 
 
-def _explain(status_tf: float, field_match: bool, grade_fit: bool,
-             tag_overlap: int, free: bool, collab_lift: bool = False) -> str:
+def _explain(status_tf: float, field_note: str | None, grade_fit: bool,
+             tag_overlap: int, free: bool, collab_lift: bool = False,
+             bookmark_note: bool = False) -> str:
     bits: list[str] = []
     if status_tf > 0.3:
         bits.append("strong semantic match")
     elif status_tf > 0.1:
         bits.append("partial semantic match")
-    if field_match:
-        bits.append("field matches an interest")
+    if field_note:
+        bits.append(field_note)
+    if bookmark_note:
+        bits.append("close to what you bookmark")
     if grade_fit:
         bits.append("eligible for your grade")
     if tag_overlap > 0:
@@ -184,6 +187,8 @@ def score_opportunities(
     student: dict,
     opportunities: Iterable[dict],
     outcomes: list[dict] | None = None,
+    bookmarked_fields: dict[str, int] | None = None,
+    dismissed_ids: set[str] | None = None,
 ) -> list[dict]:
     """Score an iterable of opportunities for one student.
 
@@ -195,11 +200,17 @@ def score_opportunities(
     (``opportunity_id`` + ``status``); when present and a trained ALS
     artifact exists, a small centered collaborative term joins the score.
 
+    ``bookmarked_fields`` counts the student's bookmarks per field — a
+    small behavioral nudge toward fields they keep saving. ``dismissed_ids``
+    are excluded outright: "not for me" means not in the list.
+
     Returns a list of dict with keys ``opportunity``, ``score`` where
     score itself is a dict with ``opportunity_id``, ``score``, ``explanation``.
     Returns empty list if student has no interests and no goals.
     """
     opps = list(opportunities)
+    if dismissed_ids:
+        opps = [o for o in opps if o.get("id") not in dismissed_ids]
     if not opps:
         return []
 
@@ -218,6 +229,11 @@ def score_opportunities(
     except (ValueError, TypeError):
         student_grade = 99  # skip grade-mismatch penalty on unparseable
 
+    # grade_min/grade_max describe HS grade bands (6-12); for college
+    # students they carry no meaning, so the grade boost is off entirely.
+    if (student.get("audience") or "high_school") == "college":
+        student_grade = 99
+
     # Map student's interests to field enum values
     student_fields: set[str] = set()
     for interest in student.get("interests", []) or []:
@@ -232,11 +248,35 @@ def score_opportunities(
         outcomes or [], [o.get("id") for o in opps if o.get("id")]
     )
 
+    # Quiz field-interest shares (0-100, sum 100), synced from the
+    # assessment. When present, the field boost scales with the share
+    # instead of firing flat — a 56% field pushes harder than a 12% one.
+    field_scores = student.get("field_scores") or {}
+    field_scores = {
+        k: v for k, v in field_scores.items() if isinstance(v, (int, float))
+    } if isinstance(field_scores, dict) else {}
+
     results: list[dict] = []
     for opp, doc_v in zip(opps, doc_vectors):
         tfidf = _cosine(doc_v, qv)
         opp_field = opp.get("opportunity_field") or opp.get("field") or ""
         field_match = opp_field in student_fields
+
+        if field_scores:
+            share = float(field_scores.get(opp_field, 0))
+            field_boost = 0.25 * max(0.0, min(share, 100.0)) / 100.0
+            field_note = (
+                f"{share:.0f}% of your interest points at this field"
+                if share >= 10
+                else None
+            )
+            field_match = field_match or share >= 10
+        else:
+            field_boost = 0.15 if field_match else 0.0
+            field_note = "field matches an interest" if field_match else None
+
+        bookmark_count = (bookmarked_fields or {}).get(opp_field, 0)
+        bookmark_boost = min(0.02 * bookmark_count, 0.06)
 
         tmin, tmax = opp.get("grade_min", 6), opp.get("grade_max", 12)
         try:
@@ -253,8 +293,7 @@ def score_opportunities(
 
         free = (opp.get("cost", 0) or 0) == 0
 
-        boost = 0.0
-        if field_match: boost += 0.15
+        boost = field_boost + bookmark_boost
         if grade_fit:   boost += 0.10
         if tag_overlap: boost += 0.10
         if free:        boost += 0.05
@@ -270,8 +309,9 @@ def score_opportunities(
             score = min(score, 0.05)
 
         explanation = _explain(
-            tfidf, field_match, grade_fit, tag_overlap, free,
+            tfidf, field_note, grade_fit, tag_overlap, free,
             collab_lift=collab_term > 0.02,
+            bookmark_note=bookmark_boost > 0,
         )
         results.append({
             "opportunity": opp,

@@ -8,15 +8,15 @@
  * Step 3: background + IRB-style consent checkbox.
  */
 
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { AppNav } from "@/components/AppNav";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { NativeSelect } from "@/components/ui/native-select";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { saveStudentProfile } from "@/lib/api";
+import type { Audience } from "@/lib/types";
 
 const subjectOptions = [
   "Computer Science",
@@ -32,6 +32,7 @@ export default function OnboardingPage() {
   const [step, setStep] = useState<1 | 2 | 3>(1);
 
   const [name, setName] = useState("");
+  const [audience, setAudience] = useState<Audience>("high_school");
   const [grade, setGrade] = useState("");
   const [interests, setInterests] = useState<string[]>([]);
   const [goals, setGoals] = useState("");
@@ -55,6 +56,7 @@ export default function OnboardingPage() {
         grade,
         interests,
         goals,
+        audience,
         onboarded: true,
         consent,
       });
@@ -78,17 +80,13 @@ export default function OnboardingPage() {
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-3xl">
-        <div className="flex items-center justify-between border-b border-border pb-5">
-          <Link href="/" className="h-display text-xl text-foreground">
-            Northstar
-          </Link>
-          <div className="flex items-center gap-3">
+        <AppNav
+          right={
             <p className="font-mono text-sm uppercase tracking-[0.16em] text-muted-foreground">
               Step {step} of 3
             </p>
-            <ThemeToggle />
-          </div>
-        </div>
+          }
+        />
 
         <div className="mt-10">
           <p className="eyebrow">Onboarding</p>
@@ -104,6 +102,36 @@ export default function OnboardingPage() {
         <section className="rounded-lg border bg-card mt-8 p-6">
           {step === 1 ? (
             <div className="grid gap-5">
+              <div className="grid gap-2">
+                <span className="text-sm font-semibold text-foreground">
+                  I am in...
+                </span>
+                <div className="flex gap-2">
+                  {(
+                    [
+                      ["high_school", "High school"],
+                      ["college", "College"],
+                    ] as const
+                  ).map(([value, label]) => (
+                    <button
+                      key={value}
+                      type="button"
+                      aria-pressed={audience === value}
+                      onClick={() => {
+                        setAudience(value);
+                        setGrade("");
+                      }}
+                      className={
+                        audience === value
+                          ? "border border-foreground bg-foreground px-4 py-2 text-sm font-medium text-background"
+                          : "border border-border bg-transparent px-4 py-2 text-sm font-medium text-foreground"
+                      }
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
               <label className="grid gap-2">
                 <span className="text-sm font-semibold text-foreground">
                   Name
@@ -127,17 +155,15 @@ export default function OnboardingPage() {
                   onChange={(event) => setGrade(event.target.value)}
                   className="h-12 px-4 text-base"
                 >
-                  <option value="">Select your grade</option>
-                  {[
-                    "8",
-                    "9",
-                    "10",
-                    "11",
-                    "12",
-                    "Gap year",
-                    "Freshman",
-                    "Sophomore",
-                  ].map((option) => (
+                  <option value="">
+                    {audience === "college"
+                      ? "Select your year"
+                      : "Select your grade"}
+                  </option>
+                  {(audience === "college"
+                    ? ["Freshman", "Sophomore", "Junior", "Senior", "Gap year"]
+                    : ["8", "9", "10", "11", "12", "Gap year"]
+                  ).map((option) => (
                     <option key={option} value={option}>
                       {option}
                     </option>

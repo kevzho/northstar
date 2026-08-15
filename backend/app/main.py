@@ -10,7 +10,17 @@ from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 
 from .auth import CurrentUser, RequireUser
-from .schemas import StudentProfile, StudentProfileCreate, Bookmark, BookmarkCreate, OutcomeCreate, Outcome
+from .schemas import (
+    AssessmentProfileSync,
+    Bookmark,
+    BookmarkCreate,
+    Dismissal,
+    DismissalCreate,
+    Outcome,
+    OutcomeCreate,
+    StudentProfile,
+    StudentProfileCreate,
+)
 from .settings import settings
 
 # Used only by POST /students to translate ``consent: True`` into the
@@ -56,7 +66,7 @@ def create_app() -> FastAPI:
         sb = get_supabase()
         row = (
             sb.table("students")
-            .select("id, name, email, grade, interests, goals, onboarded, consented_at")
+            .select("id, name, email, grade, interests, goals, audience, trait_scores, field_scores, onboarded, consented_at")
             .eq("id", user.id)
             .maybe_single()
             .execute()
@@ -104,6 +114,88 @@ def create_app() -> FastAPI:
             )
         return result.data[0]  # upsert with representation returns a list
 
+    @app.post("/assessment-profile")
+    def sync_assessment_profile(
+        body: AssessmentProfileSync,
+        user: CurrentUser = RequireUser,
+    ) -> dict:
+        """Persist the quiz's trait + field scores onto the student row.
+
+        Touches only those two columns (see AssessmentProfileSync). 404s
+        when no profile row exists yet — the frontend creates the stub via
+        POST /students first, same contract as everywhere else.
+        """
+
+        from .db import get_supabase
+
+        sb = get_supabase()
+        result = (
+            sb.table("students")
+            .update(
+                {
+                    "trait_scores": body.trait_scores,
+                    "field_scores": body.field_scores,
+                },
+                returning="representation",
+            )
+            .eq("id", user.id)
+            .execute()
+        )
+        if not result.data:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Student profile not found. POST /students to create.",
+            )
+        return {"synced": True}
+
+    @app.get("/dismissals", response_model=list[Dismissal])
+    def list_dismissals(user: CurrentUser = RequireUser) -> list[dict]:
+        """The student's "not for me" marks."""
+        from .db import get_supabase
+
+        sb = get_supabase()
+        result = (
+            sb.table("dismissals")
+            .select("id, opportunity_id, created_at")
+            .eq("student_id", user.id)
+            .order("created_at", desc=True)
+            .execute()
+        )
+        return result.data or []
+
+    @app.post("/dismissals", response_model=Dismissal)
+    def create_dismissal(
+        body: DismissalCreate,
+        user: CurrentUser = RequireUser,
+    ) -> dict:
+        """Mark an opportunity "not for me" — excluded from /match."""
+        from .db import get_supabase
+
+        sb = get_supabase()
+        row = {"student_id": user.id, "opportunity_id": body.opportunity_id}
+        result = (
+            sb.table("dismissals")
+            .upsert(row, on_conflict="student_id,opportunity_id", returning="representation")
+            .execute()
+        )
+        if not result.data:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to dismiss opportunity",
+            )
+        return result.data[0]
+
+    @app.delete("/dismissals/{opp_id}", status_code=status.HTTP_204_NO_CONTENT)
+    def delete_dismissal(
+        opp_id: str,
+        user: CurrentUser = RequireUser,
+    ):
+        """Undo a dismissal by opportunity id."""
+        from .db import get_supabase
+
+        sb = get_supabase()
+        sb.table("dismissals").delete().eq("student_id", user.id).eq("opportunity_id", opp_id).execute()
+
     @app.get("/match")
     def match(user: CurrentUser = RequireUser) -> list[dict]:
         """Ranked recommendations for the signed-in student.
@@ -123,7 +215,7 @@ def create_app() -> FastAPI:
         # Profile
         prof = (
             sb.table("students")
-            .select("id, name, email, grade, interests, goals")
+            .select("id, name, email, grade, interests, goals, audience, field_scores")
             .eq("id", user.id)
             .maybe_single()
             .execute()
@@ -135,9 +227,43 @@ def create_app() -> FastAPI:
                 detail="Student profile not found. POST /students to create.",
             )
 
-        # Catalog (all opportunities; for MVP scale this is fine)
+        # Catalog (all opportunities; for MVP scale this is fine). Filtered
+        # in Python to the student's audience shelf — rows predating the
+        # audience column count as high_school, matching its DB default.
         cat = sb.table("opportunities").select("*").execute()
-        opportunities = cat.data or []
+        shelf = student.get("audience") or "high_school"
+        opportunities = [
+            o for o in (cat.data or [])
+            if (o.get("audience") or "high_school") == shelf
+        ]
+
+        # Behavioral signals: bookmarks nudge their fields up a little;
+        # dismissed opportunities leave the list entirely. Both additive —
+        # a fetch failure must never block matching.
+        bookmarked_fields: dict[str, int] = {}
+        dismissed_ids: set[str] = set()
+        try:
+            marks = (
+                sb.table("bookmarks")
+                .select("opportunity_id")
+                .eq("student_id", user.id)
+                .execute()
+            )
+            marked_ids = {b["opportunity_id"] for b in (marks.data or [])}
+            by_id = {o.get("id"): o for o in (cat.data or [])}
+            for opp_id in marked_ids:
+                field = (by_id.get(opp_id) or {}).get("opportunity_field")
+                if field:
+                    bookmarked_fields[field] = bookmarked_fields.get(field, 0) + 1
+            gone = (
+                sb.table("dismissals")
+                .select("opportunity_id")
+                .eq("student_id", user.id)
+                .execute()
+            )
+            dismissed_ids = {d["opportunity_id"] for d in (gone.data or [])}
+        except Exception:
+            pass
 
         # The student's own outcomes feed the collaborative term. Additive
         # signal only — its absence must never block matching.
@@ -152,7 +278,13 @@ def create_app() -> FastAPI:
         except Exception:
             outcome_rows = []
 
-        results = score_opportunities(student, opportunities, outcome_rows)
+        results = score_opportunities(
+            student,
+            opportunities,
+            outcome_rows,
+            bookmarked_fields=bookmarked_fields,
+            dismissed_ids=dismissed_ids,
+        )
         # Sanitize the opportunity dict to the shape the frontend expects.
         # DB uses ``opportunity_field``; TS expects ``field``.
         for r in results:
@@ -332,7 +464,7 @@ def create_app() -> FastAPI:
         # Profile
         prof = (
             sb.table("students")
-            .select("id, name, email, grade, interests, goals")
+            .select("id, name, email, grade, interests, goals, audience")
             .eq("id", user.id)
             .maybe_single()
             .execute()
@@ -345,7 +477,11 @@ def create_app() -> FastAPI:
             )
 
         cat = sb.table("opportunities").select("*").execute()
-        opportunities = cat.data or []
+        shelf = student.get("audience") or "high_school"
+        opportunities = [
+            o for o in (cat.data or [])
+            if (o.get("audience") or "high_school") == shelf
+        ]
 
         results = score_opportunities(student, opportunities)
 
@@ -382,6 +518,24 @@ def create_app() -> FastAPI:
                     })
 
         return {"nodes": nodes, "edges": edges}
+
+    @app.get("/projects")
+    def list_projects(
+        fields: str = "",
+        user: CurrentUser = RequireUser,
+    ) -> list[dict]:
+        """Real GitHub repos worth contributing to, ranked per field.
+
+        ``fields`` is a comma-separated subset of the opportunity fields
+        (the frontend sends the quiz's leading fields). Unknown values are
+        dropped; an empty list falls back to interdisciplinary.
+        """
+
+        from .projects import FIELD_TOPICS, recommend_projects
+
+        requested = [f.strip() for f in fields.split(",") if f.strip()]
+        valid = [f for f in requested if f in FIELD_TOPICS]
+        return recommend_projects(valid or ["interdisciplinary"])
 
     @app.get("/mentors")
     def list_mentors(user: CurrentUser = RequireUser) -> list[dict]:

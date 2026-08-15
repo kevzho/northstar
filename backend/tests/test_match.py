@@ -128,3 +128,58 @@ def test_every_result_carries_an_explanation() -> None:
     for r in results:
         assert r["score"]["explanation"].strip()
         assert r["score"]["opportunity_id"]
+
+
+# ---------------------------------------------------------------------------
+# Evolving-profile signals: proportional field boost, bookmarks, dismissals.
+# ---------------------------------------------------------------------------
+
+
+def test_field_scores_make_boost_proportional() -> None:
+    """A 60% field pushes harder than a 10% one; both beat 0%."""
+    student = {**STUDENT, "field_scores": {"cs": 60, "biology": 10, "math": 0}}
+    results = score_opportunities(
+        student,
+        [
+            _opp(id="cs", opportunity_field="cs"),
+            _opp(id="bio", opportunity_field="biology"),
+            _opp(id="math", opportunity_field="math"),
+        ],
+    )
+    by_id = {r["score"]["opportunity_id"]: r["score"]["score"] for r in results}
+    assert by_id["cs"] > by_id["bio"] > by_id["math"]
+
+
+def test_field_share_appears_in_explanation() -> None:
+    student = {**STUDENT, "field_scores": {"cs": 56}}
+    (result,) = score_opportunities(student, [_opp(opportunity_field="cs")])
+    assert "56% of your interest" in result["score"]["explanation"]
+
+
+def test_without_field_scores_flat_boost_still_fires() -> None:
+    """Old behavior is the fallback: stated interest -> flat boost."""
+    (result,) = score_opportunities(STUDENT, [_opp(opportunity_field="cs")])
+    assert "field matches" in result["score"]["explanation"].lower()
+
+
+def test_dismissed_opportunities_are_excluded() -> None:
+    results = score_opportunities(
+        STUDENT,
+        [_opp(id="keep"), _opp(id="gone")],
+        dismissed_ids={"gone"},
+    )
+    ids = [r["score"]["opportunity_id"] for r in results]
+    assert ids == ["keep"]
+
+
+def test_bookmarked_field_nudges_and_is_explained() -> None:
+    plain = score_opportunities(STUDENT, [_opp()])
+    nudged = score_opportunities(STUDENT, [_opp()], bookmarked_fields={"cs": 2})
+    assert nudged[0]["score"]["score"] > plain[0]["score"]["score"]
+    assert "bookmark" in nudged[0]["score"]["explanation"].lower()
+
+
+def test_malformed_field_scores_do_not_crash() -> None:
+    student = {**STUDENT, "field_scores": {"cs": "not-a-number", "math": None}}
+    results = score_opportunities(student, [_opp(opportunity_field="cs")])
+    assert len(results) == 1  # falls back cleanly, no boost from junk
