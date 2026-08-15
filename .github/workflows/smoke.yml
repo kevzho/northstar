@@ -1,0 +1,28 @@
+# Production smoke test — the live site is checked every 30 minutes, so a
+# broken deploy alerts (workflow failure email) within minutes instead of
+# being discovered by a visitor. Checks are read-only and unauthenticated:
+# frontend renders, backend is healthy, and the auth gate still rejects
+# anonymous requests (a 200 there would mean the gate fell off).
+name: Smoke
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+jobs:
+  production:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Frontend renders
+        run: |
+          body=$(curl -sf --max-time 20 https://northstar-mu-teal.vercel.app)
+          echo "$body" | grep -qi "northstar" || { echo "homepage did not mention Northstar"; exit 1; }
+      - name: Backend healthy
+        run: |
+          status=$(curl -sf --max-time 20 https://northstar-api-theta.vercel.app/health | tr -d ' ')
+          [ "$status" = '{"status":"ok"}' ] || { echo "unexpected /health: $status"; exit 1; }
+      - name: Auth gate holds
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 https://northstar-api-theta.vercel.app/match)
+          [ "$code" = "401" ] || [ "$code" = "403" ] || { echo "/match without auth returned $code"; exit 1; }

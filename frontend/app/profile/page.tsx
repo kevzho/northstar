@@ -24,7 +24,8 @@ import {
 } from "@/lib/scoring";
 import { useStoredAnswers } from "@/lib/use-assessment";
 import { useEffect, useState } from "react";
-import type { OpportunityField } from "@/lib/types";
+import { fetchTimeline } from "@/lib/api";
+import type { OpportunityField, TimelineEvent } from "@/lib/types";
 
 const fieldLabels: Record<OpportunityField, string> = {
   cs: "Computer science",
@@ -73,6 +74,27 @@ export default function ProfilePage() {
   // field distribution is snapshotted in localStorage; when it differs we
   // name the biggest movers, then store the current one.
   const [shifts, setShifts] = useState<string[]>([]);
+  const [timeline, setTimeline] = useState<TimelineEvent[] | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    fetchTimeline()
+      .then((events) => {
+        if (!cancelled) setTimeline(events);
+      })
+      .catch(() => {
+        // Signed out — the localStorage shift note still works.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Prefer the server-side shift (computed between durable history
+  // snapshots) over the localStorage one when a session exists.
+  const serverShift = timeline?.find(
+    (event) =>
+      event.kind === "assessment" && event.detail !== "first profile snapshot",
+  )?.detail;
   useEffect(() => {
     if (!isReal) return;
     const KEY = "northstar.profile.fieldSnapshot";
@@ -178,9 +200,11 @@ export default function ProfilePage() {
             Where your answers pointed, as shares of a whole — the six numbers
             always sum to 100.
           </p>
-          {shifts.length > 0 ? (
+          {serverShift || shifts.length > 0 ? (
             <p className="mt-2 font-mono text-xs text-star">
-              Since your last visit: {shifts.join(", ")}
+              {serverShift
+                ? `Latest shift: ${serverShift}`
+                : `Since your last visit: ${shifts.join(", ")}`}
             </p>
           ) : null}
           <div className="mt-5 grid gap-4">
@@ -208,6 +232,38 @@ export default function ProfilePage() {
             ))}
           </div>
         </section>
+
+        {timeline && timeline.length > 0 ? (
+          <section className="rounded-lg border bg-card mt-8 p-5">
+            <h2 className="text-sm font-semibold text-foreground">
+              Evidence timeline
+            </h2>
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">
+              Every recorded step — assessments, missions, outcomes,
+              bookmarks — newest first. This record is the product.
+            </p>
+            <ul className="mt-4 grid gap-3">
+              {timeline.slice(0, 12).map((event, index) => (
+                <li
+                  key={`${event.kind}-${event.at}-${index}`}
+                  className="flex flex-wrap items-baseline gap-x-3 gap-y-1"
+                >
+                  <span className="font-mono text-[11px] uppercase tracking-wider text-aurora">
+                    {event.at ? event.at.slice(0, 10) : ""} · {event.kind}
+                  </span>
+                  <span className="text-sm font-semibold text-foreground">
+                    {event.title}
+                  </span>
+                  {event.detail ? (
+                    <span className="text-xs text-muted-foreground">
+                      {event.detail}
+                    </span>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
 
         <p className="mt-4 text-xs leading-5 text-muted-foreground">
           Each trait score is the sum of the trait weights on the answers you

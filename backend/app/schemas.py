@@ -65,6 +65,33 @@ class AssessmentProfileSync(BaseModel):
     field_scores: dict[str, float]
 
 
+class Mission(BaseModel):
+    """A proof mission: a small real-world task tied to an archetype."""
+
+    id: str
+    archetype_id: str
+    title: str
+    description: str
+    trait_focus: str
+    effort: str
+    sort_order: int = 0
+
+
+class MissionCompletion(BaseModel):
+    """Evidence that a student completed a mission."""
+
+    id: str
+    mission_id: str
+    evidence: str = ""
+    created_at: Optional[str] = None
+
+
+class MissionCompleteBody(BaseModel):
+    """Request body for POST /missions/{mission_id}/complete."""
+
+    evidence: str = ""
+
+
 class Dismissal(BaseModel):
     """A "not for me" mark on an opportunity."""
 

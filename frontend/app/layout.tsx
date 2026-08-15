@@ -6,6 +6,7 @@ import {
 } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
+import { SentryInit } from "@/components/SentryInit";
 import { cn } from "@/lib/utils";
 
 /* Display face — characterful grotesque for titles; hierarchy from size. */
@@ -56,6 +57,7 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
+          <SentryInit />
           {children}
         </ThemeProvider>
       </body>

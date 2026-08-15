@@ -22,6 +22,9 @@ import type {
   StudentProfile,
   Outcome,
   ProjectRec,
+  Mission,
+  MissionCompletion,
+  TimelineEvent,
 } from "./types";
 
 export type Mentor = {
@@ -213,4 +216,31 @@ export async function dismissOpportunity(opportunityId: string): Promise<void> {
 
 export async function undoDismissal(opportunityId: string): Promise<void> {
   await authedFetch(`/dismissals/${opportunityId}`, { method: "DELETE" });
+}
+
+/** Proof missions, optionally for one archetype (future path). */
+export async function fetchMissions(archetype?: string): Promise<Mission[]> {
+  const query = archetype ? `?archetype=${encodeURIComponent(archetype)}` : "";
+  return (await authedFetch(`/missions${query}`)).json();
+}
+
+/** The student's completed missions. */
+export async function fetchMissionCompletions(): Promise<MissionCompletion[]> {
+  return (await authedFetch("/missions/completions")).json();
+}
+
+/** Record mission evidence; idempotent per (student, mission). */
+export async function completeMission(
+  missionId: string,
+  evidence: string,
+): Promise<MissionCompletion> {
+  return (await authedFetch(`/missions/${missionId}/complete`, {
+    method: "POST",
+    body: JSON.stringify({ evidence }),
+  })).json();
+}
+
+/** The evidence timeline: every recorded step, newest first. */
+export async function fetchTimeline(): Promise<TimelineEvent[]> {
+  return (await authedFetch("/timeline")).json();
 }

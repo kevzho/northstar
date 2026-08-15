@@ -7,10 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run"
+    "test": "vitest run",
+    "gen:api": "openapi-typescript lib/api-schema.json -o lib/api-types.gen.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
+    "@sentry/browser": "^10.70.0",
     "@supabase/supabase-js": "^2.108.2",
     "@types/d3": "^7.4.3",
     "class-variance-authority": "^0.7.1",
@@ -35,6 +37,7 @@
     "@types/three": "^0.185.4",
     "eslint": "^9",
     "eslint-config-next": "16.2.0",
+    "openapi-typescript": "^7.13.0",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^4.1.10"

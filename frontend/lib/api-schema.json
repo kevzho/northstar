@@ -1,0 +1,1220 @@
+{
+  "components": {
+    "schemas": {
+      "AssessmentProfileSync": {
+        "description": "Request body for POST /assessment-profile.\n\nOnly these two columns are touched \u2014 deliberately not an upsert of the\nwhole profile, so a quiz sync can never clobber onboarding fields.",
+        "properties": {
+          "field_scores": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Field Scores",
+            "type": "object"
+          },
+          "trait_scores": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Trait Scores",
+            "type": "object"
+          }
+        },
+        "required": [
+          "trait_scores",
+          "field_scores"
+        ],
+        "title": "AssessmentProfileSync",
+        "type": "object"
+      },
+      "Audience": {
+        "enum": [
+          "high_school",
+          "college"
+        ],
+        "title": "Audience",
+        "type": "string"
+      },
+      "Bookmark": {
+        "description": "A saved opportunity reference for a student.",
+        "properties": {
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "opportunity_id": {
+            "title": "Opportunity Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "opportunity_id"
+        ],
+        "title": "Bookmark",
+        "type": "object"
+      },
+      "BookmarkCreate": {
+        "description": "Request body for POST /bookmarks.",
+        "properties": {
+          "opportunity_id": {
+            "title": "Opportunity Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "opportunity_id"
+        ],
+        "title": "BookmarkCreate",
+        "type": "object"
+      },
+      "Dismissal": {
+        "description": "A \"not for me\" mark on an opportunity.",
+        "properties": {
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "opportunity_id": {
+            "title": "Opportunity Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "opportunity_id"
+        ],
+        "title": "Dismissal",
+        "type": "object"
+      },
+      "DismissalCreate": {
+        "description": "Request body for POST /dismissals.",
+        "properties": {
+          "opportunity_id": {
+            "title": "Opportunity Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "opportunity_id"
+        ],
+        "title": "DismissalCreate",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "Mission": {
+        "description": "A proof mission: a small real-world task tied to an archetype.",
+        "properties": {
+          "archetype_id": {
+            "title": "Archetype Id",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "effort": {
+            "title": "Effort",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "sort_order": {
+            "default": 0,
+            "title": "Sort Order",
+            "type": "integer"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "trait_focus": {
+            "title": "Trait Focus",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "archetype_id",
+          "title",
+          "description",
+          "trait_focus",
+          "effort"
+        ],
+        "title": "Mission",
+        "type": "object"
+      },
+      "MissionCompleteBody": {
+        "description": "Request body for POST /missions/{mission_id}/complete.",
+        "properties": {
+          "evidence": {
+            "default": "",
+            "title": "Evidence",
+            "type": "string"
+          }
+        },
+        "title": "MissionCompleteBody",
+        "type": "object"
+      },
+      "MissionCompletion": {
+        "description": "Evidence that a student completed a mission.",
+        "properties": {
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "evidence": {
+            "default": "",
+            "title": "Evidence",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "mission_id": {
+            "title": "Mission Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "mission_id"
+        ],
+        "title": "MissionCompletion",
+        "type": "object"
+      },
+      "Outcome": {
+        "description": "Logged outcome row.",
+        "properties": {
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "impact_notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Impact Notes"
+          },
+          "opportunity_id": {
+            "title": "Opportunity Id",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "opportunity_id",
+          "status"
+        ],
+        "title": "Outcome",
+        "type": "object"
+      },
+      "OutcomeCreate": {
+        "description": "Request body for POST /outcomes.",
+        "properties": {
+          "impact_notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Impact Notes"
+          },
+          "opportunity_id": {
+            "title": "Opportunity Id",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "opportunity_id",
+          "status"
+        ],
+        "title": "OutcomeCreate",
+        "type": "object"
+      },
+      "StudentProfile": {
+        "description": "Full student row as served by GET /me or POST /students response.",
+        "properties": {
+          "audience": {
+            "$ref": "#/components/schemas/Audience",
+            "default": "high_school"
+          },
+          "consented_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Consented At"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "field_scores": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "number"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Field Scores"
+          },
+          "goals": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Goals"
+          },
+          "grade": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grade"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "interests": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Interests",
+            "type": "array"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "onboarded": {
+            "default": false,
+            "title": "Onboarded",
+            "type": "boolean"
+          },
+          "trait_scores": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "number"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Trait Scores"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "StudentProfile",
+        "type": "object"
+      },
+      "StudentProfileCreate": {
+        "description": "Request body for POST /students (upsert).\n\n``id`` is omitted \u2014 the backend derives it from the JWT ``sub`` claim.\n``email`` is omitted \u2014 the backend copies it from ``auth.users.email``\nvia the Supabase client, or the client may supply it. If absent the\nupsert leaves the column alone.\n\n``consent`` (bool, default False) \u2014 when True the backend stamps\n``consented_at = now()`` on the row; when False the column is left\nuntouched (so we never revoke an earlier consent via a stub call).",
+        "properties": {
+          "audience": {
+            "$ref": "#/components/schemas/Audience",
+            "default": "high_school"
+          },
+          "consent": {
+            "default": false,
+            "title": "Consent",
+            "type": "boolean"
+          },
+          "goals": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Goals"
+          },
+          "grade": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grade"
+          },
+          "interests": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Interests",
+            "type": "array"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "onboarded": {
+            "default": false,
+            "title": "Onboarded",
+            "type": "boolean"
+          }
+        },
+        "title": "StudentProfileCreate",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "title": "Northstar API",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "root__get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Root  Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Root"
+      }
+    },
+    "/assessment-profile": {
+      "post": {
+        "description": "Persist the quiz's trait + field scores onto the student row.\n\nTouches only those two columns (see AssessmentProfileSync). 404s\nwhen no profile row exists yet \u2014 the frontend creates the stub via\nPOST /students first, same contract as everywhere else.",
+        "operationId": "sync_assessment_profile_assessment_profile_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssessmentProfileSync"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Sync Assessment Profile Assessment Profile Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Sync Assessment Profile"
+      }
+    },
+    "/bookmarks": {
+      "get": {
+        "description": "Return the student's bookmarked opportunities.",
+        "operationId": "list_bookmarks_bookmarks_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Bookmark"
+                  },
+                  "title": "Response List Bookmarks Bookmarks Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Bookmarks"
+      },
+      "post": {
+        "description": "Bookmark an opportunity for the signed-in student.",
+        "operationId": "create_bookmark_bookmarks_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookmarkCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Bookmark"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Bookmark"
+      }
+    },
+    "/bookmarks/{opp_id}": {
+      "delete": {
+        "description": "Remove a bookmark by opportunity id.",
+        "operationId": "delete_bookmark_bookmarks__opp_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "opp_id",
+            "required": true,
+            "schema": {
+              "title": "Opp Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Bookmark"
+      }
+    },
+    "/dismissals": {
+      "get": {
+        "description": "The student's \"not for me\" marks.",
+        "operationId": "list_dismissals_dismissals_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Dismissal"
+                  },
+                  "title": "Response List Dismissals Dismissals Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Dismissals"
+      },
+      "post": {
+        "description": "Mark an opportunity \"not for me\" \u2014 excluded from /match.",
+        "operationId": "create_dismissal_dismissals_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DismissalCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dismissal"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Dismissal"
+      }
+    },
+    "/dismissals/{opp_id}": {
+      "delete": {
+        "description": "Undo a dismissal by opportunity id.",
+        "operationId": "delete_dismissal_dismissals__opp_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "opp_id",
+            "required": true,
+            "schema": {
+              "title": "Opp Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Dismissal"
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Health Health Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Health"
+      }
+    },
+    "/match": {
+      "get": {
+        "description": "Ranked recommendations for the signed-in student.\n\nFetches the student profile + catalog from Supabase, runs the TF-IDF\nscoring engine (``app/match.py``), upserts the scored results into\n``public.matches`` keyed on the existing ``unique(student_id,\nopportunity_id)`` constraint, and returns MatchResult[] sorted by\nscore desc. Re-running refreshes scores (and explanations) without\ncreating duplicate rows.",
+        "operationId": "match_match_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "title": "Response Match Match Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Match"
+      }
+    },
+    "/me": {
+      "get": {
+        "description": "Return the signed-in student's profile, or 404 if none yet.\n\nThe 404 is a contract with the frontend: when the dashboard sees a\n404 on /me it knows to POST /students (task 2) and upsert the row\nkeyed by ``auth.users.id``.",
+        "operationId": "me_me_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Me Me Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Me"
+      }
+    },
+    "/mentors": {
+      "get": {
+        "description": "Ranked mentor recommendations for the signed-in student.\n\nReuses the TF-IDF / cosine pipeline from app/mentors.py. All\nmentors are returned (``select *``) \u2014 there are <100 in the\ncatalog at MVP scale, so no need for server-side prefilter.",
+        "operationId": "list_mentors_mentors_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "title": "Response List Mentors Mentors Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Mentors"
+      }
+    },
+    "/missions": {
+      "get": {
+        "description": "Proof missions, optionally filtered to one archetype (path).",
+        "operationId": "list_missions_missions_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "archetype",
+            "required": false,
+            "schema": {
+              "default": "",
+              "title": "Archetype",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Mission"
+                  },
+                  "title": "Response List Missions Missions Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Missions"
+      }
+    },
+    "/missions/completions": {
+      "get": {
+        "description": "The student's completed missions, newest first.",
+        "operationId": "list_mission_completions_missions_completions_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/MissionCompletion"
+                  },
+                  "title": "Response List Mission Completions Missions Completions Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Mission Completions"
+      }
+    },
+    "/missions/{mission_id}/complete": {
+      "post": {
+        "description": "Record mission evidence onto the student record.\n\nIdempotent by the unique(student_id, mission_id) constraint \u2014\ncompleting twice updates the evidence instead of duplicating.",
+        "operationId": "complete_mission_missions__mission_id__complete_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "mission_id",
+            "required": true,
+            "schema": {
+              "title": "Mission Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MissionCompleteBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MissionCompletion"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Complete Mission"
+      }
+    },
+    "/opportunities/{opp_id}": {
+      "get": {
+        "description": "Return a single opportunity row by id.\n\nAuth-gated so only signed-in students can browse the catalog. The\nresponse is sanitized: DB ``opportunity_field`` is renamed to\n``field`` to match the frontend ``Opportunity`` type.",
+        "operationId": "get_opportunity_opportunities__opp_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "opp_id",
+            "required": true,
+            "schema": {
+              "title": "Opp Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Get Opportunity Opportunities  Opp Id  Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Opportunity"
+      }
+    },
+    "/outcomes": {
+      "get": {
+        "description": "Return the student's logged outcomes.",
+        "operationId": "list_outcomes_outcomes_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Outcome"
+                  },
+                  "title": "Response List Outcomes Outcomes Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Outcomes"
+      },
+      "post": {
+        "description": "Log the student's outcome for a bookmarked opportunity.\n\nThis is the feedback loop that future edge-weight update logic\nwill observe (task 17). For now, it just inserts into public.outcomes.",
+        "operationId": "log_outcome_outcomes_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OutcomeCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Log Outcome Outcomes Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Log Outcome"
+      }
+    },
+    "/pathways": {
+      "get": {
+        "description": "Return nodes + edges for the Northstar pathway map.\n\nNodes are the student's matched opportunities (from /match scores).\nEdges are derived from shared tags + same field between nodes \u2014 a\nself-contained graph that renders even without seeded pathway_edges.\nEach node carries ``score`` and ``field`` for coloring/sizing in D3.",
+        "operationId": "pathways_pathways_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Pathways Pathways Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Pathways"
+      }
+    },
+    "/projects": {
+      "get": {
+        "description": "Real GitHub repos worth contributing to, ranked per field.\n\n``fields`` is a comma-separated subset of the opportunity fields\n(the frontend sends the quiz's leading fields). Unknown values are\ndropped; an empty list falls back to interdisciplinary.",
+        "operationId": "list_projects_projects_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "default": "",
+              "title": "Fields",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "title": "Response List Projects Projects Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Projects"
+      }
+    },
+    "/students": {
+      "post": {
+        "description": "Upsert the student profile keyed by ``auth.users.id``.\n\nThe caller sends name, grade, interests, goals, onboarded. The backend\nfills ``id`` from the JWT and copies ``email`` from the token's email\nclaim (or whatever the Supabase auth user has). RLS on ``students``\nalready restricts reads/updates to the owning student; the service-role\nclient here bypasses RLS to perform the upsert itself.",
+        "operationId": "create_student_students_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StudentProfileCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudentProfile"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Student"
+      }
+    },
+    "/timeline": {
+      "get": {
+        "description": "The evidence stream: every recorded step, newest first.\n\nAggregates assessment syncs (with field deltas between consecutive\nsnapshots), mission completions, outcomes, bookmarks, and\ndismissals into one chronological list of\n``{kind, at, title, detail}`` events.",
+        "operationId": "timeline_timeline_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "title": "Response Timeline Timeline Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Timeline"
+      }
+    }
+  }
+}

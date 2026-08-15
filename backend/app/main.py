@@ -16,6 +16,9 @@ from .schemas import (
     BookmarkCreate,
     Dismissal,
     DismissalCreate,
+    Mission,
+    MissionCompleteBody,
+    MissionCompletion,
     Outcome,
     OutcomeCreate,
     StudentProfile,
@@ -32,6 +35,16 @@ from .match import score_opportunities
 
 
 def create_app() -> FastAPI:
+    # Error tracking, armed only when SENTRY_DSN is set (production).
+    # Local dev and CI run without it and without noise.
+    import os
+
+    dsn = os.getenv("SENTRY_DSN", "")
+    if dsn:
+        import sentry_sdk
+
+        sentry_sdk.init(dsn=dsn, traces_sample_rate=0.0)
+
     app = FastAPI(title="Northstar API")
 
     app.add_middleware(
@@ -146,7 +159,205 @@ def create_app() -> FastAPI:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Student profile not found. POST /students to create.",
             )
+
+        # Append to history unless nothing changed — re-finishing the quiz
+        # with identical answers is a visit, not an evolution.
+        try:
+            latest = (
+                sb.table("profile_history")
+                .select("trait_scores, field_scores")
+                .eq("student_id", user.id)
+                .order("created_at", desc=True)
+                .limit(1)
+                .execute()
+            )
+            last = (latest.data or [{}])[0] if latest.data else {}
+            if (
+                last.get("trait_scores") != body.trait_scores
+                or last.get("field_scores") != body.field_scores
+            ):
+                sb.table("profile_history").insert(
+                    {
+                        "student_id": user.id,
+                        "trait_scores": body.trait_scores,
+                        "field_scores": body.field_scores,
+                    },
+                    returning="minimal",
+                ).execute()
+        except Exception:
+            # History is additive; its failure must never fail the sync.
+            pass
+
         return {"synced": True}
+
+    @app.get("/timeline")
+    def timeline(user: CurrentUser = RequireUser) -> list[dict]:
+        """The evidence stream: every recorded step, newest first.
+
+        Aggregates assessment syncs (with field deltas between consecutive
+        snapshots), mission completions, outcomes, bookmarks, and
+        dismissals into one chronological list of
+        ``{kind, at, title, detail}`` events.
+        """
+
+        from .db import get_supabase
+
+        sb = get_supabase()
+        events: list[dict] = []
+
+        def opp_titles() -> dict:
+            rows = sb.table("opportunities").select("id, title").execute()
+            return {r["id"]: r["title"] for r in (rows.data or [])}
+
+        titles = opp_titles()
+
+        history = (
+            sb.table("profile_history")
+            .select("field_scores, created_at")
+            .eq("student_id", user.id)
+            .order("created_at")
+            .execute()
+        ).data or []
+        previous: dict = {}
+        for row in history:
+            current = row.get("field_scores") or {}
+            deltas = [
+                f"{field} {'+' if current[field] > previous.get(field, 0) else ''}"
+                f"{round(current[field] - previous.get(field, 0))}"
+                for field in current
+                if round(current[field] - previous.get(field, 0)) != 0
+            ]
+            events.append({
+                "kind": "assessment",
+                "at": row["created_at"],
+                "title": "Assessment synced",
+                "detail": ", ".join(deltas[:3]) if previous else "first profile snapshot",
+            })
+            previous = current
+
+        completions = (
+            sb.table("mission_completions")
+            .select("evidence, created_at, missions(title, trait_focus)")
+            .eq("student_id", user.id)
+            .execute()
+        ).data or []
+        for row in completions:
+            mission = row.get("missions") or {}
+            events.append({
+                "kind": "mission",
+                "at": row["created_at"],
+                "title": mission.get("title", "Mission completed"),
+                "detail": row.get("evidence", ""),
+            })
+
+        outcomes = (
+            sb.table("outcomes")
+            .select("opportunity_id, status, created_at")
+            .eq("student_id", user.id)
+            .execute()
+        ).data or []
+        for row in outcomes:
+            events.append({
+                "kind": "outcome",
+                "at": row["created_at"],
+                "title": titles.get(row["opportunity_id"], "An opportunity"),
+                "detail": row["status"],
+            })
+
+        marks = (
+            sb.table("bookmarks")
+            .select("opportunity_id, created_at")
+            .eq("student_id", user.id)
+            .execute()
+        ).data or []
+        for row in marks:
+            events.append({
+                "kind": "bookmark",
+                "at": row["created_at"],
+                "title": titles.get(row["opportunity_id"], "An opportunity"),
+                "detail": "bookmarked",
+            })
+
+        gone = (
+            sb.table("dismissals")
+            .select("opportunity_id, created_at")
+            .eq("student_id", user.id)
+            .execute()
+        ).data or []
+        for row in gone:
+            events.append({
+                "kind": "dismissal",
+                "at": row["created_at"],
+                "title": titles.get(row["opportunity_id"], "An opportunity"),
+                "detail": "not for me",
+            })
+
+        events.sort(key=lambda e: e["at"] or "", reverse=True)
+        return events
+
+    @app.get("/missions", response_model=list[Mission])
+    def list_missions(
+        archetype: str = "",
+        user: CurrentUser = RequireUser,
+    ) -> list[dict]:
+        """Proof missions, optionally filtered to one archetype (path)."""
+        from .db import get_supabase
+
+        sb = get_supabase()
+        query = sb.table("missions").select(
+            "id, archetype_id, title, description, trait_focus, effort, sort_order"
+        )
+        if archetype:
+            query = query.eq("archetype_id", archetype)
+        result = query.order("sort_order").execute()
+        return result.data or []
+
+    @app.get("/missions/completions", response_model=list[MissionCompletion])
+    def list_mission_completions(user: CurrentUser = RequireUser) -> list[dict]:
+        """The student's completed missions, newest first."""
+        from .db import get_supabase
+
+        sb = get_supabase()
+        result = (
+            sb.table("mission_completions")
+            .select("id, mission_id, evidence, created_at")
+            .eq("student_id", user.id)
+            .order("created_at", desc=True)
+            .execute()
+        )
+        return result.data or []
+
+    @app.post("/missions/{mission_id}/complete", response_model=MissionCompletion)
+    def complete_mission(
+        mission_id: str,
+        body: MissionCompleteBody,
+        user: CurrentUser = RequireUser,
+    ) -> dict:
+        """Record mission evidence onto the student record.
+
+        Idempotent by the unique(student_id, mission_id) constraint —
+        completing twice updates the evidence instead of duplicating.
+        """
+
+        from .db import get_supabase
+
+        sb = get_supabase()
+        row = {
+            "student_id": user.id,
+            "mission_id": mission_id,
+            "evidence": body.evidence[:1000],
+        }
+        result = (
+            sb.table("mission_completions")
+            .upsert(row, on_conflict="student_id,mission_id", returning="representation")
+            .execute()
+        )
+        if not result.data:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to record mission completion",
+            )
+        return result.data[0]
 
     @app.get("/dismissals", response_model=list[Dismissal])
     def list_dismissals(user: CurrentUser = RequireUser) -> list[dict]:
@@ -424,7 +635,18 @@ def create_app() -> FastAPI:
             "status": body.status,
             "impact_notes": body.impact_notes,
         }
-        result = sb.table("outcomes").insert(row, returning="representation").execute()
+        # Idempotent: the same (student, opportunity, status) is one fact.
+        # A double-click updates notes instead of double-firing the
+        # edge-weight trigger and polluting the ALS training data.
+        result = (
+            sb.table("outcomes")
+            .upsert(
+                row,
+                on_conflict="student_id,opportunity_id,status",
+                returning="representation",
+            )
+            .execute()
+        )
         if not result.data:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

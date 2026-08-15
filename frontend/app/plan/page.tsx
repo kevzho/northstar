@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Planet, Ship } from "@/components/decor/voyage";
 import { fetchMatches } from "@/lib/api";
+import { MissionBoard } from "@/components/MissionBoard";
 import { findArchetype, generatePlan } from "@/lib/plan";
 import { pathLabel, rankArchetypes, scoreTraits } from "@/lib/scoring";
 import type { MatchResult } from "@/lib/types";
@@ -108,7 +109,7 @@ export default function PlanPage() {
             </h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
               The plan is generated from your traits and chosen path. Take the
-              eight-question assessment first — about five minutes.
+              fourteen-question assessment first — about five minutes.
             </p>
             <Button
               render={<Link href="/assessment" />}
@@ -135,6 +136,7 @@ export default function PlanPage() {
           </section>
         ) : (
           <>
+            <MissionBoard archetype={archetype} traits={traits} matches={matches} />
             {matchesSettled && matches === null ? (
               <p className="mt-6 rounded-md border border-border bg-panel-raised p-3 text-sm leading-6 text-muted-foreground">
                 You are signed out, so this plan has no application targets.
