@@ -295,6 +295,62 @@ def create_app() -> FastAPI:
         events.sort(key=lambda e: e["at"] or "", reverse=True)
         return events
 
+    @app.post("/advisor")
+    def route_advisor(
+        body: dict,
+        user: CurrentUser = RequireUser,
+    ) -> dict:
+        """Exploratory route advice grounded in the student's own matches.
+
+        Returns {answer, sources} where sources are the numbered catalog
+        entries the model was allowed to cite. 503 when no LLM key is
+        configured — the feature is off, not broken.
+        """
+
+        from .advisor import advisor_enabled, ask_advisor, build_sources
+        from .db import get_supabase
+
+        if not advisor_enabled():
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Advisor not configured (LLM_API_KEY unset).",
+            )
+
+        question = str(body.get("question", "")).strip()
+        if not question:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="A question is required.",
+            )
+
+        sb = get_supabase()
+        prof = (
+            sb.table("students")
+            .select("interests, goals, audience, trait_scores, field_scores")
+            .eq("id", user.id)
+            .maybe_single()
+            .execute()
+        )
+        student = prof.data or {}
+
+        cat = sb.table("opportunities").select("*").execute()
+        shelf = student.get("audience") or "high_school"
+        opportunities = [
+            o for o in (cat.data or [])
+            if (o.get("audience") or "high_school") == shelf
+        ]
+        ranked = score_opportunities(student, opportunities)
+        sources = build_sources(ranked)
+
+        try:
+            answer = ask_advisor(question, student, sources)
+        except Exception:
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="The advisor's model call failed; try again shortly.",
+            )
+        return {"answer": answer, "sources": sources}
+
     @app.get("/missions", response_model=list[Mission])
     def list_missions(
         archetype: str = "",

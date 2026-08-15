@@ -546,6 +546,49 @@
         "summary": "Root"
       }
     },
+    "/advisor": {
+      "post": {
+        "description": "Exploratory route advice grounded in the student's own matches.\n\nReturns {answer, sources} where sources are the numbered catalog\nentries the model was allowed to cite. 503 when no LLM key is\nconfigured \u2014 the feature is off, not broken.",
+        "operationId": "route_advisor_advisor_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "title": "Body",
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Route Advisor Advisor Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Route Advisor"
+      }
+    },
     "/assessment-profile": {
       "post": {
         "description": "Persist the quiz's trait + field scores onto the student row.\n\nTouches only those two columns (see AssessmentProfileSync). 404s\nwhen no profile row exists yet \u2014 the frontend creates the stub via\nPOST /students first, same contract as everywhere else.",

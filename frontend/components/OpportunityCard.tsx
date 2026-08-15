@@ -14,6 +14,10 @@ const fieldLabels: Record<OpportunityField, string> = {
   physics: "Physics",
   engineering: "Engineering",
   interdisciplinary: "Interdisciplinary",
+  design: "Design & Media",
+  business: "Business",
+  humanities: "Humanities",
+  health: "Health",
 };
 
 const typeLabels: Record<OpportunityType, string> = {

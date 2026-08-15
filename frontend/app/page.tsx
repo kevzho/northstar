@@ -24,7 +24,7 @@ const waypoints = [
     planet: "moon" as const,
     title: "Trait profile",
     description:
-      "Fourteen prompts become six trait signals plus a field-interest map. No black box — every score is a sum you can check.",
+      "Seventeen prompts become six trait signals plus a field-interest map across ten fields. No black box — every score is a sum you can check.",
   },
   {
     mark: "02",
@@ -248,7 +248,7 @@ export default function Home() {
             <p className="mt-7 max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">
               Most students never hear about the research programs,
               scholarships, and competitions they were qualified for. Northstar
-              starts with how you actually think and work — fourteen behavioral
+              starts with how you actually think and work — seventeen behavioral
               questions — and charts a course to real, ranked STEM
               opportunities with a reason attached to every one.
             </p>

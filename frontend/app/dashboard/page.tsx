@@ -390,6 +390,15 @@ export default function DashboardPage() {
               open right now.
             </p>
           </Link>
+          <Link href="/advisor" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
+            <h2 className="text-xl font-semibold text-foreground">
+              Explore unusual routes
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              Ask about directions the rankings can&apos;t see — answers
+              grounded in your verified matches.
+            </p>
+          </Link>
           <Link href="/onboarding" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
             <h2 className="text-xl font-semibold text-foreground">
               Edit profile

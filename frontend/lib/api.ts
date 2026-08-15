@@ -244,3 +244,21 @@ export async function completeMission(
 export async function fetchTimeline(): Promise<TimelineEvent[]> {
   return (await authedFetch("/timeline")).json();
 }
+
+/** One grounded advisor exchange; 503 when the feature is unconfigured. */
+export async function askAdvisor(question: string): Promise<{
+  answer: string;
+  sources: {
+    n: number;
+    title: string;
+    field: string;
+    type: string;
+    deadline: string | null;
+    url: string;
+  }[];
+}> {
+  return (await authedFetch("/advisor", {
+    method: "POST",
+    body: JSON.stringify({ question }),
+  })).json();
+}

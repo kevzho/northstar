@@ -1,0 +1,168 @@
+"use client";
+
+/**
+ * Route advisor — exploration, not ranking.
+ *
+ * A single grounded exchange: the student asks about unusual or
+ * interdisciplinary directions, the backend answers using only their
+ * profile and their verified matched opportunities as sources, and every
+ * response shows the "backed by" list. The deterministic engine keeps
+ * sole authority over scores; this page is deliberately score-free.
+ *
+ * When LLM_API_KEY is unset the backend 503s and this page says the
+ * feature is off — never a broken spinner.
+ */
+
+import { useState } from "react";
+import Link from "next/link";
+import { AppNav } from "@/components/AppNav";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { askAdvisor } from "@/lib/api";
+
+type Exchange = Awaited<ReturnType<typeof askAdvisor>>;
+
+const SUGGESTED = [
+  "What unusual routes fit how I actually think?",
+  "How could I combine my top two fields into one direction?",
+  "What would a non-obvious college major look like for me?",
+];
+
+export default function AdvisorPage() {
+  const [question, setQuestion] = useState("");
+  const [exchange, setExchange] = useState<Exchange | null>(null);
+  const [state, setState] = useState<"idle" | "asking" | "off" | "failed">(
+    "idle",
+  );
+
+  async function ask(text: string) {
+    if (!text.trim()) return;
+    setState("asking");
+    setExchange(null);
+    try {
+      const result = await askAdvisor(text.trim());
+      setExchange(result);
+      setState("idle");
+    } catch (error) {
+      setState(
+        error instanceof Error && error.message.includes("503")
+          ? "off"
+          : "failed",
+      );
+    }
+  }
+
+  return (
+    <main className="min-h-screen px-6 py-8 sm:px-8">
+      <div className="mx-auto max-w-3xl">
+        <AppNav
+          homeHref="/dashboard"
+          right={
+            <Link
+              href="/dashboard"
+              className="text-sm font-semibold text-aurora"
+            >
+              Back to dashboard
+            </Link>
+          }
+        />
+
+        <header className="mt-10">
+          <p className="eyebrow">Exploration, not prediction</p>
+          <h1 className="h-display mt-3 text-4xl text-foreground">
+            Route advisor
+          </h1>
+          <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
+            Ask about unusual directions, hybrid fields, or college majors the
+            rankings can&apos;t see. Answers are grounded in your profile and
+            your verified matches — the sources are always shown, and this
+            page never scores or predicts.
+          </p>
+        </header>
+
+        <section className="mt-8">
+          <Textarea
+            value={question}
+            onChange={(event) => setQuestion(event.target.value)}
+            placeholder="e.g. I like debate and biology — what routes combine them?"
+            className="min-h-24 bg-panel-raised p-4 text-base"
+          />
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <Button
+              onClick={() => ask(question)}
+              disabled={state === "asking" || !question.trim()}
+              className="h-11 px-5"
+            >
+              {state === "asking" ? "Thinking..." : "Ask"}
+            </Button>
+            {SUGGESTED.map((suggestion) => (
+              <button
+                key={suggestion}
+                type="button"
+                onClick={() => {
+                  setQuestion(suggestion);
+                  void ask(suggestion);
+                }}
+                className="border border-border px-3 py-2 text-xs text-muted-foreground transition hover:border-foreground hover:text-foreground"
+              >
+                {suggestion}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        {state === "off" ? (
+          <section className="rounded-lg border bg-card mt-8 p-6">
+            <p className="text-sm leading-6 text-muted-foreground">
+              The advisor is not configured yet — it needs an LLM key on the
+              backend (<span className="font-mono text-xs">LLM_API_KEY</span>{" "}
+              in <span className="font-mono text-xs">backend/.env</span>).
+              Everything else on Northstar works without it.
+            </p>
+          </section>
+        ) : state === "failed" ? (
+          <section className="rounded-lg border border-destructive/40 bg-card mt-8 p-6">
+            <p className="text-sm leading-6 text-muted-foreground">
+              The advisor call failed — sign in first, or try again in a
+              moment.
+            </p>
+          </section>
+        ) : exchange ? (
+          <section className="rounded-lg border bg-card mt-8 p-6">
+            <div className="whitespace-pre-wrap text-base leading-7 text-foreground">
+              {exchange.answer}
+            </div>
+            {exchange.sources.length > 0 ? (
+              <div className="mt-6 border-t border-border pt-4">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  Backed by your verified matches
+                </p>
+                <ul className="mt-2 grid gap-1">
+                  {exchange.sources.map((source) => (
+                    <li key={source.n} className="text-sm">
+                      <span className="font-mono text-xs text-aurora">
+                        [{source.n}]
+                      </span>{" "}
+                      <a
+                        href={source.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-semibold text-star underline-offset-4 hover:underline"
+                      >
+                        {source.title}
+                      </a>{" "}
+                      <span className="text-xs text-muted-foreground">
+                        {source.field} · {source.type}
+                        {source.deadline ? ` · due ${source.deadline}` : ""}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+          </section>
+        ) : null}
+      </div>
+    </main>
+  );
+}

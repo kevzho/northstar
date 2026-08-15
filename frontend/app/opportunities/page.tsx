@@ -27,6 +27,10 @@ const fieldFilters: { value: OpportunityField | "all"; label: string }[] = [
   { value: "physics", label: "Physics" },
   { value: "engineering", label: "Engineering" },
   { value: "interdisciplinary", label: "Interdisciplinary" },
+  { value: "design", label: "Design & Media" },
+  { value: "business", label: "Business" },
+  { value: "humanities", label: "Humanities" },
+  { value: "health", label: "Health" },
 ];
 
 const typeFilters: { value: OpportunityType | "all"; label: string }[] = [

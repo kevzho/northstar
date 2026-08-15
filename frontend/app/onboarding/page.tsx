@@ -25,6 +25,10 @@ const subjectOptions = [
   "Physics",
   "Engineering",
   "Interdisciplinary",
+  "Design",
+  "Business",
+  "Humanities",
+  "Health",
 ];
 
 export default function OnboardingPage() {

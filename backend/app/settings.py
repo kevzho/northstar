@@ -35,6 +35,12 @@ class Settings(BaseModel):
     # 10 requests/minute to 30. A classic PAT with no scopes is enough.
     github_token: str = ""
 
+    # Optional: the route advisor (POST /advisor) — any OpenAI-compatible
+    # chat API. Defaults target DeepSeek; absent key = 503, feature off.
+    llm_api_key: str = ""
+    llm_api_base: str = "https://api.deepseek.com"
+    llm_model: str = "deepseek-v4-pro"
+
     @classmethod
     def from_env(cls) -> "Settings":
         return cls(
@@ -44,6 +50,9 @@ class Settings(BaseModel):
             supabase_secret_key=os.getenv("SUPABASE_SECRET_KEY", ""),
             supabase_jwt_secret=os.getenv("SUPABASE_JWT_SECRET", ""),
             github_token=os.getenv("GITHUB_TOKEN", ""),
+            llm_api_key=os.getenv("LLM_API_KEY", ""),
+            llm_api_base=os.getenv("LLM_API_BASE", "https://api.deepseek.com"),
+            llm_model=os.getenv("LLM_MODEL", "deepseek-v4-pro"),
         )
 
 

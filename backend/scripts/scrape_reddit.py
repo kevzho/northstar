@@ -93,6 +93,10 @@ FIELD_SEARCHES: dict[str, list[str]] = {
     "engineering": ["engineering summer program", "robotics competition high school"],
     "biology": ["biology research program high school", "medical program high school"],
     "cs": ["AI research high school", "coding summer program"],
+    "design": ["art portfolio program", "design summer program high school"],
+    "business": ["business summer program high school", "entrepreneurship competition"],
+    "humanities": ["writing program high school", "debate scholarship"],
+    "health": ["public health program high school", "medical volunteering"],
 }
 
 # College sweep — r/REU is literally Research Experiences for
@@ -173,6 +177,10 @@ FIELD_HINTS: list[tuple[str, re.Pattern[str]]] = [
     ("math", re.compile(r"\b(math|olympiad|amc|aime|putnam)\b", re.I)),
     ("physics", re.compile(r"\b(physics|astro|space|quantum)\b", re.I)),
     ("engineering", re.compile(r"\b(engineer|mechanical|electrical|aero|rocket)\b", re.I)),
+    ("design", re.compile(r"\b(design|art|animation|film|game\s?dev|ux|portfolio)\b", re.I)),
+    ("business", re.compile(r"\b(business|entrepreneur|startup|econ|finance|investing)\b", re.I)),
+    ("humanities", re.compile(r"\b(writing|journalism|debate|policy|history|essay)\b", re.I)),
+    ("health", re.compile(r"\b(public\s?health|nursing|sports\s?med|nutrition|mental\s?health)\b", re.I)),
 ]
 
 TYPE_HINTS: list[tuple[str, re.Pattern[str]]] = [

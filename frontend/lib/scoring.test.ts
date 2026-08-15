@@ -84,14 +84,14 @@ describe("scoreFieldInterests", () => {
 describe("leadingFields", () => {
   it("collapses to one field when the leader dominates", () => {
     const leading = leadingFields({
-      cs: 80, biology: 10, math: 10, physics: 0, engineering: 0, interdisciplinary: 0,
+      cs: 80, biology: 10, math: 10, physics: 0, engineering: 0, interdisciplinary: 0, design: 0, business: 0, humanities: 0, health: 0,
     });
     expect(leading).toEqual(["cs"]);
   });
 
   it("keeps a genuine runner-up (at least half the leader)", () => {
     const leading = leadingFields({
-      cs: 40, biology: 30, math: 30, physics: 0, engineering: 0, interdisciplinary: 0,
+      cs: 40, biology: 30, math: 30, physics: 0, engineering: 0, interdisciplinary: 0, design: 0, business: 0, humanities: 0, health: 0,
     });
     expect(leading).toHaveLength(2);
     expect(leading[0]).toBe("cs");
@@ -100,7 +100,7 @@ describe("leadingFields", () => {
   it("returns nothing for an all-zero distribution", () => {
     expect(
       leadingFields({
-        cs: 0, biology: 0, math: 0, physics: 0, engineering: 0, interdisciplinary: 0,
+        cs: 0, biology: 0, math: 0, physics: 0, engineering: 0, interdisciplinary: 0, design: 0, business: 0, humanities: 0, health: 0,
       }),
     ).toEqual([]);
   });

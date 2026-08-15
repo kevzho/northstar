@@ -351,4 +351,76 @@ export const assessmentQuestions: AssessmentQuestion[] = [
       },
     ],
   },
+  {
+    id: "q15-free-elective",
+    prompt: "You get one free elective, no requirements. You pick...",
+    choices: [
+      {
+        id: "studio-design",
+        label: "Studio art and digital design — make things that look right.",
+        traits: { builder: 1 },
+        fields: { design: 2 },
+      },
+      {
+        id: "entrepreneurship",
+        label: "Entrepreneurship — turn an idea into something people want.",
+        traits: { riskTolerance: 1 },
+        fields: { business: 2 },
+      },
+      {
+        id: "global-health",
+        label: "Global health — why some communities thrive and others do not.",
+        traits: { ambiguityComfort: 1 },
+        fields: { health: 2, interdisciplinary: 1 },
+      },
+    ],
+  },
+  {
+    id: "q16-dream-project",
+    prompt: "Your dream school project would be...",
+    choices: [
+      {
+        id: "short-documentary",
+        label: "Directing a short documentary about something overlooked.",
+        traits: { collaboration: 1 },
+        fields: { humanities: 2, design: 1 },
+      },
+      {
+        id: "school-store",
+        label: "Running a real micro-business and keeping the books.",
+        traits: { executionTempo: 1 },
+        fields: { business: 2 },
+      },
+      {
+        id: "redesign-site",
+        label: "Redesigning the school's confusing website so it makes sense.",
+        traits: { builder: 1 },
+        fields: { design: 2, cs: 1 },
+      },
+    ],
+  },
+  {
+    id: "q17-news-first",
+    prompt: "Which section of the news do you actually read first?",
+    choices: [
+      {
+        id: "culture-essays",
+        label: "Culture, essays, and opinion — the arguments.",
+        traits: { ambiguityComfort: 1 },
+        fields: { humanities: 2 },
+      },
+      {
+        id: "markets-startups",
+        label: "Markets and startups — who is building and who is winning.",
+        traits: { analyst: 1 },
+        fields: { business: 2 },
+      },
+      {
+        id: "health-medicine",
+        label: "Health and medicine — what actually helps people live better.",
+        traits: { analyst: 1 },
+        fields: { health: 2, biology: 1 },
+      },
+    ],
+  },
 ];

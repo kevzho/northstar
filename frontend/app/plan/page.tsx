@@ -109,7 +109,7 @@ export default function PlanPage() {
             </h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
               The plan is generated from your traits and chosen path. Take the
-              fourteen-question assessment first — about five minutes.
+              seventeen-question assessment first — about five minutes.
             </p>
             <Button
               render={<Link href="/assessment" />}

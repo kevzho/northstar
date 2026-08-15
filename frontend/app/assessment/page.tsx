@@ -68,8 +68,8 @@ export default function AssessmentPage() {
               Assessment
             </h1>
             <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
-              Fourteen prompts: eight reveal how you build, analyze,
-              collaborate, and handle risk; six reveal which fields actually
+              Seventeen prompts: eight reveal how you build, analyze,
+              collaborate, and handle risk; nine reveal which fields actually
               pull you in. Pick what fits best — there are no wrong answers.
             </p>
           </div>
@@ -134,7 +134,7 @@ export default function AssessmentPage() {
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="font-mono text-sm text-muted-foreground">
             {complete
-              ? "All fourteen answered — your trait profile is ready."
+              ? "All seventeen answered — your trait profile is ready."
               : `${left} ${left === 1 ? "question" : "questions"} left.`}
           </p>
           <Button

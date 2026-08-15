@@ -34,16 +34,24 @@ const fieldLabels: Record<OpportunityField, string> = {
   physics: "Physics",
   engineering: "Engineering",
   interdisciplinary: "Interdisciplinary",
+  design: "Design & Media",
+  business: "Business",
+  humanities: "Humanities",
+  health: "Health",
 };
 
 /** Preview distribution, shown until a real assessment exists. */
 const sampleFieldScores: FieldScores = {
-  cs: 34,
-  engineering: 22,
-  math: 16,
-  biology: 12,
-  physics: 9,
-  interdisciplinary: 7,
+  cs: 28,
+  engineering: 18,
+  math: 12,
+  design: 10,
+  biology: 8,
+  business: 8,
+  physics: 6,
+  humanities: 4,
+  health: 3,
+  interdisciplinary: 3,
 };
 
 /** Shown only when no assessment has been taken — labelled as a preview. */
@@ -138,7 +146,7 @@ export default function ProfilePage() {
             </h1>
             <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
               {isReal
-                ? `Six trait signals and a field-interest map scored from your fourteen answers. Your strongest signal is ${traitLabels[top].toLowerCase()}.`
+                ? `Six trait signals and a field-interest map scored from your seventeen answers. Your strongest signal is ${traitLabels[top].toLowerCase()}.`
                 : "This preview shows the six interpretable signals Northstar computes from assessment choices."}
             </p>
           </div>
@@ -268,7 +276,7 @@ export default function ProfilePage() {
         <p className="mt-4 text-xs leading-5 text-muted-foreground">
           Each trait score is the sum of the trait weights on the answers you
           picked, divided by the highest total that trait could reach across
-          all fourteen questions. Field interest divides each field&apos;s
+          all seventeen questions. Field interest divides each field&apos;s
           points by the total points across every field. See
           frontend/lib/scoring.ts.
         </p>

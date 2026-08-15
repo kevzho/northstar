@@ -19,6 +19,10 @@ class OpportunityField(str, Enum):
     physics = "physics"
     engineering = "engineering"
     interdisciplinary = "interdisciplinary"
+    design = "design"
+    business = "business"
+    humanities = "humanities"
+    health = "health"
 
 
 class OpportunityType(str, Enum):

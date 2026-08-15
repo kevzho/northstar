@@ -103,6 +103,10 @@ export const FIELD_KEYS: OpportunityField[] = [
   "physics",
   "engineering",
   "interdisciplinary",
+  "design",
+  "business",
+  "humanities",
+  "health",
 ];
 
 export type FieldScores = Record<OpportunityField, number>;
@@ -114,6 +118,10 @@ const FIELD_ZERO: FieldScores = {
   physics: 0,
   engineering: 0,
   interdisciplinary: 0,
+  design: 0,
+  business: 0,
+  humanities: 0,
+  health: 0,
 };
 
 /**
@@ -215,6 +223,10 @@ export const INTEREST_TO_FIELD: Record<string, OpportunityField> = {
   Physics: "physics",
   Engineering: "engineering",
   Interdisciplinary: "interdisciplinary",
+  Design: "design",
+  Business: "business",
+  Humanities: "humanities",
+  Health: "health",
 };
 
 export function interestFields(interests: string[]): OpportunityField[] {

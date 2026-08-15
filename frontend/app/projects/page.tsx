@@ -27,6 +27,10 @@ const fieldLabels: Record<string, string> = {
   physics: "Physics",
   engineering: "Engineering",
   interdisciplinary: "Interdisciplinary",
+  design: "Design & Media",
+  business: "Business",
+  humanities: "Humanities",
+  health: "Health",
 };
 
 export default function ProjectsPage() {

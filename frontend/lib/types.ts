@@ -21,7 +21,11 @@ export type OpportunityField =
   | "math"
   | "physics"
   | "engineering"
-  | "interdisciplinary";
+  | "interdisciplinary"
+  | "design"
+  | "business"
+  | "humanities"
+  | "health";
 
 export type OpportunityType =
   | "program"

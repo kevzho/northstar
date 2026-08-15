@@ -36,6 +36,10 @@ FIELD_TOPICS: dict[str, str] = {
     "physics": "astronomy",
     "engineering": "robotics",
     "interdisciplinary": "data-science",
+    "design": "design-system",
+    "business": "fintech",
+    "humanities": "digital-humanities",
+    "health": "healthcare",
 }
 
 # Approachability band: below the floor a repo is usually a personal toy
