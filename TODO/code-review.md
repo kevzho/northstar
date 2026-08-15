@@ -95,3 +95,20 @@ until it sounds like you. Tiers 3–4 are understand/skim.
 - [ ] Know why light mode "didn't work": stale dev server serving CSS
       from before `.light` existed — restart the dev server after theme
       CSS changes (7e64414).
+
+- [ ] TIER 1: proportional field boost in `backend/app/match.py` — own
+      the 0.25 × share/100 formula, the flat-0.15 fallback, and the
+      bookmark nudge cap (0.02/bookmark, max 0.06) (72b36bb).
+- [ ] TIER 1: field-interest scoring in `frontend/lib/scoring.ts` —
+      share-of-total + largest-remainder rounding (always sums to 100),
+      and the leadingFields half-the-leader rule (72b36bb).
+- [ ] TIER 2: the six field-signal questions (q9-q14) in
+      `frontend/lib/assessment.ts` — every field weight should be yours
+      (72b36bb).
+- [ ] TIER 3: `backend/app/projects.py` — GitHub query qualifiers encode
+      approachability; ranking is a visible sum (72b36bb).
+- [ ] TIER 3: dismissals flow (migration → /dismissals routes → 'Not for
+      me' on cards → excluded from /match) and the assessment-profile
+      sync endpoint (72b36bb).
+- [ ] Read `frontend/lib/scoring.test.ts` + the 6 new match tests — these
+      are the invariants CI now enforces on every push (72b36bb).
