@@ -112,3 +112,18 @@ until it sounds like you. Tiers 3–4 are understand/skim.
       sync endpoint (72b36bb).
 - [ ] Read `frontend/lib/scoring.test.ts` + the 6 new match tests — these
       are the invariants CI now enforces on every push (72b36bb).
+
+- [ ] TIER 1: readiness gap math in `components/MissionBoard.tsx` —
+      archetype traits are 0-10, student traits 0-100; own the ×10
+      normalization and the top-2 gap rule (84f2bb3).
+- [ ] TIER 2: all 36 mission descriptions in
+      `supabase/migrations/20260815140000_proof_missions.sql` — these are
+      product voice; every mission should sound like you (84f2bb3).
+- [ ] TIER 3: /timeline aggregation in `backend/app/main.py` (field
+      deltas between consecutive profile_history rows) and the
+      no-op-skip on identical sync snapshots (84f2bb3).
+- [ ] TIER 3: the OpenAPI contract loop — export_openapi.py →
+      api-schema.json → gen:api → test_openapi_contract.py; know the
+      regeneration command when the drift test reds (84f2bb3).
+- [ ] Run `backend/scripts/review_candidates.py` once for real — the
+      review session IS the fresh catalog (84f2bb3).
