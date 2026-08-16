@@ -776,6 +776,7 @@ def create_app() -> FastAPI:
                 "field": field,
                 "type": opp.get("type", ""),
                 "score": float(r["score"]["score"]),
+                "deadline": opp.get("deadline"),
                 "tags": opp.get("tags", []) or [],
             })
 

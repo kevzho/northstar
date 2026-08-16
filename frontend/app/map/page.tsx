@@ -25,6 +25,7 @@ type GraphNode = {
   field: string;
   type: string;
   score: number;
+  deadline?: string | null;
   tags: string[];
   x?: number;
   y?: number;
@@ -86,139 +87,165 @@ export default function MapPage() {
   useEffect(() => {
     if (!data || !svgRef.current || data.nodes.length === 0) return;
 
-    const width = 800;
-    const height = 600;
+    /* Chronological tree: You -> field branches -> deadline-ordered
+       chains. Depth reads as time; the deepest leaf is the furthest
+       deadline. Static layout — no simulation, same picture every visit. */
+    type TreeDatum = {
+      kind: "root" | "field" | "opp";
+      label: string;
+      field?: string;
+      node?: GraphNode;
+      children?: TreeDatum[];
+    };
 
-    // Clear previous render
+    const byField = d3.group(data.nodes, (n) => n.field || "interdisciplinary");
+    const fieldOrder = [...byField.entries()].sort(
+      (a, b) =>
+        (d3.max(b[1], (n) => n.score) ?? 0) - (d3.max(a[1], (n) => n.score) ?? 0),
+    );
+    const branches: TreeDatum[] = fieldOrder.map(([field, nodes]) => {
+      const ordered = [...nodes].sort((a, b) => {
+        if (!a.deadline && !b.deadline) return b.score - a.score;
+        if (!a.deadline) return 1;
+        if (!b.deadline) return -1;
+        return a.deadline < b.deadline ? -1 : 1;
+      });
+      let chain: TreeDatum | undefined;
+      for (let i = ordered.length - 1; i >= 0; i -= 1) {
+        chain = {
+          kind: "opp",
+          label: ordered[i].title,
+          field,
+          node: ordered[i],
+          children: chain ? [chain] : undefined,
+        };
+      }
+      return { kind: "field", label: field, field, children: chain ? [chain] : undefined };
+    });
+
+    const root = d3.hierarchy<TreeDatum>({
+      kind: "root",
+      label: "You",
+      children: branches,
+    });
+    d3.tree<TreeDatum>().nodeSize([46, 210])(root);
+
+    let xMin = Infinity;
+    let xMax = -Infinity;
+    let yMax = -Infinity;
+    root.each((d) => {
+      xMin = Math.min(xMin, d.x ?? 0);
+      xMax = Math.max(xMax, d.x ?? 0);
+      yMax = Math.max(yMax, d.y ?? 0);
+    });
+    const margin = 60;
+    const width = yMax + 330;
+    const height = xMax - xMin + margin * 2;
+
     d3.select(svgRef.current).selectAll("*").remove();
-
     const svg = d3
       .select(svgRef.current)
-      .attr("viewBox", `0 0 ${width} ${height}`)
+      .attr("viewBox", `-50 ${xMin - margin} ${width + 50} ${height}`)
       .attr("preserveAspectRatio", "xMidYMid meet")
       .style("width", "100%")
       .style("height", "auto")
-      // Let the zoom/drag handlers own the gestures instead of the page
-      // scroller, so pinch-zoom on the graph does not scroll the phone.
       .style("touch-action", "none");
 
-    // Everything renders inside this group so zoom/pan is a single transform.
     const viewport = svg.append("g");
 
-    // Build link/target refs for d3-force
-    const nodes = data.nodes.map((n) => ({ ...n }));
-    const links = data.edges.map((e) => ({
-      source: e.source,
-      target: e.target,
-      weight: e.weight,
-    }));
-
-    const sim = d3
-      .forceSimulation(nodes as d3.SimulationNodeDatum[])
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .force("link", d3.forceLink(links).id((d: any) => d.id).distance(120))
-      .force("charge", d3.forceManyBody().strength(-340))
-      .force("center", d3.forceCenter(width / 2, height / 2));
-
-    const link = viewport
+    // Links: gentle horizontal curves along the time axis.
+    viewport
       .append("g")
-      .selectAll("line")
-      .data(links)
+      .selectAll("path")
+      .data(root.links())
       .enter()
-      .append("line")
+      .append("path")
+      .attr("fill", "none")
       .attr("stroke", "#3f3f3f")
-      .attr("stroke-width", (d) => Math.max(1, d.weight * 2.5))
-      .attr("stroke-opacity", 0.35);
+      .attr("stroke-width", 1.2)
+      .attr("stroke-opacity", 0.6)
+      .attr(
+        "d",
+        d3
+          .linkHorizontal<d3.HierarchyLink<TreeDatum>, d3.HierarchyNode<TreeDatum>>()
+          .x((d) => d.y ?? 0)
+          .y((d) => d.x ?? 0),
+      );
 
     const node = viewport
       .append("g")
-      .selectAll("circle")
-      .data(nodes)
+      .selectAll("g")
+      .data(root.descendants())
       .enter()
+      .append("g")
+      .attr("transform", (d) => `translate(${d.y ?? 0},${d.x ?? 0})`);
+
+    node
       .append("circle")
-      .attr("r", (d) => 8 + (d as GraphNode).score * 20)
-      .attr("fill", (d) => fieldColors[(d as GraphNode).field] ?? "#9e9e9e")
+      .attr("r", (d) =>
+        d.data.kind === "root"
+          ? 10
+          : d.data.kind === "field"
+            ? 6
+            : 5 + (d.data.node?.score ?? 0) * 12,
+      )
+      .attr("fill", (d) =>
+        d.data.kind === "root"
+          ? "#f5f5f5"
+          : fieldColors[d.data.field ?? ""] ?? "#9e9e9e",
+      )
+      .attr("fill-opacity", (d) => (d.data.kind === "field" ? 0.45 : 1))
       .attr("stroke", "#0a0a0a")
       .attr("stroke-width", 1.5)
-      .style("cursor", "pointer");
+      .style("cursor", (d) => (d.data.kind === "opp" ? "pointer" : "default"));
 
-    const labels = viewport
-      .append("g")
-      .selectAll("text")
-      .data(nodes)
-      .enter()
+    node
       .append("text")
-      .text((d) => (d as GraphNode).title.slice(0, 20))
-      .attr("font-size", 10)
+      .text((d) =>
+        d.data.kind === "opp" ? d.data.label.slice(0, 28) : d.data.label,
+      )
+      .attr("font-size", (d) => (d.data.kind === "root" ? 12 : 10))
+      .attr("font-weight", (d) => (d.data.kind === "opp" ? 400 : 600))
       .attr("fill", "#d4d4d4")
-      .attr("dx", 12)
-      .attr("dy", 4)
+      .attr("dx", (d) => (d.data.kind === "root" ? -14 : 12))
+      .attr("dy", (d) => (d.data.kind === "root" ? 24 : -8))
+      .attr("text-anchor", (d) => (d.data.kind === "root" ? "middle" : "start"))
+      .style("text-transform", (d) => (d.data.kind === "field" ? "capitalize" : "none"))
       .style("pointer-events", "none");
 
-    // Tooltip via title
-    node.append("title").text(
-      (d) =>
-        `${(d as GraphNode).title}\nScore: ${Math.round((d as GraphNode).score * 100)}%\nField: ${(d as GraphNode).field}`,
-    );
+    // Deadline under each opportunity: the chronology made legible.
+    node
+      .filter((d) => d.data.kind === "opp")
+      .append("text")
+      .text((d) => d.data.node?.deadline ?? "rolling")
+      .attr("font-size", 9)
+      .attr("font-family", "var(--font-coords), monospace")
+      .attr("fill", "#8a8a8a")
+      .attr("dx", 12)
+      .attr("dy", 6)
+      .style("pointer-events", "none");
+
+    node
+      .filter((d) => d.data.kind === "opp")
+      .append("title")
+      .text(
+        (d) =>
+          `${d.data.node?.title}\nScore: ${Math.round((d.data.node?.score ?? 0) * 100)}%\nDeadline: ${d.data.node?.deadline ?? "rolling"}`,
+      );
+
+    node.on("click", (_event, d) => {
+      if (d.data.kind === "opp" && d.data.node) {
+        router.push(`/opportunities/${d.data.node.id}`);
+      }
+    });
 
     /* eslint-disable @typescript-eslint/no-explicit-any */
-
-    // Pinch/scroll to zoom, drag the background to pan. The viewBox is a fixed
-    // 800x600, so on a phone the graph is scaled down to ~40% and labels are
-    // unreadable without this.
     const zoom = d3
       .zoom<SVGSVGElement, unknown>()
       .scaleExtent([0.4, 4])
       .on("zoom", (event) => viewport.attr("transform", event.transform));
     svg.call(zoom as any);
-
-    // Drag individual nodes. `dragged` distinguishes a drag from a tap so
-    // repositioning a node does not also navigate away from the map.
-    let dragged = false;
-    node.call(
-      d3
-        .drag<SVGCircleElement, any>()
-        .on("start", (event, d) => {
-          dragged = false;
-          if (!event.active) sim.alphaTarget(0.3).restart();
-          d.fx = d.x;
-          d.fy = d.y;
-        })
-        .on("drag", (event, d) => {
-          dragged = true;
-          d.fx = event.x;
-          d.fy = event.y;
-        })
-        .on("end", (event, d) => {
-          if (!event.active) sim.alphaTarget(0);
-          d.fx = null;
-          d.fy = null;
-        }) as any,
-    );
-
-    node.on("click", (_event, d) => {
-      if (dragged) return;
-      router.push(`/opportunities/${(d as GraphNode).id}`);
-    });
-
-    sim.on("tick", () => {
-      link
-        .attr("x1", (d: any) => (d.source as unknown as { x: number }).x)
-        .attr("y1", (d: any) => (d.source as unknown as { y: number }).y)
-        .attr("x2", (d: any) => (d.target as unknown as { x: number }).x)
-        .attr("y2", (d: any) => (d.target as unknown as { y: number }).y);
-      node
-        .attr("cx", (d: unknown) => (d as { x: number }).x)
-        .attr("cy", (d: unknown) => (d as { y: number }).y);
-      labels
-        .attr("x", (d: unknown) => (d as { x: number }).x)
-        .attr("y", (d: unknown) => (d as { y: number }).y);
-    });
     /* eslint-enable @typescript-eslint/no-explicit-any */
-
-    return () => {
-      sim.stop();
-    };
   }, [data, router]);
 
   return (
@@ -242,9 +269,9 @@ export default function MapPage() {
             Your night sky
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
-            Each node is an opportunity matched to your profile. Edges connect
-            programs that share a field or tags — your pathway through STEM.
-            Click any node to see details.
+            Time flows left to right: each branch is a field, each step the
+            next deadline on that path. The deepest leaves are your furthest
+            horizons. Click any opportunity to see details.
           </p>
         </header>
 
