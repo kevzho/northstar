@@ -84,7 +84,7 @@ def create_app() -> FastAPI:
             .maybe_single()
             .execute()
         )
-        if not row.data:
+        if not (row.data if row else None):
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Student profile not found. POST /students to create.",
@@ -331,7 +331,7 @@ def create_app() -> FastAPI:
             .maybe_single()
             .execute()
         )
-        student = prof.data or {}
+        student = (prof.data if prof else None) or {}
 
         cat = sb.table("opportunities").select("*").execute()
         shelf = student.get("audience") or "high_school"
@@ -487,7 +487,7 @@ def create_app() -> FastAPI:
             .maybe_single()
             .execute()
         )
-        student = prof.data
+        student = prof.data if prof else None
         if not student:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -606,7 +606,7 @@ def create_app() -> FastAPI:
             .maybe_single()
             .execute()
         )
-        if not row.data:
+        if not (row.data if row else None):
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Opportunity not found.",
@@ -747,7 +747,7 @@ def create_app() -> FastAPI:
             .maybe_single()
             .execute()
         )
-        student = prof.data
+        student = prof.data if prof else None
         if not student:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -836,7 +836,7 @@ def create_app() -> FastAPI:
             .maybe_single()
             .execute()
         )
-        student = prof.data
+        student = prof.data if prof else None
         if not student:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
