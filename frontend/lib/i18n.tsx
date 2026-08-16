@@ -63,7 +63,7 @@ const dictionary: Record<LanguageCode, Dict> = {
     "faq.a3": "Nothing. Northstar is free for students.",
     "faq.q4": "Where do the opportunities come from?",
     "faq.a4":
-      "They are gathered from public sources through official APIs, then reviewed by a person before they enter the catalog. Nothing unverified is shown as a real program.",
+      "They are gathered from public sources through official APIs, then screened by an automated verifier — which checks each one is a real, current opportunity — before it enters the catalog, with human spot-checks. Nothing unscreened is shown as a real program.",
     "faq.q5": "Is my data private?",
     "faq.a5":
       "Your profile is private by default. Public evidence pages and friend comparisons are opt-in, and negative outcomes are never made public.",
@@ -102,7 +102,7 @@ const dictionary: Record<LanguageCode, Dict> = {
     "faq.a3": "Nada. Northstar es gratis para estudiantes.",
     "faq.q4": "¿De dónde vienen las oportunidades?",
     "faq.a4":
-      "Se recopilan de fuentes públicas mediante APIs oficiales, y luego una persona las revisa antes de que entren al catálogo. Nada sin verificar se muestra como un programa real.",
+      "Se recopilan de fuentes públicas mediante APIs oficiales, y luego un verificador automático comprueba que cada una sea una oportunidad real y vigente antes de entrar al catálogo, con revisiones humanas puntuales. Nada sin verificar se muestra como un programa real.",
     "faq.q5": "¿Mis datos son privados?",
     "faq.a5":
       "Tu perfil es privado por defecto. Las páginas públicas y las comparaciones con amigos son opcionales, y los resultados negativos nunca se hacen públicos.",
@@ -141,7 +141,7 @@ const dictionary: Record<LanguageCode, Dict> = {
     "faq.a3": "免费。Northstar 对学生免费。",
     "faq.q4": "这些机会从哪里来？",
     "faq.a4":
-      "它们通过官方 API 从公开来源收集，然后由人工审核后才进入目录。未经核实的内容不会被展示为真实项目。",
+      "它们通过官方 API 从公开来源收集，然后由自动验证器检查每一个是否为真实、有效的机会后才进入目录，并辅以人工抽查。未经核实的内容不会被展示为真实项目。",
     "faq.q5": "我的数据是私密的吗？",
     "faq.a5":
       "你的档案默认是私密的。公开的成果页面和好友比较都是自愿选择的，负面结果永远不会公开。",
@@ -180,7 +180,7 @@ const dictionary: Record<LanguageCode, Dict> = {
     "faq.a3": "Rien. Northstar est gratuit pour les étudiants.",
     "faq.q4": "D'où viennent les opportunités ?",
     "faq.a4":
-      "Elles sont recueillies de sources publiques via des API officielles, puis vérifiées par une personne avant d'entrer au catalogue. Rien de non vérifié n'est présenté comme un vrai programme.",
+      "Elles sont recueillies de sources publiques via des API officielles, puis un vérificateur automatique confirme que chacune est une opportunité réelle et actuelle avant son entrée au catalogue, avec des contrôles humains ponctuels. Rien de non vérifié n'est présenté comme un vrai programme.",
     "faq.q5": "Mes données sont-elles privées ?",
     "faq.a5":
       "Votre profil est privé par défaut. Les pages publiques et les comparaisons entre amis sont facultatives, et les résultats négatifs ne sont jamais rendus publics.",

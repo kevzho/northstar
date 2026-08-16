@@ -14,12 +14,22 @@ import traceback
 
 import scrape_devpost
 import scrape_reddit
+import verify_and_import
 
-for name, scraper in (("reddit", scrape_reddit), ("devpost", scrape_devpost)):
+# Scrape every source into the pool, then let the verifier promote the
+# clear wins into the live catalog. The verify stage no-ops (exits) when
+# no LLM key is set, so the scrapers still run without it.
+STAGES = (
+    ("reddit", scrape_reddit),
+    ("devpost", scrape_devpost),
+    ("verify+import", verify_and_import),
+)
+
+for name, stage in STAGES:
     print(f"=== {name} ===")
     try:
-        scraper.main()
-    except SystemExit as exit_:  # scrapers sys.exit() on fatal blocks
+        stage.main()
+    except SystemExit as exit_:  # stages sys.exit() on fatal blocks
         print(f"{name} stopped: {exit_}")
     except Exception:
         traceback.print_exc()
