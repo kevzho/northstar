@@ -84,6 +84,7 @@ export async function saveStudentProfile(
   profile: Pick<StudentProfile, "name" | "grade" | "interests" | "goals" | "onboarded"> & {
     /** Omitted on stub upserts; the backend defaults to high_school. */
     audience?: StudentProfile["audience"];
+    location_pref?: StudentProfile["location_pref"];
     consent?: boolean;
   },
 ): Promise<StudentProfile> {

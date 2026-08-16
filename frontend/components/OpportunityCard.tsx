@@ -79,8 +79,19 @@ export function OpportunityCard({
         {opportunity.blurb}
       </p>
       <div className="mt-4 flex items-center justify-between gap-3">
-        <span className="text-xs font-semibold text-aurora">
-          {fieldLabels[opportunity.field]}
+        <span className="flex items-center gap-2">
+          <span className="text-xs font-semibold text-aurora">
+            {fieldLabels[opportunity.field]}
+          </span>
+          {opportunity.location_scope ? (
+            <span className="border border-border px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wide text-muted-foreground">
+              {opportunity.location_scope === "us"
+                ? "US"
+                : opportunity.location_scope === "international"
+                  ? "Intl"
+                  : "Global"}
+            </span>
+          ) : null}
         </span>
         <span className="flex items-center gap-4">
           {onDismiss ? (

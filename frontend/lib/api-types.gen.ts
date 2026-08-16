@@ -708,6 +708,11 @@ export interface components {
             detail?: components["schemas"]["ValidationError"][];
         };
         /**
+         * LocationPref
+         * @enum {string}
+         */
+        LocationPref: "us" | "international" | "either";
+        /**
          * Mission
          * @description A proof mission: a small real-world task tied to an archetype.
          */
@@ -811,6 +816,8 @@ export interface components {
             id: string;
             /** Interests */
             interests?: string[];
+            /** @default either */
+            location_pref: components["schemas"]["LocationPref"];
             /** Name */
             name?: string | null;
             /**
@@ -855,6 +862,8 @@ export interface components {
             grade?: string | null;
             /** Interests */
             interests?: string[];
+            /** @default either */
+            location_pref: components["schemas"]["LocationPref"];
             /** Name */
             name?: string | null;
             /**

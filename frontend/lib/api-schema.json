@@ -135,6 +135,15 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
+      "LocationPref": {
+        "enum": [
+          "us",
+          "international",
+          "either"
+        ],
+        "title": "LocationPref",
+        "type": "string"
+      },
       "Mission": {
         "description": "A proof mission: a small real-world task tied to an archetype.",
         "properties": {
@@ -389,6 +398,10 @@
             "title": "Interests",
             "type": "array"
           },
+          "location_pref": {
+            "$ref": "#/components/schemas/LocationPref",
+            "default": "either"
+          },
           "name": {
             "anyOf": [
               {
@@ -471,6 +484,10 @@
             },
             "title": "Interests",
             "type": "array"
+          },
+          "location_pref": {
+            "$ref": "#/components/schemas/LocationPref",
+            "default": "either"
           },
           "name": {
             "anyOf": [

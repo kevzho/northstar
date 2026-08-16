@@ -280,6 +280,11 @@ def to_candidate(
         "field_guess": classify(FIELD_HINTS, text, field_default),
         "type_guess": classify(TYPE_HINTS, text, "program"),
         "audience_guess": audience,
+        "location_guess": (
+            "international"
+            if re.search(r"\b(international|abroad|worldwide|global|overseas)\b", text, re.I)
+            else "us"
+        ),
         "needs_review": True,
     }
 

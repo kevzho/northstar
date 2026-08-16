@@ -9,6 +9,7 @@ resurrect anything you have already judged.
 
 Keys:
     k  keep — prompts once for a deadline, then upserts to Supabase
+    l  cycle location scope (us / international / global)
     d  drop
     f  cycle field guess        t  cycle type guess
     a  toggle audience guess    o  open the URL in your browser
@@ -37,6 +38,7 @@ POOL = pathlib.Path(__file__).parent / "scraped" / "reddit_candidates.json"
 FIELDS = ["cs", "biology", "math", "physics", "engineering", "interdisciplinary"]
 TYPES = ["program", "scholarship", "competition", "mentorship"]
 AUDIENCES = ["high_school", "college"]
+SCOPES = ["us", "international", "global"]
 
 
 def read_key() -> str:
@@ -89,6 +91,7 @@ def keep(sb, entry: dict) -> bool:
         "cost": 0,
         "url": entry["url"],
         "audience": entry.get("audience_guess", "high_school"),
+        "location_scope": entry.get("location_guess", "us"),
         "tags": [],
     }
     result = (
@@ -117,6 +120,7 @@ def main() -> None:
                 f"  {entry['url']}\n"
                 f"  [{entry.get('field_guess')}] [{entry.get('type_guess')}] "
                 f"[{entry.get('audience_guess', 'high_school')}] "
+                f"[{entry.get('location_guess', 'us')}] "
                 f"score {entry.get('score')} · {entry.get('posted_utc', '')[:10]} "
                 f"· {entry.get('source')}"
             )
@@ -139,6 +143,11 @@ def main() -> None:
             if key == "a":
                 current = entry.get("audience_guess", "high_school")
                 entry["audience_guess"] = AUDIENCES[1 - AUDIENCES.index(current)]
+                continue
+            if key == "l":
+                current = entry.get("location_guess", "us")
+                idx = SCOPES.index(current) if current in SCOPES else 0
+                entry["location_guess"] = SCOPES[(idx + 1) % len(SCOPES)]
                 continue
             if key == "o":
                 webbrowser.open(entry["url"])

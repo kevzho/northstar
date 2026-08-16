@@ -55,6 +55,7 @@ export type Opportunity = {
   tags: string[];
   /** Optional geographic location for map placement. */
   location: string | null;
+  location_scope?: LocationScope;
 };
 
 export type MatchScore = {
@@ -93,6 +94,8 @@ export type Outcome = {
 };
 
 export type Audience = "high_school" | "college";
+export type LocationPref = "us" | "international" | "either";
+export type LocationScope = "us" | "international" | "global";
 
 export type StudentProfile = Required<Schema<"StudentProfile">>;
 

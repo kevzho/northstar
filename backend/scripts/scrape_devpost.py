@@ -125,6 +125,7 @@ def main() -> None:
                 "audience_guess": (
                     "high_school" if "high school" in title.lower() else "college"
                 ),
+                "location_guess": "global",
                 "needs_review": True,
             }
             new_count += 1

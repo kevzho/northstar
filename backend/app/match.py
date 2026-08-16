@@ -158,7 +158,7 @@ def _cosine(v1: dict[str, float], v2: dict[str, float]) -> float:
 
 def _explain(status_tf: float, field_note: str | None, grade_fit: bool,
              tag_overlap: int, free: bool, collab_lift: bool = False,
-             bookmark_note: bool = False) -> str:
+             bookmark_note: bool = False, location_note: str | None = None) -> str:
     bits: list[str] = []
     if status_tf > 0.3:
         bits.append("strong semantic match")
@@ -174,6 +174,8 @@ def _explain(status_tf: float, field_note: str | None, grade_fit: bool,
         bits.append(f"overlaps on {tag_overlap} tag(s)")
     if free:
         bits.append("fully funded")
+    if location_note:
+        bits.append(location_note)
     if collab_lift:
         bits.append("students with outcomes like yours did well here")
     if not bits:
@@ -252,6 +254,10 @@ def score_opportunities(
     # assessment. When present, the field boost scales with the share
     # instead of firing flat — a 56% field pushes harder than a 12% one.
     field_scores = student.get("field_scores") or {}
+    # Location preference gives a small boost, never a hard filter — an
+    # 'international' preference must not empty a mostly-US catalog. Global
+    # opportunities (open to all) satisfy either preference.
+    location_pref = student.get("location_pref") or "either"
     field_scores = {
         k: v for k, v in field_scores.items() if isinstance(v, (int, float))
     } if isinstance(field_scores, dict) else {}
@@ -278,6 +284,16 @@ def score_opportunities(
         bookmark_count = (bookmarked_fields or {}).get(opp_field, 0)
         bookmark_boost = min(0.02 * bookmark_count, 0.06)
 
+        scope = opp.get("location_scope") or "us"
+        location_note = None
+        location_boost = 0.0
+        if location_pref != "either" and scope in (location_pref, "global"):
+            location_boost = 0.05
+            location_note = (
+                "open worldwide" if scope == "global"
+                else f"{scope}-based, matching your preference"
+            )
+
         tmin, tmax = opp.get("grade_min", 6), opp.get("grade_max", 12)
         try:
             grade_fit = (tmin <= student_grade <= tmax)
@@ -293,7 +309,7 @@ def score_opportunities(
 
         free = (opp.get("cost", 0) or 0) == 0
 
-        boost = field_boost + bookmark_boost
+        boost = field_boost + bookmark_boost + location_boost
         if grade_fit:   boost += 0.10
         if tag_overlap: boost += 0.10
         if free:        boost += 0.05
@@ -312,6 +328,7 @@ def score_opportunities(
             tfidf, field_note, grade_fit, tag_overlap, free,
             collab_lift=collab_term > 0.02,
             bookmark_note=bookmark_boost > 0,
+            location_note=location_note,
         )
         results.append({
             "opportunity": opp,

@@ -37,6 +37,12 @@ class Audience(str, Enum):
     college = "college"
 
 
+class LocationPref(str, Enum):
+    us = "us"
+    international = "international"
+    either = "either"
+
+
 class StudentProfile(BaseModel):
     """Full student row as served by GET /me or POST /students response."""
 
@@ -47,6 +53,7 @@ class StudentProfile(BaseModel):
     interests: list[str] = Field(default_factory=list)
     goals: Optional[str] = None
     audience: Audience = Audience.high_school
+    location_pref: LocationPref = LocationPref.either
     # Quiz outputs synced from the frontend (shapes owned by
     # frontend/lib/scoring.ts): six 0-100 trait signals; six field shares
     # summing to 100. None until the student syncs an assessment.
@@ -131,6 +138,7 @@ class StudentProfileCreate(BaseModel):
     interests: list[str] = Field(default_factory=list)
     goals: Optional[str] = None
     audience: Audience = Audience.high_school
+    location_pref: LocationPref = LocationPref.either
     onboarded: bool = False
     consent: bool = False
 

@@ -16,7 +16,7 @@ import { NativeSelect } from "@/components/ui/native-select";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { saveStudentProfile } from "@/lib/api";
-import type { Audience } from "@/lib/types";
+import type { Audience, LocationPref } from "@/lib/types";
 
 const subjectOptions = [
   "Computer Science",
@@ -37,6 +37,8 @@ export default function OnboardingPage() {
 
   const [name, setName] = useState("");
   const [audience, setAudience] = useState<Audience>("high_school");
+  const [locationPref, setLocationPref] =
+    useState<LocationPref>("either");
   const [grade, setGrade] = useState("");
   const [interests, setInterests] = useState<string[]>([]);
   const [goals, setGoals] = useState("");
@@ -61,6 +63,7 @@ export default function OnboardingPage() {
         interests,
         goals,
         audience,
+        location_pref: locationPref,
         onboarded: true,
         consent,
       });
@@ -127,6 +130,34 @@ export default function OnboardingPage() {
                       }}
                       className={
                         audience === value
+                          ? "border border-foreground bg-foreground px-4 py-2 text-sm font-medium text-background"
+                          : "border border-border bg-transparent px-4 py-2 text-sm font-medium text-foreground"
+                      }
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="grid gap-2">
+                <span className="text-sm font-semibold text-foreground">
+                  Opportunities from...
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {(
+                    [
+                      ["us", "US-based"],
+                      ["international", "International"],
+                      ["either", "Either"],
+                    ] as const
+                  ).map(([value, label]) => (
+                    <button
+                      key={value}
+                      type="button"
+                      aria-pressed={locationPref === value}
+                      onClick={() => setLocationPref(value)}
+                      className={
+                        locationPref === value
                           ? "border border-foreground bg-foreground px-4 py-2 text-sm font-medium text-background"
                           : "border border-border bg-transparent px-4 py-2 text-sm font-medium text-foreground"
                       }

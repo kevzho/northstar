@@ -79,7 +79,7 @@ def create_app() -> FastAPI:
         sb = get_supabase()
         row = (
             sb.table("students")
-            .select("id, name, email, grade, interests, goals, audience, trait_scores, field_scores, handle, public_profile, onboarded, consented_at")
+            .select("id, name, email, grade, interests, goals, audience, location_pref, trait_scores, field_scores, handle, public_profile, onboarded, consented_at")
             .eq("id", user.id)
             .maybe_single()
             .execute()
@@ -775,7 +775,7 @@ def create_app() -> FastAPI:
         # Profile
         prof = (
             sb.table("students")
-            .select("id, name, email, grade, interests, goals, audience, field_scores")
+            .select("id, name, email, grade, interests, goals, audience, location_pref, field_scores")
             .eq("id", user.id)
             .maybe_single()
             .execute()

@@ -183,3 +183,30 @@ def test_malformed_field_scores_do_not_crash() -> None:
     student = {**STUDENT, "field_scores": {"cs": "not-a-number", "math": None}}
     results = score_opportunities(student, [_opp(opportunity_field="cs")])
     assert len(results) == 1  # falls back cleanly, no boost from junk
+
+
+def test_location_preference_boosts_matching_scope() -> None:
+    us_pref = {**STUDENT, "location_pref": "us"}
+    results = score_opportunities(
+        us_pref,
+        [
+            _opp(id="us", location_scope="us"),
+            _opp(id="intl", location_scope="international"),
+        ],
+    )
+    by_id = {r["score"]["opportunity_id"]: r["score"]["score"] for r in results}
+    assert by_id["us"] > by_id["intl"]
+    us_result = next(r for r in results if r["score"]["opportunity_id"] == "us")
+    assert "us-based" in us_result["score"]["explanation"].lower()
+
+
+def test_global_opportunities_satisfy_any_preference() -> None:
+    intl_pref = {**STUDENT, "location_pref": "international"}
+    (result,) = score_opportunities(intl_pref, [_opp(location_scope="global")])
+    assert "worldwide" in result["score"]["explanation"].lower()
+
+
+def test_either_preference_gives_no_location_boost() -> None:
+    either = {**STUDENT, "location_pref": "either"}
+    (result,) = score_opportunities(either, [_opp(location_scope="us")])
+    assert "matching your preference" not in result["score"]["explanation"]
