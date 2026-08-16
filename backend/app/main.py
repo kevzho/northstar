@@ -79,7 +79,7 @@ def create_app() -> FastAPI:
         sb = get_supabase()
         row = (
             sb.table("students")
-            .select("id, name, email, grade, interests, goals, audience, trait_scores, field_scores, onboarded, consented_at")
+            .select("id, name, email, grade, interests, goals, audience, trait_scores, field_scores, handle, public_profile, onboarded, consented_at")
             .eq("id", user.id)
             .maybe_single()
             .execute()
@@ -350,6 +350,262 @@ def create_app() -> FastAPI:
                 detail="The advisor's model call failed; try again shortly.",
             )
         return {"answer": answer, "sources": sources}
+
+    @app.post("/sharing")
+    def update_sharing(
+        body: dict,
+        user: CurrentUser = RequireUser,
+    ) -> dict:
+        """Set the handle and/or the public toggle on the student's record."""
+        from .db import get_supabase
+        from .social import valid_handle
+
+        updates: dict = {}
+        if "handle" in body:
+            handle = str(body["handle"] or "").strip().lower()
+            if handle and not valid_handle(handle):
+                raise HTTPException(
+                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    detail="Handles are 3-20 characters: lowercase letters, digits, dashes.",
+                )
+            updates["handle"] = handle or None
+        if "public_profile" in body:
+            updates["public_profile"] = bool(body["public_profile"])
+        if not updates:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="Nothing to update.",
+            )
+
+        sb = get_supabase()
+        try:
+            result = (
+                sb.table("students")
+                .update(updates, returning="representation")
+                .eq("id", user.id)
+                .execute()
+            )
+        except Exception:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="That handle is taken.",
+            )
+        if not (result.data if result else None):
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Student profile not found. POST /students to create.",
+            )
+        row = result.data[0]
+        return {"handle": row.get("handle"), "public_profile": row.get("public_profile")}
+
+    @app.get("/public/{handle}")
+    def public_profile(handle: str) -> dict:
+        """The shareable record — deliberately unauthenticated.
+
+        Serves highlights only, and only for students who opted in
+        (public_profile true). Everyone else is a uniform 404, so the
+        endpoint cannot be used to probe which handles exist.
+        """
+
+        from .db import get_supabase
+        from .social import public_payload
+
+        sb = get_supabase()
+        row = (
+            sb.table("students")
+            .select("id, name, handle, audience, trait_scores, field_scores, chosen_archetype, chosen_kind, public_profile")
+            .eq("handle", handle.lower())
+            .maybe_single()
+            .execute()
+        )
+        student = row.data if row else None
+        if not student or not student.get("public_profile"):
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No public profile here.",
+            )
+        return public_payload(sb, student)
+
+    @app.post("/chosen-path")
+    def sync_chosen_path(
+        body: dict,
+        user: CurrentUser = RequireUser,
+    ) -> dict:
+        """Persist the charted path so friends can compare career choices."""
+        from .db import get_supabase
+
+        archetype = str(body.get("archetype_id", ""))[:60]
+        kind = str(body.get("kind", ""))[:20]
+        sb = get_supabase()
+        sb.table("students").update(
+            {"chosen_archetype": archetype or None, "chosen_kind": kind or None}
+        ).eq("id", user.id).execute()
+        return {"synced": True}
+
+    @app.post("/friends")
+    def send_friend_request(
+        body: dict,
+        user: CurrentUser = RequireUser,
+    ) -> dict:
+        """Request friendship by handle. The target must have set one."""
+        from .db import get_supabase
+
+        handle = str(body.get("handle", "")).strip().lower()
+        if not handle:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="A handle is required.",
+            )
+        sb = get_supabase()
+        target_row = (
+            sb.table("students").select("id").eq("handle", handle).maybe_single().execute()
+        )
+        target = target_row.data if target_row else None
+        if not target or target["id"] == user.id:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No student with that handle.",
+            )
+        # One row per pair, whichever direction exists.
+        existing = (
+            sb.table("friendships")
+            .select("id, status")
+            .or_(
+                f"and(requester.eq.{user.id},addressee.eq.{target['id']}),"
+                f"and(requester.eq.{target['id']},addressee.eq.{user.id})"
+            )
+            .execute()
+        ).data or []
+        if existing:
+            return {"id": existing[0]["id"], "status": existing[0]["status"]}
+        result = (
+            sb.table("friendships")
+            .insert(
+                {"requester": user.id, "addressee": target["id"]},
+                returning="representation",
+            )
+            .execute()
+        )
+        return {"id": result.data[0]["id"], "status": "pending"}
+
+    @app.get("/friends")
+    def list_friends(user: CurrentUser = RequireUser) -> dict:
+        """Accepted friends plus pending requests, with handles and names."""
+        from .db import get_supabase
+        from .social import first_name
+
+        sb = get_supabase()
+        rows = (
+            sb.table("friendships")
+            .select("id, requester, addressee, status, created_at")
+            .or_(f"requester.eq.{user.id},addressee.eq.{user.id}")
+            .order("created_at", desc=True)
+            .execute()
+        ).data or []
+
+        other_ids = list({
+            (r["addressee"] if r["requester"] == user.id else r["requester"])
+            for r in rows
+        })
+        people: dict[str, dict] = {}
+        if other_ids:
+            students = (
+                sb.table("students")
+                .select("id, name, handle")
+                .in_("id", other_ids)
+                .execute()
+            ).data or []
+            people = {s["id"]: s for s in students}
+
+        def entry(r: dict) -> dict:
+            other_id = r["addressee"] if r["requester"] == user.id else r["requester"]
+            other = people.get(other_id, {})
+            return {
+                "id": r["id"],
+                "student_id": other_id,
+                "name": first_name(other.get("name")),
+                "handle": other.get("handle"),
+                "direction": "sent" if r["requester"] == user.id else "received",
+            }
+
+        return {
+            "accepted": [entry(r) for r in rows if r["status"] == "accepted"],
+            "pending": [entry(r) for r in rows if r["status"] == "pending"],
+        }
+
+    @app.post("/friends/{friendship_id}/accept")
+    def accept_friend(
+        friendship_id: str,
+        user: CurrentUser = RequireUser,
+    ) -> dict:
+        """Only the addressee can accept."""
+        from .db import get_supabase
+
+        sb = get_supabase()
+        result = (
+            sb.table("friendships")
+            .update({"status": "accepted"}, returning="representation")
+            .eq("id", friendship_id)
+            .eq("addressee", user.id)
+            .execute()
+        )
+        if not (result.data if result else None):
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No such pending request for you.",
+            )
+        return {"status": "accepted"}
+
+    @app.delete("/friends/{friendship_id}", status_code=status.HTTP_204_NO_CONTENT)
+    def remove_friend(
+        friendship_id: str,
+        user: CurrentUser = RequireUser,
+    ):
+        """Either party can decline or unfriend."""
+        from .db import get_supabase
+
+        sb = get_supabase()
+        sb.table("friendships").delete().eq("id", friendship_id).or_(
+            f"requester.eq.{user.id},addressee.eq.{user.id}"
+        ).execute()
+
+    @app.get("/friends/{student_id}/compare")
+    def compare_with_friend(
+        student_id: str,
+        user: CurrentUser = RequireUser,
+    ) -> dict:
+        """Side-by-side records — accepted friendships only."""
+        from .db import get_supabase
+        from .social import compare_payload
+
+        sb = get_supabase()
+        link = (
+            sb.table("friendships")
+            .select("id")
+            .eq("status", "accepted")
+            .or_(
+                f"and(requester.eq.{user.id},addressee.eq.{student_id}),"
+                f"and(requester.eq.{student_id},addressee.eq.{user.id})"
+            )
+            .execute()
+        ).data or []
+        if not link:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="You can only compare with accepted friends.",
+            )
+
+        cols = "id, name, handle, audience, trait_scores, field_scores, chosen_archetype, chosen_kind"
+        mine = (sb.table("students").select(cols).eq("id", user.id).maybe_single().execute())
+        theirs = (sb.table("students").select(cols).eq("id", student_id).maybe_single().execute())
+        me_row = mine.data if mine else None
+        them_row = theirs.data if theirs else None
+        if not me_row or not them_row:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Profile missing.")
+        return {
+            "me": compare_payload(sb, me_row),
+            "friend": compare_payload(sb, them_row),
+        }
 
     @app.get("/missions", response_model=list[Mission])
     def list_missions(

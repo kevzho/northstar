@@ -25,6 +25,7 @@ import type {
   Mission,
   MissionCompletion,
   TimelineEvent,
+  PublicProfile,
 } from "./types";
 
 export type Mentor = {
@@ -261,4 +262,85 @@ export async function askAdvisor(question: string): Promise<{
     method: "POST",
     body: JSON.stringify({ question }),
   })).json();
+}
+
+// ---------------------------------------------------------------------------
+// Sharing + friends
+// ---------------------------------------------------------------------------
+
+/** Set the public handle and/or the share toggle. 409 = handle taken. */
+export async function updateSharing(update: {
+  handle?: string;
+  public_profile?: boolean;
+}): Promise<{ handle: string | null; public_profile: boolean }> {
+  return (await authedFetch("/sharing", {
+    method: "POST",
+    body: JSON.stringify(update),
+  })).json();
+}
+
+/** A public record — no auth; 404 for private or unknown handles. */
+export async function fetchPublicProfile(handle: string): Promise<PublicProfile> {
+  const res = await fetch(`${API_URL}/public/${encodeURIComponent(handle)}`);
+  if (!res.ok) throw new Error(`API ${res.status}`);
+  return res.json();
+}
+
+/** Persist the charted path so friends can compare career choices. */
+export async function syncChosenPath(
+  archetypeId: string,
+  kind: string,
+): Promise<void> {
+  await authedFetch("/chosen-path", {
+    method: "POST",
+    body: JSON.stringify({ archetype_id: archetypeId, kind }),
+  });
+}
+
+export type FriendEntry = {
+  id: string;
+  student_id: string;
+  name: string;
+  handle: string | null;
+  direction: "sent" | "received";
+};
+
+export async function fetchFriends(): Promise<{
+  accepted: FriendEntry[];
+  pending: FriendEntry[];
+}> {
+  return (await authedFetch("/friends")).json();
+}
+
+export async function sendFriendRequest(handle: string): Promise<{ status: string }> {
+  return (await authedFetch("/friends", {
+    method: "POST",
+    body: JSON.stringify({ handle }),
+  })).json();
+}
+
+export async function acceptFriend(friendshipId: string): Promise<void> {
+  await authedFetch(`/friends/${friendshipId}/accept`, { method: "POST" });
+}
+
+export async function removeFriend(friendshipId: string): Promise<void> {
+  await authedFetch(`/friends/${friendshipId}`, { method: "DELETE" });
+}
+
+export type ComparedRecord = {
+  handle: string | null;
+  name: string;
+  audience: string;
+  trait_scores: Record<string, number> | null;
+  field_scores: Record<string, number> | null;
+  chosen_archetype: string | null;
+  chosen_kind: string | null;
+  missions_completed: number;
+  outcome_counts: Record<string, number>;
+};
+
+export async function compareWithFriend(
+  studentId: string,
+): Promise<{ me: ComparedRecord; friend: ComparedRecord }> {
+  return (await authedFetch(`/friends/${studentId}/compare`)).json();
 }

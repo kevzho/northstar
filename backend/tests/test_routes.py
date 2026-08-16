@@ -85,7 +85,12 @@ def test_server_without_jwt_secret_fails_closed(
 def test_every_route_except_public_ones_declares_auth() -> None:
     """No route may be added later without the RequireUser dependency."""
     app = create_app()
-    public = {"/", "/health", "/openapi.json", "/docs", "/docs/oauth2-redirect", "/redoc"}
+    public = {
+        "/", "/health", "/openapi.json", "/docs", "/docs/oauth2-redirect", "/redoc",
+        # Deliberately public: serves opt-in highlight data only, uniform
+        # 404 for private/unknown handles (see app/main.py public_profile).
+        "/public/{handle}",
+    }
 
     for route in app.routes:
         path = getattr(route, "path", None)

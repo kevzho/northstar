@@ -52,6 +52,9 @@ class StudentProfile(BaseModel):
     # summing to 100. None until the student syncs an assessment.
     trait_scores: Optional[dict[str, float]] = None
     field_scores: Optional[dict[str, float]] = None
+    # Sharing: the public-page name and the opt-in toggle (see /sharing).
+    handle: Optional[str] = None
+    public_profile: bool = False
     onboarded: bool = False
     # ISO 8601 timestamp when the student accepted the IRB-style data policy
     # during onboarding. NULL means consent has not been recorded.

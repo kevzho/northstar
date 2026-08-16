@@ -25,6 +25,7 @@ import {
 import { useStoredAnswers } from "@/lib/use-assessment";
 import { useEffect, useState } from "react";
 import { fetchTimeline } from "@/lib/api";
+import { SharingCard } from "@/components/SharingCard";
 import type { OpportunityField, TimelineEvent } from "@/lib/types";
 
 const fieldLabels: Record<OpportunityField, string> = {
@@ -275,6 +276,8 @@ export default function ProfilePage() {
             </ul>
           </section>
         ) : null}
+
+        <SharingCard />
 
         <p className="mt-4 text-xs leading-5 text-muted-foreground">
           Each trait score is the sum of the trait weights on the answers you

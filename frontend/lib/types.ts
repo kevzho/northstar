@@ -125,3 +125,16 @@ export type TimelineEvent = {
   title: string;
   detail: string;
 };
+
+/** The opt-in public record served by GET /public/{handle}. */
+export type PublicProfile = {
+  handle: string | null;
+  name: string;
+  audience: Audience;
+  trait_scores: Record<string, number> | null;
+  field_scores: Record<string, number> | null;
+  chosen_archetype: string | null;
+  chosen_kind: string | null;
+  missions: { title: string; trait_focus: string; evidence: string; at: string | null }[];
+  outcomes: { title: string; status: string; at: string | null }[];
+};

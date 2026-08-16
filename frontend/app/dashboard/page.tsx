@@ -397,6 +397,15 @@ export default function DashboardPage() {
               open right now.
             </p>
           </Link>
+          <Link href="/friends" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
+            <h2 className="text-xl font-semibold text-foreground">
+              Friends
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              Compare records side by side — traits, paths, missions, and
+              outcomes.
+            </p>
+          </Link>
           <Link href="/advisor" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
             <h2 className="text-xl font-semibold text-foreground">
               Explore unusual routes

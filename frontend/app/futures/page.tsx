@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { archetypes } from "@/lib/archetypes";
-import { authedFetch } from "@/lib/api";
+import { authedFetch, syncChosenPath } from "@/lib/api";
 import {
   interestFields,
   leadingFields,
@@ -62,6 +62,8 @@ export default function FuturesPage() {
 
   function chart(path: FuturePath) {
     writeChosenPath({ archetypeId: path.archetype.id, kind: path.kind });
+    // Best-effort server sync so friends can compare career choices.
+    syncChosenPath(path.archetype.id, path.kind).catch(() => {});
     router.push("/plan");
   }
 

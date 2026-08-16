@@ -367,6 +367,17 @@
             ],
             "title": "Grade"
           },
+          "handle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Handle"
+          },
           "id": {
             "title": "Id",
             "type": "string"
@@ -392,6 +403,11 @@
           "onboarded": {
             "default": false,
             "title": "Onboarded",
+            "type": "boolean"
+          },
+          "public_profile": {
+            "default": false,
+            "title": "Public Profile",
             "type": "boolean"
           },
           "trait_scores": {
@@ -723,6 +739,49 @@
         "summary": "Delete Bookmark"
       }
     },
+    "/chosen-path": {
+      "post": {
+        "description": "Persist the charted path so friends can compare career choices.",
+        "operationId": "sync_chosen_path_chosen_path_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "title": "Body",
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Sync Chosen Path Chosen Path Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Sync Chosen Path"
+      }
+    },
     "/dismissals": {
       "get": {
         "description": "The student's \"not for me\" marks.",
@@ -814,6 +873,185 @@
           }
         },
         "summary": "Delete Dismissal"
+      }
+    },
+    "/friends": {
+      "get": {
+        "description": "Accepted friends plus pending requests, with handles and names.",
+        "operationId": "list_friends_friends_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response List Friends Friends Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Friends"
+      },
+      "post": {
+        "description": "Request friendship by handle. The target must have set one.",
+        "operationId": "send_friend_request_friends_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "title": "Body",
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Send Friend Request Friends Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Send Friend Request"
+      }
+    },
+    "/friends/{friendship_id}": {
+      "delete": {
+        "description": "Either party can decline or unfriend.",
+        "operationId": "remove_friend_friends__friendship_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "friendship_id",
+            "required": true,
+            "schema": {
+              "title": "Friendship Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Remove Friend"
+      }
+    },
+    "/friends/{friendship_id}/accept": {
+      "post": {
+        "description": "Only the addressee can accept.",
+        "operationId": "accept_friend_friends__friendship_id__accept_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "friendship_id",
+            "required": true,
+            "schema": {
+              "title": "Friendship Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Accept Friend Friends  Friendship Id  Accept Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Accept Friend"
+      }
+    },
+    "/friends/{student_id}/compare": {
+      "get": {
+        "description": "Side-by-side records \u2014 accepted friendships only.",
+        "operationId": "compare_with_friend_friends__student_id__compare_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "student_id",
+            "required": true,
+            "schema": {
+              "title": "Student Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Compare With Friend Friends  Student Id  Compare Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Compare With Friend"
       }
     },
     "/health": {
@@ -1194,6 +1432,91 @@
           }
         },
         "summary": "List Projects"
+      }
+    },
+    "/public/{handle}": {
+      "get": {
+        "description": "The shareable record \u2014 deliberately unauthenticated.\n\nServes highlights only, and only for students who opted in\n(public_profile true). Everyone else is a uniform 404, so the\nendpoint cannot be used to probe which handles exist.",
+        "operationId": "public_profile_public__handle__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "handle",
+            "required": true,
+            "schema": {
+              "title": "Handle",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Public Profile Public  Handle  Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Public Profile"
+      }
+    },
+    "/sharing": {
+      "post": {
+        "description": "Set the handle and/or the public toggle on the student's record.",
+        "operationId": "update_sharing_sharing_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "title": "Body",
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Update Sharing Sharing Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Sharing"
       }
     },
     "/students": {
