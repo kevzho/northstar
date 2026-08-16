@@ -71,6 +71,8 @@ SUBREDDITS: list[tuple[str, str]] = [
     ("csMajors", "college"),
     ("premed", "college"),
     ("REU", "college"),
+    ("FinancialCareers", "college"),
+    ("quant", "college"),
 ]
 
 # Targeted searches sweep further back than /new can reach.
@@ -94,7 +96,14 @@ FIELD_SEARCHES: dict[str, list[str]] = {
     "biology": ["biology research program high school", "medical program high school"],
     "cs": ["AI research high school", "coding summer program"],
     "design": ["art portfolio program", "design summer program high school"],
-    "business": ["business summer program high school", "entrepreneurship competition"],
+    "business": [
+        "business summer program high school",
+        "entrepreneurship competition",
+        "finance summer program high school",
+        "economics competition high school",
+        "investment banking high school program",
+        "DECA scholarship",
+    ],
     "humanities": ["writing program high school", "debate scholarship"],
     "health": ["public health program high school", "medical volunteering"],
 }
@@ -108,6 +117,17 @@ COLLEGE_SEARCHES = [
     "undergraduate scholarship",
 ]
 COLLEGE_SEARCH_SUBREDDITS = ["csMajors", "internships", "REU"]
+
+# Finance/econ sweep — these subreddits carry internship, fellowship, and
+# competition threads that the generic college searches miss.
+FINANCE_SEARCHES = [
+    "summer analyst application",
+    "finance internship deadline",
+    "economics fellowship",
+    "quant internship",
+    "sophomore diversity program finance",
+]
+FINANCE_SEARCH_SUBREDDITS = ["FinancialCareers", "quant"]
 
 PAGES_PER_LISTING = 4  # 4 x 75 = up to 300 posts per subreddit per run
 
@@ -371,6 +391,11 @@ def main() -> None:
     run_searches(
         [(query, "interdisciplinary") for query in COLLEGE_SEARCHES],
         COLLEGE_SEARCH_SUBREDDITS,
+        "college",
+    )
+    run_searches(
+        [(query, "business") for query in FINANCE_SEARCHES],
+        FINANCE_SEARCH_SUBREDDITS,
         "college",
     )
 

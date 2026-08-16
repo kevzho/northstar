@@ -172,6 +172,13 @@ export default function FriendsPage() {
               <Button onClick={add} disabled={!handle.trim()} className="h-11 px-5">
                 Add friend
               </Button>
+              <Button
+                variant="outline"
+                render={<Link href="/discover" />}
+                className="h-11 px-5"
+              >
+                Discover peers
+              </Button>
             </section>
             {note ? (
               <p className="mt-2 text-sm text-muted-foreground">{note}</p>

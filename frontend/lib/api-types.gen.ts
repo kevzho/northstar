@@ -133,6 +133,31 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/discover": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Discover
+         * @description Opted-in peers who share the student's interests, ranked.
+         *
+         *     Gated by the target's public_profile flag — only findable students
+         *     appear — and by same audience. Excludes anyone already connected.
+         *     Empty list (not an error) when the student has no profile or when
+         *     no one else has opted in yet.
+         */
+        get: operations["discover_discover_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/dismissals": {
         parameters: {
             query?: never;
@@ -1069,6 +1094,28 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    discover_discover_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    }[];
                 };
             };
         };

@@ -782,6 +782,30 @@
         "summary": "Sync Chosen Path"
       }
     },
+    "/discover": {
+      "get": {
+        "description": "Opted-in peers who share the student's interests, ranked.\n\nGated by the target's public_profile flag \u2014 only findable students\nappear \u2014 and by same audience. Excludes anyone already connected.\nEmpty list (not an error) when the student has no profile or when\nno one else has opted in yet.",
+        "operationId": "discover_discover_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "title": "Response Discover Discover Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Discover"
+      }
+    },
     "/dismissals": {
       "get": {
         "description": "The student's \"not for me\" marks.",

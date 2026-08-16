@@ -569,6 +569,43 @@ def create_app() -> FastAPI:
             f"requester.eq.{user.id},addressee.eq.{user.id}"
         ).execute()
 
+    @app.get("/discover")
+    def discover(user: CurrentUser = RequireUser) -> list[dict]:
+        """Opted-in peers who share the student's interests, ranked.
+
+        Gated by the target's public_profile flag — only findable students
+        appear — and by same audience. Excludes anyone already connected.
+        Empty list (not an error) when the student has no profile or when
+        no one else has opted in yet.
+        """
+
+        from .db import get_supabase
+        from .social import discover_peers
+
+        sb = get_supabase()
+        me_row = (
+            sb.table("students")
+            .select("id, audience, field_scores, chosen_archetype, chosen_kind")
+            .eq("id", user.id)
+            .maybe_single()
+            .execute()
+        )
+        me = me_row.data if me_row else None
+        if not me:
+            return []
+
+        links = (
+            sb.table("friendships")
+            .select("requester, addressee")
+            .or_(f"requester.eq.{user.id},addressee.eq.{user.id}")
+            .execute()
+        ).data or []
+        exclude = {
+            (link["addressee"] if link["requester"] == user.id else link["requester"])
+            for link in links
+        }
+        return discover_peers(sb, me, exclude)
+
     @app.get("/friends/{student_id}/compare")
     def compare_with_friend(
         student_id: str,

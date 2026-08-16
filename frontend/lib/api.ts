@@ -344,3 +344,18 @@ export async function compareWithFriend(
 ): Promise<{ me: ComparedRecord; friend: ComparedRecord }> {
   return (await authedFetch(`/friends/${studentId}/compare`)).json();
 }
+
+export type Peer = {
+  student_id: string;
+  name: string;
+  handle: string | null;
+  shared_fields: string[];
+  chosen_archetype: string | null;
+  missions_completed: number;
+  reasons: string[];
+};
+
+/** Opted-in peers who share the student's interests, ranked. */
+export async function fetchDiscover(): Promise<Peer[]> {
+  return (await authedFetch("/discover")).json();
+}
