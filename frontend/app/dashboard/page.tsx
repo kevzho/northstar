@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { AppNav } from "@/components/AppNav";
@@ -31,8 +31,15 @@ export default function DashboardPage() {
 
   // On first sign-in without a profile: create a minimal students row,
   // then redirect to onboarding so the student fills in the real fields.
+  //
+  // The run-once guard is a ref, NOT the `checking` state: `checking` in
+  // the dependency array meant setChecking(true) re-ran the effect and
+  // fired the cleanup, so `cancelled` flipped before the fetch resolved
+  // and no completion path could ever clear the spinner.
+  const startedCheck = useRef(false);
   useEffect(() => {
-    if (loading || !user || checking) return;
+    if (loading || !user || startedCheck.current) return;
+    startedCheck.current = true;
 
     let cancelled = false;
     setChecking(true);
@@ -86,7 +93,7 @@ export default function DashboardPage() {
     })();
 
     return () => { cancelled = true; };
-  }, [loading, user, checking, router]);
+  }, [loading, user, router]);
 
   async function signOut() {
     const { supabase } = await import("@/lib/supabase");
