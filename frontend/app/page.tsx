@@ -5,6 +5,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { MotionConfig, motion, useScroll, useTransform } from "motion/react";
 import { useTheme } from "next-themes";
+import { useLanguage } from "@/lib/i18n";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { HorizonWaves } from "@/components/decor/horizon-waves";
@@ -187,6 +188,7 @@ function Constellation() {
 
 export default function Home() {
   const { resolvedTheme } = useTheme();
+  const { t } = useLanguage();
   const ink = resolvedTheme === "light";
   const { scrollY } = useScroll();
   const pathwayRef = useRef<HTMLDivElement>(null);
@@ -212,12 +214,13 @@ export default function Home() {
             <span className="h-display text-xl">Northstar</span>
           </Link>
           <div className="flex items-center gap-3">
-            <Link
-              href="/login"
-              className="text-sm font-medium text-foreground hover:underline underline-offset-4"
+            <Button
+              variant="outline"
+              render={<Link href="/login" />}
+              className="h-9 px-4"
             >
-              Sign in
-            </Link>
+              Sign in / Sign up
+            </Button>
             <Button render={<Link href="/assessment" />} className="h-9 px-4">
               Start assessment
             </Button>
@@ -327,6 +330,49 @@ export default function Home() {
                 </div>
               </InView>
             ))}
+          </div>
+        </section>
+
+        <section aria-label="Frequently asked questions" className="pb-16">
+          <h2 className="h-display text-2xl text-foreground sm:text-3xl">
+            {t("faq.title")}
+          </h2>
+          <div className="mt-8 grid gap-4">
+            {(["1", "2", "3", "4"] as const).map((key) => (
+              <details
+                key={key}
+                className="group rounded-lg border border-border bg-background/40 p-5 backdrop-blur"
+              >
+                <summary className="flex cursor-pointer items-center justify-between gap-4 text-base font-semibold text-foreground marker:content-none">
+                  {t(`faq.q${key}`)}
+                  <span className="font-mono text-muted-foreground transition group-open:rotate-45">
+                    +
+                  </span>
+                </summary>
+                <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                  {t(`faq.a${key}`)}
+                </p>
+              </details>
+            ))}
+          </div>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Button render={<Link href="/login" />} className="h-11 px-6">
+              Sign in / Sign up
+            </Button>
+            <Button
+              variant="outline"
+              render={<Link href="/faq" />}
+              className="h-11 px-6"
+            >
+              All questions
+            </Button>
+            <Button
+              variant="outline"
+              render={<Link href="/contact" />}
+              className="h-11 px-6"
+            >
+              {t("footer.contact")}
+            </Button>
           </div>
         </section>
 

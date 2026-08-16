@@ -91,7 +91,8 @@ export default function LoginPage() {
               Continue with Google
             </Button>
             <p className="mt-2 text-center text-xs leading-5 text-muted-foreground">
-              Fastest option — school Google accounts work.
+              Fastest option — school Google accounts work. New here? Signing
+              in creates your account.
             </p>
 
             {!showEmail ? (
