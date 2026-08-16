@@ -12,6 +12,7 @@ import { AnimatedGroup } from "@/components/motion/animated-group";
 import { InView } from "@/components/motion/in-view";
 import { TextEffect } from "@/components/motion/text-effect";
 import { Planet, Ship } from "@/components/decor/voyage";
+import { SiteFooter } from "@/components/SiteFooter";
 
 /* three.js stays out of the initial bundle; the sky fades in after mount. */
 const Starfield = dynamic(() => import("@/components/decor/starfield"), {
@@ -332,13 +333,7 @@ export default function Home() {
       </section>
 
       <HorizonWaves className="block h-28 w-full text-foreground" />
-      <footer className="border-t border-border">
-        <div className="mx-auto max-w-6xl px-6 py-6 sm:px-8 lg:px-10">
-          <p className="font-mono text-xs tracking-wide text-muted-foreground">
-            Kevin Zhou © 2026
-          </p>
-        </div>
-      </footer>
+      <SiteFooter />
     </main>
     </MotionConfig>
   );
