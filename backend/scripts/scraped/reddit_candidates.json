@@ -2112,7 +2112,8 @@
     "blurb": "It looks like the applications are posted but there isn't an apply button?",
     "field_guess": "interdisciplinary",
     "type_guess": "program",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "r/ApplyingToCollege search:coding summer program",
@@ -8590,7 +8591,8 @@
     "blurb": "Hi everyone, My brother just finished his internship as a Goddard Space Club Scholar and loved it. The projects were great, and the program is pretty selective. There were around 2,000 applicants this year and only 30 in",
     "field_guess": "physics",
     "type_guess": "program",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "r/summerprogramresults",
@@ -8698,7 +8700,8 @@
     "blurb": "List of Summer Internships for High School Students with Upcoming Deadlines!",
     "field_guess": "interdisciplinary",
     "type_guess": "program",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "r/HSSummerPrograms",
@@ -9825,7 +9828,8 @@
     "blurb": "EPILEPSY WARNING, EPILEPSY WARNING! Thought i should say that. Other than that though, does anyone have any advice on how seniors like me can enjoy their final year? I just wanna hear something, that isn't from me.",
     "field_guess": "interdisciplinary",
     "type_guess": "program",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "r/ApplyingToCollege",
@@ -10053,7 +10057,8 @@
     "blurb": "Longform article about the TASS debacle this July. Pretty even-handed.",
     "field_guess": "interdisciplinary",
     "type_guess": "program",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "r/summerprogramresults",
@@ -10916,7 +10921,8 @@
     "field_guess": "cs",
     "type_guess": "program",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "r/quant",
@@ -10929,7 +10935,8 @@
     "field_guess": "design",
     "type_guess": "program",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "r/FinancialCareers search:summer analyst application",
@@ -12805,7 +12812,8 @@
     "field_guess": "interdisciplinary",
     "type_guess": "program",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "r/REU",
@@ -16126,7 +16134,8 @@
     "blurb": "A free research workshop for students who are interested in conducting and publishing academic research but are unsure where to begin. This session is based on what I have learned through my own research experience, incl",
     "field_guess": "interdisciplinary",
     "type_guess": "program",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "r/summerprogramresults",
@@ -24006,7 +24015,8 @@
     "blurb": "Hi everyone! I run the tutor program for Constillate, a nonprofit **supporting immigrant and low-income communities** by bridging educational gaps and providing essential resources through donations. Our annual tutoring ",
     "field_guess": "math",
     "type_guess": "scholarship",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "r/summerprogramresults",
@@ -24630,7 +24640,8 @@
     "blurb": "Some good ideas for the summer",
     "field_guess": "interdisciplinary",
     "type_guess": "program",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "r/HSSummerPrograms",
@@ -31997,7 +32008,8 @@
     "field_guess": "design",
     "type_guess": "program",
     "audience_guess": "high_school",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "r/summerprogramresults search:art portfolio program",
@@ -32503,7 +32515,8 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32517,7 +32530,8 @@
     "field_guess": "health",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32531,7 +32545,8 @@
     "field_guess": "interdisciplinary",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32545,7 +32560,8 @@
     "field_guess": "business",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32559,7 +32575,8 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32573,7 +32590,8 @@
     "field_guess": "business",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32587,7 +32605,8 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32601,7 +32620,8 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32615,7 +32635,8 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32629,7 +32650,8 @@
     "field_guess": "interdisciplinary",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32643,7 +32665,8 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32657,7 +32680,8 @@
     "field_guess": "business",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32671,7 +32695,8 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32685,7 +32710,8 @@
     "field_guess": "design",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32699,7 +32725,8 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32713,7 +32740,8 @@
     "field_guess": "business",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32727,7 +32755,8 @@
     "field_guess": "interdisciplinary",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32741,7 +32770,8 @@
     "field_guess": "interdisciplinary",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32755,7 +32785,8 @@
     "field_guess": "interdisciplinary",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32769,7 +32800,8 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32783,7 +32815,8 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32797,7 +32830,8 @@
     "field_guess": "design",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32811,7 +32845,8 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32825,7 +32860,8 @@
     "field_guess": "interdisciplinary",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32839,7 +32875,8 @@
     "field_guess": "interdisciplinary",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32853,7 +32890,8 @@
     "field_guess": "interdisciplinary",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32867,7 +32905,8 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32881,7 +32920,8 @@
     "field_guess": "design",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32895,7 +32935,8 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32909,7 +32950,8 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32923,7 +32965,8 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32937,7 +32980,8 @@
     "field_guess": "health",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32951,7 +32995,8 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "r/scholarships",

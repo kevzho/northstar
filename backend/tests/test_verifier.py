@@ -85,3 +85,22 @@ def test_missing_title_is_rejected() -> None:
 
 def test_malformed_confidence_does_not_crash() -> None:
     assert decide(_candidate(), _verdict(confidence="high")) is None
+
+
+def test_google_form_link_is_not_auto_imported() -> None:
+    form = _candidate(url="https://forms.gle/abc123", source="r/highschool")
+    assert decide(form, _verdict()) is None
+
+
+def test_docs_form_and_shortener_are_rejected() -> None:
+    for bad in (
+        "https://docs.google.com/forms/d/e/x/viewform",
+        "https://bit.ly/xyz",
+        "https://linktr.ee/someorg",
+    ):
+        assert decide(_candidate(url=bad, source="r/x"), _verdict()) is None
+
+
+def test_real_org_domain_still_passes() -> None:
+    real = _candidate(url="https://www.nasa.gov/goddard/stem/program/", source="r/x")
+    assert decide(real, _verdict()) is not None

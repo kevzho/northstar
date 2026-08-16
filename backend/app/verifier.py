@@ -38,6 +38,20 @@ TYPES = ["program", "scholarship", "competition", "mentorship"]
 
 CONFIDENCE_FLOOR = 0.8
 
+# A bare form or shortened link is not a verifiable organization — it's the
+# signature of an unvetted, student-run "opportunity" the model can't judge
+# from text. These never auto-import; they drop to human review, where a
+# person can confirm the program is real before it reaches minors.
+UNVERIFIABLE_HOSTS = (
+    "forms.gle",
+    "docs.google.com",
+    "forms.office.com",
+    "bit.ly",
+    "tinyurl.com",
+    "linktr.ee",
+    "notion.site",
+)
+
 SYSTEM_PROMPT = """You screen scraped posts to decide whether each is a REAL, \
 current opportunity a student could apply to — a program, scholarship, \
 competition, internship, or fellowship — as opposed to a discussion, \
@@ -88,6 +102,9 @@ def decide(candidate: dict, verdict: dict) -> dict | None:
     is_devpost = candidate.get("source") == "devpost"
     if is_reddit and not is_devpost:
         # No real destination to send a student to — leave for a human.
+        return None
+    if any(host == h or host.endswith("." + h) for h in UNVERIFIABLE_HOSTS):
+        # A form/shortener alone can't establish the program is real.
         return None
 
     field = verdict.get("field")
