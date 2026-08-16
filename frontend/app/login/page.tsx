@@ -13,6 +13,9 @@ export default function LoginPage() {
   const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // Google is the steered path (no email rate limits, works with school
+  // accounts); the magic link stays available but starts collapsed.
+  const [showEmail, setShowEmail] = useState(false);
 
   async function signInWithGoogle() {
     setError(null);
@@ -87,39 +90,55 @@ export default function LoginPage() {
             >
               Continue with Google
             </Button>
+            <p className="mt-2 text-center text-xs leading-5 text-muted-foreground">
+              Fastest option — school Google accounts work.
+            </p>
 
-            <div className="my-6 flex items-center gap-3">
-              <div className="h-px flex-1 bg-[var(--border)]" />
-              <span className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
-                or
-              </span>
-              <div className="h-px flex-1 bg-[var(--border)]" />
-            </div>
+            {!showEmail ? (
+              <button
+                type="button"
+                onClick={() => setShowEmail(true)}
+                className="mt-6 w-full text-center text-sm text-muted-foreground underline underline-offset-4 transition hover:text-foreground"
+              >
+                Prefer email? Send yourself a sign-in link
+              </button>
+            ) : (
+              <>
+                <div className="my-6 flex items-center gap-3">
+                  <div className="h-px flex-1 bg-[var(--border)]" />
+                  <span className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                    or
+                  </span>
+                  <div className="h-px flex-1 bg-[var(--border)]" />
+                </div>
 
-            <form onSubmit={sendMagicLink} className="grid gap-3">
-              <Label
-                htmlFor="email"
-                className="text-sm font-semibold text-foreground"
-              >
-                Email address
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                required
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                placeholder="you@example.com"
-                className="h-12 bg-panel-raised px-4 text-base"
-              />
-              <Button variant="outline"
-                type="submit"
-                disabled={isSubmitting}
-                className="mt-2 h-12 px-5 font-semibold"
-              >
-                {isSubmitting ? "Sending..." : "Send magic link"}
-              </Button>
-            </form>
+                <form onSubmit={sendMagicLink} className="grid gap-3">
+                  <Label
+                    htmlFor="email"
+                    className="text-sm font-semibold text-foreground"
+                  >
+                    Email address
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    required
+                    autoFocus
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    placeholder="you@example.com"
+                    className="h-12 bg-panel-raised px-4 text-base"
+                  />
+                  <Button variant="outline"
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="mt-2 h-12 px-5 font-semibold"
+                  >
+                    {isSubmitting ? "Sending..." : "Send magic link"}
+                  </Button>
+                </form>
+              </>
+            )}
 
             {status ? (
               <p className="mt-4 rounded-md border border-[var(--success-border)] bg-[var(--success-bg)] p-3 text-sm leading-6 text-[var(--success-text)]">
