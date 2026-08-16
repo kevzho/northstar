@@ -48,6 +48,10 @@ const fieldColors: Record<string, string> = {
   physics: "#f09a62",
   engineering: "#55c7de",
   interdisciplinary: "#e7c868",
+  design: "#f08bc9",
+  business: "#a8d96c",
+  humanities: "#dab07f",
+  health: "#f07d7d",
 };
 
 export default function MapPage() {
@@ -112,8 +116,8 @@ export default function MapPage() {
     const sim = d3
       .forceSimulation(nodes as d3.SimulationNodeDatum[])
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .force("link", d3.forceLink(links).id((d: any) => d.id).distance(80))
-      .force("charge", d3.forceManyBody().strength(-200))
+      .force("link", d3.forceLink(links).id((d: any) => d.id).distance(120))
+      .force("charge", d3.forceManyBody().strength(-340))
       .force("center", d3.forceCenter(width / 2, height / 2));
 
     const link = viewport
@@ -123,8 +127,8 @@ export default function MapPage() {
       .enter()
       .append("line")
       .attr("stroke", "#3f3f3f")
-      .attr("stroke-width", (d) => Math.max(1, d.weight * 4))
-      .attr("stroke-opacity", 0.7);
+      .attr("stroke-width", (d) => Math.max(1, d.weight * 2.5))
+      .attr("stroke-opacity", 0.35);
 
     const node = viewport
       .append("g")

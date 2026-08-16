@@ -763,8 +763,8 @@ def create_app() -> FastAPI:
 
         results = score_opportunities(student, opportunities)
 
-        # Limit to top 20 for a readable graph
-        top = results[:20]
+        # Limit to top 14 for a readable graph
+        top = results[:14]
 
         nodes = []
         for r in top:
@@ -779,7 +779,9 @@ def create_app() -> FastAPI:
                 "tags": opp.get("tags", []) or [],
             })
 
-        # Derive edges from shared tags + same field
+        # Derive edges from shared tags + same field. A same-field pair
+        # alone (0.4) qualifies; a lone shared tag (0.2) does not — weak
+        # ties are what turn the graph into a hairball.
         edges = []
         for i, n1 in enumerate(nodes):
             for n2 in nodes[i + 1:]:
@@ -788,12 +790,26 @@ def create_app() -> FastAPI:
                     weight += 0.4
                 shared = set(n1["tags"]) & set(n2["tags"])
                 weight += 0.2 * len(shared)
-                if weight > 0:
+                if weight >= 0.4:
                     edges.append({
                         "source": n1["id"],
                         "target": n2["id"],
                         "weight": round(weight, 2),
                     })
+
+        # Prune to a readable constellation: an edge survives only if it
+        # ranks among either endpoint's three strongest. Clusters stay
+        # legible; the O(n^2) same-field mesh does not.
+        by_node: dict[str, list[dict]] = {}
+        for edge in edges:
+            by_node.setdefault(edge["source"], []).append(edge)
+            by_node.setdefault(edge["target"], []).append(edge)
+        keep: set[tuple[str, str]] = set()
+        for node_edges in by_node.values():
+            node_edges.sort(key=lambda e: e["weight"], reverse=True)
+            for edge in node_edges[:3]:
+                keep.add((edge["source"], edge["target"]))
+        edges = [e for e in edges if (e["source"], e["target"]) in keep]
 
         return {"nodes": nodes, "edges": edges}
 

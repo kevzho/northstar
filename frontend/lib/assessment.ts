@@ -26,6 +26,20 @@ export type AssessmentQuestion = {
   choices: AssessmentChoice[];
 };
 
+/** One-line meanings shown under the profile bars — high is a shape,
+ * not a grade; every trait names a way of working, not a virtue. */
+export const traitDescriptions: Record<TraitKey, string> = {
+  builder: "Defaults to making things — shipping beats theorizing.",
+  analyst: "Leads with evidence, structure, and depth before acting.",
+  riskTolerance:
+    "Comfort betting effort on uncertain outcomes — entering what you might lose, launching before it is perfect.",
+  ambiguityComfort:
+    "Operates well without clear instructions or a known right answer.",
+  collaboration:
+    "Draws energy from working through people — teams, feedback, mentors.",
+  executionTempo: "Moves quickly from decision to done — iteration over polish.",
+};
+
 export const traitLabels: Record<TraitKey, string> = {
   builder: "Builder",
   analyst: "Analyst",

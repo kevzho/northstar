@@ -13,7 +13,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { AnimatedNumber } from "@/components/motion/animated-number";
-import { traitLabels } from "@/lib/assessment";
+import { traitDescriptions, traitLabels } from "@/lib/assessment";
 import {
   FIELD_KEYS,
   TRAIT_KEYS,
@@ -195,6 +195,9 @@ export default function ProfilePage() {
                     style={{ width: `${scores[trait]}%` }}
                   />
                 </div>
+                <p className="mt-1.5 text-xs leading-5 text-muted-foreground">
+                  {traitDescriptions[trait]}
+                </p>
               </div>
             ))}
           </div>
