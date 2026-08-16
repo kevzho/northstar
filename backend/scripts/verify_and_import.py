@@ -21,8 +21,10 @@ from __future__ import annotations
 
 import json
 import pathlib
+import re
 import sys
 import time
+from urllib.parse import urlparse
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 from app.db import get_supabase  # noqa: E402
@@ -33,15 +35,42 @@ MAX_VERIFY_PER_RUN = 60   # token/rate budget per daily run
 REQUEST_DELAY_S = 1.0
 
 
+OPP_KEYWORDS = re.compile(
+    r"\b(apply|applications?|program|scholarship|fellowship|deadline|"
+    r"internship|competition|hackathon|open|cohort|apprenticeship)\b",
+    re.I,
+)
+
+
 def promising(candidate: dict) -> bool:
-    """Cheap pre-filter so we don't spend a token on obvious non-starters."""
+    """Cheap pre-filter so we don't spend a token on obvious non-starters.
+
+    Devpost entries are real hackathons on their own domain. Otherwise the
+    candidate must point at a real external site — every reddit-owned host
+    (reddit.com AND the media CDNs i.redd.it / v.redd.it / redd.it) is a
+    dead end for auto-import: an image or a discussion, never a program.
+    """
     if candidate.get("review"):
         return False  # already judged (human or a prior auto run)
-    url = candidate.get("url", "")
-    is_reddit = "reddit.com" in url or not url
-    if is_reddit and candidate.get("source") != "devpost":
-        return False  # no external destination -> not auto-importable anyway
+    if candidate.get("source") == "devpost":
+        return True
+    host = urlparse(candidate.get("url", "")).netloc.lower()
+    if not host or host.endswith("redd.it") or host.endswith("reddit.com"):
+        return False
     return True
+
+
+def rank_key(candidate: dict) -> tuple:
+    """Verify the likeliest opportunities first, not the top-upvoted memes.
+
+    Devpost (known-real) first, then external links whose text actually
+    reads like an opportunity — so the per-run token budget is spent where
+    it pays off.
+    """
+    is_devpost = candidate.get("source") == "devpost"
+    text = f"{candidate.get('title', '')} {candidate.get('blurb', '')}"
+    has_keyword = bool(OPP_KEYWORDS.search(text))
+    return (0 if is_devpost else 1, 0 if has_keyword else 1)
 
 
 def main() -> None:
@@ -55,8 +84,13 @@ def main() -> None:
     pool = json.loads(POOL.read_text()) if POOL.exists() else []
     sb = get_supabase()
 
-    candidates = [c for c in pool if promising(c)][:MAX_VERIFY_PER_RUN]
-    print(f"{len(candidates)} candidates to verify (cap {MAX_VERIFY_PER_RUN}).")
+    # Optional CLI cap for calibration runs: `verify_and_import.py 10`.
+    cap = MAX_VERIFY_PER_RUN
+    if len(sys.argv) > 1 and sys.argv[1].isdigit():
+        cap = int(sys.argv[1])
+
+    candidates = sorted((c for c in pool if promising(c)), key=rank_key)[:cap]
+    print(f"{len(candidates)} candidates to verify (cap {cap}).")
 
     imported = rejected = errored = 0
     for candidate in candidates:

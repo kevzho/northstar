@@ -23,7 +23,8 @@
     "field_guess": "cs",
     "type_guess": "program",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "r/FinancialCareers search:summer analyst application",
@@ -75,7 +76,8 @@
     "field_guess": "cs",
     "type_guess": "program",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "r/FinancialCareers search:quant internship",
@@ -149,7 +151,8 @@
     "blurb": "It's August, guys. Enjoy the rest of the summer.",
     "field_guess": "biology",
     "type_guess": "program",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "r/csMajors search:undergraduate research program",
@@ -238,7 +241,8 @@
     "field_guess": "interdisciplinary",
     "type_guess": "program",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "r/scholarships",
@@ -301,7 +305,8 @@
     "field_guess": "interdisciplinary",
     "type_guess": "program",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "r/premed",
@@ -529,7 +534,8 @@
     "field_guess": "business",
     "type_guess": "program",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "r/FinancialCareers",
@@ -767,7 +773,8 @@
     "field_guess": "cs",
     "type_guess": "program",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "r/csMajors search:college internship application",
@@ -942,7 +949,8 @@
     "field_guess": "physics",
     "type_guess": "program",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "r/ApplyingToCollege search:entrepreneurship competition",
@@ -981,7 +989,8 @@
     "field_guess": "design",
     "type_guess": "competition",
     "audience_guess": "high_school",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "r/internships",
@@ -1335,7 +1344,8 @@
     "field_guess": "cs",
     "type_guess": "program",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "r/summerprogramresults search:art portfolio program",
@@ -1726,7 +1736,8 @@
     "field_guess": "interdisciplinary",
     "type_guess": "program",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "r/quant",
@@ -1926,7 +1937,8 @@
     "blurb": "I swear, everyone else in online school seems to be doing it bc they're elite athletes and need more training time, or they have a job or internship, etc. Meanwhile I just do it bc I'm a lazy depressed socially inept chu",
     "field_guess": "interdisciplinary",
     "type_guess": "program",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "r/ApplyingToCollege search:math olympiad qualifier",
@@ -32311,7 +32323,8 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32325,7 +32338,8 @@
     "field_guess": "design",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32339,7 +32353,8 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32353,7 +32368,8 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32367,7 +32383,8 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32381,7 +32398,8 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32395,7 +32413,8 @@
     "field_guess": "humanities",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32409,7 +32428,8 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32423,7 +32443,8 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32437,7 +32458,8 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32451,7 +32473,8 @@
     "field_guess": "engineering",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",
@@ -32465,7 +32488,8 @@
     "field_guess": "design",
     "type_guess": "competition",
     "audience_guess": "college",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "devpost",

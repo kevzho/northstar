@@ -118,31 +118,43 @@ def decide(candidate: dict, verdict: dict) -> dict | None:
     }
 
 
-def verify_candidate(candidate: dict) -> dict:
-    """One LLM verdict for a candidate. Raises on network/parse failure."""
+def verify_candidate(candidate: dict, retries: int = 2) -> dict:
+    """One LLM verdict for a candidate. Raises on network/parse failure.
+
+    Retries on read timeouts — free hosted tiers (NIM) cold-start slowly,
+    so a single timeout shouldn't drop an otherwise-fine candidate.
+    """
     text = f"Title: {candidate.get('title', '')}\n\n{candidate.get('blurb', '')[:1500]}"
-    response = requests.post(
-        f"{settings.llm_api_base}/chat/completions",
-        headers={
-            "Authorization": f"Bearer {settings.llm_api_key}",
-            "Content-Type": "application/json",
-        },
-        json={
-            "model": settings.llm_model,
-            "messages": [
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": text},
-            ],
-            "max_tokens": 300,
-            "temperature": 0.0,
-            "response_format": {"type": "json_object"},
-        },
-        timeout=45,
-    )
-    response.raise_for_status()
-    content = response.json()["choices"][0]["message"]["content"]
-    # Some models wrap JSON in prose or fences despite instructions.
-    start, end = content.find("{"), content.rfind("}")
-    if start >= 0 and end > start:
-        content = content[start : end + 1]
-    return json.loads(content)
+    payload = {
+        "model": settings.llm_model,
+        "messages": [
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": text},
+        ],
+        "max_tokens": 300,
+        "temperature": 0.0,
+        "response_format": {"type": "json_object"},
+    }
+    last_error: Exception | None = None
+    for attempt in range(retries + 1):
+        try:
+            response = requests.post(
+                f"{settings.llm_api_base}/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {settings.llm_api_key}",
+                    "Content-Type": "application/json",
+                },
+                json=payload,
+                timeout=90,
+            )
+            response.raise_for_status()
+            content = response.json()["choices"][0]["message"]["content"]
+            # Some models wrap JSON in prose or fences despite instructions.
+            start, end = content.find("{"), content.rfind("}")
+            if start >= 0 and end > start:
+                content = content[start : end + 1]
+            return json.loads(content)
+        except (requests.Timeout, requests.ConnectionError) as error:
+            last_error = error
+            continue
+    raise last_error if last_error else RuntimeError("verify failed")
