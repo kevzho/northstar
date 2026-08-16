@@ -877,6 +877,32 @@ def create_app() -> FastAPI:
 
         return results
 
+    @app.get("/catalog")
+    def catalog(user: CurrentUser = RequireUser) -> list[dict]:
+        """The full opportunity bank — every catalog entry, unranked.
+
+        Distinct from /match (personalized, scored): this is browse-all,
+        for a student who wants to see everything and filter it themselves.
+        Sanitized the same way (opportunity_field -> field).
+        """
+
+        from .db import get_supabase
+
+        sb = get_supabase()
+        rows = (
+            sb.table("opportunities")
+            .select("*")
+            .order("deadline", desc=False)
+            .execute()
+        ).data or []
+        catalog: list[dict] = []
+        for row in rows:
+            opp = dict(row)
+            if "opportunity_field" in opp:
+                opp["field"] = opp.pop("opportunity_field")
+            catalog.append(opp)
+        return catalog
+
     @app.get("/opportunities/{opp_id}")
     def get_opportunity(
         opp_id: str,

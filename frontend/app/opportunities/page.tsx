@@ -16,8 +16,8 @@ import { AppNav } from "@/components/AppNav";
 import { NativeSelect } from "@/components/ui/native-select";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { OpportunityCard } from "@/components/OpportunityCard";
-import { dismissOpportunity, fetchMatches, undoDismissal } from "@/lib/api";
-import type { MatchResult, OpportunityField, OpportunityType } from "@/lib/types";
+import { dismissOpportunity, fetchCatalog, fetchMatches, undoDismissal } from "@/lib/api";
+import type { MatchResult, Opportunity, OpportunityField, OpportunityType } from "@/lib/types";
 
 const fieldFilters: { value: OpportunityField | "all"; label: string }[] = [
   { value: "all", label: "All fields" },
@@ -67,6 +67,8 @@ function OpportunitiesList() {
   const [loadFailed, setLoadFailed] = useState(false);
   // Ids dismissed this session, newest last — drives the undo strip.
   const [dismissedHere, setDismissedHere] = useState<string[]>([]);
+  const [catalog, setCatalog] = useState<Opportunity[] | null>(null);
+  const view = searchParams.get("view") === "all" ? "all" : "matched";
 
   // Filters live in the URL so a reload, a back button, or a shared link keeps
   // the same view. Useful in the demo: the filtered list is linkable.
@@ -128,8 +130,37 @@ function OpportunitiesList() {
     undoDismissal(last).catch(() => {});
   }
 
+  useEffect(() => {
+    if (view !== "all" || catalog !== null) return;
+    let mounted = true;
+    fetchCatalog()
+      .then((rows) => {
+        if (mounted) setCatalog(rows);
+      })
+      .catch(() => {
+        if (mounted) setCatalog([]);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, [view, catalog]);
+
+  function setView(next: "matched" | "all") {
+    const params = new URLSearchParams(searchParams.toString());
+    if (next === "all") params.set("view", "all");
+    else params.delete("view");
+    const query = params.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+  }
+
   const filtered = matches.filter(({ opportunity }) => {
     if (dismissedHere.includes(opportunity.id)) return false;
+    if (field !== "all" && opportunity.field !== field) return false;
+    if (type !== "all" && opportunity.type !== type) return false;
+    return true;
+  });
+
+  const filteredCatalog = (catalog ?? []).filter((opportunity) => {
     if (field !== "all" && opportunity.field !== field) return false;
     if (type !== "all" && opportunity.type !== type) return false;
     return true;
@@ -151,14 +182,39 @@ function OpportunitiesList() {
         />
 
         <header className="mt-10">
-          <p className="eyebrow">Recommendations</p>
+          <p className="eyebrow">Opportunities</p>
           <h1 className="h-display mt-3 text-4xl text-foreground">
-            Opportunities for you
+            {view === "all" ? "The full bank" : "Opportunities for you"}
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
-            Ranked by the Northstar TF-IDF match engine against your profile.
-            Filter by field and type to focus the list.
+            {view === "all"
+              ? "Every opportunity in the catalog, sorted by deadline. Switch back to Matched to see them ranked for your profile."
+              : "Ranked by the Northstar match engine against your profile. Or browse the entire bank."}
           </p>
+          <div className="mt-5 inline-flex border border-border">
+            <button
+              type="button"
+              onClick={() => setView("matched")}
+              className={
+                view === "matched"
+                  ? "bg-foreground px-4 py-2 text-sm font-medium text-background"
+                  : "bg-transparent px-4 py-2 text-sm font-medium text-foreground"
+              }
+            >
+              Matched for you
+            </button>
+            <button
+              type="button"
+              onClick={() => setView("all")}
+              className={
+                view === "all"
+                  ? "bg-foreground px-4 py-2 text-sm font-medium text-background"
+                  : "bg-transparent px-4 py-2 text-sm font-medium text-foreground"
+              }
+            >
+              Browse all
+            </button>
+          </div>
         </header>
 
         <section className="mt-6 flex flex-wrap gap-3">
@@ -202,7 +258,34 @@ function OpportunitiesList() {
           </p>
         ) : null}
 
-        {loadFailed ? (
+        {view === "all" ? (
+          catalog === null ? (
+            <p className="mt-10 font-mono text-sm text-muted-foreground">
+              Loading the full bank...
+            </p>
+          ) : filteredCatalog.length > 0 ? (
+            <>
+              <p className="mt-6 font-mono text-xs text-muted-foreground">
+                {filteredCatalog.length} opportunit
+                {filteredCatalog.length === 1 ? "y" : "ies"} in the catalog
+              </p>
+              <section className="mt-4 grid gap-4 md:grid-cols-2">
+                {filteredCatalog.map((opportunity) => (
+                  <OpportunityCard key={opportunity.id} opportunity={opportunity} />
+                ))}
+              </section>
+            </>
+          ) : (
+            <section className="rounded-lg border bg-card mt-10 p-8 text-center">
+              <h2 className="text-xl font-semibold text-foreground">
+                Nothing in the catalog matches these filters
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                Try clearing the field or type filter.
+              </p>
+            </section>
+          )
+        ) : loadFailed ? (
           <section className="rounded-lg border border-destructive/40 bg-card mt-10 p-8 text-center">
             <h2 className="text-xl font-semibold text-foreground">
               Could not load your recommendations

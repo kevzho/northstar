@@ -756,6 +756,30 @@
         "summary": "Delete Bookmark"
       }
     },
+    "/catalog": {
+      "get": {
+        "description": "The full opportunity bank \u2014 every catalog entry, unranked.\n\nDistinct from /match (personalized, scored): this is browse-all,\nfor a student who wants to see everything and filter it themselves.\nSanitized the same way (opportunity_field -> field).",
+        "operationId": "catalog_catalog_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "title": "Response Catalog Catalog Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Catalog"
+      }
+    },
     "/chosen-path": {
       "post": {
         "description": "Persist the charted path so friends can compare career choices.",

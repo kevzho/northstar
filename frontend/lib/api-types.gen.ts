@@ -113,6 +113,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/catalog": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Catalog
+         * @description The full opportunity bank — every catalog entry, unranked.
+         *
+         *     Distinct from /match (personalized, scored): this is browse-all,
+         *     for a student who wants to see everything and filter it themselves.
+         *     Sanitized the same way (opportunity_field -> field).
+         */
+        get: operations["catalog_catalog_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/chosen-path": {
         parameters: {
             query?: never;
@@ -1066,6 +1090,28 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    catalog_catalog_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    }[];
                 };
             };
         };

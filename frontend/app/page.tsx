@@ -1,6 +1,8 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/use-auth";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { MotionConfig, motion, useScroll, useTransform } from "motion/react";
@@ -189,6 +191,14 @@ function Constellation() {
 export default function Home() {
   const { resolvedTheme } = useTheme();
   const { t } = useLanguage();
+  const router = useRouter();
+  // A signed-in student who hits the marketing page (usually by clicking the
+  // wordmark) wants their app, not the pitch — send them to the dashboard so
+  // the logo never dumps them back on the signed-out hero.
+  const { user, loading } = useAuth();
+  useEffect(() => {
+    if (!loading && user) router.replace("/dashboard");
+  }, [loading, user, router]);
   const ink = resolvedTheme === "light";
   const { scrollY } = useScroll();
   const pathwayRef = useRef<HTMLDivElement>(null);

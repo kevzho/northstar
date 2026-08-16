@@ -360,3 +360,8 @@ export type Peer = {
 export async function fetchDiscover(): Promise<Peer[]> {
   return (await authedFetch("/discover")).json();
 }
+
+/** The full opportunity bank — every entry, unranked (GET /catalog). */
+export async function fetchCatalog(): Promise<Opportunity[]> {
+  return (await authedFetch("/catalog")).json();
+}

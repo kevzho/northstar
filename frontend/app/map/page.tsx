@@ -87,170 +87,178 @@ export default function MapPage() {
   useEffect(() => {
     if (!data || !svgRef.current || data.nodes.length === 0) return;
 
-    /* Chronological tree: You -> field branches -> deadline-ordered
-       chains. Depth reads as time; the deepest leaf is the furthest
-       deadline. Static layout — no simulation, same picture every visit. */
-    type TreeDatum = {
-      kind: "root" | "field" | "opp";
-      label: string;
-      field?: string;
-      node?: GraphNode;
-      children?: TreeDatum[];
-    };
+    /* Solar systems: one per field the student matches. A central sun
+       (the field) with opportunity-planets orbiting it — inner orbits are
+       sooner deadlines, so the closest planets are the most urgent.
+       Deterministic layout (no physics) so the map is the same each
+       visit. Planet sprites: Kenney's planet pack, /public/planets. */
 
-    const byField = d3.group(data.nodes, (n) => n.field || "interdisciplinary");
-    const fieldOrder = [...byField.entries()].sort(
-      (a, b) =>
-        (d3.max(b[1], (n) => n.score) ?? 0) - (d3.max(a[1], (n) => n.score) ?? 0),
+    const byField = d3.group(
+      data.nodes,
+      (n) => n.field || "interdisciplinary",
     );
-    const branches: TreeDatum[] = fieldOrder.map(([field, nodes]) => {
-      const ordered = [...nodes].sort((a, b) => {
-        if (!a.deadline && !b.deadline) return b.score - a.score;
-        if (!a.deadline) return 1;
-        if (!b.deadline) return -1;
-        return a.deadline < b.deadline ? -1 : 1;
-      });
-      let chain: TreeDatum | undefined;
-      for (let i = ordered.length - 1; i >= 0; i -= 1) {
-        chain = {
-          kind: "opp",
-          label: ordered[i].title,
-          field,
-          node: ordered[i],
-          children: chain ? [chain] : undefined,
-        };
-      }
-      return { kind: "field", label: field, field, children: chain ? [chain] : undefined };
-    });
+    const systems = [...byField.entries()]
+      .map(([field, nodes]) => ({ field, nodes }))
+      .sort((a, b) => b.nodes.length - a.nodes.length);
 
-    const root = d3.hierarchy<TreeDatum>({
-      kind: "root",
-      label: "You",
-      children: branches,
-    });
-    d3.tree<TreeDatum>().nodeSize([46, 210])(root);
-
-    let xMin = Infinity;
-    let xMax = -Infinity;
-    let yMax = -Infinity;
-    root.each((d) => {
-      xMin = Math.min(xMin, d.x ?? 0);
-      xMax = Math.max(xMax, d.x ?? 0);
-      yMax = Math.max(yMax, d.y ?? 0);
-    });
-    const margin = 60;
-    const width = yMax + 330;
-    const height = xMax - xMin + margin * 2;
+    const cols = systems.length <= 1 ? 1 : 2;
+    const rows = Math.ceil(systems.length / cols);
+    const CELL_W = 620;
+    const CELL_H = 560;
+    const width = cols * CELL_W;
+    const height = rows * CELL_H;
 
     d3.select(svgRef.current).selectAll("*").remove();
     const svg = d3
       .select(svgRef.current)
-      .attr("viewBox", `-50 ${xMin - margin} ${width + 50} ${height}`)
+      .attr("viewBox", `0 0 ${width} ${height}`)
       .attr("preserveAspectRatio", "xMidYMid meet")
       .style("width", "100%")
       .style("height", "auto")
       .style("touch-action", "none");
-
     const viewport = svg.append("g");
 
-    // Links: gentle horizontal curves along the time axis.
-    viewport
-      .append("g")
-      .selectAll("path")
-      .data(root.links())
-      .enter()
-      .append("path")
-      .attr("fill", "none")
-      .attr("stroke", "#3f3f3f")
-      .attr("stroke-width", 1.2)
-      .attr("stroke-opacity", 0.6)
-      .attr(
-        "d",
-        d3
-          .linkHorizontal<d3.HierarchyLink<TreeDatum>, d3.HierarchyNode<TreeDatum>>()
-          .x((d) => d.y ?? 0)
-          .y((d) => d.x ?? 0),
-      );
+    // Deadline -> orbit index (0 = innermost/soonest). Rolling deadlines
+    // sit on the outermost orbit.
+    function daysOut(deadline?: string | null): number {
+      if (!deadline) return 9999;
+      const t = new Date(`${deadline}T23:59:59`).getTime();
+      if (Number.isNaN(t)) return 9999;
+      return Math.max(0, (t - Date.now()) / 86_400_000);
+    }
 
-    const node = viewport
-      .append("g")
-      .selectAll("g")
-      .data(root.descendants())
-      .enter()
-      .append("g")
-      .attr("transform", (d) => `translate(${d.y ?? 0},${d.x ?? 0})`);
+    systems.forEach((system, si) => {
+      const cx = (si % cols) * CELL_W + CELL_W / 2;
+      const cy = Math.floor(si / cols) * CELL_H + CELL_H / 2;
+      const color = fieldColors[system.field] ?? "#9e9e9e";
 
-    node
-      .append("circle")
-      .attr("r", (d) =>
-        d.data.kind === "root"
-          ? 10
-          : d.data.kind === "field"
-            ? 6
-            : 5 + (d.data.node?.score ?? 0) * 12,
-      )
-      .attr("fill", (d) =>
-        d.data.kind === "root"
-          ? "#f5f5f5"
-          : fieldColors[d.data.field ?? ""] ?? "#9e9e9e",
-      )
-      .attr("fill-opacity", (d) => (d.data.kind === "field" ? 0.45 : 1))
-      .attr("stroke", "#0a0a0a")
-      .attr("stroke-width", 1.5)
-      .style("cursor", (d) => (d.data.kind === "opp" ? "pointer" : "default"));
+      const planets = [...system.nodes]
+        .sort((a, b) => daysOut(a.deadline) - daysOut(b.deadline))
+        .slice(0, 8);
+      const minR = 90;
+      const maxR = 250;
 
-    node
-      .append("text")
-      .text((d) =>
-        d.data.kind === "opp" ? d.data.label.slice(0, 28) : d.data.label,
-      )
-      .attr("font-size", (d) => (d.data.kind === "root" ? 12 : 10))
-      .attr("font-weight", (d) => (d.data.kind === "opp" ? 400 : 600))
-      .attr("fill", "#d4d4d4")
-      .attr("dx", (d) => (d.data.kind === "root" ? -14 : 12))
-      .attr("dy", (d) => (d.data.kind === "root" ? 24 : -8))
-      .attr("text-anchor", (d) => (d.data.kind === "root" ? "middle" : "start"))
-      .style("text-transform", (d) => (d.data.kind === "field" ? "capitalize" : "none"))
-      .style("pointer-events", "none");
+      const cell = viewport.append("g");
 
-    // Deadline under each opportunity: the chronology made legible.
-    node
-      .filter((d) => d.data.kind === "opp")
-      .append("text")
-      .text((d) => d.data.node?.deadline ?? "rolling")
-      .attr("font-size", 9)
-      .attr("font-family", "var(--font-coords), monospace")
-      .attr("fill", "#8a8a8a")
-      .attr("dx", 12)
-      .attr("dy", 6)
-      .style("pointer-events", "none");
+      // Orbit rings.
+      planets.forEach((_, i) => {
+        const r = minR + (maxR - minR) * (planets.length === 1 ? 0 : i / (planets.length - 1));
+        cell
+          .append("circle")
+          .attr("cx", cx)
+          .attr("cy", cy)
+          .attr("r", r)
+          .attr("fill", "none")
+          .attr("stroke", color)
+          .attr("stroke-opacity", 0.14)
+          .attr("stroke-width", 1);
+      });
 
-    node
-      .filter((d) => d.data.kind === "opp")
-      .append("title")
-      .text(
-        (d) =>
-          `${d.data.node?.title}\nScore: ${Math.round((d.data.node?.score ?? 0) * 100)}%\nDeadline: ${d.data.node?.deadline ?? "rolling"}`,
-      );
+      // The sun: a glowing field core.
+      const sunGrad = `sun-${si}`;
+      const defs = cell.append("defs");
+      const grad = defs
+        .append("radialGradient")
+        .attr("id", sunGrad);
+      grad.append("stop").attr("offset", "0%").attr("stop-color", color).attr("stop-opacity", 1);
+      grad.append("stop").attr("offset", "70%").attr("stop-color", color).attr("stop-opacity", 0.5);
+      grad.append("stop").attr("offset", "100%").attr("stop-color", color).attr("stop-opacity", 0);
 
-    node.on("click", (_event, d) => {
-      if (d.data.kind === "opp" && d.data.node) {
-        router.push(`/opportunities/${d.data.node.id}`);
-      }
+      cell
+        .append("circle")
+        .attr("cx", cx)
+        .attr("cy", cy)
+        .attr("r", 54)
+        .attr("fill", `url(#${sunGrad})`);
+      cell
+        .append("circle")
+        .attr("cx", cx)
+        .attr("cy", cy)
+        .attr("r", 22)
+        .attr("fill", color);
+      cell
+        .append("text")
+        .attr("x", cx)
+        .attr("y", cy + 5)
+        .attr("text-anchor", "middle")
+        .attr("font-size", 13)
+        .attr("font-weight", 700)
+        .attr("fill", "#0a0a0a")
+        .style("text-transform", "capitalize")
+        .style("pointer-events", "none")
+        .text(system.field.slice(0, 3));
+      cell
+        .append("text")
+        .attr("x", cx)
+        .attr("y", cy - 66)
+        .attr("text-anchor", "middle")
+        .attr("font-size", 15)
+        .attr("font-weight", 600)
+        .attr("fill", "#d4d4d4")
+        .style("text-transform", "capitalize")
+        .style("pointer-events", "none")
+        .text(system.field);
+
+      // Planets on their orbits. Angle is deterministic per index so the
+      // system looks composed, not random.
+      planets.forEach((planet, i) => {
+        const r =
+          minR + (maxR - minR) * (planets.length === 1 ? 0 : i / (planets.length - 1));
+        const angle = (i * 2.399963) % (Math.PI * 2); // golden-angle spread
+        const px = cx + Math.cos(angle) * r;
+        const py = cy + Math.sin(angle) * r;
+        const size = 34 + planet.score * 30;
+        // Sprite chosen deterministically from the opportunity id.
+        const hash = [...planet.id].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
+        const sprite = `/planets/planet0${hash % 10}.png`;
+
+        const g = cell
+          .append("g")
+          .attr("transform", `translate(${px},${py})`)
+          .style("cursor", "pointer")
+          .on("click", () => router.push(`/opportunities/${planet.id}`));
+
+        g.append("image")
+          .attr("href", sprite)
+          .attr("x", -size / 2)
+          .attr("y", -size / 2)
+          .attr("width", size)
+          .attr("height", size);
+
+        g.append("title").text(
+          `${planet.title}\nDeadline: ${planet.deadline ?? "rolling"}\nFit: ${Math.round(planet.score * 100)}%`,
+        );
+
+        g.append("text")
+          .text(planet.title.slice(0, 22))
+          .attr("y", size / 2 + 14)
+          .attr("text-anchor", "middle")
+          .attr("font-size", 10)
+          .attr("fill", "#d4d4d4")
+          .style("pointer-events", "none");
+        g.append("text")
+          .text(planet.deadline ?? "rolling")
+          .attr("y", size / 2 + 27)
+          .attr("text-anchor", "middle")
+          .attr("font-size", 9)
+          .attr("font-family", "var(--font-coords), monospace")
+          .attr("fill", "#8a8a8a")
+          .style("pointer-events", "none");
+      });
     });
 
     /* eslint-disable @typescript-eslint/no-explicit-any */
     const zoom = d3
       .zoom<SVGSVGElement, unknown>()
-      .scaleExtent([0.4, 4])
+      .scaleExtent([0.3, 3])
       .on("zoom", (event) => viewport.attr("transform", event.transform));
     svg.call(zoom as any);
     /* eslint-enable @typescript-eslint/no-explicit-any */
   }, [data, router]);
 
   return (
-    <main className="min-h-screen px-6 py-8 sm:px-8">
-      <div className="mx-auto max-w-5xl">
+    <main className="min-h-screen px-4 py-8 sm:px-6">
+      <div className="mx-auto max-w-7xl">
         <AppNav
           homeHref="/dashboard"
           right={
@@ -266,12 +274,12 @@ export default function MapPage() {
         <header className="mt-10">
           <p className="eyebrow">Pathway map</p>
           <h1 className="h-display mt-3 text-4xl text-foreground">
-            Your night sky
+            Your solar systems
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
-            Time flows left to right: each branch is a field, each step the
-            next deadline on that path. The deepest leaves are your furthest
-            horizons. Click any opportunity to see details.
+            Each field is a star; the opportunities matched to you orbit it.
+            Inner orbits are the soonest deadlines — the closest planets are
+            the most urgent. Click any planet to open it.
           </p>
         </header>
 
@@ -311,10 +319,11 @@ export default function MapPage() {
           </section>
         ) : (
           <section className="rounded-lg border bg-card mt-8 p-4">
-            <svg ref={svgRef} className="block w-full" />
+            <svg ref={svgRef} className="block w-full min-h-[70vh]" />
             <p className="mt-3 text-xs leading-5 text-muted-foreground">
-              Scroll or pinch to zoom, drag the background to pan, drag a node to
-              reposition it. Tap a node to open the opportunity.
+              Scroll or pinch to zoom, drag the background to pan. Planet size
+              is fit; the sun labels the field. Tap a planet to open the
+              opportunity.
             </p>
           </section>
         )}
