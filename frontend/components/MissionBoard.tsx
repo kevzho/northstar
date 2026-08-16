@@ -26,7 +26,7 @@ import {
   fetchMissionCompletions,
   fetchMissions,
 } from "@/lib/api";
-import { traitLabels, type TraitKey } from "@/lib/assessment";
+import { traitDescriptions, traitLabels, type TraitKey } from "@/lib/assessment";
 import type { Archetype } from "@/lib/archetypes";
 import { TRAIT_KEYS, type TraitScores } from "@/lib/scoring";
 import type { MatchResult, Mission, MissionCompletion } from "@/lib/types";
@@ -124,7 +124,10 @@ export function MissionBoard({
             {gaps.map(({ trait, demand, current }) => (
               <div key={trait}>
                 <div className="mb-1 flex items-baseline justify-between gap-3">
-                  <span className="text-sm font-semibold text-foreground">
+                  <span
+                    className="text-sm font-semibold text-foreground"
+                    title={traitDescriptions[trait]}
+                  >
                     {traitLabels[trait]}
                   </span>
                   <span className="font-mono text-xs text-muted-foreground">

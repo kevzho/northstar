@@ -14,7 +14,7 @@ import Link from "next/link";
 import { AppNav } from "@/components/AppNav";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { traitLabels, type TraitKey } from "@/lib/assessment";
+import { traitDescriptions, traitLabels, type TraitKey } from "@/lib/assessment";
 import { findArchetype } from "@/lib/plan";
 import { TRAIT_KEYS } from "@/lib/scoring";
 import {
@@ -54,7 +54,10 @@ function RecordColumn({ record }: { record: ComparedRecord }) {
           return (
             <div key={trait}>
               <div className="flex items-baseline justify-between gap-2">
-                <span className="text-xs text-muted-foreground">
+                <span
+                  className="text-xs text-muted-foreground"
+                  title={traitDescriptions[trait]}
+                >
                   {traitLabels[trait]}
                 </span>
                 <span className="font-mono text-xs text-star">{score}</span>
