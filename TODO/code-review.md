@@ -178,3 +178,20 @@ until it sounds like you. Tiers 3–4 are understand/skim.
 - [ ] TIER 3: landing nav lost its "Start assessment" button; the only
       anonymous quiz entrance is now the hero's "Try the assessment
       first" — check the copy still earns that placement (47524de).
+
+- [ ] TIER 1: the new fit formula in `frontend/lib/scoring.ts`
+      (rankArchetypes) — inverted RMS gap on a 0-100 axis replaced
+      cosine; own the ×10 archetype normalization and check the numbers
+      feel right on your own quiz results (3db7a8a).
+- [ ] TIER 2: the six rewritten quiz choices in
+      `frontend/lib/assessment.ts` (student-investigation,
+      trading-floor, design-icons, wellness-week, dorm-founder,
+      assistive-device) — product voice + field weights are editorial;
+      every label should sound like you (3db7a8a).
+- [ ] TIER 2: ProfileDetailsCard duplicates the onboarding form's
+      controls; if onboarding's options change, both places must move —
+      consider extracting shared field components later (3db7a8a).
+- [ ] TIER 3: /match opportunity scores plateau (many identical 56%
+      rows from equal boost stacks, max ~0.68) — separate issue from
+      the archetype 99% bug; consider spreading or hiding the % on
+      opportunity cards (3db7a8a).
