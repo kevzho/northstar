@@ -449,6 +449,7 @@ def create_app() -> FastAPI:
     ) -> dict:
         """Request friendship by handle. The target must have set one."""
         from .db import get_supabase
+        from .social import blocked_ids
 
         handle = str(body.get("handle", "")).strip().lower()
         if not handle:
@@ -461,7 +462,13 @@ def create_app() -> FastAPI:
             sb.table("students").select("id").eq("handle", handle).maybe_single().execute()
         )
         target = target_row.data if target_row else None
-        if not target or target["id"] == user.id:
+        # A blocked pair gets the same 404 as an unknown handle, so blocking
+        # is not detectable from the outside.
+        if (
+            not target
+            or target["id"] == user.id
+            or target["id"] in blocked_ids(sb, user.id)
+        ):
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="No student with that handle.",
@@ -580,7 +587,7 @@ def create_app() -> FastAPI:
         """
 
         from .db import get_supabase
-        from .social import discover_peers
+        from .social import blocked_ids, discover_peers
 
         sb = get_supabase()
         me_row = (
@@ -604,6 +611,7 @@ def create_app() -> FastAPI:
             (link["addressee"] if link["requester"] == user.id else link["requester"])
             for link in links
         }
+        exclude |= blocked_ids(sb, user.id)
         return discover_peers(sb, me, exclude)
 
     @app.get("/friends/{student_id}/compare")
@@ -643,6 +651,291 @@ def create_app() -> FastAPI:
             "me": compare_payload(sb, me_row),
             "friend": compare_payload(sb, them_row),
         }
+
+    # -- Team up: mutual-interest collaborator / study-buddy matching -------
+    #
+    # Not dating. The pool is opt-in, interest is invisible until mutual,
+    # and every surface carries report + block. A match simply creates an
+    # accepted friendship — the same connection the rest of the app uses.
+
+    @app.get("/teamup/settings")
+    def teamup_settings(user: CurrentUser = RequireUser) -> dict:
+        """Whether the student is in the matching pool, and their pitch."""
+        from .db import get_supabase
+
+        sb = get_supabase()
+        row = (
+            sb.table("students")
+            .select("teamup_enabled, teamup_pitch")
+            .eq("id", user.id)
+            .maybe_single()
+            .execute()
+        )
+        data = row.data if row else None
+        if not data:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Student profile not found. POST /students to create.",
+            )
+        return {
+            "enabled": bool(data.get("teamup_enabled")),
+            "pitch": data.get("teamup_pitch") or "",
+        }
+
+    @app.post("/teamup/settings")
+    def update_teamup_settings(
+        body: dict,
+        user: CurrentUser = RequireUser,
+    ) -> dict:
+        """Join or leave the matching pool and set the pitch."""
+        from .db import get_supabase
+        from .social import TEAMUP_PITCH_MAX
+
+        updates: dict = {}
+        if "enabled" in body:
+            updates["teamup_enabled"] = bool(body["enabled"])
+        if "pitch" in body:
+            pitch = str(body["pitch"] or "").strip()[:TEAMUP_PITCH_MAX]
+            updates["teamup_pitch"] = pitch or None
+        if not updates:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="Nothing to update.",
+            )
+
+        sb = get_supabase()
+        result = (
+            sb.table("students")
+            .update(updates, returning="representation")
+            .eq("id", user.id)
+            .execute()
+        )
+        if not (result.data if result else None):
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Student profile not found. POST /students to create.",
+            )
+        row = result.data[0]
+        return {
+            "enabled": bool(row.get("teamup_enabled")),
+            "pitch": row.get("teamup_pitch") or "",
+        }
+
+    @app.get("/teamup/candidates")
+    def teamup_candidates_route(user: CurrentUser = RequireUser) -> list[dict]:
+        """Ranked collaborator candidates for the signed-in student.
+
+        409 until the student opts in themselves — you cannot browse the
+        pool without being in it. Excludes existing connections (any
+        status), anyone already decided on, and blocked pairs.
+        """
+        from .db import get_supabase
+        from .social import blocked_ids, teamup_candidates
+
+        sb = get_supabase()
+        me_row = (
+            sb.table("students")
+            .select(
+                "id, audience, field_scores, chosen_archetype, chosen_kind, teamup_enabled"
+            )
+            .eq("id", user.id)
+            .maybe_single()
+            .execute()
+        )
+        me = me_row.data if me_row else None
+        if not me:
+            return []
+        if not me.get("teamup_enabled"):
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Join team-up matching first.",
+            )
+
+        links = (
+            sb.table("friendships")
+            .select("requester, addressee")
+            .or_(f"requester.eq.{user.id},addressee.eq.{user.id}")
+            .execute()
+        ).data or []
+        exclude = {
+            (link["addressee"] if link["requester"] == user.id else link["requester"])
+            for link in links
+        }
+        decided = (
+            sb.table("teamup_interest")
+            .select("target")
+            .eq("student", user.id)
+            .execute()
+        ).data or []
+        exclude |= {d["target"] for d in decided}
+        exclude |= blocked_ids(sb, user.id)
+        return teamup_candidates(sb, me, exclude)
+
+    @app.post("/teamup/interest")
+    def record_teamup_interest(
+        body: dict,
+        user: CurrentUser = RequireUser,
+    ) -> dict:
+        """Record interest or a pass; mutual interest connects both students.
+
+        The target never learns about a one-sided decision — the response
+        only says ``matched`` when BOTH said interested, at which point an
+        accepted friendship is created (or the pending one is upgraded).
+        """
+        from .db import get_supabase
+        from .social import blocked_ids
+
+        target_id = str(body.get("student_id", "")).strip()
+        decision = body.get("decision")
+        if not target_id or decision not in ("interested", "passed"):
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="student_id and a decision of interested/passed are required.",
+            )
+        if target_id == user.id:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="That's you.",
+            )
+
+        sb = get_supabase()
+        target_row = (
+            sb.table("students")
+            .select("id, teamup_enabled")
+            .eq("id", target_id)
+            .maybe_single()
+            .execute()
+        )
+        target = target_row.data if target_row else None
+        # Same 404 for unknown, opted-out, and blocked targets: no probing.
+        if (
+            not target
+            or not target.get("teamup_enabled")
+            or target_id in blocked_ids(sb, user.id)
+        ):
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No such student in matching.",
+            )
+
+        sb.table("teamup_interest").upsert(
+            {"student": user.id, "target": target_id, "decision": decision},
+            on_conflict="student,target",
+        ).execute()
+        if decision == "passed":
+            return {"matched": False}
+
+        reciprocal = (
+            sb.table("teamup_interest")
+            .select("id")
+            .eq("student", target_id)
+            .eq("target", user.id)
+            .eq("decision", "interested")
+            .execute()
+        ).data or []
+        if not reciprocal:
+            return {"matched": False}
+
+        existing = (
+            sb.table("friendships")
+            .select("id, status")
+            .or_(
+                f"and(requester.eq.{user.id},addressee.eq.{target_id}),"
+                f"and(requester.eq.{target_id},addressee.eq.{user.id})"
+            )
+            .execute()
+        ).data or []
+        if existing:
+            if existing[0]["status"] != "accepted":
+                sb.table("friendships").update({"status": "accepted"}).eq(
+                    "id", existing[0]["id"]
+                ).execute()
+        else:
+            sb.table("friendships").insert(
+                {"requester": user.id, "addressee": target_id, "status": "accepted"}
+            ).execute()
+        return {"matched": True}
+
+    # -- Safety: report + block ---------------------------------------------
+
+    @app.post("/report", status_code=status.HTTP_201_CREATED)
+    def report_student(
+        body: dict,
+        user: CurrentUser = RequireUser,
+    ) -> dict:
+        """File a safety report about another student.
+
+        Reports go to a moderation queue read via the service role; the
+        reported student never sees who filed. Accepts a student_id or a
+        handle so every surface (cards, friends, public pages) can report.
+        """
+        from .db import get_supabase
+        from .social import REPORT_DETAILS_MAX, REPORT_REASONS
+
+        reason = body.get("reason")
+        if reason not in REPORT_REASONS:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=f"reason must be one of: {', '.join(REPORT_REASONS)}.",
+            )
+
+        sb = get_supabase()
+        target_id = str(body.get("student_id", "")).strip()
+        if not target_id:
+            handle = str(body.get("handle", "")).strip().lower()
+            if handle:
+                row = (
+                    sb.table("students")
+                    .select("id")
+                    .eq("handle", handle)
+                    .maybe_single()
+                    .execute()
+                )
+                target_id = (row.data or {}).get("id", "") if row else ""
+        if not target_id or target_id == user.id:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No such student.",
+            )
+
+        sb.table("reports").insert({
+            "reporter": user.id,
+            "reported": target_id,
+            "reason": reason,
+            "details": str(body.get("details", "") or "").strip()[:REPORT_DETAILS_MAX] or None,
+        }).execute()
+        return {"filed": True}
+
+    @app.post("/block", status_code=status.HTTP_201_CREATED)
+    def block_student(
+        body: dict,
+        user: CurrentUser = RequireUser,
+    ) -> dict:
+        """Hard wall: removes any connection and hides both students from
+        each other in discover, team-up, and friend requests."""
+        from .db import get_supabase
+
+        target_id = str(body.get("student_id", "")).strip()
+        if not target_id or target_id == user.id:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="A student_id (not your own) is required.",
+            )
+
+        sb = get_supabase()
+        sb.table("blocks").upsert(
+            {"blocker": user.id, "blocked": target_id},
+            on_conflict="blocker,blocked",
+        ).execute()
+        sb.table("friendships").delete().or_(
+            f"and(requester.eq.{user.id},addressee.eq.{target_id}),"
+            f"and(requester.eq.{target_id},addressee.eq.{user.id})"
+        ).execute()
+        sb.table("teamup_interest").delete().or_(
+            f"and(student.eq.{user.id},target.eq.{target_id}),"
+            f"and(student.eq.{target_id},target.eq.{user.id})"
+        ).execute()
+        return {"blocked": True}
 
     @app.get("/missions", response_model=list[Mission])
     def list_missions(

@@ -663,6 +663,49 @@
         "summary": "Sync Assessment Profile"
       }
     },
+    "/block": {
+      "post": {
+        "description": "Hard wall: removes any connection and hides both students from\neach other in discover, team-up, and friend requests.",
+        "operationId": "block_student_block_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "title": "Body",
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Block Student Block Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Block Student"
+      }
+    },
     "/bookmarks": {
       "get": {
         "description": "Return the student's bookmarked opportunities.",
@@ -1541,6 +1584,49 @@
         "summary": "Public Profile"
       }
     },
+    "/report": {
+      "post": {
+        "description": "File a safety report about another student.\n\nReports go to a moderation queue read via the service role; the\nreported student never sees who filed. Accepts a student_id or a\nhandle so every surface (cards, friends, public pages) can report.",
+        "operationId": "report_student_report_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "title": "Body",
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Report Student Report Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Report Student"
+      }
+    },
     "/sharing": {
       "post": {
         "description": "Set the handle and/or the public toggle on the student's record.",
@@ -1621,6 +1707,135 @@
           }
         },
         "summary": "Create Student"
+      }
+    },
+    "/teamup/candidates": {
+      "get": {
+        "description": "Ranked collaborator candidates for the signed-in student.\n\n409 until the student opts in themselves \u2014 you cannot browse the\npool without being in it. Excludes existing connections (any\nstatus), anyone already decided on, and blocked pairs.",
+        "operationId": "teamup_candidates_route_teamup_candidates_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "title": "Response Teamup Candidates Route Teamup Candidates Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Teamup Candidates Route"
+      }
+    },
+    "/teamup/interest": {
+      "post": {
+        "description": "Record interest or a pass; mutual interest connects both students.\n\nThe target never learns about a one-sided decision \u2014 the response\nonly says ``matched`` when BOTH said interested, at which point an\naccepted friendship is created (or the pending one is upgraded).",
+        "operationId": "record_teamup_interest_teamup_interest_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "title": "Body",
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Record Teamup Interest Teamup Interest Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Record Teamup Interest"
+      }
+    },
+    "/teamup/settings": {
+      "get": {
+        "description": "Whether the student is in the matching pool, and their pitch.",
+        "operationId": "teamup_settings_teamup_settings_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Teamup Settings Teamup Settings Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Teamup Settings"
+      },
+      "post": {
+        "description": "Join or leave the matching pool and set the pitch.",
+        "operationId": "update_teamup_settings_teamup_settings_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "title": "Body",
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Update Teamup Settings Teamup Settings Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Teamup Settings"
       }
     },
     "/timeline": {

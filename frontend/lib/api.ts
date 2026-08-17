@@ -361,6 +361,81 @@ export async function fetchDiscover(): Promise<Peer[]> {
   return (await authedFetch("/discover")).json();
 }
 
+// ---------------------------------------------------------------------------
+// Team up (mutual-match collaborators) + safety
+// ---------------------------------------------------------------------------
+
+export type TeamupSettings = { enabled: boolean; pitch: string };
+
+export async function fetchTeamupSettings(): Promise<TeamupSettings> {
+  return (await authedFetch("/teamup/settings")).json();
+}
+
+export async function updateTeamupSettings(update: {
+  enabled?: boolean;
+  pitch?: string;
+}): Promise<TeamupSettings> {
+  return (await authedFetch("/teamup/settings", {
+    method: "POST",
+    body: JSON.stringify(update),
+  })).json();
+}
+
+export type TeamupCandidate = {
+  student_id: string;
+  name: string;
+  handle: string | null;
+  grade: number | null;
+  fields: string[];
+  chosen_archetype: string | null;
+  pitch: string;
+  reasons: string[];
+};
+
+/** Ranked collaborator candidates; 409 until the student opts in. */
+export async function fetchTeamupCandidates(): Promise<TeamupCandidate[]> {
+  return (await authedFetch("/teamup/candidates")).json();
+}
+
+/** Interested/passed on a candidate; matched=true means you're connected. */
+export async function sendTeamupInterest(
+  studentId: string,
+  decision: "interested" | "passed",
+): Promise<{ matched: boolean }> {
+  return (await authedFetch("/teamup/interest", {
+    method: "POST",
+    body: JSON.stringify({ student_id: studentId, decision }),
+  })).json();
+}
+
+export type ReportReason =
+  | "inappropriate"
+  | "harassment"
+  | "impersonation"
+  | "spam"
+  | "other";
+
+/** File a safety report; the reported student never sees who filed. */
+export async function reportStudent(input: {
+  student_id?: string;
+  handle?: string;
+  reason: ReportReason;
+  details?: string;
+}): Promise<void> {
+  await authedFetch("/report", {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+}
+
+/** Hard wall: removes the connection and hides both students everywhere. */
+export async function blockStudent(studentId: string): Promise<void> {
+  await authedFetch("/block", {
+    method: "POST",
+    body: JSON.stringify({ student_id: studentId }),
+  });
+}
+
 /** The full opportunity bank — every entry, unranked (GET /catalog). */
 export async function fetchCatalog(): Promise<Opportunity[]> {
   return (await authedFetch("/catalog")).json();

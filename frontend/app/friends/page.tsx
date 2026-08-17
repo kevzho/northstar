@@ -12,6 +12,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { AppNav } from "@/components/AppNav";
+import { ReportDialog, type ReportTarget } from "@/components/ReportDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { traitDescriptions, traitLabels, type TraitKey } from "@/lib/assessment";
@@ -97,6 +98,7 @@ export default function FriendsPage() {
     me: ComparedRecord;
     friend: ComparedRecord;
   } | null>(null);
+  const [reporting, setReporting] = useState<ReportTarget | null>(null);
 
   const refresh = useCallback(() => {
     fetchFriends()
@@ -225,6 +227,12 @@ export default function FriendsPage() {
                         >
                           {entry.direction === "received" ? "Decline" : "Cancel"}
                         </Button>
+                        <button
+                          onClick={() => setReporting(entry)}
+                          className="text-xs text-muted-foreground underline-offset-2 hover:underline"
+                        >
+                          Report
+                        </button>
                       </span>
                     </li>
                   ))}
@@ -270,6 +278,12 @@ export default function FriendsPage() {
                         >
                           Remove
                         </Button>
+                        <button
+                          onClick={() => setReporting(entry)}
+                          className="text-xs text-muted-foreground underline-offset-2 hover:underline"
+                        >
+                          Report
+                        </button>
                       </span>
                     </li>
                   ))}
@@ -287,6 +301,17 @@ export default function FriendsPage() {
                   <RecordColumn record={comparison.friend} />
                 </div>
               </section>
+            ) : null}
+
+            {reporting ? (
+              <ReportDialog
+                target={reporting}
+                onClose={() => setReporting(null)}
+                onBlocked={() => {
+                  setComparison(null);
+                  refresh();
+                }}
+              />
             ) : null}
           </>
         )}

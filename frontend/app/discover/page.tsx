@@ -69,9 +69,14 @@ export default function DiscoverPage() {
         <AppNav
           homeHref="/dashboard"
           right={
-            <Link href="/friends" className="text-sm font-semibold text-aurora">
-              Your friends
-            </Link>
+            <span className="flex gap-4">
+              <Link href="/teamup" className="text-sm font-semibold text-aurora">
+                Team up
+              </Link>
+              <Link href="/friends" className="text-sm font-semibold text-aurora">
+                Your friends
+              </Link>
+            </span>
           }
         />
 

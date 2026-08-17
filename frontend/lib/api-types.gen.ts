@@ -69,6 +69,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/block": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Block Student
+         * @description Hard wall: removes any connection and hides both students from
+         *     each other in discover, team-up, and friend requests.
+         */
+        post: operations["block_student_block_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/bookmarks": {
         parameters: {
             query?: never;
@@ -589,6 +610,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Report Student
+         * @description File a safety report about another student.
+         *
+         *     Reports go to a moderation queue read via the service role; the
+         *     reported student never sees who filed. Accepts a student_id or a
+         *     handle so every surface (cards, friends, public pages) can report.
+         */
+        post: operations["report_student_report_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/sharing": {
         parameters: {
             query?: never;
@@ -629,6 +674,78 @@ export interface paths {
          *     client here bypasses RLS to perform the upsert itself.
          */
         post: operations["create_student_students_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/teamup/candidates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Teamup Candidates Route
+         * @description Ranked collaborator candidates for the signed-in student.
+         *
+         *     409 until the student opts in themselves — you cannot browse the
+         *     pool without being in it. Excludes existing connections (any
+         *     status), anyone already decided on, and blocked pairs.
+         */
+        get: operations["teamup_candidates_route_teamup_candidates_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/teamup/interest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Record Teamup Interest
+         * @description Record interest or a pass; mutual interest connects both students.
+         *
+         *     The target never learns about a one-sided decision — the response
+         *     only says ``matched`` when BOTH said interested, at which point an
+         *     accepted friendship is created (or the pending one is upgraded).
+         */
+        post: operations["record_teamup_interest_teamup_interest_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/teamup/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Teamup Settings
+         * @description Whether the student is in the matching pool, and their pitch.
+         */
+        get: operations["teamup_settings_teamup_settings_get"];
+        put?: never;
+        /**
+         * Update Teamup Settings
+         * @description Join or leave the matching pool and set the pitch.
+         */
+        post: operations["update_teamup_settings_teamup_settings_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -992,6 +1109,43 @@ export interface operations {
         responses: {
             /** @description Successful Response */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    block_student_block_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    [key: string]: unknown;
+                };
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1761,6 +1915,43 @@ export interface operations {
             };
         };
     };
+    report_student_report_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    [key: string]: unknown;
+                };
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     update_sharing_sharing_post: {
         parameters: {
             query?: never;
@@ -1818,6 +2009,124 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["StudentProfile"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    teamup_candidates_route_teamup_candidates_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    }[];
+                };
+            };
+        };
+    };
+    record_teamup_interest_teamup_interest_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    [key: string]: unknown;
+                };
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    teamup_settings_teamup_settings_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+        };
+    };
+    update_teamup_settings_teamup_settings_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    [key: string]: unknown;
+                };
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
                 };
             };
             /** @description Validation Error */

@@ -20,6 +20,11 @@ HANDLE_RE = re.compile(r"^[a-z0-9][a-z0-9-]{2,19}$")
 
 PUBLIC_OUTCOME_STATUSES = ("accepted", "completed")
 
+TEAMUP_PITCH_MAX = 240
+
+REPORT_REASONS = ("inappropriate", "harassment", "impersonation", "spam", "other")
+REPORT_DETAILS_MAX = 2000
+
 
 def valid_handle(handle: str) -> bool:
     return bool(HANDLE_RE.fullmatch(handle))
@@ -115,6 +120,69 @@ def discover_peers(sb, me: dict, exclude_ids: set[str], limit: int = 12) -> list
             "shared_fields": leading_fields(other.get("field_scores")),
             "chosen_archetype": other.get("chosen_archetype"),
             "missions_completed": completed.count or 0,
+            "reasons": reasons,
+            "_score": score,
+        })
+
+    scored.sort(key=lambda p: p["_score"], reverse=True)
+    for p in scored:
+        del p["_score"]
+    return scored[:limit]
+
+
+def blocked_ids(sb, student_id: str) -> set[str]:
+    """Everyone the student has blocked or been blocked by.
+
+    Blocks are a hard wall in both directions: neither party appears in
+    the other's discover, team-up pool, or friend requests.
+    """
+    rows = (
+        sb.table("blocks")
+        .select("blocker, blocked")
+        .or_(f"blocker.eq.{student_id},blocked.eq.{student_id}")
+        .execute()
+    ).data or []
+    return {
+        (r["blocked"] if r["blocker"] == student_id else r["blocker"])
+        for r in rows
+    }
+
+
+def teamup_candidates(sb, me: dict, exclude_ids: set[str], limit: int = 8) -> list[dict]:
+    """Opted-in, same-audience students ranked for collaboration fit.
+
+    Like discover, but the pool is only students who explicitly enabled
+    team-up matching, and nobody is dropped for low affinity — the pitch
+    ("what I'm building") is signal the score can't see. A candidate's
+    handle is exposed only when their profile is public, so team-up never
+    leaks a private student's handle.
+    """
+    audience = me.get("audience") or "high_school"
+    rows = (
+        sb.table("students")
+        .select(
+            "id, name, handle, grade, field_scores, chosen_archetype,"
+            " chosen_kind, teamup_pitch, public_profile"
+        )
+        .eq("teamup_enabled", True)
+        .eq("audience", audience)
+        .limit(200)
+        .execute()
+    ).data or []
+
+    scored = []
+    for other in rows:
+        if other["id"] == me.get("id") or other["id"] in exclude_ids:
+            continue
+        score, reasons = affinity(me, other)
+        scored.append({
+            "student_id": other["id"],
+            "name": first_name(other.get("name")),
+            "handle": other.get("handle") if other.get("public_profile") else None,
+            "grade": other.get("grade"),
+            "fields": leading_fields(other.get("field_scores")),
+            "chosen_archetype": other.get("chosen_archetype"),
+            "pitch": (other.get("teamup_pitch") or "").strip(),
             "reasons": reasons,
             "_score": score,
         })

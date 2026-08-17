@@ -22,6 +22,8 @@ PROTECTED_GETS = [
     "/outcomes",
     "/pathways",
     "/mentors",
+    "/teamup/settings",
+    "/teamup/candidates",
 ]
 
 

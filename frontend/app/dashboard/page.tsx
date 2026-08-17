@@ -406,6 +406,15 @@ export default function DashboardPage() {
               records side by side.
             </p>
           </Link>
+          <Link href="/teamup" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
+            <h2 className="text-xl font-semibold text-foreground">
+              Team up
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              Find a collaborator or study buddy — pick who you&apos;d build
+              with, connect only when it&apos;s mutual.
+            </p>
+          </Link>
           <Link href="/advisor" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
             <h2 className="text-xl font-semibold text-foreground">
               Explore unusual routes
