@@ -90,6 +90,11 @@ function OpportunitiesList() {
     typeValues,
   );
 
+  // Captured once via the lazy initializer: render must stay pure
+  // (react-hooks/purity forbids a bare Date.now() there), and deadline
+  // math is day-granular, so one timestamp per mount is plenty.
+  const [now] = useState(() => Date.now());
+
   function setFilter(key: "field" | "type" | "cost" | "status", value: string) {
     const next = new URLSearchParams(searchParams.toString());
     if (value === "all") {
@@ -169,7 +174,7 @@ function OpportunitiesList() {
     if (status !== "all") {
       if (!o.deadline) return status === "open" ? true : false;
       const days = Math.ceil(
-        (new Date(`${o.deadline}T23:59:59`).getTime() - Date.now()) / 86_400_000,
+        (new Date(`${o.deadline}T23:59:59`).getTime() - now) / 86_400_000,
       );
       if (status === "open" && days < 0) return false;
       if (status === "closing" && (days < 0 || days > 30)) return false;
