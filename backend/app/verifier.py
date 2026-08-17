@@ -34,7 +34,8 @@ from .settings import settings
 
 FIELDS = ["cs", "biology", "math", "physics", "engineering",
           "interdisciplinary", "design", "business", "humanities", "health"]
-TYPES = ["program", "scholarship", "competition", "mentorship"]
+TYPES = ["program", "scholarship", "competition", "mentorship",
+         "internship", "volunteer", "journal"]
 
 CONFIDENCE_FLOOR = 0.8
 

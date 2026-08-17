@@ -25,6 +25,9 @@ const typeLabels: Record<OpportunityType, string> = {
   scholarship: "Scholarship",
   competition: "Competition",
   mentorship: "Mentorship",
+  internship: "Internship",
+  volunteer: "Volunteer",
+  journal: "Journal",
 };
 
 /** Days until the deadline, or null for rolling/absent deadlines. */

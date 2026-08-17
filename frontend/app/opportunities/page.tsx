@@ -39,6 +39,9 @@ const typeFilters: { value: OpportunityType | "all"; label: string }[] = [
   { value: "scholarship", label: "Scholarships" },
   { value: "competition", label: "Competitions" },
   { value: "mentorship", label: "Mentorship" },
+  { value: "internship", label: "Internships" },
+  { value: "volunteer", label: "Volunteer" },
+  { value: "journal", label: "Journals" },
 ];
 
 const fieldValues = new Set(fieldFilters.map((f) => f.value));
@@ -69,6 +72,10 @@ function OpportunitiesList() {
   const [dismissedHere, setDismissedHere] = useState<string[]>([]);
   const [catalog, setCatalog] = useState<Opportunity[] | null>(null);
   const view = searchParams.get("view") === "all" ? "all" : "matched";
+  const cost = searchParams.get("cost") === "free" ? "free"
+    : searchParams.get("cost") === "paid" ? "paid" : "all";
+  const status = searchParams.get("status") === "open" ? "open"
+    : searchParams.get("status") === "closing" ? "closing" : "all";
 
   // Filters live in the URL so a reload, a back button, or a shared link keeps
   // the same view. Useful in the demo: the filtered list is linkable.
@@ -83,7 +90,7 @@ function OpportunitiesList() {
     typeValues,
   );
 
-  function setFilter(key: "field" | "type", value: string) {
+  function setFilter(key: "field" | "type" | "cost" | "status", value: string) {
     const next = new URLSearchParams(searchParams.toString());
     if (value === "all") {
       next.delete(key);
@@ -153,16 +160,35 @@ function OpportunitiesList() {
     router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
   }
 
+  function passesCostStatus(o: {
+    cost?: number | null;
+    deadline?: string | null;
+  }): boolean {
+    if (cost === "free" && (o.cost ?? 0) > 0) return false;
+    if (cost === "paid" && (o.cost ?? 0) === 0) return false;
+    if (status !== "all") {
+      if (!o.deadline) return status === "open" ? true : false;
+      const days = Math.ceil(
+        (new Date(`${o.deadline}T23:59:59`).getTime() - Date.now()) / 86_400_000,
+      );
+      if (status === "open" && days < 0) return false;
+      if (status === "closing" && (days < 0 || days > 30)) return false;
+    }
+    return true;
+  }
+
   const filtered = matches.filter(({ opportunity }) => {
     if (dismissedHere.includes(opportunity.id)) return false;
     if (field !== "all" && opportunity.field !== field) return false;
     if (type !== "all" && opportunity.type !== type) return false;
+    if (!passesCostStatus(opportunity)) return false;
     return true;
   });
 
   const filteredCatalog = (catalog ?? []).filter((opportunity) => {
     if (field !== "all" && opportunity.field !== field) return false;
     if (type !== "all" && opportunity.type !== type) return false;
+    if (!passesCostStatus(opportunity)) return false;
     return true;
   });
 
@@ -241,6 +267,26 @@ function OpportunitiesList() {
                 {filter.label}
               </option>
             ))}
+          </NativeSelect>
+          <NativeSelect
+            value={cost}
+            aria-label="Filter by cost"
+            onChange={(event) => setFilter("cost", event.target.value)}
+            className="h-11 px-4 font-semibold"
+          >
+            <option value="all">Any cost</option>
+            <option value="free">Free only</option>
+            <option value="paid">Paid</option>
+          </NativeSelect>
+          <NativeSelect
+            value={status}
+            aria-label="Filter by status"
+            onChange={(event) => setFilter("status", event.target.value)}
+            className="h-11 px-4 font-semibold"
+          >
+            <option value="all">Any status</option>
+            <option value="open">Open now</option>
+            <option value="closing">Closing in 30 days</option>
           </NativeSelect>
         </section>
 

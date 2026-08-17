@@ -30,6 +30,9 @@ class OpportunityType(str, Enum):
     scholarship = "scholarship"
     competition = "competition"
     mentorship = "mentorship"
+    internship = "internship"
+    volunteer = "volunteer"
+    journal = "journal"
 
 
 class Audience(str, Enum):

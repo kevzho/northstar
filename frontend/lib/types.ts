@@ -31,7 +31,10 @@ export type OpportunityType =
   | "program"
   | "scholarship"
   | "competition"
-  | "mentorship";
+  | "mentorship"
+  | "internship"
+  | "volunteer"
+  | "journal";
 
 export type DemographicEligibility = "first_gen" | "urm" | "women_only" | "any";
 

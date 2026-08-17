@@ -73,6 +73,9 @@ SUBREDDITS: list[tuple[str, str]] = [
     ("REU", "college"),
     ("FinancialCareers", "college"),
     ("quant", "college"),
+    ("chemistry", "high_school"),
+    ("EngineeringStudents", "college"),
+    ("labrats", "college"),
 ]
 
 # Targeted searches sweep further back than /new can reach.
@@ -83,17 +86,30 @@ SEARCHES = [
     "STEM competition high school",
     "high school internship",
 ]
-SEARCH_SUBREDDITS = ["summerprogramresults", "scholarships", "ApplyingToCollege"]
+SEARCH_SUBREDDITS = ["summerprogramresults", "scholarships", "ApplyingToCollege", "highschool"]
 
 # The matcher personalizes on opportunity_field, so the pool has to cover
 # every field — /new listings alone skew cs/bio (csMajors, premed) and
 # leave math/physics/engineering underrepresented. These searches also
 # stamp the field onto the candidate when no text hint contradicts it.
 FIELD_SEARCHES: dict[str, list[str]] = {
-    "math": ["math olympiad qualifier", "math summer program"],
-    "physics": ["physics olympiad", "astronomy research high school"],
-    "engineering": ["engineering summer program", "robotics competition high school"],
-    "biology": ["biology research program high school", "medical program high school"],
+    "math": [
+        "math olympiad qualifier", "math summer program", "AMC AIME preparation program",
+        "math research program high school", "Ross Mathematics",
+    ],
+    "physics": [
+        "physics olympiad", "astronomy research high school", "USAPhO",
+        "physics summer program high school", "space research internship high school",
+    ],
+    "engineering": [
+        "engineering summer program", "robotics competition high school",
+        "aerospace program high school", "civil engineering internship high school",
+    ],
+    "biology": [
+        "biology research program high school", "medical program high school",
+        "USABO biology olympiad", "neuroscience program high school",
+        "genetics research high school", "chemistry olympiad USNCO",
+    ],
     "cs": ["AI research high school", "coding summer program"],
     "design": ["art portfolio program", "design summer program high school"],
     "business": [
@@ -206,8 +222,11 @@ FIELD_HINTS: list[tuple[str, re.Pattern[str]]] = [
 TYPE_HINTS: list[tuple[str, re.Pattern[str]]] = [
     ("scholarship", re.compile(r"\b(scholarship|grant|award)\b", re.I)),
     ("competition", re.compile(r"\b(competition|contest|olympiad|challenge|hackathon)\b", re.I)),
+    ("journal", re.compile(r"\b(journal|publication|publish|peer[- ]?review)\b", re.I)),
+    ("volunteer", re.compile(r"\b(volunteer|service|nonprofit|tutoring)\b", re.I)),
+    ("internship", re.compile(r"\b(internship|intern|apprenticeship)\b", re.I)),
     ("mentorship", re.compile(r"\b(mentor|mentorship)\b", re.I)),
-    ("program", re.compile(r"\b(program|internship|fellowship|camp|course)\b", re.I)),
+    ("program", re.compile(r"\b(program|fellowship|camp|course)\b", re.I)),
 ]
 
 
