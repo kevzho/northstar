@@ -151,3 +151,20 @@ until it sounds like you. Tiers 3–4 are understand/skim.
 - [ ] Decide the moderation loop: reports land in an unread table today;
       pick a cadence (or an email trigger) so "a human reviews it" stays
       true (4684902).
+
+- [ ] TIER 2: the new subreddit list + per-sub field defaults in
+      `backend/scripts/scrape_reddit.py` — audiences and fields are
+      editorial guesses (e.g. r/PhysicsStudents=college,
+      r/ArtistLounge=high_school); sanity-check against what actually
+      lands in the review pool (5794072).
+- [ ] TIER 2: the tightened INCLUDE/EXCLUDE — phrase-shaped volunteer
+      terms and the seeker-post exclusions ("looking for", "where can
+      i") now apply to every subreddit, not just r/volunteer; spot-check
+      that no real opportunities get dropped elsewhere (5794072).
+- [ ] TIER 3: the react-hooks/purity fix in
+      `frontend/app/opportunities/page.tsx` — one Date.now() per mount
+      via lazy useState; fine for day-granular deadlines, but know it
+      goes stale in a tab left open across midnight (d45d525).
+- [ ] Run `review_candidates.py` on the ~700 new non-CS/volunteer
+      candidates soon — the volunteer entries especially are
+      question-heavy and need the human pass (5794072).
