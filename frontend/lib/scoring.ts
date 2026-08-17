@@ -200,7 +200,7 @@ function vector(traits: Record<TraitKey, number>): number[] {
 
 export type ScoredArchetype = {
   archetype: Archetype;
-  /** Cosine similarity as a 0-100 percentage (plus any interest bonus). */
+  /** Trait-shape closeness as a 0-99 percentage (plus any interest bonus). */
   fit: number;
   /** True when the fit includes an interest-field bonus. */
   interestAligned: boolean;
@@ -243,7 +243,18 @@ export function rankArchetypes(
   const student = vector(traits);
   return archetypes
     .map((archetype) => {
-      const base = cosine(student, vector(archetype.traits)) * 100;
+      // Fit is the inverted root-mean-square gap between the student's
+      // trait shape and the archetype's, on a shared 0-100 axis
+      // (archetype traits are authored 0-10). Cosine was used before,
+      // but two all-positive 6-vectors almost always cosine to 0.9+,
+      // which pinned every archetype at "99% fit" — RMS distance keeps
+      // the ranking honest AND the percentages spread out.
+      const target = vector(archetype.traits).map((t) => t * 10);
+      const gap = Math.sqrt(
+        student.reduce((sum, s, i) => sum + (s - target[i]) ** 2, 0) /
+          student.length,
+      );
+      const base = 100 - gap;
       const overlap = archetype.fields.filter((field) =>
         fields.includes(field),
       ).length;

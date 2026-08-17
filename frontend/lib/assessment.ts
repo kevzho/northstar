@@ -98,7 +98,7 @@ export const assessmentQuestions: AssessmentQuestion[] = [
     choices: [
       {
         id: "hackathon",
-        label: "A weekend hackathon where speed and demos matter.",
+        label: "A weekend build-a-thon — any medium — where speed and demos matter.",
         traits: { builder: 2, executionTempo: 2, riskTolerance: 1 },
       },
       {
@@ -140,7 +140,7 @@ export const assessmentQuestions: AssessmentQuestion[] = [
     choices: [
       {
         id: "launch-app",
-        label: "Launch an app, even if the first version is imperfect.",
+        label: "Launch something real — an app, a zine, a small business — even if v1 is rough.",
         traits: { builder: 2, riskTolerance: 2, executionTempo: 1 },
       },
       {
@@ -238,10 +238,10 @@ export const assessmentQuestions: AssessmentQuestion[] = [
         fields: { physics: 2, math: 1 },
       },
       {
-        id: "river-robot",
-        label: "Student-built robot cleans a polluted river.",
-        traits: { builder: 1 },
-        fields: { engineering: 2, interdisciplinary: 1 },
+        id: "student-investigation",
+        label: "Student newspaper investigation gets a state law changed.",
+        traits: { collaboration: 1, riskTolerance: 1 },
+        fields: { humanities: 2, business: 1 },
       },
     ],
   },
@@ -256,10 +256,10 @@ export const assessmentQuestions: AssessmentQuestion[] = [
         fields: { biology: 2 },
       },
       {
-        id: "proof-room",
-        label: "The puzzle room: proofs and paradoxes you can touch.",
-        traits: { analyst: 1, ambiguityComfort: 1 },
-        fields: { math: 2 },
+        id: "trading-floor",
+        label: "The trading floor: run a mock market against real strategies.",
+        traits: { analyst: 1, riskTolerance: 1 },
+        fields: { business: 2, math: 1 },
       },
       {
         id: "maker-floor",
@@ -283,13 +283,13 @@ export const assessmentQuestions: AssessmentQuestion[] = [
         id: "outbreak",
         label: "How outbreaks start, spread, and get stopped.",
         traits: { ambiguityComfort: 1, collaboration: 1 },
-        fields: { biology: 2, interdisciplinary: 1 },
+        fields: { biology: 2, health: 1 },
       },
       {
-        id: "equations",
-        label: "The handful of equations that predict almost everything.",
-        traits: { analyst: 1 },
-        fields: { math: 2, physics: 1 },
+        id: "design-icons",
+        label: "Why the best-designed things feel obvious — and the rest don't.",
+        traits: { builder: 1 },
+        fields: { design: 2, engineering: 1 },
       },
     ],
   },
@@ -310,10 +310,10 @@ export const assessmentQuestions: AssessmentQuestion[] = [
         fields: { engineering: 2, physics: 1 },
       },
       {
-        id: "creek-survey",
-        label: "Test which local creeks are healthiest and map the results.",
+        id: "wellness-week",
+        label: "Organize a mental-health awareness week people actually attend.",
         traits: { collaboration: 1 },
-        fields: { biology: 2, interdisciplinary: 1 },
+        fields: { health: 2, interdisciplinary: 1 },
       },
     ],
   },
@@ -358,10 +358,10 @@ export const assessmentQuestions: AssessmentQuestion[] = [
         fields: { interdisciplinary: 2, physics: 1 },
       },
       {
-        id: "surgeon-researcher",
-        label: "The surgeon who also runs a research lab.",
-        traits: { executionTempo: 1, analyst: 1 },
-        fields: { biology: 2 },
+        id: "dorm-founder",
+        label: "The founder who bootstrapped a company from their dorm room.",
+        traits: { riskTolerance: 1, executionTempo: 1 },
+        fields: { business: 2 },
       },
     ],
   },
@@ -400,10 +400,10 @@ export const assessmentQuestions: AssessmentQuestion[] = [
         fields: { humanities: 2, design: 1 },
       },
       {
-        id: "school-store",
-        label: "Running a real micro-business and keeping the books.",
-        traits: { executionTempo: 1 },
-        fields: { business: 2 },
+        id: "assistive-device",
+        label: "Engineering an assistive device for a classmate who needs one.",
+        traits: { builder: 1, collaboration: 1 },
+        fields: { engineering: 2, health: 1 },
       },
       {
         id: "redesign-site",

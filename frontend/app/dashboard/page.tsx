@@ -24,6 +24,7 @@ export default function DashboardPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const [checking, setChecking] = useState(false);
+  const [studentName, setStudentName] = useState<string | null>(null);
   const [matches, setMatches] = useState<MatchResult[] | null>(null);
   const [matchesFailed, setMatchesFailed] = useState(false);
   const [outcomes, setOutcomes] = useState<Outcome[]>([]);
@@ -46,9 +47,10 @@ export default function DashboardPage() {
 
     (async () => {
       try {
-        await authedFetch("/me");
-        // Profile exists — fetch matches.
+        const me = await (await authedFetch("/me")).json();
+        // Profile exists — greet by name, fetch matches.
         if (!cancelled) {
+          setStudentName((me?.name ?? "").trim() || null);
           setChecking(false);
           try {
             const data = await fetchMatches();
@@ -189,8 +191,17 @@ export default function DashboardPage() {
         <header className="py-10">
           <p className="eyebrow">Signed in</p>
           <h1 className="h-display mt-3 text-4xl text-foreground">
-            Welcome{user.email ? `, ${user.email}` : ""}.
+            Welcome{studentName ? `, ${studentName.split(" ")[0]}` : ""}.
           </h1>
+          {!studentName ? (
+            <p className="mt-2 text-sm text-muted-foreground">
+              Northstar doesn&apos;t know your name yet —{" "}
+              <Link href="/profile" className="font-semibold text-aurora">
+                add it to your profile
+              </Link>
+              .
+            </p>
+          ) : null}
           <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
             Your matches refresh each time you visit — the latest TF-IDF
             scores are always ready below.
@@ -424,12 +435,13 @@ export default function DashboardPage() {
               grounded in your verified matches.
             </p>
           </Link>
-          <Link href="/onboarding" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
+          <Link href="/profile" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
             <h2 className="text-xl font-semibold text-foreground">
               Edit profile
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Update your interests and goals to refine your match scores.
+              All your details, traits, and sharing settings on one page —
+              edit anything to refine your matches.
             </p>
           </Link>
         </section>

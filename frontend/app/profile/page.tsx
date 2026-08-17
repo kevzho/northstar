@@ -25,6 +25,7 @@ import {
 import { useStoredAnswers } from "@/lib/use-assessment";
 import { useEffect, useState } from "react";
 import { fetchTimeline } from "@/lib/api";
+import { ProfileDetailsCard } from "@/components/ProfileDetailsCard";
 import { SharingCard } from "@/components/SharingCard";
 import type { OpportunityField, TimelineEvent } from "@/lib/types";
 
@@ -158,6 +159,8 @@ export default function ProfilePage() {
             <ThemeToggle />
           </div>
         </header>
+
+        <ProfileDetailsCard />
 
         {!isReal ? (
           <section className="mt-6 rounded-md border border-star bg-star/8 p-4">
