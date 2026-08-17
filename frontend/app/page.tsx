@@ -224,15 +224,8 @@ export default function Home() {
             <span className="h-display text-xl">Northstar</span>
           </Link>
           <div className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              render={<Link href="/login" />}
-              className="h-9 px-4"
-            >
+            <Button render={<Link href="/login" />} className="h-9 px-4">
               Sign in / Sign up
-            </Button>
-            <Button render={<Link href="/assessment" />} className="h-9 px-4">
-              Start assessment
             </Button>
             <ThemeToggle />
           </div>

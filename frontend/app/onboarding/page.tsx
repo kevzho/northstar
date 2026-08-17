@@ -15,7 +15,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { NativeSelect } from "@/components/ui/native-select";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { saveStudentProfile } from "@/lib/api";
+import { saveStudentProfile, syncAssessmentProfile } from "@/lib/api";
+import { isComplete, scoreFieldInterests, scoreTraits } from "@/lib/scoring";
+import { useStoredAnswers } from "@/lib/use-assessment";
 import type { Audience, LocationPref } from "@/lib/types";
 
 const subjectOptions = [
@@ -34,6 +36,11 @@ const subjectOptions = [
 export default function OnboardingPage() {
   const router = useRouter();
   const [step, setStep] = useState<1 | 2 | 3>(1);
+  // The quiz is part of onboarding: brand-new students continue into it,
+  // and students who took it before signing up skip straight to the
+  // dashboard with their stored answers attached to the account.
+  const answers = useStoredAnswers() ?? {};
+  const quizDone = isComplete(answers);
 
   const [name, setName] = useState("");
   const [audience, setAudience] = useState<Audience>("high_school");
@@ -76,7 +83,18 @@ export default function OnboardingPage() {
       setIsSubmitting(false);
     }
     void background;
-    router.push("/dashboard");
+    if (quizDone) {
+      // Taken anonymously before the account existed: the finish-time
+      // sync on /assessment failed silently while signed out, so attach
+      // the scores now that there is a student row to put them on.
+      syncAssessmentProfile(
+        scoreTraits(answers),
+        scoreFieldInterests(answers),
+      ).catch(() => {});
+      router.push("/dashboard");
+    } else {
+      router.push("/assessment");
+    }
   }
 
   const canContinue =
@@ -308,7 +326,11 @@ export default function OnboardingPage() {
                 disabled={!canContinue || isSubmitting}
                 className="h-11 px-5 font-semibold"
               >
-                {isSubmitting ? "Saving..." : "Finish onboarding"}
+                {isSubmitting
+                  ? "Saving..."
+                  : quizDone
+                    ? "Finish onboarding"
+                    : "Finish — take the quiz"}
               </Button>
             )}
           </div>
