@@ -24,7 +24,13 @@ except ImportError:  # python-dotenv absent → process env only, still valid
 
 
 class Settings(BaseModel):
+    # Comma-separated list of allowed browser origins. More than one exists
+    # during a domain migration (custom domain + the old .vercel.app URL).
     frontend_url: str = "http://localhost:3000"
+
+    @property
+    def frontend_urls(self) -> list[str]:
+        return [u.strip().rstrip("/") for u in self.frontend_url.split(",") if u.strip()]
 
     supabase_url: str = "http://localhost:54321"
     supabase_publishable_key: str = ""
