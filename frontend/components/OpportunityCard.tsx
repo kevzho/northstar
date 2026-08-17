@@ -5,6 +5,7 @@
  * the cheapest negative signal the profile can collect.
  */
 import Link from "next/link";
+import { FieldPlanet } from "@/components/decor/field-planets";
 import type { Opportunity, OpportunityField, OpportunityType } from "@/lib/types";
 
 const fieldLabels: Record<OpportunityField, string> = {
@@ -83,7 +84,8 @@ export function OpportunityCard({
       </p>
       <div className="mt-4 flex items-center justify-between gap-3">
         <span className="flex items-center gap-2">
-          <span className="text-xs font-semibold text-aurora">
+          <span className="flex items-center gap-1.5 text-xs font-semibold text-aurora">
+            <FieldPlanet field={opportunity.field} className="h-4 w-4" />
             {fieldLabels[opportunity.field]}
           </span>
           {opportunity.location_scope ? (

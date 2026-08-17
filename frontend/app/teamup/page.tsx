@@ -13,7 +13,9 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { AppNav } from "@/components/AppNav";
+import { FieldPlanet } from "@/components/decor/field-planets";
 import { ReportDialog, type ReportTarget } from "@/components/ReportDialog";
+import type { OpportunityField } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { findArchetype } from "@/lib/plan";
@@ -230,7 +232,7 @@ export default function TeamupPage() {
                 </section>
               ) : (
                 <p className="mt-8 font-mono text-sm text-muted-foreground">
-                  Finding students to build with…
+                  Scanning for co-builders in your orbit…
                 </p>
               )
             ) : (
@@ -273,8 +275,12 @@ export default function TeamupPage() {
                   {candidate.fields.map((field) => (
                     <span
                       key={field}
-                      className="border border-border px-2 py-0.5 font-mono text-[11px] text-muted-foreground"
+                      className="flex items-center gap-1 border border-border px-2 py-0.5 font-mono text-[11px] text-muted-foreground"
                     >
+                      <FieldPlanet
+                        field={field as OpportunityField}
+                        className="h-3 w-3"
+                      />
                       {fieldLabels[field] ?? field}
                     </span>
                   ))}

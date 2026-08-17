@@ -15,8 +15,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AppNav } from "@/components/AppNav";
+import { FieldPlanet } from "@/components/decor/field-planets";
 import { Button } from "@/components/ui/button";
 import { findArchetype } from "@/lib/plan";
+import type { OpportunityField } from "@/lib/types";
 import { fetchDiscover, sendFriendRequest, type Peer } from "@/lib/api";
 
 const fieldLabels: Record<string, string> = {
@@ -103,7 +105,7 @@ export default function DiscoverPage() {
           </section>
         ) : peers === null ? (
           <p className="mt-10 font-mono text-sm text-muted-foreground">
-            Finding students who share your interests...
+            Scanning for students in your orbit...
           </p>
         ) : peers.length === 0 ? (
           <section className="rounded-lg border bg-card mt-10 p-8 text-center">
@@ -161,8 +163,12 @@ export default function DiscoverPage() {
                     {peer.shared_fields.map((field) => (
                       <span
                         key={field}
-                        className="border border-border px-2 py-0.5 font-mono text-[11px] text-muted-foreground"
+                        className="flex items-center gap-1 border border-border px-2 py-0.5 font-mono text-[11px] text-muted-foreground"
                       >
+                        <FieldPlanet
+                          field={field as OpportunityField}
+                          className="h-3 w-3"
+                        />
                         {fieldLabels[field] ?? field}
                       </span>
                     ))}

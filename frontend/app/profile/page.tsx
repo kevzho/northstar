@@ -25,6 +25,7 @@ import {
 import { useStoredAnswers } from "@/lib/use-assessment";
 import { useEffect, useState } from "react";
 import { fetchTimeline } from "@/lib/api";
+import { FieldPlanet } from "@/components/decor/field-planets";
 import { ProfileDetailsCard } from "@/components/ProfileDetailsCard";
 import { SharingCard } from "@/components/SharingCard";
 import type { OpportunityField, TimelineEvent } from "@/lib/types";
@@ -212,8 +213,8 @@ export default function ProfilePage() {
             Field interest
           </h2>
           <p className="mt-1 text-xs leading-5 text-muted-foreground">
-            Where your answers pointed, as shares of a whole — the six numbers
-            always sum to 100.
+            Ten worlds, one sky — your answers as shares of a whole, always
+            summing to 100.
           </p>
           {serverShift || shifts.length > 0 ? (
             <p className="mt-2 font-mono text-xs text-star">
@@ -226,7 +227,8 @@ export default function ProfilePage() {
             {orderedFields.map((field) => (
               <div key={field}>
                 <div className="mb-2 flex items-center justify-between gap-4">
-                  <span className="text-sm text-foreground">
+                  <span className="flex items-center gap-2 text-sm text-foreground">
+                    <FieldPlanet field={field} className="h-5 w-5 text-aurora" />
                     {fieldLabels[field]}
                   </span>
                   <span className="font-mono text-sm text-star">

@@ -4,6 +4,7 @@
  * spacing, the toggle, and future nav items change in exactly one place.
  */
 import Link from "next/link";
+import { StarGlyph } from "@/components/decor/star-glyph";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 export function AppNav({
@@ -17,8 +18,12 @@ export function AppNav({
 }) {
   return (
     <div className="flex items-center justify-between border-b border-border pb-5">
-      <Link href={homeHref} className="h-display text-xl text-foreground">
-        Northstar
+      <Link
+        href={homeHref}
+        className="flex items-center gap-2 text-foreground"
+      >
+        <StarGlyph className="h-3.5 w-3.5 text-star" />
+        <span className="h-display text-xl">Northstar</span>
       </Link>
       <div className="flex items-center gap-3">
         {right}

@@ -107,7 +107,7 @@ export default function DashboardPage() {
     return (
       <main className="flex min-h-screen items-center justify-center px-6">
         <p className="font-mono text-sm text-muted-foreground">
-          {checking ? "Checking your profile..." : "Loading Northstar..."}
+          {checking ? "Reading your charts..." : "Bringing the sky into focus..."}
         </p>
       </main>
     );
@@ -189,7 +189,7 @@ export default function DashboardPage() {
         />
 
         <header className="py-10">
-          <p className="eyebrow">Signed in</p>
+          <p className="eyebrow">Mission control</p>
           <h1 className="h-display mt-3 text-4xl text-foreground">
             Welcome{studentName ? `, ${studentName.split(" ")[0]}` : ""}.
           </h1>

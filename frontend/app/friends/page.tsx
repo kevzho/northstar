@@ -145,7 +145,7 @@ export default function FriendsPage() {
         />
 
         <header className="mt-10">
-          <p className="eyebrow">Friends</p>
+          <p className="eyebrow">Your constellation</p>
           <h1 className="h-display mt-3 text-4xl text-foreground">
             Compare trajectories
           </h1>

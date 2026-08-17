@@ -268,6 +268,21 @@ button:disabled {
   animation: polaris-pulse 4s ease-in-out 3s infinite;
 }
 
+/* The in-app sky (components/decor/sky.tsx): a few stars breathe. */
+@keyframes sky-twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.sky-twinkle {
+  animation: sky-twinkle 7s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .constellation-line {
     animation: none;
@@ -278,6 +293,9 @@ button:disabled {
     opacity: 1;
   }
   .polaris-halo {
+    animation: none;
+  }
+  .sky-twinkle {
     animation: none;
   }
 }

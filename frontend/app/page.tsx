@@ -15,6 +15,7 @@ import { AnimatedGroup } from "@/components/motion/animated-group";
 import { InView } from "@/components/motion/in-view";
 import { TextEffect } from "@/components/motion/text-effect";
 import { Planet, Ship } from "@/components/decor/voyage";
+import { StarGlyph } from "@/components/decor/star-glyph";
 import { SiteFooter } from "@/components/SiteFooter";
 
 /* three.js stays out of the initial bundle; the sky fades in after mount. */
@@ -45,23 +46,6 @@ const waypoints = [
       "A TF-IDF match engine ranks curated STEM programs against your interests and goals, explains every score, and maps the pathways between them.",
   },
 ];
-
-/* The Northstar mark — a four-point star with a counter-star cut out. */
-function StarGlyph({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 100 100"
-      aria-hidden="true"
-      className={className}
-      fill="currentColor"
-    >
-      <path
-        fillRule="evenodd"
-        d="M50 0Q56 40 100 50 56 60 50 100 44 60 0 50 44 40 50 0ZM50 28Q54 46 72 50 54 54 50 72 46 54 28 50 46 46 50 28Z"
-      />
-    </svg>
-  );
-}
 
 /*
  * Ursa Minor, hand-plotted. The line draws itself on load (pathLength

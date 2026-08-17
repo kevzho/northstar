@@ -7,6 +7,7 @@ import {
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import { SentryInit } from "@/components/SentryInit";
+import { Sky } from "@/components/decor/sky";
 import { LanguageProvider } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -59,6 +60,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <SentryInit />
+          <Sky />
           <LanguageProvider>{children}</LanguageProvider>
         </ThemeProvider>
       </body>
