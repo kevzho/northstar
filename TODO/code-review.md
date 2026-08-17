@@ -168,3 +168,13 @@ until it sounds like you. Tiers 3–4 are understand/skim.
 - [ ] Run `review_candidates.py` on the ~700 new non-CS/volunteer
       candidates soon — the volunteer entries especially are
       question-heavy and need the human pass (5794072).
+
+- [ ] TIER 2: the merged onboarding -> quiz flow in
+      `frontend/app/onboarding/page.tsx` — finishing onboarding routes
+      to /assessment unless stored answers already exist, in which case
+      they sync to the new account; confirm you want returning students
+      (edit-profile path) to land back on the dashboard, not the quiz
+      (47524de).
+- [ ] TIER 3: landing nav lost its "Start assessment" button; the only
+      anonymous quiz entrance is now the hero's "Try the assessment
+      first" — check the copy still earns that placement (47524de).
