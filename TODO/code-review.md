@@ -127,3 +127,27 @@ until it sounds like you. Tiers 3–4 are understand/skim.
       regeneration command when the drift test reds (84f2bb3).
 - [ ] Run `backend/scripts/review_candidates.py` once for real — the
       review session IS the fresh catalog (84f2bb3).
+
+- [ ] TIER 1: the match handshake in `backend/app/main.py`
+      (/teamup/interest) — upsert my decision, check the reciprocal row,
+      upgrade/insert an accepted friendship; convince yourself a
+      one-sided "interested" can never leak to the target (4684902).
+- [ ] TIER 1: block semantics — `blocked_ids` in `backend/app/social.py`
+      is a two-way wall enforced in /discover, /friends (request), and
+      both teamup routes, and always 404s identically to "not found";
+      verify no route was missed (4684902).
+- [ ] TIER 2: safety copy in `frontend/app/teamup/page.tsx` and
+      `components/ReportDialog.tsx` — the collaborator-not-dating
+      framing and the report/block promises are product voice and
+      CAC-judge-facing; every sentence should be one you'd defend
+      (4684902).
+- [ ] TIER 2: `teamup_candidates` keeps zero-affinity students in the
+      deck (unlike discover) and hides handles of private profiles —
+      decide if you agree with both choices (4684902).
+- [ ] TIER 3: RLS in
+      `supabase/migrations/20260816200000_teamup_matching.sql` — reports
+      are insert-only for students (moderation is service-role), swipes
+      readable only by their author (4684902).
+- [ ] Decide the moderation loop: reports land in an unread table today;
+      pick a cadence (or an email trigger) so "a human reviews it" stays
+      true (4684902).
