@@ -59,23 +59,34 @@ except ImportError:
 
 USER_AGENT = "northstar-opportunity-scraper/0.2 (student project; contact: dev.thorfinn@gmail.com)"
 
-# (subreddit, audience) — the audience seeds each candidate's
-# audience_guess so reviewed keepers land on the right catalog shelf.
-SUBREDDITS: list[tuple[str, str]] = [
-    ("summerprogramresults", "high_school"),
-    ("HSSummerPrograms", "high_school"),
-    ("scholarships", "high_school"),
-    ("highschool", "high_school"),
-    ("ApplyingToCollege", "high_school"),
-    ("internships", "college"),
-    ("csMajors", "college"),
-    ("premed", "college"),
-    ("REU", "college"),
-    ("FinancialCareers", "college"),
-    ("quant", "college"),
-    ("chemistry", "high_school"),
-    ("EngineeringStudents", "college"),
-    ("labrats", "college"),
+# (subreddit, audience, field) — audience seeds each candidate's
+# audience_guess so reviewed keepers land on the right catalog shelf;
+# field is the default stamped when no FIELD_HINTS text hint overrides
+# it, which is what makes single-field subreddits (r/FRC, r/Debate)
+# worth sweeping: their posts rarely repeat the field in the title.
+SUBREDDITS: list[tuple[str, str, str]] = [
+    ("summerprogramresults", "high_school", "interdisciplinary"),
+    ("HSSummerPrograms", "high_school", "interdisciplinary"),
+    ("scholarships", "high_school", "interdisciplinary"),
+    ("highschool", "high_school", "interdisciplinary"),
+    ("ApplyingToCollege", "high_school", "interdisciplinary"),
+    ("internships", "college", "interdisciplinary"),
+    ("csMajors", "college", "cs"),
+    ("premed", "college", "biology"),
+    ("REU", "college", "interdisciplinary"),
+    ("FinancialCareers", "college", "business"),
+    ("quant", "college", "business"),
+    ("chemistry", "high_school", "biology"),
+    ("EngineeringStudents", "college", "engineering"),
+    ("labrats", "college", "biology"),
+    # Field-specific sweeps (verified public + SFW, 2026-08):
+    ("MathOlympiad", "high_school", "math"),
+    ("PhysicsStudents", "college", "physics"),
+    ("FRC", "high_school", "engineering"),
+    ("Debate", "high_school", "humanities"),
+    ("ArtistLounge", "high_school", "design"),
+    ("biology", "college", "biology"),
+    ("volunteer", "high_school", "interdisciplinary"),
 ]
 
 # Targeted searches sweep further back than /new can reach.
@@ -145,6 +156,21 @@ FINANCE_SEARCHES = [
 ]
 FINANCE_SEARCH_SUBREDDITS = ["FinancialCareers", "quant"]
 
+# Volunteer sweep — service hours are the extracurricular every student
+# needs and the catalog's newest type. r/volunteer posts real openings;
+# the general HS subreddits carry "where do I volunteer" threads whose
+# answers name organizations worth cataloging.
+VOLUNTEER_SEARCHES: list[tuple[str, str]] = [
+    ("high school volunteer opportunity", "interdisciplinary"),
+    ("virtual volunteering students", "interdisciplinary"),
+    ("community service hours program", "interdisciplinary"),
+    ("hospital volunteer high school", "health"),
+    ("environmental volunteering high school", "biology"),
+    ("volunteer tutoring program", "interdisciplinary"),
+    ("museum volunteer program", "humanities"),
+]
+VOLUNTEER_SEARCH_SUBREDDITS = ["volunteer", "highschool", "ApplyingToCollege"]
+
 PAGES_PER_LISTING = 4  # 4 x 75 = up to 300 posts per subreddit per run
 
 OAUTH_BASE = "https://oauth.reddit.com"
@@ -196,14 +222,23 @@ def build_client() -> Client:
 
 
 # A post has to look like an opportunity, not a question about one.
+# Volunteer terms stay phrase-shaped ("volunteers needed", "volunteer
+# opportunity", "service hours"): the bare word would pass every personal
+# story on r/volunteer, where all 300 listing posts contain it.
 INCLUDE = re.compile(
     r"\b(program|internship|competition|scholarship|fellowship|research|"
-    r"hackathon|olympiad|summer|apply|applications?\s+open|deadline)\b",
+    r"hackathon|olympiad|summer|apply|applications?\s+open|deadline|"
+    r"volunteers?\s+(?:needed|wanted)|volunteer(?:ing)?\s+opportunit\w*|"
+    r"service\s+hours)\b",
     re.IGNORECASE,
 )
 EXCLUDE = re.compile(
     r"\b(chance me|rejected|rant|meme|advice\??$|help\??$|should i|"
-    r"is it worth|anyone else|results thread)\b",
+    r"is it worth|anyone else|results thread)\b"
+    # Seeker posts, not offers: someone asking where to find an
+    # opportunity is not one. Matters most on r/volunteer, where half
+    # the listing is "Looking for volunteer opportunities in <city>?".
+    r"|^\s*looking for\b|\bwhere (?:can|do|should) i\b|\bhow (?:do|can|should) i\b",
     re.IGNORECASE,
 )
 
@@ -366,7 +401,7 @@ def main() -> None:
         pool[candidate["url"]] = candidate
         new_count += 1
 
-    for sub, audience in SUBREDDITS:
+    for sub, audience, field_default in SUBREDDITS:
         try:
             posts = harvest_listing(client, sub)
         except requests.RequestException as error:
@@ -375,7 +410,7 @@ def main() -> None:
             continue
         before = new_count
         for post in posts:
-            consider(post, f"r/{sub}", audience=audience)
+            consider(post, f"r/{sub}", field_default, audience)
         print(f"r/{sub}: {len(posts)} posts, {new_count - before} new candidates")
 
     def run_searches(
@@ -421,6 +456,11 @@ def main() -> None:
         [(query, "business") for query in FINANCE_SEARCHES],
         FINANCE_SEARCH_SUBREDDITS,
         "college",
+    )
+    run_searches(
+        VOLUNTEER_SEARCHES,
+        VOLUNTEER_SEARCH_SUBREDDITS,
+        "high_school",
     )
 
     ordered = sorted(pool.values(), key=lambda c: c.get("score", 0), reverse=True)
