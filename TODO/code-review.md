@@ -195,3 +195,14 @@ until it sounds like you. Tiers 3–4 are understand/skim.
       rows from equal boost stacks, max ~0.68) — separate issue from
       the archetype 99% bug; consider spreading or hiding the % on
       opportunity cards (3db7a8a).
+
+- [ ] TIER 2: the ten field-planet forms in
+      `frontend/components/decor/field-planets.tsx` — each glyph is a
+      mnemonic claim about a field; redraw any that don't feel like
+      yours, and check them at 12px in both themes (1080d4e).
+- [ ] TIER 3: `frontend/components/decor/sky.tsx` — seeded PRNG sky,
+      why it skips "/" (landing has the three.js field), and the
+      reduced-motion guard in globals.css (1080d4e).
+- [ ] TIER 2: the atlas-voice copy pass (Mission control, Your
+      constellation, scanning/orbit loading strings) — flavor must never
+      beat clarity; revert any line that confuses a first-time user.
