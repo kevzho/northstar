@@ -215,3 +215,14 @@ until it sounds like you. Tiers 3–4 are understand/skim.
       upcoming derivation in MissionBoard (first incomplete mission) and
       the assessment page (first unanswered prompt); check both in light
       theme where Polaris deepens to #b26a1f.
+
+- [ ] TIER 1: `mission_counts` batching in `backend/app/social.py` —
+      discover's per-candidate count queries were the page lag; verify
+      the one-query .in_() version returns identical numbers (aeaadf5).
+- [ ] TIER 2: `clean_social_links` policy — the four allowlisted
+      platforms, https-prepend, and 422 behavior; decide if minors
+      publishing LinkedIn/YouTube links on public records needs a
+      consent-page mention (aeaadf5).
+- [ ] TIER 3: teamup detail overlay shows only pool-consented fields;
+      socials deliberately require visiting the public record — keep
+      that boundary if the overlay grows (aeaadf5).
