@@ -104,6 +104,21 @@ export default function PublicProfilePage({
                   ? `Charting toward ${archetype.label.toLowerCase()} — every step below is logged evidence, not a claim.`
                   : "Every step below is logged evidence, not a claim."}
               </p>
+              {Object.keys(profile.social_links ?? {}).length > 0 ? (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {Object.entries(profile.social_links).map(([key, url]) => (
+                    <a
+                      key={key}
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="border border-border px-2.5 py-1 font-mono text-xs text-aurora transition-colors hover:border-star hover:text-star"
+                    >
+                      {key} ↗
+                    </a>
+                  ))}
+                </div>
+              ) : null}
             </header>
 
             {orderedFields.length > 0 ? (

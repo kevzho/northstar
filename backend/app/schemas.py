@@ -65,6 +65,9 @@ class StudentProfile(BaseModel):
     # Sharing: the public-page name and the opt-in toggle (see /sharing).
     handle: Optional[str] = None
     public_profile: bool = False
+    # Allowlisted self-published links (github/website/youtube/linkedin),
+    # validated by app/social.py:clean_social_links on write.
+    social_links: Optional[dict[str, str]] = None
     onboarded: bool = False
     # ISO 8601 timestamp when the student accepted the IRB-style data policy
     # during onboarding. NULL means consent has not been recorded.
@@ -144,6 +147,9 @@ class StudentProfileCreate(BaseModel):
     location_pref: LocationPref = LocationPref.either
     onboarded: bool = False
     consent: bool = False
+    # Optional: when present it REPLACES the stored links (after
+    # validation); when absent/None the column is left untouched.
+    social_links: Optional[dict[str, str]] = None
 
 
 class Bookmark(BaseModel):

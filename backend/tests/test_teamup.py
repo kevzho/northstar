@@ -24,6 +24,9 @@ class FakeQuery:
     def or_(self, *_args):
         return self
 
+    def in_(self, *_args):
+        return self
+
     def limit(self, *_args):
         return self
 
@@ -107,3 +110,27 @@ def test_blocked_ids_covers_both_directions() -> None:
         ]
     })
     assert blocked_ids(sb, "me") == {"them", "other"}
+
+
+def test_clean_social_links_normalizes_and_rejects() -> None:
+    from app.social import clean_social_links
+
+    cleaned = clean_social_links({
+        "github": "github.com/kev",
+        "website": "https://kev.dev",
+        "tiktok": "https://tiktok.com/@kev",  # not allowlisted -> dropped
+        "youtube": "",
+    })
+    assert cleaned == {
+        "github": "https://github.com/kev",
+        "website": "https://kev.dev",
+    }
+
+    import pytest
+
+    with pytest.raises(ValueError):
+        clean_social_links({"github": "not a url"})
+    with pytest.raises(ValueError):
+        clean_social_links({"website": "x" * 300})
+    with pytest.raises(ValueError):
+        clean_social_links("github.com/kev")  # type: ignore[arg-type]

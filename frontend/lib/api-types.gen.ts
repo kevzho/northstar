@@ -971,6 +971,10 @@ export interface components {
              * @default false
              */
             public_profile: boolean;
+            /** Social Links */
+            social_links?: {
+                [key: string]: string;
+            } | null;
             /** Trait Scores */
             trait_scores?: {
                 [key: string]: number;
@@ -1012,6 +1016,10 @@ export interface components {
              * @default false
              */
             onboarded: boolean;
+            /** Social Links */
+            social_links?: {
+                [key: string]: string;
+            } | null;
         };
         /** ValidationError */
         ValidationError: {

@@ -50,6 +50,7 @@ export default function TeamupPage() {
   const [deckLoaded, setDeckLoaded] = useState(false);
   const [matched, setMatched] = useState<TeamupCandidate | null>(null);
   const [reporting, setReporting] = useState<ReportTarget | null>(null);
+  const [detail, setDetail] = useState<TeamupCandidate | null>(null);
   const [editingPitch, setEditingPitch] = useState(false);
 
   const loadDeck = useCallback(() => {
@@ -63,12 +64,15 @@ export default function TeamupPage() {
 
   useEffect(() => {
     let mounted = true;
+    // Both requests fire at once: for enrolled students that halves the
+    // wait (the old flow loaded settings, THEN the deck). For everyone
+    // else the candidates call 409s and is ignored.
+    loadDeck();
     fetchTeamupSettings()
       .then((settings) => {
         if (!mounted) return;
         setEnabled(settings.enabled);
         setPitch(settings.pitch);
-        if (settings.enabled) loadDeck();
       })
       .catch(() => {
         if (mounted) setSignedOut(true);
@@ -251,11 +255,11 @@ export default function TeamupPage() {
                       </Link>
                     ) : null}
                   </div>
-                  {candidate.grade ? (
-                    <span className="font-mono text-xs text-muted-foreground">
-                      grade {candidate.grade}
-                    </span>
-                  ) : null}
+                  <span className="font-mono text-xs text-muted-foreground">
+                    {candidate.grade ? `grade ${candidate.grade} · ` : ""}
+                    {candidate.missions_completed} mission
+                    {candidate.missions_completed === 1 ? "" : "s"}
+                  </span>
                 </div>
 
                 {candidate.pitch ? (
@@ -301,6 +305,12 @@ export default function TeamupPage() {
                     Skip
                   </Button>
                   <button
+                    onClick={() => setDetail(candidate)}
+                    className="ml-auto text-xs font-semibold text-aurora underline-offset-2 hover:underline"
+                  >
+                    Full details
+                  </button>
+                  <button
                     onClick={() =>
                       setReporting({
                         student_id: candidate.student_id,
@@ -308,7 +318,7 @@ export default function TeamupPage() {
                         handle: candidate.handle,
                       })
                     }
-                    className="ml-auto text-xs text-muted-foreground underline-offset-2 hover:underline"
+                    className="text-xs text-muted-foreground underline-offset-2 hover:underline"
                   >
                     Report this profile
                   </button>
@@ -363,6 +373,87 @@ export default function TeamupPage() {
             </section>
           </>
         )}
+
+        {detail ? (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 p-6 backdrop-blur-sm"
+            role="dialog"
+            aria-modal="true"
+            aria-label={`About ${detail.name}`}
+            onClick={() => setDetail(null)}
+          >
+            <div
+              className="w-full max-w-md rounded-lg border bg-card p-6"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className="flex items-baseline justify-between gap-3">
+                <h2 className="text-xl font-semibold text-foreground">
+                  {detail.name}
+                </h2>
+                <span className="font-mono text-xs text-muted-foreground">
+                  {detail.grade ? `grade ${detail.grade}` : ""}
+                </span>
+              </div>
+              {detail.pitch ? (
+                <p className="mt-3 text-sm leading-6 text-foreground">
+                  &ldquo;{detail.pitch}&rdquo;
+                </p>
+              ) : null}
+              <dl className="mt-4 grid gap-2 text-sm">
+                <div className="flex justify-between gap-3">
+                  <dt className="text-muted-foreground">Charting</dt>
+                  <dd className="text-foreground">
+                    {detail.chosen_archetype
+                      ? findArchetype(detail.chosen_archetype)?.label ??
+                        "A path of their own"
+                      : "No path chosen yet"}
+                  </dd>
+                </div>
+                <div className="flex justify-between gap-3">
+                  <dt className="text-muted-foreground">Missions completed</dt>
+                  <dd className="font-mono text-foreground">
+                    {detail.missions_completed}
+                  </dd>
+                </div>
+              </dl>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {detail.fields.map((field) => (
+                  <span
+                    key={field}
+                    className="flex items-center gap-1 border border-border px-2 py-0.5 font-mono text-[11px] text-muted-foreground"
+                  >
+                    <FieldPlanet
+                      field={field as OpportunityField}
+                      className="h-3 w-3"
+                    />
+                    {fieldLabels[field] ?? field}
+                  </span>
+                ))}
+              </div>
+              <div className="mt-5 flex flex-wrap items-center gap-2">
+                {detail.handle ? (
+                  <Button
+                    variant="outline"
+                    render={<Link href={`/p/${detail.handle}`} />}
+                    className="h-10 px-4"
+                  >
+                    View public record →
+                  </Button>
+                ) : (
+                  <p className="text-xs text-muted-foreground">
+                    Their full record unlocks if you match.
+                  </p>
+                )}
+                <Button
+                  onClick={() => setDetail(null)}
+                  className="ml-auto h-10 px-4"
+                >
+                  Back to the deck
+                </Button>
+              </div>
+            </div>
+          </div>
+        ) : null}
 
         {reporting ? (
           <ReportDialog

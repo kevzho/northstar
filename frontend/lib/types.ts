@@ -141,6 +141,7 @@ export type PublicProfile = {
   field_scores: Record<string, number> | null;
   chosen_archetype: string | null;
   chosen_kind: string | null;
+  social_links: Record<string, string>;
   missions: { title: string; trait_focus: string; evidence: string; at: string | null }[];
   outcomes: { title: string; status: string; at: string | null }[];
 };

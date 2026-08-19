@@ -86,6 +86,8 @@ export async function saveStudentProfile(
     audience?: StudentProfile["audience"];
     location_pref?: StudentProfile["location_pref"];
     consent?: boolean;
+    /** When present it replaces the stored links; absent leaves them alone. */
+    social_links?: Record<string, string>;
   },
 ): Promise<StudentProfile> {
   return (await authedFetch("/students", {
@@ -390,6 +392,7 @@ export type TeamupCandidate = {
   chosen_archetype: string | null;
   pitch: string;
   reasons: string[];
+  missions_completed: number;
 };
 
 /** Ranked collaborator candidates; 409 until the student opts in. */

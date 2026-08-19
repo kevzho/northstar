@@ -25,6 +25,57 @@ TEAMUP_PITCH_MAX = 240
 REPORT_REASONS = ("inappropriate", "harassment", "impersonation", "spam", "other")
 REPORT_DETAILS_MAX = 2000
 
+SOCIAL_KEYS = ("github", "website", "youtube", "linkedin")
+SOCIAL_URL_MAX = 200
+
+
+def clean_social_links(links: dict) -> dict:
+    """Validate and normalize the student-entered social links.
+
+    Allowlisted keys only, https:// prepended when the scheme is missing,
+    and anything that does not parse to an http(s) URL with a dotted host
+    raises ValueError (the route turns that into a 422).
+    """
+    from urllib.parse import urlparse
+
+    if not isinstance(links, dict):
+        raise ValueError("social_links must be an object")
+    out: dict[str, str] = {}
+    for key in SOCIAL_KEYS:
+        url = str(links.get(key, "") or "").strip()
+        if not url:
+            continue
+        if len(url) > SOCIAL_URL_MAX:
+            raise ValueError(f"{key} link is too long")
+        if not url.lower().startswith(("http://", "https://")):
+            url = "https://" + url
+        parsed = urlparse(url)
+        if parsed.scheme not in ("http", "https") or "." not in parsed.netloc:
+            raise ValueError(f"{key} is not a valid link")
+        out[key] = url
+    return out
+
+
+def mission_counts(sb, student_ids: list[str]) -> dict[str, int]:
+    """Completed-mission counts for a set of students, in ONE query.
+
+    Both discover and team-up used to fire one count query per candidate,
+    which is where the pages' lag came from — a page of 12 candidates was
+    12 extra round-trips.
+    """
+    if not student_ids:
+        return {}
+    rows = (
+        sb.table("mission_completions")
+        .select("student_id")
+        .in_("student_id", student_ids)
+        .execute()
+    ).data or []
+    counts: dict[str, int] = {}
+    for r in rows:
+        counts[r["student_id"]] = counts.get(r["student_id"], 0) + 1
+    return counts
+
 
 def valid_handle(handle: str) -> bool:
     return bool(HANDLE_RE.fullmatch(handle))
@@ -106,28 +157,25 @@ def discover_peers(sb, me: dict, exclude_ids: set[str], limit: int = 12) -> list
         score, reasons = affinity(me, other)
         if score <= 0:
             continue
-        # Missions completed — the "what they're doing" learning hook.
-        completed = (
-            sb.table("mission_completions")
-            .select("id", count="exact")
-            .eq("student_id", other["id"])
-            .execute()
-        )
         scored.append({
             "student_id": other["id"],
             "name": first_name(other.get("name")),
             "handle": other.get("handle"),
             "shared_fields": leading_fields(other.get("field_scores")),
             "chosen_archetype": other.get("chosen_archetype"),
-            "missions_completed": completed.count or 0,
             "reasons": reasons,
             "_score": score,
         })
 
     scored.sort(key=lambda p: p["_score"], reverse=True)
-    for p in scored:
+    top = scored[:limit]
+    # Missions completed — the "what they're doing" learning hook —
+    # batched into one query for just the page that will be shown.
+    counts = mission_counts(sb, [p["student_id"] for p in top])
+    for p in top:
+        p["missions_completed"] = counts.get(p["student_id"], 0)
         del p["_score"]
-    return scored[:limit]
+    return top
 
 
 def blocked_ids(sb, student_id: str) -> set[str]:
@@ -188,9 +236,12 @@ def teamup_candidates(sb, me: dict, exclude_ids: set[str], limit: int = 8) -> li
         })
 
     scored.sort(key=lambda p: p["_score"], reverse=True)
-    for p in scored:
+    top = scored[:limit]
+    counts = mission_counts(sb, [p["student_id"] for p in top])
+    for p in top:
+        p["missions_completed"] = counts.get(p["student_id"], 0)
         del p["_score"]
-    return scored[:limit]
+    return top
 
 
 def public_payload(sb, student: dict) -> dict:
@@ -226,6 +277,7 @@ def public_payload(sb, student: dict) -> dict:
         "field_scores": student.get("field_scores"),
         "chosen_archetype": student.get("chosen_archetype"),
         "chosen_kind": student.get("chosen_kind"),
+        "social_links": student.get("social_links") or {},
         "missions": [
             {
                 "title": (c.get("missions") or {}).get("title", ""),

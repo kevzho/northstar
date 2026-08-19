@@ -40,6 +40,7 @@ export function ProfileDetailsCard() {
   const [grade, setGrade] = useState("");
   const [interests, setInterests] = useState<string[]>([]);
   const [goals, setGoals] = useState("");
+  const [socials, setSocials] = useState<Record<string, string>>({});
   const [state, setState] = useState<"idle" | "saving" | "saved" | "failed">(
     "idle",
   );
@@ -56,6 +57,7 @@ export function ProfileDetailsCard() {
         setGrade(me.grade ?? "");
         setInterests(Array.isArray(me.interests) ? me.interests : []);
         setGoals(me.goals ?? "");
+        setSocials(me.social_links ?? {});
         setLoaded(true);
       } catch {
         // Signed out or no row yet — the card simply doesn't render.
@@ -85,6 +87,7 @@ export function ProfileDetailsCard() {
         audience,
         location_pref: locationPref,
         onboarded: true,
+        social_links: socials,
       });
       setState("saved");
     } catch {
@@ -233,6 +236,40 @@ export function ProfileDetailsCard() {
           placeholder="What do you want out of the next two years?"
         />
       </label>
+
+      <div className="mt-5">
+        <span className="text-sm font-semibold text-foreground">Links</span>
+        <p className="mt-1 text-xs leading-5 text-muted-foreground">
+          Shown on your public record only — and only if you made it public.
+        </p>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          {(
+            [
+              ["github", "GitHub"],
+              ["website", "Personal site / portfolio"],
+              ["youtube", "YouTube"],
+              ["linkedin", "LinkedIn"],
+            ] as const
+          ).map(([key, label]) => (
+            <label key={key} className="grid gap-1.5">
+              <span className="text-xs font-semibold text-muted-foreground">
+                {label}
+              </span>
+              <Input
+                value={socials[key] ?? ""}
+                onChange={(event) =>
+                  setSocials((current) => ({
+                    ...current,
+                    [key]: event.target.value,
+                  }))
+                }
+                placeholder={key === "github" ? "github.com/you" : "https://…"}
+                className="h-10 bg-panel-raised px-3 font-mono text-sm"
+              />
+            </label>
+          ))}
+        </div>
+      </div>
 
       <div className="mt-5 flex items-center gap-3">
         <Button

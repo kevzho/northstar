@@ -423,6 +423,20 @@
             "title": "Public Profile",
             "type": "boolean"
           },
+          "social_links": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Social Links"
+          },
           "trait_scores": {
             "anyOf": [
               {
@@ -504,6 +518,20 @@
             "default": false,
             "title": "Onboarded",
             "type": "boolean"
+          },
+          "social_links": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Social Links"
           }
         },
         "title": "StudentProfileCreate",

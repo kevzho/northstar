@@ -79,7 +79,7 @@ def create_app() -> FastAPI:
         sb = get_supabase()
         row = (
             sb.table("students")
-            .select("id, name, email, grade, interests, goals, audience, location_pref, trait_scores, field_scores, handle, public_profile, onboarded, consented_at")
+            .select("id, name, email, grade, interests, goals, audience, location_pref, trait_scores, field_scores, handle, public_profile, social_links, onboarded, consented_at")
             .eq("id", user.id)
             .maybe_single()
             .execute()
@@ -117,6 +117,20 @@ def create_app() -> FastAPI:
         consent = row.pop("consent", False)
         if consent:
             row["consented_at"] = datetime.now(timezone.utc).isoformat()
+
+        # Same never-null-out contract for social links: absent means
+        # "leave the column alone", present means "replace after validation".
+        socials = row.pop("social_links", None)
+        if socials is not None:
+            from .social import clean_social_links
+
+            try:
+                row["social_links"] = clean_social_links(socials)
+            except ValueError as error:
+                raise HTTPException(
+                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    detail=str(error),
+                )
 
         sb = get_supabase()
         result = sb.table("students").upsert(row, returning="representation").execute()
@@ -413,7 +427,7 @@ def create_app() -> FastAPI:
         sb = get_supabase()
         row = (
             sb.table("students")
-            .select("id, name, handle, audience, trait_scores, field_scores, chosen_archetype, chosen_kind, public_profile")
+            .select("id, name, handle, audience, trait_scores, field_scores, chosen_archetype, chosen_kind, social_links, public_profile")
             .eq("handle", handle.lower())
             .maybe_single()
             .execute()
