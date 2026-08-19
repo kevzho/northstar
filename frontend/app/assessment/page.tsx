@@ -12,8 +12,8 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Progress } from "@/components/ui/progress";
 import { ScrollProgress } from "@/components/motion/scroll-progress";
+import { WaypointPath } from "@/components/decor/waypoints";
 import { useRouter } from "next/navigation";
 import { assessmentQuestions } from "@/lib/assessment";
 import { isComplete, scoreFieldInterests, scoreTraits } from "@/lib/scoring";
@@ -85,10 +85,23 @@ export default function AssessmentPage() {
           </div>
         </header>
 
-        <Progress
-          value={(answered / total) * 100}
-          aria-label="Assessment progress"
+        {/* Each prompt is a waypoint on the course; the warm node is
+            the first one still unanswered. */}
+        <WaypointPath
           className="mt-6"
+          ariaLabel={`Assessment progress: ${answered} of ${total} answered`}
+          steps={assessmentQuestions.map((question, index) => {
+            const firstOpen = assessmentQuestions.findIndex(
+              (q) => !answers[q.id],
+            );
+            return {
+              state: answers[question.id]
+                ? "done"
+                : index === firstOpen
+                  ? "current"
+                  : "upcoming",
+            };
+          })}
         />
 
         <section className="mt-8 grid gap-4">

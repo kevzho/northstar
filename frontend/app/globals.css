@@ -66,6 +66,11 @@
   /* Nebula glows behind the body — inverted by the light theme. */
   --glow-a: rgba(255, 255, 255, 0.06);
   --glow-b: rgba(255, 255, 255, 0.04);
+
+  /* Polaris — the one warm light in the monochrome sky. Reserved for a
+     single meaning: "you are here" (the current waypoint). */
+  --polaris: #ffc88a;
+  --polaris-glow: rgba(255, 200, 138, 0.45);
 }
 
 /*
@@ -100,6 +105,9 @@
 
   --glow-a: rgba(0, 0, 0, 0.04);
   --glow-b: rgba(0, 0, 0, 0.025);
+
+  --polaris: #b26a1f;
+  --polaris-glow: rgba(178, 106, 31, 0.3);
 }
 
 @theme inline {

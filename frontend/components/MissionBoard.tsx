@@ -19,6 +19,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { WaypointPath } from "@/components/decor/waypoints";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -173,6 +174,25 @@ export function MissionBoard({
 
       <div className="rounded-lg border bg-card p-5">
         <p className="eyebrow">Proof missions</p>
+        {!authFailed && missions.length > 0 ? (
+          (() => {
+            const firstOpen = missions.findIndex((m) => !completions.has(m.id));
+            return (
+              <WaypointPath
+                className="mt-4 max-w-xs"
+                ariaLabel={`Mission progress: ${completions.size} of ${missions.length} complete`}
+                steps={missions.map((m, i) => ({
+                  label: String(i + 1).padStart(2, "0"),
+                  state: completions.has(m.id)
+                    ? "done"
+                    : i === firstOpen
+                      ? "current"
+                      : "upcoming",
+                }))}
+              />
+            );
+          })()
+        ) : null}
         {authFailed ? (
           <p className="mt-3 text-sm leading-6 text-muted-foreground">
             Missions write evidence to your student record, so they need a
