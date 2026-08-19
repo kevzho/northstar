@@ -206,3 +206,12 @@ until it sounds like you. Tiers 3–4 are understand/skim.
 - [ ] TIER 2: the atlas-voice copy pass (Mission control, Your
       constellation, scanning/orbit loading strings) — flavor must never
       beat clarity; revert any line that confuses a first-time user.
+
+- [ ] TIER 2: the Polaris accent (--polaris in globals.css) — the
+      monochrome system now has exactly one warm color with exactly one
+      meaning ("you are here", the current waypoint); guard that rule in
+      future UI, or the identity dissolves into a normal accent color.
+- [ ] TIER 3: `frontend/components/decor/waypoints.tsx` — done/current/
+      upcoming derivation in MissionBoard (first incomplete mission) and
+      the assessment page (first unanswered prompt); check both in light
+      theme where Polaris deepens to #b26a1f.
