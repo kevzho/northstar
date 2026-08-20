@@ -226,3 +226,22 @@ until it sounds like you. Tiers 3–4 are understand/skim.
 - [ ] TIER 3: teamup detail overlay shows only pool-consented fields;
       socials deliberately require visiting the public record — keep
       that boundary if the overlay grows (aeaadf5).
+
+- [ ] TIER 2: `frontend/components/Guide.tsx` — the Polaris corner
+      guide's hand-written route map; every tip is a product claim, so
+      reread each one against what the page actually does today and
+      prune any that go stale as features change (c73188f).
+- [ ] TIER 2: guide z-order contract — the guide sits at z-40, modals
+      (report dialog, teamup detail) at z-50; new overlays must use
+      z-50+ or they'll render under the guide button (c73188f).
+- [ ] TIER 3: `frontend/components/decor/orbit-loader.tsx` — the one
+      loading treatment; if a page ever needs a skeleton instead of a
+      centered orbit, extend this file rather than hand-rolling
+      (c73188f).
+- [ ] TIER 3: flash-of-wrong-state fixes — friends waits on the fetch
+      before "No friends yet", futures gates on hydration via
+      useSyncExternalStore; the same trap exists for any new page
+      reading localStorage-backed answers (c73188f).
+- [ ] TIER 3: the sky comet (`.sky-comet`, 90s cycle) uses px translate
+      = SVG user units; if the sky viewBox ever changes, retune the
+      keyframes in globals.css (c73188f).
