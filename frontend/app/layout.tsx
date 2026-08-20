@@ -6,6 +6,7 @@ import {
 } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
+import { Guide } from "@/components/Guide";
 import { SentryInit } from "@/components/SentryInit";
 import { Sky } from "@/components/decor/sky";
 import { LanguageProvider } from "@/lib/i18n";
@@ -61,7 +62,10 @@ export default function RootLayout({
         >
           <SentryInit />
           <Sky />
-          <LanguageProvider>{children}</LanguageProvider>
+          <LanguageProvider>
+            {children}
+            <Guide />
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>

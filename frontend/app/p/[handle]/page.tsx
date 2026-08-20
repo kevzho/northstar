@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { findArchetype } from "@/lib/plan";
 import { fetchPublicProfile } from "@/lib/api";
 import type { PublicProfile } from "@/lib/types";
+import { LoadingSection } from "@/components/decor/orbit-loader";
 
 const fieldLabels: Record<string, string> = {
   cs: "Computer science",
@@ -89,9 +90,7 @@ export default function PublicProfilePage({
             </Button>
           </section>
         ) : !profile ? (
-          <p className="mt-16 text-center font-mono text-sm text-muted-foreground">
-            Loading record...
-          </p>
+          <LoadingSection label="Loading their record..." className="mt-16 flex flex-col items-center gap-4 text-center" />
         ) : (
           <>
             <header className="mt-10">

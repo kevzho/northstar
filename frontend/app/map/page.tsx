@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { AppNav } from "@/components/AppNav";
 import { useRouter } from "next/navigation";
 import * as d3 from "d3";
+import { LoadingSection } from "@/components/decor/orbit-loader";
 
 type GraphNode = {
   id: string;
@@ -299,11 +300,7 @@ export default function MapPage() {
         </section>
 
         {loading ? (
-          <section className="rounded-lg border bg-card mt-10 p-8 text-center">
-            <p className="font-mono text-sm text-muted-foreground">
-              Building your pathway map...
-            </p>
-          </section>
+          <LoadingSection label="Building your pathway map..." />
         ) : !data || data.nodes.length === 0 ? (
           <section className="rounded-lg border bg-card mt-10 p-8 text-center">
             <h2 className="text-xl font-semibold text-foreground">

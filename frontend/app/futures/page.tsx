@@ -9,7 +9,7 @@
  * lib/scoring.ts#selectFuturePaths, and every archetype shows its fit score.
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -29,6 +29,9 @@ import {
 import type { OpportunityField, StudentProfile } from "@/lib/types";
 import { useStoredAnswers } from "@/lib/use-assessment";
 import { useChosenPath, writeChosenPath } from "@/lib/use-chosen-path";
+import { LoadingSection } from "@/components/decor/orbit-loader";
+
+const emptySubscribe = () => () => {};
 
 export default function FuturesPage() {
   const router = useRouter();
@@ -58,6 +61,14 @@ export default function FuturesPage() {
   const quizFields = answers ? leadingFields(scoreFieldInterests(answers)) : [];
   const allFields = [...new Set([...fields, ...quizFields])];
   const paths = traits ? selectFuturePaths(traits, allFields) : null;
+  // Stored answers are always null during the server render; only after
+  // hydration does null mean "never took the quiz", so a student WITH a
+  // profile never sees the empty state flash.
+  const hydrated = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
   const ranked = traits ? rankArchetypes(traits, allFields) : null;
 
   function chart(path: FuturePath) {
@@ -95,7 +106,9 @@ export default function FuturesPage() {
           </div>
         </header>
 
-        {paths === null ? (
+        {!hydrated ? (
+          <LoadingSection label="Reading your trait chart..." className="mt-8 flex flex-col items-center gap-4 py-10 text-center" />
+        ) : paths === null ? (
           <section className="rounded-lg border bg-card mt-8 p-8 text-center">
             <h2 className="text-xl font-semibold text-foreground">
               No trait profile yet

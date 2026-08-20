@@ -11,6 +11,7 @@ import { traitLabels } from "@/lib/assessment";
 import { TRAIT_KEYS, scoreTraits } from "@/lib/scoring";
 import { useStoredAnswers } from "@/lib/use-assessment";
 import type { MatchResult, Outcome } from "@/lib/types";
+import { LoadingScreen } from "@/components/decor/orbit-loader";
 
 const outcomeLabels: Record<Outcome["status"], string> = {
   accepted: "Accepted",
@@ -105,11 +106,9 @@ export default function DashboardPage() {
 
   if (loading || checking) {
     return (
-      <main className="flex min-h-screen items-center justify-center px-6">
-        <p className="font-mono text-sm text-muted-foreground">
-          {checking ? "Reading your charts..." : "Bringing the sky into focus..."}
-        </p>
-      </main>
+      <LoadingScreen
+        label={checking ? "Reading your charts..." : "Bringing the sky into focus..."}
+      />
     );
   }
 

@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { findArchetype } from "@/lib/plan";
 import type { OpportunityField } from "@/lib/types";
 import { fetchDiscover, sendFriendRequest, type Peer } from "@/lib/api";
+import { LoadingSection } from "@/components/decor/orbit-loader";
 
 const fieldLabels: Record<string, string> = {
   cs: "CS",
@@ -104,9 +105,7 @@ export default function DiscoverPage() {
             </Button>
           </section>
         ) : peers === null ? (
-          <p className="mt-10 font-mono text-sm text-muted-foreground">
-            Scanning for students in your orbit...
-          </p>
+          <LoadingSection label="Scanning for students in your orbit..." />
         ) : peers.length === 0 ? (
           <section className="rounded-lg border bg-card mt-10 p-8 text-center">
             <h2 className="text-xl font-semibold text-foreground">

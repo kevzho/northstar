@@ -19,6 +19,7 @@ import { fetchProjects } from "@/lib/api";
 import { leadingFields, scoreFieldInterests } from "@/lib/scoring";
 import { useStoredAnswers } from "@/lib/use-assessment";
 import type { ProjectRec } from "@/lib/types";
+import { LoadingSection } from "@/components/decor/orbit-loader";
 
 const fieldLabels: Record<string, string> = {
   cs: "Computer science",
@@ -92,9 +93,7 @@ export default function ProjectsPage() {
         </header>
 
         {projects === null ? (
-          <p className="mt-10 font-mono text-sm text-muted-foreground">
-            Searching GitHub...
-          </p>
+          <LoadingSection label="Searching GitHub..." />
         ) : projects.length === 0 ? (
           <section className="rounded-lg border bg-card mt-10 p-8 text-center">
             <h2 className="h-display text-2xl text-foreground">

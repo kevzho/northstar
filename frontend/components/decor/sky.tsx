@@ -7,8 +7,9 @@
  * this instead: a fixed inline SVG of seeded star specks in the brand
  * monochrome (ink specks in the light "printed atlas" theme). Pure CSS,
  * no per-frame work — the only motion is a slow opacity twinkle on a
- * handful of brighter stars, and `prefers-reduced-motion` stills it via
- * the global media query in globals.css.
+ * handful of brighter stars and one comet pass every 90 seconds, and
+ * `prefers-reduced-motion` stills both via the global media query in
+ * globals.css.
  *
  * Deterministic by design: the same 56 stars render on every visit, so
  * the sky reads as a place, not a screensaver.
@@ -63,6 +64,19 @@ export function Sky() {
           }
         />
       ))}
+      {/* One comet, one quiet pass every 90 seconds, starting up-left. */}
+      <g className="sky-comet" opacity="0">
+        <line
+          x1="8"
+          y1="4"
+          x2="12.4"
+          y2="7"
+          stroke="currentColor"
+          strokeWidth="0.22"
+          strokeLinecap="round"
+        />
+        <circle cx="12.4" cy="7" r="0.45" fill="currentColor" />
+      </g>
     </svg>
   );
 }

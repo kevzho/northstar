@@ -291,6 +291,53 @@ button:disabled {
   animation: sky-twinkle 7s ease-in-out infinite;
 }
 
+
+/* Orbit loader (components/decor/orbit-loader.tsx): a small system in
+   transit. Each planet group spins about the SVG center; the rings
+   themselves hold still. */
+@keyframes orbit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.orbit-planet-a {
+  animation: orbit-spin 6s linear infinite;
+  transform-origin: 50% 50%;
+}
+
+.orbit-planet-b {
+  animation: orbit-spin 10s linear infinite reverse;
+  transform-origin: 50% 50%;
+}
+
+.orbit-core {
+  animation: polaris-pulse 3s ease-in-out infinite;
+}
+
+/* A rare comet across the in-app sky: one quiet pass, long dark gap. */
+@keyframes comet-pass {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  2% {
+    opacity: 0.7;
+  }
+  9% {
+    transform: translate(70px, 48px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(70px, 48px);
+    opacity: 0;
+  }
+}
+
+.sky-comet {
+  animation: comet-pass 90s linear 12s infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .constellation-line {
     animation: none;
@@ -305,5 +352,14 @@ button:disabled {
   }
   .sky-twinkle {
     animation: none;
+  }
+  .orbit-planet-a,
+  .orbit-planet-b,
+  .orbit-core {
+    animation: none;
+  }
+  .sky-comet {
+    animation: none;
+    opacity: 0;
   }
 }

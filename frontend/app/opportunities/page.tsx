@@ -18,6 +18,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { OpportunityCard } from "@/components/OpportunityCard";
 import { dismissOpportunity, fetchCatalog, fetchMatches, undoDismissal } from "@/lib/api";
 import type { MatchResult, Opportunity, OpportunityField, OpportunityType } from "@/lib/types";
+import { LoadingScreen, LoadingSection } from "@/components/decor/orbit-loader";
 
 const fieldFilters: { value: OpportunityField | "all"; label: string }[] = [
   { value: "all", label: "All fields" },
@@ -311,9 +312,7 @@ function OpportunitiesList() {
 
         {view === "all" ? (
           catalog === null ? (
-            <p className="mt-10 font-mono text-sm text-muted-foreground">
-              Loading the full bank...
-            </p>
+            <LoadingSection label="Loading the full bank..." />
           ) : filteredCatalog.length > 0 ? (
             <>
               <p className="mt-6 font-mono text-xs text-muted-foreground">
@@ -420,13 +419,7 @@ function OpportunitiesList() {
 export default function OpportunitiesPage() {
   return (
     <Suspense
-      fallback={
-        <main className="flex min-h-screen items-center justify-center px-6">
-          <p className="font-mono text-sm text-muted-foreground">
-            Loading your recommendations...
-          </p>
-        </main>
-      }
+      fallback={<LoadingScreen label="Loading your recommendations..." />}
     >
       <OpportunitiesList />
     </Suspense>

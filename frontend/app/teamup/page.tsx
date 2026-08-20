@@ -19,6 +19,7 @@ import type { OpportunityField } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { findArchetype } from "@/lib/plan";
+import { LoadingSection } from "@/components/decor/orbit-loader";
 import {
   fetchTeamupCandidates,
   fetchTeamupSettings,
@@ -156,9 +157,7 @@ export default function TeamupPage() {
             </Button>
           </section>
         ) : enabled === null ? (
-          <p className="mt-10 font-mono text-sm text-muted-foreground">
-            Loading…
-          </p>
+          <LoadingSection label="Opening the matching pool..." />
         ) : !enabled ? (
           <section className="rounded-lg border bg-card mt-10 p-8">
             <h2 className="text-xl font-semibold text-foreground">
@@ -235,9 +234,7 @@ export default function TeamupPage() {
                   </Button>
                 </section>
               ) : (
-                <p className="mt-8 font-mono text-sm text-muted-foreground">
-                  Scanning for co-builders in your orbit…
-                </p>
+                <LoadingSection label="Scanning for co-builders in your orbit…" className="mt-8 flex flex-col items-center gap-4 text-center" />
               )
             ) : (
               <section className="mt-8 rounded-lg border bg-card p-6">

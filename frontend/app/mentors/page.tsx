@@ -16,6 +16,7 @@ import { authedFetch, fetchMentors } from "@/lib/api";
 import type { MentorMatch } from "@/lib/api";
 import { buildIntroEmail, mailtoHref } from "@/lib/outreach";
 import type { StudentProfile } from "@/lib/types";
+import { LoadingSection } from "@/components/decor/orbit-loader";
 
 export default function MentorsPage() {
   const [mentors, setMentors] = useState<MentorMatch[]>([]);
@@ -85,11 +86,7 @@ export default function MentorsPage() {
         </header>
 
         {loading ? (
-          <section className="rounded-lg border bg-card mt-10 p-8 text-center">
-            <p className="font-mono text-sm text-muted-foreground">
-              Finding mentors that match your profile...
-            </p>
-          </section>
+          <LoadingSection label="Finding mentors that match your profile..." />
         ) : error ? (
           <section className="rounded-lg border bg-card mt-10 p-8 text-center">
             <h2 className="text-xl font-semibold text-foreground">

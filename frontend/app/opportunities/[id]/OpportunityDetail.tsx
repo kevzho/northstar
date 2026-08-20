@@ -21,6 +21,7 @@ import { fetchOpportunity } from "@/lib/api";
 import type { Opportunity } from "@/lib/types";
 import { BookmarkButton } from "@/components/BookmarkButton";
 import { OutcomeForm } from "@/components/OutcomeForm";
+import { LoadingSection } from "@/components/decor/orbit-loader";
 
 export function OpportunityDetail({ id }: { id: string }) {
   const [opportunity, setOpportunity] = useState<Opportunity | null>(null);
@@ -56,11 +57,7 @@ export function OpportunityDetail({ id }: { id: string }) {
         />
 
         {loading ? (
-          <section className="rounded-lg border bg-card mt-10 p-8 text-center">
-            <p className="font-mono text-sm text-muted-foreground">
-              Loading opportunity...
-            </p>
-          </section>
+          <LoadingSection label="Loading opportunity..." />
         ) : !opportunity ? (
           <section className="rounded-lg border bg-card mt-10 p-8 text-center">
             <h1 className="h-display text-3xl text-foreground">

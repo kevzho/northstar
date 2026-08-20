@@ -8,6 +8,7 @@
  */
 
 import Link from "next/link";
+import { StarGlyph } from "@/components/decor/star-glyph";
 import { NativeSelect } from "@/components/ui/native-select";
 import { LANGUAGES, useLanguage, type LanguageCode } from "@/lib/i18n";
 
@@ -18,7 +19,8 @@ export function SiteFooter() {
     <footer className="border-t border-border">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-8 lg:px-10">
         <div className="flex items-center gap-5">
-          <p className="font-mono text-xs tracking-wide text-muted-foreground">
+          <p className="flex items-center gap-1.5 font-mono text-xs tracking-wide text-muted-foreground">
+            <StarGlyph className="h-2.5 w-2.5" />
             Kevin Zhou © 2026
           </p>
           <Link

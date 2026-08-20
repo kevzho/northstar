@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { traitDescriptions, traitLabels, type TraitKey } from "@/lib/assessment";
 import { findArchetype } from "@/lib/plan";
 import { TRAIT_KEYS } from "@/lib/scoring";
+import { LoadingSection } from "@/components/decor/orbit-loader";
 import {
   acceptFriend,
   compareWithFriend,
@@ -94,6 +95,7 @@ export default function FriendsPage() {
   const [handle, setHandle] = useState("");
   const [note, setNote] = useState<string | null>(null);
   const [signedOut, setSignedOut] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [comparison, setComparison] = useState<{
     me: ComparedRecord;
     friend: ComparedRecord;
@@ -105,6 +107,7 @@ export default function FriendsPage() {
       .then((data) => {
         setAccepted(data.accepted);
         setPending(data.pending);
+        setLoaded(true);
       })
       .catch(() => setSignedOut(true));
   }, []);
@@ -242,7 +245,9 @@ export default function FriendsPage() {
 
             <section className="mt-8">
               <h2 className="text-sm font-semibold text-foreground">Friends</h2>
-              {accepted.length === 0 ? (
+              {!loaded ? (
+                <LoadingSection label="Gathering your constellation..." className="mt-3 flex flex-col items-center gap-4 py-6 text-center" />
+              ) : accepted.length === 0 ? (
                 <p className="mt-3 text-sm leading-6 text-muted-foreground">
                   No friends yet — trade handles with someone who has a
                   Northstar record.
