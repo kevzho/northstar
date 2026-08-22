@@ -158,7 +158,8 @@ export function MissionBoard({
                 >
                   <Link
                     href={`/opportunities/${opportunity.id}`}
-                    className="truncate text-sm font-semibold text-star hover:underline"
+                    title={opportunity.title}
+                    className="min-w-0 truncate text-sm font-semibold text-star hover:underline"
                   >
                     {opportunity.title}
                   </Link>

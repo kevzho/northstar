@@ -217,7 +217,8 @@ export default function DashboardPage() {
                   <li key={opportunity.id} className="flex items-baseline justify-between gap-3">
                     <Link
                       href={`/opportunities/${opportunity.id}`}
-                      className="truncate text-sm font-semibold text-foreground hover:underline"
+                      title={opportunity.title}
+                      className="min-w-0 truncate text-sm font-semibold text-foreground hover:underline"
                     >
                       {opportunity.title}
                     </Link>
