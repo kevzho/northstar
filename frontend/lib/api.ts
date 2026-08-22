@@ -54,6 +54,13 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
  * When no session exists the caller receives a 401 from the backend — the
  * UI gate already runs useAuth() before this, so that path is rare.
  */
+/** An HTTP failure, with the status and the server's message kept intact. */
+export type ApiError = Error & { status: number; detail: string };
+
+export function isApiError(error: unknown): error is ApiError {
+  return error instanceof Error && typeof (error as ApiError).status === "number";
+}
+
 export async function authedFetch(
   path: string,
   init: RequestInit = {},
@@ -69,7 +76,21 @@ export async function authedFetch(
     },
   });
   if (!res.ok) {
-    throw new Error(`API ${res.status} on ${path}`);
+    // Carry the server's own message out with the error. Some refusals are
+    // written for the student to read — /advisor's 429 says which budget ran
+    // out and when it resets — and throwing only the status discards them.
+    let detail = "";
+    try {
+      detail = ((await res.clone().json()) as { detail?: string }).detail ?? "";
+    } catch {
+      // Non-JSON body (a proxy error page, say); the status has to speak.
+    }
+    const error = new Error(
+      `API ${res.status} on ${path}${detail ? `: ${detail}` : ""}`,
+    ) as ApiError;
+    error.status = res.status;
+    error.detail = detail;
+    throw error;
   }
   return res;
 }
@@ -249,7 +270,13 @@ export async function fetchTimeline(): Promise<TimelineEvent[]> {
   return (await authedFetch("/timeline")).json();
 }
 
-/** One grounded advisor exchange; 503 when the feature is unconfigured. */
+/**
+ * One grounded advisor exchange.
+ *
+ * 503 when the feature is unconfigured; 429 when a spend cap is hit, with a
+ * student-readable reason in `detail`. `cached` marks an answer replayed
+ * from a previous identical question — those cost no LLM credits.
+ */
 export async function askAdvisor(question: string): Promise<{
   answer: string;
   sources: {
@@ -260,6 +287,7 @@ export async function askAdvisor(question: string): Promise<{
     deadline: string | null;
     url: string;
   }[];
+  cached?: boolean;
 }> {
   return (await authedFetch("/advisor", {
     method: "POST",

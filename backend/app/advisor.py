@@ -21,9 +21,113 @@ Provider: any OpenAI-compatible chat API. Defaults target DeepSeek
 
 from __future__ import annotations
 
+import hashlib
+import json
+from datetime import datetime, timedelta, timezone
+
 import requests
 
 from .settings import settings
+
+# --- Spend control -------------------------------------------------------
+#
+# Every model call here costs a credit from a fixed pool, so the ledger and
+# the cache are one table (public.advisor_calls): one row per BILLED call,
+# no row for a cache hit. That makes count(rows) mean "credits spent".
+#
+# A cache hit is checked before the budget and never consumes quota — the
+# point of the cache is that re-asking a known question is free.
+
+# The provider's free tier allows 40 requests/minute across everything using
+# the key, and the nightly verifier shares it. Leave that real headroom.
+GLOBAL_PER_MINUTE = 20
+
+
+def cache_key(question: str, sources: list[dict]) -> str:
+    """Same question over the same sources and model -> same answer.
+
+    The sources are part of the key, not just the question: once the catalog
+    behind an answer changes, the old answer is stale and deserves a fresh
+    call. Whitespace and case are normalized so trivial retypings hit.
+    """
+    basis = json.dumps(
+        {
+            "q": " ".join(question.lower().split()),
+            "s": [s.get("url") or s.get("title", "") for s in sources],
+            "m": settings.llm_model,
+        },
+        sort_keys=True,
+    )
+    return hashlib.sha256(basis.encode("utf-8")).hexdigest()
+
+
+def _since(**delta: int) -> str:
+    return (datetime.now(timezone.utc) - timedelta(**delta)).isoformat()
+
+
+def cached_answer(sb, key: str) -> dict | None:
+    """The newest unexpired answer for this key, or None."""
+    rows = (
+        sb.table("advisor_calls")
+        .select("answer, sources")
+        .eq("cache_key", key)
+        .gte("created_at", _since(hours=settings.advisor_cache_ttl_h))
+        .order("created_at", desc=True)
+        .limit(1)
+        .execute()
+    ).data or []
+    return rows[0] if rows else None
+
+
+def _spent(sb, since: str, student: str | None = None) -> int:
+    """How many billed calls since `since`, optionally for one student."""
+    query = (
+        sb.table("advisor_calls")
+        .select("id", count="exact", head=True)
+        .gte("created_at", since)
+    )
+    if student is not None:
+        query = query.eq("student", student)
+    return query.execute().count or 0
+
+
+def budget_block(sb, student: str) -> str | None:
+    """Why this call must be refused, or None to let it through.
+
+    Ordered cheapest-to-explain first, and burst before daily so a spike
+    gets "try again in a minute" rather than "come back tomorrow".
+    """
+    if _spent(sb, _since(minutes=1)) >= GLOBAL_PER_MINUTE:
+        return "The advisor is busy right now — try again in a minute."
+    if _spent(sb, _since(days=1), student) >= settings.advisor_per_student_daily:
+        return (
+            f"You have used your {settings.advisor_per_student_daily} advisor "
+            "questions for today. This resets 24 hours after your first one."
+        )
+    if _spent(sb, _since(days=1)) >= settings.advisor_global_daily:
+        return "The advisor has reached today's shared limit. Try again tomorrow."
+    return None
+
+
+def record_call(
+    sb, student: str, key: str, question: str, answer: str, sources: list[dict]
+) -> None:
+    """Log a billed call. This row is both the ledger entry and the cache."""
+    try:
+        sb.table("advisor_calls").insert(
+            {
+                "student": student,
+                "cache_key": key,
+                "question": question[:1000],
+                "answer": answer,
+                "sources": sources,
+            }
+        ).execute()
+    except Exception:
+        # Never lose the student an answer we already paid for. The cost is
+        # that this call goes uncounted against the quota, which is the
+        # cheaper failure next to a 500 on a successful completion.
+        pass
 
 SYSTEM_PROMPT = """You are Northstar's route advisor for students. You help them \
 explore unusual, interdisciplinary, and non-obvious directions.

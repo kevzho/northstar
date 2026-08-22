@@ -316,12 +316,21 @@ def create_app() -> FastAPI:
     ) -> dict:
         """Exploratory route advice grounded in the student's own matches.
 
-        Returns {answer, sources} where sources are the numbered catalog
-        entries the model was allowed to cite. 503 when no LLM key is
-        configured — the feature is off, not broken.
+        Returns {answer, sources, cached} where sources are the numbered
+        catalog entries the model was allowed to cite. 503 when no LLM key
+        is configured — the feature is off, not broken. 429 when the credit
+        budget for the student, the minute, or the day is used up.
         """
 
-        from .advisor import advisor_enabled, ask_advisor, build_sources
+        from .advisor import (
+            advisor_enabled,
+            ask_advisor,
+            budget_block,
+            build_sources,
+            cache_key,
+            cached_answer,
+            record_call,
+        )
         from .db import get_supabase
 
         if not advisor_enabled():
@@ -355,6 +364,24 @@ def create_app() -> FastAPI:
         ]
         ranked = score_opportunities(student, opportunities)
         sources = build_sources(ranked)
+        key = cache_key(question, sources)
+
+        # Before the budget check, deliberately: a question already answered
+        # over the same sources costs nothing, so it must not spend quota.
+        hit = cached_answer(sb, key)
+        if hit:
+            return {
+                "answer": hit["answer"],
+                "sources": hit.get("sources") or sources,
+                "cached": True,
+            }
+
+        refusal = budget_block(sb, user.id)
+        if refusal:
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                detail=refusal,
+            )
 
         try:
             answer = ask_advisor(question, student, sources)
@@ -363,7 +390,9 @@ def create_app() -> FastAPI:
                 status_code=status.HTTP_502_BAD_GATEWAY,
                 detail="The advisor's model call failed; try again shortly.",
             )
-        return {"answer": answer, "sources": sources}
+
+        record_call(sb, user.id, key, question, answer, sources)
+        return {"answer": answer, "sources": sources, "cached": False}
 
     @app.post("/sharing")
     def update_sharing(

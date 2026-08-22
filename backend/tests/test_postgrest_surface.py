@@ -21,7 +21,12 @@ import pathlib
 
 import pytest
 
-MAIN = pathlib.Path(__file__).resolve().parents[1] / "app" / "main.py"
+APP = pathlib.Path(__file__).resolve().parents[1] / "app"
+
+# Every module that builds sb.table(...) chains. Adding one here is the
+# whole cost of keeping it guarded; forgetting to is how the next
+# .maybesingle() reaches production.
+QUERY_MODULES = [APP / "main.py", APP / "advisor.py"]
 
 
 def _valid_builder_methods() -> set[str]:
@@ -75,15 +80,19 @@ def _collect_chain_methods(tree: ast.AST) -> set[str]:
     return found
 
 
-def test_route_query_chains_use_real_postgrest_methods() -> None:
+@pytest.mark.parametrize("module", QUERY_MODULES, ids=lambda p: p.name)
+def test_route_query_chains_use_real_postgrest_methods(module: pathlib.Path) -> None:
     valid = _valid_builder_methods()
-    called = _collect_chain_methods(ast.parse(MAIN.read_text()))
-    assert called, "AST walk found no sb.table(...) chains — the guard is broken"
+    called = _collect_chain_methods(ast.parse(module.read_text()))
+    assert called, (
+        f"AST walk found no sb.table(...) chains in {module.name} — either the "
+        f"guard is broken or the module no longer belongs in QUERY_MODULES"
+    )
 
     unknown = sorted(called - valid)
     assert not unknown, (
-        f"app/main.py calls PostgREST methods that do not exist: {unknown}. "
-        f"These raise AttributeError at request time, not import time."
+        f"app/{module.name} calls PostgREST methods that do not exist: "
+        f"{unknown}. These raise AttributeError at request time, not import time."
     )
 
 

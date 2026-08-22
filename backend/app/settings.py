@@ -41,6 +41,13 @@ class Settings(BaseModel):
     # 10 requests/minute to 30. A classic PAT with no scopes is enough.
     github_token: str = ""
 
+    # Advisor spend controls. The free NIM tier is a fixed pool of calls
+    # rather than a monthly allowance, so these are hard ceilings, not
+    # smoothing. Raise them once the key's own quota is raised.
+    advisor_per_student_daily: int = 10
+    advisor_global_daily: int = 150
+    advisor_cache_ttl_h: int = 24
+
     # Optional: the route advisor (POST /advisor) — any OpenAI-compatible
     # chat API. Defaults target DeepSeek; absent key = 503, feature off.
     llm_api_key: str = ""
@@ -49,6 +56,18 @@ class Settings(BaseModel):
 
     @classmethod
     def from_env(cls) -> "Settings":
+        def _int(name: str, default: int) -> int:
+            """Unset, empty, or malformed all fall back to the default.
+
+            os.getenv returns "" for a set-but-empty variable, which int()
+            rejects — and a CI runner exporting an undefined secret produces
+            exactly that.
+            """
+            try:
+                return int(os.getenv(name, ""))
+            except ValueError:
+                return default
+
         return cls(
             frontend_url=os.getenv("FRONTEND_URL", "http://localhost:3000"),
             supabase_url=os.getenv("SUPABASE_URL", "http://localhost:54321"),
@@ -59,6 +78,9 @@ class Settings(BaseModel):
             llm_api_key=os.getenv("LLM_API_KEY", ""),
             llm_api_base=os.getenv("LLM_API_BASE", "https://api.deepseek.com"),
             llm_model=os.getenv("LLM_MODEL", "deepseek-v4-pro"),
+            advisor_per_student_daily=_int("ADVISOR_PER_STUDENT_DAILY", 10),
+            advisor_global_daily=_int("ADVISOR_GLOBAL_DAILY", 150),
+            advisor_cache_ttl_h=_int("ADVISOR_CACHE_TTL_H", 24),
         )
 
 

@@ -609,7 +609,7 @@
     },
     "/advisor": {
       "post": {
-        "description": "Exploratory route advice grounded in the student's own matches.\n\nReturns {answer, sources} where sources are the numbered catalog\nentries the model was allowed to cite. 503 when no LLM key is\nconfigured \u2014 the feature is off, not broken.",
+        "description": "Exploratory route advice grounded in the student's own matches.\n\nReturns {answer, sources, cached} where sources are the numbered\ncatalog entries the model was allowed to cite. 503 when no LLM key\nis configured \u2014 the feature is off, not broken. 429 when the credit\nbudget for the student, the minute, or the day is used up.",
         "operationId": "route_advisor_advisor_post",
         "requestBody": {
           "content": {

@@ -34,9 +34,10 @@ export interface paths {
          * Route Advisor
          * @description Exploratory route advice grounded in the student's own matches.
          *
-         *     Returns {answer, sources} where sources are the numbered catalog
-         *     entries the model was allowed to cite. 503 when no LLM key is
-         *     configured — the feature is off, not broken.
+         *     Returns {answer, sources, cached} where sources are the numbered
+         *     catalog entries the model was allowed to cite. 503 when no LLM key
+         *     is configured — the feature is off, not broken. 429 when the credit
+         *     budget for the student, the minute, or the day is used up.
          */
         post: operations["route_advisor_advisor_post"];
         delete?: never;

@@ -18,7 +18,7 @@ import Link from "next/link";
 import { AppNav } from "@/components/AppNav";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { askAdvisor } from "@/lib/api";
+import { askAdvisor, isApiError } from "@/lib/api";
 
 type Exchange = Awaited<ReturnType<typeof askAdvisor>>;
 
@@ -31,9 +31,12 @@ const SUGGESTED = [
 export default function AdvisorPage() {
   const [question, setQuestion] = useState("");
   const [exchange, setExchange] = useState<Exchange | null>(null);
-  const [state, setState] = useState<"idle" | "asking" | "off" | "failed">(
-    "idle",
-  );
+  const [state, setState] = useState<
+    "idle" | "asking" | "off" | "failed" | "limited"
+  >("idle");
+  // The server words its own refusal (which cap, when it resets), so the UI
+  // shows that rather than guessing at a generic "slow down" message.
+  const [limitReason, setLimitReason] = useState("");
 
   async function ask(text: string) {
     if (!text.trim()) return;
@@ -44,11 +47,14 @@ export default function AdvisorPage() {
       setExchange(result);
       setState("idle");
     } catch (error) {
-      setState(
-        error instanceof Error && error.message.includes("503")
-          ? "off"
-          : "failed",
-      );
+      if (isApiError(error) && error.status === 503) {
+        setState("off");
+      } else if (isApiError(error) && error.status === 429) {
+        setLimitReason(error.detail);
+        setState("limited");
+      } else {
+        setState("failed");
+      }
     }
   }
 
@@ -118,6 +124,17 @@ export default function AdvisorPage() {
               backend (<span className="font-mono text-xs">LLM_API_KEY</span>{" "}
               in <span className="font-mono text-xs">backend/.env</span>).
               Everything else on Northstar works without it.
+            </p>
+          </section>
+        ) : state === "limited" ? (
+          <section className="rounded-lg border border-star/40 bg-card mt-8 p-6">
+            <p className="text-sm leading-6 text-foreground">
+              {limitReason ||
+                "You have reached the advisor's limit for now — try again later."}
+            </p>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              Asking a question you have asked before is always free, and the
+              rest of Northstar is unaffected.
             </p>
           </section>
         ) : state === "failed" ? (
