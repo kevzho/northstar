@@ -102,9 +102,9 @@ until it sounds like you. Tiers 3–4 are understand/skim.
 - [ ] TIER 1: field-interest scoring in `frontend/lib/scoring.ts` —
       share-of-total + largest-remainder rounding (always sums to 100),
       and the leadingFields half-the-leader rule (72b36bb).
-- [ ] TIER 2: the six field-signal questions (q9-q14) in
-      `frontend/lib/assessment.ts` — every field weight should be yours
-      (72b36bb).
+- [ ] TIER 2: the field-signal questions (picks q4-q6, statements
+      l7-l14) in `frontend/lib/assessment.ts` — every field weight should
+      be yours (72b36bb).
 - [ ] TIER 3: `backend/app/projects.py` — GitHub query qualifiers encode
       approachability; ranking is a visible sum (72b36bb).
 - [ ] TIER 3: dismissals flow (migration → /dismissals routes → 'Not for

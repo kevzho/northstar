@@ -12,6 +12,38 @@ export type TraitDeltas = Partial<Record<TraitKey, number>>;
 
 export type FieldDeltas = Partial<Record<OpportunityField, number>>;
 
+// ---------------------------------------------------------------------------
+// The 1-5 agreement scale.
+// ---------------------------------------------------------------------------
+
+export const LIKERT_VALUES = [1, 2, 3, 4, 5] as const;
+
+export type LikertValue = (typeof LIKERT_VALUES)[number];
+
+export const likertLabels: Record<LikertValue, string> = {
+  1: "Strongly disagree",
+  2: "Disagree",
+  3: "Neutral",
+  4: "Agree",
+  5: "Strongly agree",
+};
+
+/**
+ * A rating's share of its question's deltas: 1 pays nothing, 5 pays in full,
+ * 3 pays half. Keeping the multiplier in [0, 1] rather than [-1, 1] is what
+ * lets Likert items reuse the same "sum, then divide by the achievable
+ * maximum" normalization the choice questions already use — a trait can never
+ * be driven negative, so the 0-100 range holds without clamping.
+ *
+ * Reverse-coded items invert it, so agreeing with "I need clear instructions"
+ * pays *less* ambiguity comfort. Mixing a few of those in is what stops a
+ * student who agrees with everything from scoring high on all six traits.
+ */
+export function likertWeight(value: LikertValue, reverse = false): number {
+  const share = (value - 1) / 4;
+  return reverse ? 1 - share : share;
+}
+
 export type AssessmentChoice = {
   id: string;
   label: string;
@@ -20,11 +52,30 @@ export type AssessmentChoice = {
   fields?: FieldDeltas;
 };
 
-export type AssessmentQuestion = {
+/**
+ * Pick-one questions. Five options, never three: with three, a student who
+ * is none of the three is forced to misreport, and the field percentages
+ * inherit that noise.
+ */
+export type ChoiceQuestion = {
+  kind: "choice";
   id: string;
   prompt: string;
   choices: AssessmentChoice[];
 };
+
+/** A statement rated 1-5. The deltas are what a "Strongly agree" pays out. */
+export type LikertQuestion = {
+  kind: "likert";
+  id: string;
+  prompt: string;
+  traits: TraitDeltas;
+  fields?: FieldDeltas;
+  /** When true, disagreeing is what pays the deltas. */
+  reverse?: boolean;
+};
+
+export type AssessmentQuestion = ChoiceQuestion | LikertQuestion;
 
 /** One-line meanings shown under the profile bars — high is a shape,
  * not a grade; every trait names a way of working, not a virtue. */
@@ -49,8 +100,20 @@ export const traitLabels: Record<TraitKey, string> = {
   executionTempo: "Execution tempo",
 };
 
+/**
+ * The bank: 20 questions, the two formats interleaved on purpose.
+ *
+ * Scenario picks force a tradeoff — choosing the hackathon is choosing *not*
+ * to choose the research fair — which is what pulls the field percentages
+ * apart instead of letting them cluster. Agreement statements measure each
+ * trait on its own axis, which a forced pick cannot do: liking both building
+ * and analysis is a real answer, and only the 1-5 items can record it.
+ * Alternating them also breaks the rhythm that makes long quizzes get
+ * straight-lined.
+ */
 export const assessmentQuestions: AssessmentQuestion[] = [
   {
+    kind: "choice",
     id: "q1-free-afternoon",
     prompt: "You have one free afternoon. What do you choose?",
     choices: [
@@ -69,31 +132,35 @@ export const assessmentQuestions: AssessmentQuestion[] = [
         label: "Pull a few friends together and test an idea as a group.",
         traits: { collaboration: 2, builder: 1 },
       },
-    ],
-  },
-  {
-    id: "q2-unclear-assignment",
-    prompt: "A teacher gives you an open-ended project with few rules. You...",
-    choices: [
       {
-        id: "define-scope",
-        label: "Define a clear scope, make milestones, and start building.",
-        traits: { builder: 1, executionTempo: 2 },
+        id: "pitch-stranger",
+        label: "Take a shot at something you might not get — an email, an application, a pitch.",
+        traits: { riskTolerance: 2, executionTempo: 1 },
       },
       {
-        id: "explore-angles",
-        label: "Explore several possible angles before choosing a direction.",
-        traits: { analyst: 1, ambiguityComfort: 2 },
-      },
-      {
-        id: "ask-feedback",
-        label: "Talk through early ideas with classmates and mentors.",
-        traits: { collaboration: 2, ambiguityComfort: 1 },
+        id: "wander-unplanned",
+        label: "Leave it unplanned and follow whatever turns out to be interesting.",
+        traits: { ambiguityComfort: 2, riskTolerance: 1 },
       },
     ],
   },
   {
-    id: "q3-competition-choice",
+    kind: "likert",
+    id: "l1-ship-rough",
+    prompt:
+      "I would rather ship something rough this week than spend a month making it perfect.",
+    traits: { builder: 2, executionTempo: 2 },
+  },
+  {
+    kind: "likert",
+    id: "l2-understand-first",
+    prompt:
+      "Before I start building, I want to understand why the problem exists in the first place.",
+    traits: { analyst: 2, ambiguityComfort: 1 },
+  },
+  {
+    kind: "choice",
+    id: "q2-competition-choice",
     prompt: "You can enter one competition. Which one sounds most energizing?",
     choices: [
       {
@@ -111,94 +178,48 @@ export const assessmentQuestions: AssessmentQuestion[] = [
         label: "A pitch contest where persuasion and uncertainty matter.",
         traits: { riskTolerance: 2, collaboration: 1 },
       },
-    ],
-  },
-  {
-    id: "q4-stuck-moment",
-    prompt: "You get stuck on a hard problem. Your first move is to...",
-    choices: [
       {
-        id: "debug-alone",
-        label: "Break it into smaller pieces and debug by yourself.",
-        traits: { analyst: 2, executionTempo: 1 },
+        id: "team-relay",
+        label: "A team event where your score is the whole group's score.",
+        traits: { collaboration: 2, executionTempo: 1 },
       },
       {
-        id: "prototype-around",
-        label: "Try a rough workaround so the project keeps moving.",
-        traits: { builder: 2, riskTolerance: 1 },
-      },
-      {
-        id: "find-helper",
-        label: "Ask someone sharper in that area and compare approaches.",
-        traits: { collaboration: 2, ambiguityComfort: 1 },
+        id: "open-problem",
+        label: "A month-long open problem nobody has solved yet.",
+        traits: { ambiguityComfort: 2, analyst: 2 },
       },
     ],
   },
   {
-    id: "q5-summer-plan",
-    prompt: "You are choosing a summer focus. You would rather...",
-    choices: [
-      {
-        id: "launch-app",
-        label: "Launch something real — an app, a zine, a small business — even if v1 is rough.",
-        traits: { builder: 2, riskTolerance: 2, executionTempo: 1 },
-      },
-      {
-        id: "deep-study",
-        label: "Study a demanding field and produce a serious writeup.",
-        traits: { analyst: 2, ambiguityComfort: 1 },
-      },
-      {
-        id: "community-program",
-        label: "Run a small program that helps people in your community.",
-        traits: { collaboration: 2, builder: 1 },
-      },
-    ],
+    kind: "likert",
+    id: "l3-long-odds",
+    prompt:
+      "I would enter something I might lose if the payoff for winning were big enough.",
+    traits: { riskTolerance: 3 },
   },
   {
-    id: "q6-feedback",
-    prompt: "When someone critiques your work, you usually...",
-    choices: [
-      {
-        id: "revise-fast",
-        label: "Revise quickly and test whether the change improves it.",
-        traits: { executionTempo: 2, builder: 1 },
-      },
-      {
-        id: "inspect-logic",
-        label: "Inspect the logic behind the critique before changing direction.",
-        traits: { analyst: 2, ambiguityComfort: 1 },
-      },
-      {
-        id: "discuss-tradeoffs",
-        label: "Discuss tradeoffs so everyone agrees on the next version.",
-        traits: { collaboration: 2, ambiguityComfort: 1 },
-      },
-    ],
+    kind: "likert",
+    id: "l4-need-instructions",
+    prompt: "I need clear instructions before I feel comfortable starting.",
+    traits: { ambiguityComfort: 3 },
+    reverse: true,
   },
   {
-    id: "q7-risk",
-    prompt: "A risky opportunity appears, but the upside is meaningful. You...",
-    choices: [
-      {
-        id: "take-shot",
-        label: "Take the shot and learn from the result.",
-        traits: { riskTolerance: 2, executionTempo: 1 },
-      },
-      {
-        id: "model-outcomes",
-        label: "Model the downside, upside, and decision criteria first.",
-        traits: { analyst: 2, riskTolerance: 1 },
-      },
-      {
-        id: "pilot-small",
-        label: "Run a small pilot with collaborators before committing.",
-        traits: { collaboration: 1, builder: 1, ambiguityComfort: 1 },
-      },
-    ],
+    kind: "likert",
+    id: "l5-think-out-loud",
+    prompt: "I think best out loud, with other people in the room.",
+    traits: { collaboration: 3 },
   },
   {
-    id: "q8-team-role",
+    kind: "likert",
+    id: "l6-every-option",
+    prompt: "I put off deciding until I have looked at every option.",
+    traits: { executionTempo: 3 },
+    reverse: true,
+  },
+  {
+    kind: "choice",
+    id: "q3-team-role",
     prompt: "On a team, the role you naturally drift toward is...",
     choices: [
       {
@@ -208,7 +229,7 @@ export const assessmentQuestions: AssessmentQuestion[] = [
       },
       {
         id: "strategist",
-        label: "The strategist who clarifies the problem and evidence.",
+        label: "The strategist who clarifies the problem and the evidence.",
         traits: { analyst: 2, ambiguityComfort: 1 },
       },
       {
@@ -216,13 +237,24 @@ export const assessmentQuestions: AssessmentQuestion[] = [
         label: "The connector who keeps people aligned and moving.",
         traits: { collaboration: 2, executionTempo: 1 },
       },
+      {
+        id: "closer",
+        label: "The closer who drags the last 10% over the line.",
+        traits: { executionTempo: 2, builder: 1 },
+      },
+      {
+        id: "wildcard",
+        label: "The wildcard who keeps pushing the idea everyone else called too risky.",
+        traits: { riskTolerance: 2, ambiguityComfort: 1 },
+      },
     ],
   },
-  // Questions 9-14 are field-signal prompts: they still carry light trait
-  // deltas, but their main job is forcing tradeoffs between fields so the
-  // interest percentages come out distinct instead of uniformly mild.
+  // From here the questions lean on field signal. The picks force tradeoffs
+  // between fields; the statements let a student rate an interest without
+  // having to rank it against something unrelated.
   {
-    id: "q9-headline",
+    kind: "choice",
+    id: "q4-headline",
     prompt: "Which headline pulls you in first?",
     choices: [
       {
@@ -243,82 +275,45 @@ export const assessmentQuestions: AssessmentQuestion[] = [
         traits: { collaboration: 1, riskTolerance: 1 },
         fields: { humanities: 2, business: 1 },
       },
-    ],
-  },
-  {
-    id: "q10-exhibit",
-    prompt: "Free ticket to one museum exhibit. You pick...",
-    choices: [
       {
-        id: "gene-lab",
-        label: "The genetics lab: edit DNA in a dish and watch what happens.",
-        traits: { analyst: 1 },
-        fields: { biology: 2 },
+        id: "lab-grown-organ",
+        label: "Lab-grown organ keeps a patient alive for the first time.",
+        traits: { analyst: 1, builder: 1 },
+        fields: { health: 2, biology: 2 },
       },
       {
-        id: "trading-floor",
-        label: "The trading floor: run a mock market against real strategies.",
-        traits: { analyst: 1, riskTolerance: 1 },
-        fields: { business: 2, math: 1 },
-      },
-      {
-        id: "maker-floor",
-        label: "The maker floor: motors, circuits, and 3D printers running.",
-        traits: { builder: 1, executionTempo: 1 },
-        fields: { engineering: 2, cs: 1 },
+        id: "teen-founders",
+        label: "Two teenagers turn a class project into a real company.",
+        traits: { riskTolerance: 1, executionTempo: 1 },
+        fields: { business: 2, design: 1 },
       },
     ],
   },
   {
-    id: "q11-series",
-    prompt: "You would actually binge a series about...",
-    choices: [
-      {
-        id: "how-internet-works",
-        label: "How the internet really works, from wires to protocols.",
-        traits: { analyst: 1 },
-        fields: { cs: 2 },
-      },
-      {
-        id: "outbreak",
-        label: "How outbreaks start, spread, and get stopped.",
-        traits: { ambiguityComfort: 1, collaboration: 1 },
-        fields: { biology: 2, health: 1 },
-      },
-      {
-        id: "design-icons",
-        label: "Why the best-designed things feel obvious — and the rest don't.",
-        traits: { builder: 1 },
-        fields: { design: 2, engineering: 1 },
-      },
-    ],
+    kind: "likert",
+    id: "l7-proof-clicks",
+    prompt: "A proof or a puzzle that finally clicks is deeply satisfying to me.",
+    traits: { analyst: 1 },
+    fields: { math: 3 },
   },
   {
-    id: "q12-weekend-pitch",
-    prompt: "A friend pitches a weekend project. Which pitch wins?",
-    choices: [
-      {
-        id: "game-bot",
-        label: "Train a bot to beat us at our favorite game.",
-        traits: { builder: 1 },
-        fields: { cs: 2, math: 1 },
-      },
-      {
-        id: "model-rocket",
-        label: "Build and launch a model rocket from scratch.",
-        traits: { builder: 1, riskTolerance: 1 },
-        fields: { engineering: 2, physics: 1 },
-      },
-      {
-        id: "wellness-week",
-        label: "Organize a mental-health awareness week people actually attend.",
-        traits: { collaboration: 1 },
-        fields: { health: 2, interdisciplinary: 1 },
-      },
-    ],
+    kind: "likert",
+    id: "l8-disease-spread",
+    prompt:
+      "I would read about how a treatment works or how a disease spreads for fun.",
+    traits: { analyst: 1 },
+    fields: { health: 2, biology: 2 },
   },
   {
-    id: "q13-fun-class",
+    kind: "likert",
+    id: "l9-bad-design",
+    prompt: "I notice when an app, sign, or poster is badly designed, and it bothers me.",
+    traits: { builder: 1 },
+    fields: { design: 3 },
+  },
+  {
+    kind: "choice",
+    id: "q5-fun-class",
     prompt: "Which hard class would you take just for fun?",
     choices: [
       {
@@ -339,10 +334,46 @@ export const assessmentQuestions: AssessmentQuestion[] = [
         traits: { builder: 1 },
         fields: { biology: 2, engineering: 1 },
       },
+      {
+        id: "architecture-studio",
+        label: "Architecture studio: design a building people would want to live in.",
+        traits: { builder: 1, collaboration: 1 },
+        fields: { design: 2, engineering: 1 },
+      },
+      {
+        id: "ethics-of-tech",
+        label: "Ethics of technology: who gets hurt when the thing actually ships.",
+        traits: { analyst: 1, ambiguityComfort: 1 },
+        fields: { humanities: 2, cs: 1 },
+      },
     ],
   },
   {
-    id: "q14-career-day",
+    kind: "likert",
+    id: "l10-argue-meaning",
+    prompt:
+      "I enjoy arguing about what a book, a film, or a piece of history actually meant.",
+    traits: { ambiguityComfort: 1 },
+    fields: { humanities: 3 },
+  },
+  {
+    kind: "likert",
+    id: "l11-why-it-worked",
+    prompt:
+      "Figuring out why a company or a product won is as interesting to me as the product itself.",
+    traits: { analyst: 1 },
+    fields: { business: 3 },
+  },
+  {
+    kind: "likert",
+    id: "l12-build-physical",
+    prompt: "I want to build the physical thing, not just the plan for it.",
+    traits: { builder: 2 },
+    fields: { engineering: 3 },
+  },
+  {
+    kind: "choice",
+    id: "q6-career-day",
     prompt: "At career day, you corner which speaker with questions?",
     choices: [
       {
@@ -363,78 +394,34 @@ export const assessmentQuestions: AssessmentQuestion[] = [
         traits: { riskTolerance: 1, executionTempo: 1 },
         fields: { business: 2 },
       },
-    ],
-  },
-  {
-    id: "q15-free-elective",
-    prompt: "You get one free elective, no requirements. You pick...",
-    choices: [
       {
-        id: "studio-design",
-        label: "Studio art and digital design — make things that look right.",
-        traits: { builder: 1 },
-        fields: { design: 2 },
-      },
-      {
-        id: "entrepreneurship",
-        label: "Entrepreneurship — turn an idea into something people want.",
-        traits: { riskTolerance: 1 },
-        fields: { business: 2 },
-      },
-      {
-        id: "global-health",
-        label: "Global health — why some communities thrive and others do not.",
-        traits: { ambiguityComfort: 1 },
-        fields: { health: 2, interdisciplinary: 1 },
-      },
-    ],
-  },
-  {
-    id: "q16-dream-project",
-    prompt: "Your dream school project would be...",
-    choices: [
-      {
-        id: "short-documentary",
-        label: "Directing a short documentary about something overlooked.",
-        traits: { collaboration: 1 },
-        fields: { humanities: 2, design: 1 },
-      },
-      {
-        id: "assistive-device",
-        label: "Engineering an assistive device for a classmate who needs one.",
-        traits: { builder: 1, collaboration: 1 },
-        fields: { engineering: 2, health: 1 },
-      },
-      {
-        id: "redesign-site",
-        label: "Redesigning the school's confusing website so it makes sense.",
-        traits: { builder: 1 },
-        fields: { design: 2, cs: 1 },
-      },
-    ],
-  },
-  {
-    id: "q17-news-first",
-    prompt: "Which section of the news do you actually read first?",
-    choices: [
-      {
-        id: "culture-essays",
-        label: "Culture, essays, and opinion — the arguments.",
-        traits: { ambiguityComfort: 1 },
-        fields: { humanities: 2 },
-      },
-      {
-        id: "markets-startups",
-        label: "Markets and startups — who is building and who is winning.",
-        traits: { analyst: 1 },
-        fields: { business: 2 },
-      },
-      {
-        id: "health-medicine",
-        label: "Health and medicine — what actually helps people live better.",
-        traits: { analyst: 1 },
+        id: "trauma-surgeon",
+        label: "The trauma surgeon who decides faster than anyone you have met.",
+        traits: { executionTempo: 1, riskTolerance: 1 },
         fields: { health: 2, biology: 1 },
       },
+      {
+        id: "documentary-director",
+        label: "The director whose documentary changed how people saw something.",
+        traits: { collaboration: 1, ambiguityComfort: 1 },
+        fields: { humanities: 2, design: 1 },
+      },
     ],
+  },
+  {
+    kind: "likert",
+    id: "l13-two-fields",
+    prompt:
+      "I would rather work on a problem that needs two different fields at once than one that stays in its lane.",
+    traits: { ambiguityComfort: 1, collaboration: 1 },
+    fields: { interdisciplinary: 3 },
+  },
+  {
+    kind: "likert",
+    id: "l14-what-universe-is",
+    prompt:
+      "What the universe is made of interests me more than most practical questions.",
+    traits: { analyst: 1, ambiguityComfort: 1 },
+    fields: { physics: 3 },
   },
 ];

@@ -15,10 +15,21 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { ScrollProgress } from "@/components/motion/scroll-progress";
 import { WaypointPath } from "@/components/decor/waypoints";
 import { useRouter } from "next/navigation";
-import { assessmentQuestions } from "@/lib/assessment";
+import {
+  LIKERT_VALUES,
+  assessmentQuestions,
+  likertLabels,
+} from "@/lib/assessment";
 import { isComplete, scoreFieldInterests, scoreTraits } from "@/lib/scoring";
 import { syncAssessmentProfile } from "@/lib/api";
 import { useStoredAnswers, writeAnswers } from "@/lib/use-assessment";
+
+/** Both question kinds use the same selected/unselected treatment. */
+function optionClass(selected: boolean, extra: string): string {
+  return selected
+    ? `rounded-md border-2 border-star bg-star/10 transition ${extra}`
+    : `rounded-md border-2 border-border bg-card transition hover:border-input ${extra}`;
+}
 
 export default function AssessmentPage() {
   const router = useRouter();
@@ -68,9 +79,10 @@ export default function AssessmentPage() {
               Assessment
             </h1>
             <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
-              Seventeen prompts: eight reveal how you build, analyze,
-              collaborate, and handle risk; nine reveal which fields actually
-              pull you in. Pick what fits best — there are no wrong answers.
+              Twenty prompts: nine reveal how you build, analyze,
+              collaborate, and handle risk; eleven reveal which fields actually
+              pull you in. Rate the statements, pick the scenario that fits —
+              there are no wrong answers.
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-3">
@@ -113,33 +125,74 @@ export default function AssessmentPage() {
               <h2 className="mt-2 text-xl font-semibold text-foreground">
                 {question.prompt}
               </h2>
-              <div
-                role="radiogroup"
-                aria-label={question.prompt}
-                className="mt-4 grid gap-3 md:grid-cols-3"
-              >
-                {question.choices.map((choice) => {
-                  const selected = answers[question.id] === choice.id;
-                  return (
-                    <button
-                      key={choice.id}
-                      type="button"
-                      role="radio"
-                      aria-checked={selected}
-                      onClick={() => choose(question.id, choice.id)}
-                      className={
-                        selected
-                          ? "rounded-md border-2 border-star bg-star/10 p-4 text-left transition"
-                          : "rounded-md border-2 border-border bg-card p-4 text-left transition hover:border-input"
-                      }
-                    >
-                      <p className="text-sm leading-6 text-foreground">
-                        {choice.label}
-                      </p>
-                    </button>
-                  );
-                })}
-              </div>
+              {question.kind === "likert" ? (
+                <div
+                  role="radiogroup"
+                  aria-label={question.prompt}
+                  className="mt-4"
+                >
+                  <div className="grid grid-cols-5 gap-2">
+                    {LIKERT_VALUES.map((value) => {
+                      const selected = answers[question.id] === String(value);
+                      return (
+                        <button
+                          key={value}
+                          type="button"
+                          role="radio"
+                          aria-checked={selected}
+                          aria-label={likertLabels[value]}
+                          onClick={() => choose(question.id, String(value))}
+                          className={optionClass(
+                            selected,
+                            "flex flex-col items-center gap-1.5 px-2 py-3",
+                          )}
+                        >
+                          <span className="font-mono text-sm text-star">
+                            {value}
+                          </span>
+                          {/* Hidden on narrow screens, where five labels
+                              side by side shred into unreadable columns;
+                              the end anchors below carry the scale there. */}
+                          <span className="hidden text-xs leading-4 text-foreground sm:block">
+                            {likertLabels[value]}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    className="mt-2 flex justify-between text-xs text-muted-foreground sm:hidden"
+                  >
+                    <span>{likertLabels[1]}</span>
+                    <span>{likertLabels[5]}</span>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  role="radiogroup"
+                  aria-label={question.prompt}
+                  className="mt-4 grid gap-3 md:grid-cols-3"
+                >
+                  {question.choices.map((choice) => {
+                    const selected = answers[question.id] === choice.id;
+                    return (
+                      <button
+                        key={choice.id}
+                        type="button"
+                        role="radio"
+                        aria-checked={selected}
+                        onClick={() => choose(question.id, choice.id)}
+                        className={optionClass(selected, "p-4 text-left")}
+                      >
+                        <p className="text-sm leading-6 text-foreground">
+                          {choice.label}
+                        </p>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </article>
           ))}
         </section>
@@ -147,7 +200,7 @@ export default function AssessmentPage() {
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="font-mono text-sm text-muted-foreground">
             {complete
-              ? "All seventeen answered — your trait profile is ready."
+              ? "All twenty answered — your trait profile is ready."
               : `${left} ${left === 1 ? "question" : "questions"} left.`}
           </p>
           <Button

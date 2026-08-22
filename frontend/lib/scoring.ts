@@ -23,14 +23,62 @@
  * it here and in the docstring — nothing else reads the raw deltas.
  */
 
-import { assessmentQuestions, type TraitKey } from "./assessment";
+import {
+  LIKERT_VALUES,
+  assessmentQuestions,
+  likertWeight,
+  type AssessmentQuestion,
+  type FieldDeltas,
+  type LikertValue,
+  type TraitDeltas,
+  type TraitKey,
+} from "./assessment";
 import { archetypes, type Archetype } from "./archetypes";
 import type { OpportunityField } from "./types";
 
 export type TraitScores = Record<TraitKey, number>;
 
-/** questionId → choiceId */
+/**
+ * questionId → the chosen choice id, or a Likert rating stored as "1".."5".
+ *
+ * Ratings are kept as strings so the stored shape stays a flat
+ * Record<string, string>: localStorage, `writeAnswers`, and the profile
+ * sync all keep working untouched, and `isComplete`'s truthiness check
+ * stays valid (no rating is ever 0).
+ */
 export type AssessmentAnswers = Record<string, string>;
+
+/** "1".."5" → a LikertValue; anything else → null. */
+export function parseLikert(raw: string): LikertValue | null {
+  const value = Number(raw);
+  return (LIKERT_VALUES as readonly number[]).includes(value)
+    ? (value as LikertValue)
+    : null;
+}
+
+/**
+ * What one answer actually pays out. A pick pays its choice's deltas in
+ * full; a rating pays the share `likertWeight` assigns it. Returning null
+ * for an unrecognized answer is what makes stale stored answers inert
+ * rather than throwing.
+ */
+function contribution(
+  question: AssessmentQuestion,
+  answer: string,
+): { traits: TraitDeltas; fields?: FieldDeltas; weight: number } | null {
+  if (question.kind === "likert") {
+    const value = parseLikert(answer);
+    if (value === null) return null;
+    return {
+      traits: question.traits,
+      fields: question.fields,
+      weight: likertWeight(value, question.reverse),
+    };
+  }
+  const choice = question.choices.find((c) => c.id === answer);
+  if (!choice) return null;
+  return { traits: choice.traits, fields: choice.fields, weight: 1 };
+}
 
 export const TRAIT_KEYS: TraitKey[] = [
   "builder",
@@ -58,10 +106,16 @@ function maximumPossible(): TraitScores {
   const max = { ...ZERO };
   for (const question of assessmentQuestions) {
     for (const trait of TRAIT_KEYS) {
-      const best = Math.max(
-        0,
-        ...question.choices.map((choice) => choice.traits[trait] ?? 0),
-      );
+      // A rating question tops out at its own delta (paid at "Strongly
+      // agree", or at "Strongly disagree" when reverse-coded); a pick tops
+      // out at the largest delta any one of its options carries.
+      const best =
+        question.kind === "likert"
+          ? Math.max(0, question.traits[trait] ?? 0)
+          : Math.max(
+              0,
+              ...question.choices.map((choice) => choice.traits[trait] ?? 0),
+            );
       max[trait] += best;
     }
   }
@@ -75,12 +129,12 @@ export function scoreTraits(answers: AssessmentAnswers): TraitScores {
   const raw = { ...ZERO };
 
   for (const question of assessmentQuestions) {
-    const chosenId = answers[question.id];
-    if (!chosenId) continue;
-    const choice = question.choices.find((c) => c.id === chosenId);
-    if (!choice) continue;
+    const answer = answers[question.id];
+    if (!answer) continue;
+    const paid = contribution(question, answer);
+    if (!paid) continue;
     for (const trait of TRAIT_KEYS) {
-      raw[trait] += choice.traits[trait] ?? 0;
+      raw[trait] += (paid.traits[trait] ?? 0) * paid.weight;
     }
   }
 
@@ -93,7 +147,8 @@ export function scoreTraits(answers: AssessmentAnswers): TraitScores {
 }
 
 // ---------------------------------------------------------------------------
-// Field interest — scored from the field-signal questions (q9-q14).
+// Field interest — scored from the field-signal questions: the picks
+// (q4-q6) and the interest statements (l7-l14).
 // ---------------------------------------------------------------------------
 
 export const FIELD_KEYS: OpportunityField[] = [
@@ -135,12 +190,12 @@ const FIELD_ZERO: FieldScores = {
 export function scoreFieldInterests(answers: AssessmentAnswers): FieldScores {
   const raw = { ...FIELD_ZERO };
   for (const question of assessmentQuestions) {
-    const chosenId = answers[question.id];
-    if (!chosenId) continue;
-    const choice = question.choices.find((c) => c.id === chosenId);
-    if (!choice?.fields) continue;
+    const answer = answers[question.id];
+    if (!answer) continue;
+    const paid = contribution(question, answer);
+    if (!paid?.fields) continue;
     for (const field of FIELD_KEYS) {
-      raw[field] += choice.fields[field] ?? 0;
+      raw[field] += (paid.fields[field] ?? 0) * paid.weight;
     }
   }
 
@@ -390,12 +445,12 @@ export function parseAnswers(raw: string | null): AssessmentAnswers | null {
 
   const valid: AssessmentAnswers = {};
   for (const question of assessmentQuestions) {
-    const choiceId = (parsed as Record<string, unknown>)[question.id];
-    if (
-      typeof choiceId === "string" &&
-      question.choices.some((c) => c.id === choiceId)
-    ) {
-      valid[question.id] = choiceId;
+    const stored = (parsed as Record<string, unknown>)[question.id];
+    if (typeof stored !== "string") continue;
+    // contribution() already knows how to recognize a valid answer for
+    // either kind, so validation and scoring can never drift apart.
+    if (contribution(question, stored)) {
+      valid[question.id] = stored;
     }
   }
   return Object.keys(valid).length > 0 ? valid : null;

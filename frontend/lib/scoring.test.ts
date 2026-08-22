@@ -9,7 +9,11 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { assessmentQuestions } from "./assessment";
+import {
+  LIKERT_VALUES,
+  assessmentQuestions,
+  type LikertValue,
+} from "./assessment";
 import {
   FIELD_KEYS,
   TRAIT_KEYS,
@@ -23,32 +27,45 @@ import {
   type AssessmentAnswers,
 } from "./scoring";
 
-/** Every question answered with its choice at `index` (wrapping). */
-function answersByIndex(index: number): AssessmentAnswers {
+/**
+ * Every question answered: picks take their option at `index` (wrapping),
+ * rating questions all take `rating`.
+ */
+function answersByIndex(
+  index: number,
+  rating: LikertValue = 4,
+): AssessmentAnswers {
   const answers: AssessmentAnswers = {};
   for (const question of assessmentQuestions) {
-    answers[question.id] = question.choices[index % question.choices.length].id;
+    answers[question.id] =
+      question.kind === "likert"
+        ? String(rating)
+        : question.choices[index % question.choices.length].id;
   }
   return answers;
 }
 
+/**
+ * Picks that all point at CS, with every rating question at "Strongly
+ * disagree" so the non-CS interest statements pay out nothing — CS should
+ * then lead by a wide margin.
+ */
 const CS_LEANING: AssessmentAnswers = {
-  ...answersByIndex(0),
-  "q9-headline": "ai-diagnosis",
-  "q10-exhibit": "maker-floor",
-  "q11-series": "how-internet-works",
-  "q12-weekend-pitch": "game-bot",
-  "q13-fun-class": "quantum",
-  "q14-career-day": "game-engineer",
+  ...answersByIndex(0, 1),
+  "q4-headline": "ai-diagnosis",
+  "q5-fun-class": "ethics-of-tech",
+  "q6-career-day": "game-engineer",
 };
 
 describe("scoreTraits", () => {
-  it("keeps every trait in [0, 100]", () => {
-    for (const index of [0, 1, 2]) {
-      const scores = scoreTraits(answersByIndex(index));
-      for (const trait of TRAIT_KEYS) {
-        expect(scores[trait]).toBeGreaterThanOrEqual(0);
-        expect(scores[trait]).toBeLessThanOrEqual(100);
+  it("keeps every trait in [0, 100] at every rating", () => {
+    for (const rating of LIKERT_VALUES) {
+      for (const index of [0, 1, 2, 3, 4]) {
+        const scores = scoreTraits(answersByIndex(index, rating));
+        for (const trait of TRAIT_KEYS) {
+          expect(scores[trait]).toBeGreaterThanOrEqual(0);
+          expect(scores[trait]).toBeLessThanOrEqual(100);
+        }
       }
     }
   });
@@ -61,6 +78,16 @@ describe("scoreTraits", () => {
 
 describe("scoreFieldInterests", () => {
   it("always sums to exactly 100 for complete answers", () => {
+    for (const rating of LIKERT_VALUES) {
+      for (const index of [0, 1, 2, 3, 4]) {
+        const scores = scoreFieldInterests(answersByIndex(index, rating));
+        const total = FIELD_KEYS.reduce((sum, field) => sum + scores[field], 0);
+        expect(total).toBe(100);
+      }
+    }
+  });
+
+  it("stays at 100 for a mixed run (some ratings, some picks)", () => {
     for (const index of [0, 1, 2]) {
       const scores = scoreFieldInterests(answersByIndex(index));
       const total = FIELD_KEYS.reduce((sum, field) => sum + scores[field], 0);
@@ -138,12 +165,70 @@ describe("selectFuturePaths", () => {
   });
 });
 
+describe("the 1-5 rating scale", () => {
+  const likert = assessmentQuestions.filter((q) => q.kind === "likert");
+  const picks = assessmentQuestions.filter((q) => q.kind === "choice");
+
+  it("mixes both formats, and no pick is down to three options", () => {
+    expect(likert.length).toBeGreaterThan(0);
+    expect(picks.length).toBeGreaterThan(0);
+    for (const question of picks) {
+      // Three was too few to describe a real student; four is the floor.
+      expect(question.choices.length).toBeGreaterThanOrEqual(4);
+    }
+  });
+
+  it("pays a forward item more the more you agree", () => {
+    const base = answersByIndex(0, 3);
+    const agree = scoreTraits({ ...base, "l3-long-odds": "5" });
+    const disagree = scoreTraits({ ...base, "l3-long-odds": "1" });
+    expect(agree.riskTolerance).toBeGreaterThan(disagree.riskTolerance);
+  });
+
+  it("pays a reverse-coded item more the more you disagree", () => {
+    const base = answersByIndex(0, 3);
+    const agree = scoreTraits({ ...base, "l4-need-instructions": "5" });
+    const disagree = scoreTraits({ ...base, "l4-need-instructions": "1" });
+    expect(disagree.ambiguityComfort).toBeGreaterThan(agree.ambiguityComfort);
+  });
+
+  it("is monotonic across the whole scale", () => {
+    const base = answersByIndex(0, 3);
+    const scores = LIKERT_VALUES.map(
+      (v) => scoreTraits({ ...base, "l3-long-odds": String(v) }).riskTolerance,
+    );
+    for (let i = 1; i < scores.length; i += 1) {
+      expect(scores[i]).toBeGreaterThanOrEqual(scores[i - 1]);
+    }
+  });
+
+  it("treats a neutral run as strictly between disagreeing and agreeing", () => {
+    const low = scoreTraits(answersByIndex(0, 1));
+    const mid = scoreTraits(answersByIndex(0, 3));
+    const high = scoreTraits(answersByIndex(0, 5));
+    // riskTolerance has no reverse-coded item, so the ordering is clean.
+    expect(mid.riskTolerance).toBeGreaterThan(low.riskTolerance);
+    expect(high.riskTolerance).toBeGreaterThan(mid.riskTolerance);
+  });
+
+  it("accepts only 1-5 as a stored rating", () => {
+    for (const raw of ["1", "3", "5"]) {
+      expect(parseAnswers(JSON.stringify({ "l3-long-odds": raw }))).toEqual({
+        "l3-long-odds": raw,
+      });
+    }
+    for (const raw of ["0", "6", "", "4.5", "agree", "take-shot"]) {
+      expect(parseAnswers(JSON.stringify({ "l3-long-odds": raw }))).toBeNull();
+    }
+  });
+});
+
 describe("parseAnswers", () => {
   it("drops answers whose question or choice no longer exists", () => {
     const stored = JSON.stringify({
       "q1-free-afternoon": "build-project",
       "q1-free-afternoon-old": "gone",
-      "q3-competition-choice": "choice-that-never-existed",
+      "q2-competition-choice": "choice-that-never-existed",
     });
     expect(parseAnswers(stored)).toEqual({
       "q1-free-afternoon": "build-project",
