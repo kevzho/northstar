@@ -245,3 +245,35 @@ until it sounds like you. Tiers 3–4 are understand/skim.
 - [ ] TIER 3: the sky comet (`.sky-comet`, 90s cycle) uses px translate
       = SVG user units; if the sky viewBox ever changes, retune the
       keyframes in globals.css (c73188f).
+
+- [ ] TIER 1: advisor spend controls in `backend/app/advisor.py` — own
+      the three caps (10/student/day, 150/day, 20/minute) and, more
+      importantly, why the counters live in Postgres rather than in
+      process: the API is serverless, so an in-process counter resets
+      on every cold start and each concurrent instance would grant a
+      full quota (f85e43d).
+- [ ] TIER 1: `public.advisor_calls` is both ledger and cache — one row
+      per BILLED call, none for a cache hit, so count(rows) is exactly
+      credits spent. The cache is checked BEFORE the budget on purpose;
+      be able to say why that ordering is the whole point (f85e43d).
+- [ ] TIER 1: Likert scoring in `frontend/lib/scoring.ts` — the [0,1]
+      multiplier (5 pays in full, 1 nothing) is what lets rated items
+      reuse the existing normalization without any trait going negative.
+      Own the two reverse-coded items and what they defend against
+      (agreeing with everything scoring high on all six) (20e8c40).
+- [ ] TIER 2: why the bank keeps both question formats — picks force a
+      tradeoff between fields, ratings measure one trait on its own
+      axis. Be able to argue why converting everything to 1-5 would
+      flatten the field percentages (20e8c40).
+- [ ] TIER 2: the flex/truncate trap — `truncate` is inert on a flex
+      item without `min-w-0`, because flex items default to
+      min-width:auto and will not shrink below min-content. This will
+      recur on any new flex row with ellipsized text (4ff9ece).
+- [ ] TIER 2: `.github/workflows/scrape.yml` — the five required
+      secrets, and why the job fails fast on a missing one (both
+      missing-credential paths look like "ran fine, found nothing")
+      (ff84235).
+- [ ] TIER 3: Actions minute budget on a private repo — every job bills
+      a full minute however short, which is why Smoke went to every two
+      hours; recheck the arithmetic before adding another scheduled
+      workflow (ff84235).
