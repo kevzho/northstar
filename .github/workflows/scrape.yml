@@ -1,0 +1,95 @@
+# The daily opportunity loop: scrape Reddit + Devpost into the shared
+# candidate pool, then let the verifier promote the clear wins into
+# public.opportunities so students see fresh listings.
+#
+# This used to be a launchd job (com.northstar.reddit-scraper) on one laptop,
+# which meant no scrape happened on any day that machine was closed or asleep
+# at 09:00 — StartCalendarInterval cannot fire on a sleeping Mac. Running it
+# here decouples the catalog from one person's lid being open.
+name: Scrape
+
+on:
+  schedule:
+    # 16:17 UTC ~= 09:17 PT, keeping the old local slot. Deliberately off the
+    # hour: on-the-hour crons queue behind everyone else's and get dropped.
+    - cron: "17 16 * * *"
+  workflow_dispatch:
+
+# A run mutates the shared pool and upserts into Supabase. Two at once would
+# spend the LLM budget twice to discover the same posts, so let a running
+# scrape finish rather than racing or cancelling it.
+concurrency:
+  group: scrape
+  cancel-in-progress: false
+
+# Needed only by the commit-back step at the end.
+permissions:
+  contents: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    # A full pass is ~40 minutes: 100+ subreddit and search fetches, each
+    # deliberately rate-limited to stay polite to Reddit's API.
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+      REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+      LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+      # Fall back rather than pass through: an unset secret would export an
+      # empty string, and os.getenv returns "" instead of its default for a
+      # variable that is set-but-empty — which would break the verifier.
+      LLM_API_BASE: ${{ secrets.LLM_API_BASE || 'https://api.deepseek.com' }}
+      LLM_MODEL: ${{ secrets.LLM_MODEL || 'deepseek-v4-pro' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+      - run: pip install -r requirements.txt
+
+      # Fail loudly and up front. Without Reddit credentials the scraper falls
+      # back to the unauthenticated endpoint and gets rate-limited into
+      # returning almost nothing; without the LLM key the verifier exits
+      # cleanly and imports zero. Both look like "ran fine, found nothing".
+      - name: Required secrets are present
+        run: |
+          missing=""
+          for name in REDDIT_CLIENT_ID REDDIT_CLIENT_SECRET \
+                      SUPABASE_URL SUPABASE_SECRET_KEY LLM_API_KEY; do
+            [ -n "${!name}" ] || missing="$missing $name"
+          done
+          if [ -n "$missing" ]; then
+            echo "Missing repo secrets:$missing"
+            echo "Add them under Settings -> Secrets and variables -> Actions."
+            exit 1
+          fi
+
+      - name: Scrape, verify, import
+        run: python scripts/scrape_all.py
+
+      # The pool is the scrapers' memory of what they have already seen, so it
+      # has to persist between runs or every day rediscovers the same posts as
+      # "new". The imported opportunities themselves already went to Supabase.
+      - name: Commit the refreshed candidate pool
+        run: |
+          git config user.name "Kevin Zhou"
+          git config user.email "86838731+kevzho@users.noreply.github.com"
+          git add scripts/scraped/reddit_candidates.json
+          if git diff --cached --quiet; then
+            echo "No new candidates; nothing to commit."
+            exit 0
+          fi
+          # [skip ci] because a data-only change cannot affect the build, and
+          # CI minutes on a private repo are worth more than a redundant run.
+          git commit -m "Daily scrape: refresh candidate pool [skip ci]"
+          # Land on top of anything pushed while the scrape was running.
+          git pull --rebase --autostash origin main
+          git push origin HEAD:main

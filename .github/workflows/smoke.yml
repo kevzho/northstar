@@ -1,13 +1,26 @@
-# Production smoke test — the live site is checked every 30 minutes, so a
-# broken deploy alerts (workflow failure email) within minutes instead of
-# being discovered by a visitor. Checks are read-only and unauthenticated:
-# frontend renders, backend is healthy, and the auth gate still rejects
-# anonymous requests (a 200 there would mean the gate fell off).
+# Production smoke test — a broken deploy alerts (workflow failure email)
+# instead of being discovered by a visitor. Checks are read-only and
+# unauthenticated: frontend renders, backend is healthy, and the auth gate
+# still rejects anonymous requests (a 200 there would mean the gate fell off).
+#
+# Every two hours, not every 30 minutes. Two reasons. GitHub never actually
+# delivered 30-minute runs — scheduled jobs on shared runners are best-effort,
+# and measured gaps here ran 30-70 minutes — so the tighter cron bought
+# latency it could not honour. And on a private repo every job bills a full
+# minute however short it is, so 30 runs/day of a 10-second check spent ~900
+# of the 2,000 monthly minutes to do five minutes of work. Twelve runs/day
+# costs ~360 and leaves room for the daily scrape. Treat alert latency as
+# "within a couple of hours"; CI still gates every push in the meantime.
+#
+# The frontend check targets the custom domain, not the .vercel.app URL:
+# northstar.study is what students actually visit, so it is the one whose
+# DNS, certificate and domain assignment need watching. A green run against
+# the vercel.app address would prove nothing about the real site.
 name: Smoke
 
 on:
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "0 */2 * * *"
   workflow_dispatch:
 
 jobs:
@@ -16,7 +29,7 @@ jobs:
     steps:
       - name: Frontend renders
         run: |
-          body=$(curl -sf --max-time 20 https://northstar-mu-teal.vercel.app)
+          body=$(curl -sf --max-time 20 https://northstar.study)
           echo "$body" | grep -qi "northstar" || { echo "homepage did not mention Northstar"; exit 1; }
       - name: Backend healthy
         run: |
