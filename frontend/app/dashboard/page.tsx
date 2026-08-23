@@ -208,13 +208,16 @@ export default function DashboardPage() {
         </header>
 
         {/* Today strip: proof the product knows you, before anything else. */}
-        <section className="mb-10 grid gap-4 md:grid-cols-3">
+        <section className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-3">
           <div className="rounded-lg border bg-card p-5">
             <p className="eyebrow">Closing soon</p>
             {closingSoon.length > 0 ? (
               <ul className="mt-3 grid gap-2">
                 {closingSoon.map(({ opportunity, days }) => (
-                  <li key={opportunity.id} className="flex items-baseline justify-between gap-3">
+                  <li
+                    key={opportunity.id}
+                    className="flex min-w-0 items-baseline justify-between gap-3"
+                  >
                     <Link
                       href={`/opportunities/${opportunity.id}`}
                       title={opportunity.title}
@@ -296,12 +299,12 @@ export default function DashboardPage() {
             <p className="mt-1 text-sm text-muted-foreground">
               Ranked by opportunity fit — from your TF-IDF profile.
             </p>
-            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {(matches.slice(0, 4)).map(({ opportunity, score }) => (
                 <Link
                   key={opportunity.id}
                   href={`/opportunities/${opportunity.id}`}
-                  className="rounded-lg border bg-card transition-colors hover:border-primary p-4"
+                  className="min-w-0 rounded-lg border bg-card transition-colors hover:border-primary p-4"
                 >
                   <span className="badge-fit mb-2">
                     {Math.round(score.score * 100)}% fit

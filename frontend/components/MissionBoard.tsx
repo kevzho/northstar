@@ -112,7 +112,7 @@ export function MissionBoard({
     .slice(0, 2);
 
   return (
-    <section className="mt-8 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+    <section className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
       <div className="rounded-lg border bg-card p-5">
         <p className="eyebrow">Readiness</p>
         {gaps.length === 0 ? (
@@ -154,7 +154,7 @@ export function MissionBoard({
               {routed.map(({ opportunity, days }) => (
                 <li
                   key={opportunity.id}
-                  className="flex items-baseline justify-between gap-3"
+                  className="flex min-w-0 items-baseline justify-between gap-3"
                 >
                   <Link
                     href={`/opportunities/${opportunity.id}`}
