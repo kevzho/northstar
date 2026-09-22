@@ -80,8 +80,8 @@ export default function MentorsPage() {
             Mentor recommendations
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
-            Ranked by how well their expertise aligns with your profile.
-            Reach out to mentors you want to work with.
+            Mentors who have opted in, ranked by how well their expertise
+            aligns with your profile.
           </p>
         </header>
 
@@ -93,8 +93,8 @@ export default function MentorsPage() {
               Could not load mentors
             </h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
-              The mentor matching engine may not have seed data yet. Run
-              scripts/seed_mentors.sql in the Supabase SQL Editor.
+              That is a connection problem, not an empty directory. Reload in
+              a moment.
             </p>
           </section>
         ) : mentors.length === 0 ? (
@@ -103,9 +103,21 @@ export default function MentorsPage() {
               No mentors yet
             </h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
-              Mentor data has not been seeded. Run scripts/seed_mentors.sql
-              to populate the catalog.
+              This directory is deliberately empty. It previously listed
+              sample profiles that were not real people, and those have been
+              removed rather than left to look like an offer we could keep.
             </p>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">
+              It will fill with mentors who have agreed in writing to hear
+              from students. Until then, every other surface in Northstar
+              points at programs you can actually apply to today.
+            </p>
+            <Button
+              render={<Link href="/opportunities" />}
+              className="mt-5 h-10 px-4"
+            >
+              Browse opportunities
+            </Button>
           </section>
         ) : (
           <section className="mt-8 grid gap-4">

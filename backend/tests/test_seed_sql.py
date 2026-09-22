@@ -50,44 +50,51 @@ def test_opportunity_seed_uses_real_enum_values() -> None:
         assert used <= declared_fields
 
 
-def test_mentor_seed_is_idempotent_via_on_conflict() -> None:
-    sql = (SCRIPTS / "seed_mentors.sql").read_text()
-    inserts = sql.count("INSERT INTO public.mentors")
-    assert inserts == 25, f"expected 25 mentor rows, found {inserts}"
-    assert sql.count("ON CONFLICT (email) DO NOTHING;") == inserts
-    assert "WHERE NOT EXISTS" not in sql
+def test_no_migration_seeds_a_placeholder_mentor() -> None:
+    """Mentors are shown to students with a working mailto button.
+
+    scripts/seed_mentors.sql used to insert 25 invented people attributed to
+    MIT, Stanford, Google, CERN and the Broad, each with an RFC 2606 reserved
+    address. It was folded into 20260815090000_seed_catalog.sql when the live
+    database was found empty, which promoted scaffolding to production data.
+    20260922090000_remove_placeholder_mentors.sql deletes those rows and adds
+    a CHECK constraint; this asserts no NEW migration reintroduces the shape.
+
+    The historical seed migration is exempt: it is already applied, cannot be
+    edited, and the later migration deletes what it inserts.
+    """
+    seeded_before_the_fix = {"20260815090000_seed_catalog.sql"}
+    reserved = re.compile(
+        r"'[^']*@[^']*\.(example|test|invalid|localhost)'"
+        r"|'[^']*@example\.(com|net|org)'",
+        re.IGNORECASE,
+    )
+    offenders = []
+    for path in sorted(MIGRATIONS.glob("*.sql")):
+        if path.name in seeded_before_the_fix:
+            continue
+        for match in reserved.finditer(path.read_text()):
+            offenders.append(f"{path.name}: {match.group(0)}")
+    assert not offenders, (
+        "migration inserts a mentor at a reserved placeholder address -- that "
+        "is an invented person, rendered to students with a mailto:\n  "
+        + "\n  ".join(offenders)
+    )
 
 
-def test_mentor_seed_emails_are_unique() -> None:
-    """A duplicate email inside the file would silently drop a row."""
-    sql = (SCRIPTS / "seed_mentors.sql").read_text()
-    emails = re.findall(r"VALUES \('[^']*', '([^']+)'", sql)
-    assert len(emails) == 25
-    assert len(set(emails)) == 25, "duplicate email in seed_mentors.sql"
+def test_placeholder_mentor_constraint_exists() -> None:
+    """The durable half of the fix.
 
-
-# mentors.expertise is text[], not the opportunity_field enum, so extra tags are
-# storable. They just cannot earn the field booster in app/mentors.py, which only
-# credits expertise values that some student interest maps onto. Keep the
-# vocabulary explicit so a new off-enum tag is a deliberate choice, not a typo.
-EXPERTISE_VOCAB = FIELDS | {"chemistry"}
-
-
-def test_mentor_seed_expertise_values_are_known() -> None:
-    sql = (SCRIPTS / "seed_mentors.sql").read_text()
-    for block in re.findall(r"ARRAY\[(.*?)\]", sql, re.DOTALL):
-        for tag in re.findall(r"'([^']+)'", block):
-            assert tag in EXPERTISE_VOCAB, (
-                f"unknown expertise value {tag!r} in seed_mentors.sql"
-            )
-
-
-def test_every_mentor_has_at_least_one_boostable_expertise() -> None:
-    """A mentor tagged only off-enum can never earn the expertise booster."""
-    sql = (SCRIPTS / "seed_mentors.sql").read_text()
-    for block in re.findall(r"ARRAY\[(.*?)\]", sql, re.DOTALL):
-        tags = set(re.findall(r"'([^']+)'", block))
-        assert tags & FIELDS, f"mentor expertise {sorted(tags)} maps to no field"
+    Deleting the rows alone is reversible by a `supabase db reset`, which
+    replays the historical seed. The CHECK constraint makes that replay fail
+    loudly instead of silently repopulating a directory of invented people.
+    """
+    sql = (MIGRATIONS / "20260922090000_remove_placeholder_mentors.sql").read_text().lower()
+    assert "delete from public.mentors" in sql, "the fabricated rows must be deleted"
+    assert "mentors_email_not_placeholder" in sql, "the constraint must be named"
+    assert "add constraint" in sql and "check" in sql
+    # Order matters: the constraint cannot be added while violating rows exist.
+    assert sql.index("delete from public.mentors") < sql.index("add constraint")
 
 
 def test_migration_filenames_follow_cli_convention() -> None:
