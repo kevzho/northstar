@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { AppNav } from "@/components/AppNav";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/use-auth";
-import { authedFetch, saveStudentProfile, fetchMatches, fetchOutcomes } from "@/lib/api";
+import { authedFetch, fetchMatches, fetchOutcomes, isApiError } from "@/lib/api";
 import { traitLabels } from "@/lib/assessment";
 import { TRAIT_KEYS, scoreTraits } from "@/lib/scoring";
 import { useStoredAnswers } from "@/lib/use-assessment";
@@ -28,11 +28,24 @@ export default function DashboardPage() {
   const [studentName, setStudentName] = useState<string | null>(null);
   const [matches, setMatches] = useState<MatchResult[] | null>(null);
   const [matchesFailed, setMatchesFailed] = useState(false);
+  const [profileFailed, setProfileFailed] = useState(false);
   const [outcomes, setOutcomes] = useState<Outcome[]>([]);
   const answers = useStoredAnswers();
 
-  // On first sign-in without a profile: create a minimal students row,
-  // then redirect to onboarding so the student fills in the real fields.
+  // On first sign-in without a profile: send the student to onboarding.
+  //
+  // This used to POST a stub row {name:null, grade:null, interests:[],
+  // goals:null, onboarded:false} BEFORE redirecting, which was a one-way
+  // trap. Once that row existed GET /me returned 200 forever, so a student
+  // who closed the tab on the onboarding form came back to a dashboard that
+  // took its success branch, ran the matcher against an empty profile
+  // (_query_for_student tokenizes to nothing), and showed them an empty list
+  // on every request from then on. Taking the assessment did not help:
+  // POST /assessment-profile writes columns the matcher never reads.
+  //
+  // The fix is to read the `onboarded` flag the app already writes in three
+  // places and had never once read, and to stop creating the row early --
+  // POST /students at the end of onboarding upserts it anyway.
   //
   // The run-once guard is a ref, NOT the `checking` state: `checking` in
   // the dependency array meant setChecking(true) re-ran the effect and
@@ -49,7 +62,19 @@ export default function DashboardPage() {
     (async () => {
       try {
         const me = await (await authedFetch("/me")).json();
-        // Profile exists — greet by name, fetch matches.
+
+        // A row can exist without onboarding being finished — an account
+        // created before this check, or a future partial-save path. Trust
+        // the flag, not the row's existence.
+        if (me?.onboarded !== true) {
+          if (!cancelled) {
+            setChecking(false);
+            router.push("/onboarding");
+          }
+          return;
+        }
+
+        // Profile exists and is complete — greet by name, fetch matches.
         if (!cancelled) {
           setStudentName((me?.name ?? "").trim() || null);
           setChecking(false);
@@ -73,25 +98,18 @@ export default function DashboardPage() {
           }
         }
         return;
-      } catch {
-        // 404 → no profile yet; create a stub then redirect to onboarding.
-        try {
-          await saveStudentProfile({
-            name: null,
-            grade: null,
-            interests: [],
-            goals: null,
-            onboarded: false,
-          });
-        } catch {
-          if (!cancelled) setChecking(false);
-          return;
-        }
-      }
-
-      if (!cancelled) {
+      } catch (err) {
+        if (cancelled) return;
         setChecking(false);
-        router.push("/onboarding");
+        // 404 is the only status that means "no profile yet." A 500, a
+        // dropped connection or an expired session is a failure to ANSWER
+        // the question, and must not be read as an answer — the old code
+        // caught all of them and wrote a stub row in response.
+        if (isApiError(err) && err.status === 404) {
+          router.push("/onboarding");
+        } else {
+          setProfileFailed(true);
+        }
       }
     })();
 
@@ -266,7 +284,17 @@ export default function DashboardPage() {
         </section>
 
         {/* Recommendations preview — top 4 matches */}
-        {matchesFailed ? (
+        {profileFailed ? (
+          <section className="rounded-lg border border-destructive/40 bg-card mb-10 p-6 text-center">
+            <h2 className="text-xl font-semibold text-foreground">
+              Could not load your profile
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              Your account is fine — we just could not reach the server.
+              Reload in a moment.
+            </p>
+          </section>
+        ) : matchesFailed ? (
           <section className="rounded-lg border border-destructive/40 bg-card mb-10 p-6 text-center">
             <h2 className="text-xl font-semibold text-foreground">
               Could not reach the match engine
@@ -288,8 +316,16 @@ export default function DashboardPage() {
               No recommendations yet
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Complete onboarding and run the seed data to populate matches.
+              Nothing in the catalog matches your profile yet. Adding a couple
+              more interests usually fixes it — the matcher reads those
+              directly.
             </p>
+            <Button
+              render={<Link href="/profile" />}
+              className="mt-4 h-10 px-4"
+            >
+              Edit your interests
+            </Button>
           </section>
         ) : (
           <section className="mb-10">

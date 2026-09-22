@@ -272,7 +272,12 @@ def public_payload(sb, student: dict) -> dict:
     return {
         "handle": student.get("handle"),
         "name": first_name(student.get("name")),
-        "audience": student.get("audience") or "high_school",
+        # `audience` is deliberately absent here. This payload is served
+        # unauthenticated by GET /public/{handle}, and "high_school" next to
+        # a first name, behavioral trait scores and social links tells any
+        # reader they are looking at a minor. Nothing renders it --
+        # frontend/app/p/[handle]/page.tsx never reads the field.
+        # compare_payload below is friends-only and still includes it.
         "trait_scores": student.get("trait_scores"),
         "field_scores": student.get("field_scores"),
         "chosen_archetype": student.get("chosen_archetype"),

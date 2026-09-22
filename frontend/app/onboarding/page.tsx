@@ -5,9 +5,10 @@
  *
  * Step 1: identity basics (name, grade).
  * Step 2: interests (multi-select chips) + open-ended goal statement.
- * Step 3: background + IRB-style consent checkbox.
+ * Step 3: optional background + consent, which links to /privacy.
  */
 
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { AppNav } from "@/components/AppNav";
 import { Input } from "@/components/ui/input";
@@ -52,6 +53,7 @@ export default function OnboardingPage() {
   const [background, setBackground] = useState("");
   const [consent, setConsent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [saveError, setSaveError] = useState(false);
 
   function toggleInterest(value: string) {
     setInterests((current) =>
@@ -63,6 +65,7 @@ export default function OnboardingPage() {
 
   async function handleSubmit() {
     setIsSubmitting(true);
+    setSaveError(false);
     try {
       await saveStudentProfile({
         name,
@@ -75,13 +78,22 @@ export default function OnboardingPage() {
         consent,
       });
     } catch (err) {
-      // Surface the failure but don't trap the user — the profile was
-      // already created (with empty fields) by the dashboard. They can
-      // edit it later from the dashboard.
+      // This call is what CREATES the student row — the dashboard no
+      // longer writes a stub ahead of it. So a failure here means the
+      // account has no profile, and walking the student onward would land
+      // them on a dashboard that bounces them straight back. Stop, say so,
+      // and keep every field they typed so Finish just works on retry.
       console.warn("onboarding save failed:", err);
-    } finally {
+      setSaveError(true);
       setIsSubmitting(false);
+      return;
     }
+    setIsSubmitting(false);
+    // Collected but deliberately not sent: there is no `background` column,
+    // and no matcher input reads it. Asking a minor about first-generation
+    // status and school resources is not something to store speculatively --
+    // when eligibility filtering actually needs it, add the column, say so in
+    // /privacy, and start sending it then.
     void background;
     if (quizDone) {
       // Taken anonymously before the account existed: the finish-time
@@ -100,7 +112,10 @@ export default function OnboardingPage() {
   const canContinue =
     (step === 1 && name.trim().length > 0 && grade.length > 0) ||
     (step === 2 && interests.length > 0 && goals.trim().length > 0) ||
-    (step === 3 && background.trim().length > 0 && consent);
+    // Step 3 gates on consent only. `background` is labelled "(optional)"
+    // and is discarded below, so requiring it blocked students on a field
+    // the product told them to skip -- with no error text saying why.
+    (step === 3 && consent);
 
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
@@ -276,7 +291,6 @@ export default function OnboardingPage() {
                   Background (optional, used only for eligibility filtering)
                 </span>
                 <Textarea
-                  required
                   value={background}
                   onChange={(event) => setBackground(event.target.value)}
                   rows={3}
@@ -284,8 +298,9 @@ export default function OnboardingPage() {
                   placeholder="e.g. First-generation student at a public high school with no STEM club."
                 />
               </label>
-              <label className="flex items-start gap-3">
+              <div className="flex items-start gap-3">
                 <input
+                  id="consent"
                   type="checkbox"
                   required
                   checked={consent}
@@ -293,12 +308,36 @@ export default function OnboardingPage() {
                   className="mt-1 h-4 w-4 rounded accent-[var(--star)]"
                 />
                 <span className="text-sm leading-6 text-foreground">
-                  I consent to Northstar storing my profile and assessment
-                  responses to personalize recommendations, in line with the
-                  the IRB-style data policy for this project.
+                  {/* The link is OUTSIDE the label on purpose: inside one,
+                      clicking "privacy policy" would also toggle consent. */}
+                  <label htmlFor="consent">
+                    I consent to Northstar storing my profile and assessment
+                    responses to personalize recommendations, as described in
+                    the
+                  </label>{" "}
+                  <Link
+                    href="/privacy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline underline-offset-2"
+                  >
+                    privacy policy
+                  </Link>
+                  .
                 </span>
-              </label>
+              </div>
             </div>
+          ) : null}
+
+          {saveError ? (
+            <p
+              role="alert"
+              className="mt-6 rounded-md border border-destructive/40 bg-card px-4 py-3 text-sm leading-6 text-foreground"
+            >
+              Could not save your profile — that is a connection problem, not
+              anything you did. Your answers are still here; press Finish to
+              try again.
+            </p>
           ) : null}
 
           <div className="mt-7 flex items-center justify-between">
