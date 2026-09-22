@@ -419,8 +419,9 @@ export function selectFuturePaths(
 //
 // Answers live in localStorage for now, read through lib/use-assessment.ts. The
 // Supabase schema already has behaviour_events / latent_profiles / future_paths
-// tables for the server-side version, but no backend routes expose them yet —
-// see docs/TASK_SPLIT.md.
+// tables for the server-side version, but no backend routes expose them yet,
+// and nothing has ever written a row to any of the three. Only the derived
+// trait_scores / field_scores reach the server, via POST /assessment-profile.
 // ---------------------------------------------------------------------------
 
 export const STORAGE_KEY = "northstar.assessment.answers";

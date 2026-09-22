@@ -1,15 +1,21 @@
 "use client";
 
 /**
- * Northstar pathway map — D3 force-directed graph.
+ * Northstar pathway map — D3 orbital diagram.
  *
- * Nodes are the student's top matched opportunities (sized by score,
- * colored by field). Edges connect opportunities that share a field or
- * tags. The graph is fetched from GET /pathways on mount and rendered
- * into an SVG via d3-force.
+ * NOT a force-directed graph, despite what this comment used to say and
+ * what the dashboard tile used to promise. Each FIELD is drawn as a star,
+ * and the student's matched opportunities orbit the star for their field:
+ * orbit index comes from the deadline (innermost closes soonest, rolling
+ * deadlines sit outermost), angle is deterministic per index so the layout
+ * is stable between renders. No edges are drawn between nodes.
  *
- * Per ARCHITECTURE.md, the node-edge model is a major technical
- * differentiator. This page is the judge-facing centerpiece.
+ * Data comes from GET /pathways, which returns nodes AND edges — the edges
+ * are derived at request time from shared tags and field. This page uses
+ * the nodes and ignores the edges.
+ *
+ * Accessibility: the SVG is decorative and mouse-only. Keyboard and screen
+ * reader users need the conforming list alternative; see the roadmap.
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -307,8 +313,8 @@ export default function MapPage() {
               No map yet
             </h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
-              Complete onboarding and run the seed data to populate your
-              pathway graph.
+              Your map is built from your ranked matches, so it fills in once
+              you have finished onboarding and the assessment.
             </p>
             <Button render={<Link href="/onboarding" />} className="mt-6 h-11 px-5 font-semibold">
               Go to onboarding

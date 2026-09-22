@@ -652,7 +652,7 @@
     },
     "/assessment-profile": {
       "post": {
-        "description": "Persist the quiz's trait + field scores onto the student row.\n\nTouches only those two columns (see AssessmentProfileSync). 404s\nwhen no profile row exists yet \u2014 the frontend creates the stub via\nPOST /students first, same contract as everywhere else.",
+        "description": "Persist the quiz's trait + field scores onto the student row.\n\nTouches only those two columns (see AssessmentProfileSync). 404s\nwhen no profile row exists yet. The row is created by POST /students\nat the end of onboarding \u2014 the dashboard no longer writes a stub\nahead of it, because that stub made an abandoned onboarding\npermanent.",
         "operationId": "sync_assessment_profile_assessment_profile_post",
         "requestBody": {
           "content": {
@@ -1264,7 +1264,7 @@
     },
     "/mentors": {
       "get": {
-        "description": "Ranked mentor recommendations for the signed-in student.\n\nReuses the TF-IDF / cosine pipeline from app/mentors.py. All\nmentors are returned (``select *``) \u2014 there are <100 in the\ncatalog at MVP scale, so no need for server-side prefilter.",
+        "description": "Ranked mentor recommendations for the signed-in student.\n\nReuses the TF-IDF / cosine pipeline from app/mentors.py. Only\nmentors with a recorded ``consented_at`` are returned; the\ndirectory is empty until real mentors opt in, so there is nothing\nto prefilter server-side.",
         "operationId": "list_mentors_mentors_get",
         "responses": {
           "200": {

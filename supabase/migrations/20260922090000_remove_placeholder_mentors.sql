@@ -19,10 +19,15 @@
 -- have emailed them.
 --
 -- Deleting the rows is not enough on its own: the seed lives in an applied
--- migration, so a `supabase db reset` would replay it. The CHECK constraint
--- is the durable half -- it makes the seed fail loudly instead of silently
--- repopulating, and it is why scripts/seed_mentors.sql is deleted in the
--- same commit.
+-- migration. On a `supabase db reset` that seed replays first, inserts the 25
+-- rows again, and this migration then deletes them -- so a reset converges on
+-- an empty directory, but it does so by cleaning up rather than by refusing.
+-- (The mentor INSERTs have since been removed from that seed migration too,
+-- so a reset no longer creates them at all.)
+--
+-- The CHECK constraint is the durable half: it makes any FUTURE insert of a
+-- reserved-address mentor fail immediately, which is why scripts/seed_mentors.sql
+-- is deleted in the same commit.
 --
 -- Real mentors, with a written opt-in, are tracked separately. An empty
 -- directory that says so is worth more than a full one that is invented.

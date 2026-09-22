@@ -1,6 +1,6 @@
 -- The evidence record goes social: opt-in public profiles and friendships.
 --
--- handle: a chosen, unique, url-safe name (northstar.app/p/<handle>).
+-- handle: a chosen, unique, url-safe name (northstar.study/p/<handle>).
 -- public_profile: OFF by default — minors' records are private until the
 -- student explicitly shares. The public page shows highlights only
 -- (positive outcomes); the full comparison is reserved for accepted

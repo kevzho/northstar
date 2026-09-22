@@ -55,7 +55,7 @@ This used to run on a laptop. It didn't run on any day the laptop lid was closed
 It loads the real homepage, asks the server if it's healthy, and tries to access a private page without logging in to confirm it still gets rejected. If any of those fail, an email goes out. This is how a broken deploy gets noticed by the developer instead of by a visitor.
 
 **Every time code changes — the safety net.**
-Before any change can land, an automated checklist runs: does the website still build, do the types line up, do the tests pass on both sides. 14 test files on the server side, plus tests specifically guarding the scoring math — the one place a silent bug would do the most damage.
+Before any change can land, an automated checklist runs: does the website still build, do the types line up, do the tests pass on both sides. 16 test files (182 tests) on the server side, plus tests specifically guarding the scoring math — the one place a silent bug would do the most damage.
 
 ---
 
@@ -78,7 +78,7 @@ Total round trip: well under a second. Every step is either explainable arithmet
 
 ## The quiz, and why it's separate
 
-The assessment quiz runs **entirely in the browser** — the server isn't involved in scoring it. A student answers agree/disagree questions on a 1–5 scale. Each answer carries small weights toward six traits: builder, analyst, risk tolerance, comfort with ambiguity, collaboration, and execution tempo.
+The assessment quiz runs **entirely in the browser** — the server isn't involved in scoring it. A student answers twenty prompts: fourteen are agree/disagree statements on a 1–5 scale, and six are pick-one scenarios with five options each. Each answer carries small weights toward six traits: builder, analyst, risk tolerance, comfort with ambiguity, collaboration, and execution tempo.
 
 The math is three steps:
 1. Add up the weights from the answers they chose.

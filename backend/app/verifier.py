@@ -63,7 +63,7 @@ Return ONLY a JSON object, no prose, with these keys:
   title: string — a clean, specific title (not a reddit headline)
   host: string — the organization running it, or "" if unknown
   field: one of cs, biology, math, physics, engineering, interdisciplinary, design, business, humanities, health
-  type: one of program, scholarship, competition, mentorship
+  type: one of program, scholarship, competition, mentorship, internship, volunteer, journal
   confidence: number 0..1 — your confidence it is a real, applyable opportunity
   reason: string — one short sentence
 

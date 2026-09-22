@@ -62,7 +62,7 @@ const GUIDE: [string, GuideEntry][] = [
     {
       title: "The assessment",
       tips: [
-        "Seventeen scenarios, about five minutes, no right answers.",
+        "Twenty prompts, about five minutes, no right answers.",
         "Scores become your trait shape — the engine ranks against it.",
       ],
     },
@@ -83,7 +83,7 @@ const GUIDE: [string, GuideEntry][] = [
     {
       title: "Your pathway map",
       tips: [
-        "Nodes are opportunities; edges are the paths students take between them.",
+        "Each field is a star; the programs matched to you orbit it. Inner orbits close soonest.",
         "The warm mark is always you — your current waypoint.",
       ],
     },
@@ -125,7 +125,7 @@ const GUIDE: [string, GuideEntry][] = [
     {
       title: "Mentors",
       tips: [
-        "Ranked by overlap with your fields — reach out to the top few.",
+        "Ranked by overlap with your fields. The directory is empty until mentors opt in.",
         "A short, specific first message beats a long generic one.",
       ],
     },

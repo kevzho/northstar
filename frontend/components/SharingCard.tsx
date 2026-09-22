@@ -68,8 +68,10 @@ export function SharingCard() {
         Share your record
       </h2>
       <p className="mt-1 text-xs leading-5 text-muted-foreground">
-        Off by default. Public shows highlights only — your shape, missions,
-        and positive outcomes. Friends you accept see the full comparison.
+        Off by default. Public shows highlights only — your first name, trait
+        and field shape, the path you charted, any social links you added,
+        your missions and your positive outcomes. Not your email, grade, or
+        goal statement. Turning it on also lists you in Discover and Team Up.
       </p>
       <div className="mt-4 flex flex-col gap-2 sm:flex-row">
         <Input

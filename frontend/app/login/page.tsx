@@ -77,8 +77,9 @@ export default function LoginPage() {
               Start with Northstar.
             </h1>
             <p className="mt-5 max-w-xl text-base leading-8 text-muted-foreground">
-              Sign in to save your assessment, trait profile, future paths, and
-              30-day plan.
+              Sign in to save your trait profile and get opportunities ranked
+              against it — plus bookmarks, logged outcomes, and a shareable
+              record of what you have done.
             </p>
           </div>
 

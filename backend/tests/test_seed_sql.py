@@ -60,10 +60,10 @@ def test_no_migration_seeds_a_placeholder_mentor() -> None:
     20260922090000_remove_placeholder_mentors.sql deletes those rows and adds
     a CHECK constraint; this asserts no NEW migration reintroduces the shape.
 
-    The historical seed migration is exempt: it is already applied, cannot be
-    edited, and the later migration deletes what it inserts.
+    No migration is exempt any more: the mentor INSERTs were removed from
+    20260815090000_seed_catalog.sql too, so a fresh `supabase db reset` never
+    creates them in the first place.
     """
-    seeded_before_the_fix = {"20260815090000_seed_catalog.sql"}
     reserved = re.compile(
         r"'[^']*@[^']*\.(example|test|invalid|localhost)'"
         r"|'[^']*@example\.(com|net|org)'",
@@ -71,8 +71,6 @@ def test_no_migration_seeds_a_placeholder_mentor() -> None:
     )
     offenders = []
     for path in sorted(MIGRATIONS.glob("*.sql")):
-        if path.name in seeded_before_the_fix:
-            continue
         for match in reserved.finditer(path.read_text()):
             offenders.append(f"{path.name}: {match.group(0)}")
     assert not offenders, (

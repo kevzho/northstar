@@ -17,7 +17,7 @@
    schemas, Sentry on both apps, and a scheduled production smoke test
    that alerts within minutes when the live site breaks.
 5. Build the catalog review tool: a maintainer view that renders the
-   scraped candidate pool (1,920 and growing daily) with one-keystroke
+   scraped candidate pool (8,716 and growing daily) with one-keystroke
    keep/drop/fix-field actions and writes keepers straight into the
    opportunities table — so weekly freshness costs twenty minutes, not
    an evening.

@@ -152,8 +152,10 @@ def create_app() -> FastAPI:
         """Persist the quiz's trait + field scores onto the student row.
 
         Touches only those two columns (see AssessmentProfileSync). 404s
-        when no profile row exists yet — the frontend creates the stub via
-        POST /students first, same contract as everywhere else.
+        when no profile row exists yet. The row is created by POST /students
+        at the end of onboarding — the dashboard no longer writes a stub
+        ahead of it, because that stub made an abandoned onboarding
+        permanent.
         """
 
         from .db import get_supabase
@@ -1517,9 +1519,10 @@ def create_app() -> FastAPI:
     def list_mentors(user: CurrentUser = RequireUser) -> list[dict]:
         """Ranked mentor recommendations for the signed-in student.
 
-        Reuses the TF-IDF / cosine pipeline from app/mentors.py. All
-        mentors are returned (``select *``) — there are <100 in the
-        catalog at MVP scale, so no need for server-side prefilter.
+        Reuses the TF-IDF / cosine pipeline from app/mentors.py. Only
+        mentors with a recorded ``consented_at`` are returned; the
+        directory is empty until real mentors opt in, so there is nothing
+        to prefilter server-side.
         """
 
         from .db import get_supabase
@@ -1541,7 +1544,17 @@ def create_app() -> FastAPI:
                 detail="Student profile not found.",
             )
 
-        catalog = sb.table("mentors").select("*").execute()
+        # Only mentors with recorded written consent are ever shown: the page
+        # renders a mailto, so an unconsented row means a student emails
+        # someone who never agreed to hear from them. NULL consented_at is
+        # invisible rather than an error, so a row can exist while outreach is
+        # still in progress.
+        catalog = (
+            sb.table("mentors")
+            .select("*")
+            .not_.is_("consented_at", "null")
+            .execute()
+        )
         rows = catalog.data or []
 
         results = score_mentors(student, rows)

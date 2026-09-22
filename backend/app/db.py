@@ -3,8 +3,8 @@ Supabase service-role client for backend reads/writes.
 
 The backend uses the service-role key (``SUPABASE_SECRET_KEY``) which bypasses
 RLS — it owns upserting student profiles, reading the catalog, persisting
-matches. Frontend calls keep using the publishable anon key + the user's own
-RLS-scoped access.
+matches. The frontend never queries a table directly — it uses the publishable key
+for auth only and reaches data through this API.
 
 Lazy-imports ``create_client`` so test code and lightweight imports don't
 require network/disk unless the client is actually used.

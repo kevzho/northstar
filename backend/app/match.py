@@ -10,12 +10,21 @@ Design summary (selected by the student, see chat):
       The student profile becomes a "query" of interests + goals.
   2.  Compute cosine similarity between the student profile vector and
       each opportunity vector using TF-IDF weighting.
-  3.  Apply boosters (small additive, capped at 1.0):
-      - +0.15 when the opportunity's field aligns with a student
-        interest keyword (e.g. "Computer Science" → ``cs``)
-      - +0.10 when the student's grade is in ``[grade_min, grade_max]``
-      - +0.10 for tag overlap (intersection of tags)
-      - +0.05 for free opportunities (cost == 0)
+  3.  Apply boosters (small additive, capped at 1.0). All six, in the
+      order they are computed -- this list is the contract the /match
+      explanation strings are generated from, so keep it in step with
+      the code below:
+      - FIELD. Two modes. With assessment field_scores the term SCALES
+        with the student's interest share in that field:
+        ``0.25 * share/100`` (at most +0.25). Without field_scores it
+        falls back to a flat +0.15 on a keyword match.
+      - BOOKMARKS. +0.02 per opportunity already bookmarked in the same
+        field, capped at +0.06.
+      - LOCATION. +0.05 when the student stated a location preference and
+        the opportunity's scope matches it or is global.
+      - GRADE. +0.10 when the student's grade is in ``[grade_min, grade_max]``
+      - TAGS. +0.10 for tag overlap (intersection of tags)
+      - COST. +0.05 for free opportunities (cost == 0)
   4.  ``score = clip(0.5*tfidf + boosters + collab, 0, 1)`` where
       ``collab`` is a small centered collaborative term from app/collab.py
       (ALS over logged outcomes): ``COLLAB_WEIGHT * (cf - 0.5)`` for
@@ -47,6 +56,34 @@ INTEREST_TO_FIELD = {
     "interdisciplinary": "interdisciplinary",
     "stem": "interdisciplinary",
     "research": "interdisciplinary",
+    # The four fields added by 20260815170000_expand_fields.sql. That
+    # migration's comment says "the frontend quiz, matcher, and scraper all
+    # learn them in the same change set" -- the quiz and the enum did, this
+    # table did not. Until now a student who picked Design or Business could
+    # never earn the field booster, and their explanation never said the
+    # field matched, for the opportunities carrying exactly those fields.
+    "design": "design",
+    "art": "design",
+    "graphic design": "design",
+    "ux": "design",
+    "architecture": "design",
+    "business": "business",
+    "entrepreneurship": "business",
+    "finance": "business",
+    "economics": "business",
+    "marketing": "business",
+    "humanities": "humanities",
+    "writing": "humanities",
+    "history": "humanities",
+    "philosophy": "humanities",
+    "communication": "humanities",
+    "journalism": "humanities",
+    "policy": "humanities",
+    "health": "health",
+    "medicine": "health",
+    "public health": "health",
+    "nursing": "health",
+    "neuroscience": "health",
 }
 
 # Tiny stopword set — keeps the engine small and predictable.

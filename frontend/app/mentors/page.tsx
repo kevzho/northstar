@@ -93,8 +93,9 @@ export default function MentorsPage() {
               Could not load mentors
             </h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
-              That is a connection problem, not an empty directory. Reload in
-              a moment.
+              Your session may have expired, or the server is unreachable. This
+              is not an empty directory — reload, and sign in again if that
+              does not help.
             </p>
           </section>
         ) : mentors.length === 0 ? (

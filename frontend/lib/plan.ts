@@ -240,7 +240,7 @@ export function generatePlan(
   const weeks23: string[] = [
     spine.publish,
     `Run a focused 5-hour sprint on ${spine.skill}.`,
-    "Reach out to two mentors from your mentor matches — ask one specific question each, not for generic advice.",
+    "Email two people doing work you want to do — a lab manager, a program director, a student who finished the thing. Ask one specific question each, not for generic advice.",
     STRETCH[weakest],
   ];
 

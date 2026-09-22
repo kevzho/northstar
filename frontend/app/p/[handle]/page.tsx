@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * The public evidence record — northstar.app/p/<handle>.
+ * The public evidence record — northstar.study/p/<handle>.
  *
  * Opt-in only; the backend serves highlights (trait/field shape, chosen
  * path, mission evidence, positive outcomes) and 404s uniformly for

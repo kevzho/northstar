@@ -60,8 +60,10 @@ export interface paths {
          * @description Persist the quiz's trait + field scores onto the student row.
          *
          *     Touches only those two columns (see AssessmentProfileSync). 404s
-         *     when no profile row exists yet — the frontend creates the stub via
-         *     POST /students first, same contract as everywhere else.
+         *     when no profile row exists yet. The row is created by POST /students
+         *     at the end of onboarding — the dashboard no longer writes a stub
+         *     ahead of it, because that stub made an abandoned onboarding
+         *     permanent.
          */
         post: operations["sync_assessment_profile_assessment_profile_post"];
         delete?: never;
@@ -411,9 +413,10 @@ export interface paths {
          * List Mentors
          * @description Ranked mentor recommendations for the signed-in student.
          *
-         *     Reuses the TF-IDF / cosine pipeline from app/mentors.py. All
-         *     mentors are returned (``select *``) — there are <100 in the
-         *     catalog at MVP scale, so no need for server-side prefilter.
+         *     Reuses the TF-IDF / cosine pipeline from app/mentors.py. Only
+         *     mentors with a recorded ``consented_at`` are returned; the
+         *     directory is empty until real mentors opt in, so there is nothing
+         *     to prefilter server-side.
          */
         get: operations["list_mentors_mentors_get"];
         put?: never;

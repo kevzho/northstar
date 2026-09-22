@@ -210,3 +210,48 @@ def test_either_preference_gives_no_location_boost() -> None:
     either = {**STUDENT, "location_pref": "either"}
     (result,) = score_opportunities(either, [_opp(location_scope="us")])
     assert "matching your preference" not in result["score"]["explanation"]
+
+
+def test_matcher_knows_every_field_in_the_enum() -> None:
+    """INTEREST_TO_FIELD must cover the whole opportunity_field enum.
+
+    20260815170000_expand_fields.sql added design, business, humanities and
+    health, and its comment says "the frontend quiz, matcher, and scraper all
+    learn them in the same change set." The quiz and the enum did; this table
+    did not, for five weeks. A student who picked Design never earned the
+    field booster, and their explanation never said the field matched, for
+    exactly the opportunities carrying that field.
+
+    Ground truth is the migrations, not a hand-copied list, so adding a fifth
+    field to the enum without teaching the matcher fails here.
+    """
+    import pathlib
+    import re
+
+    from app.match import INTEREST_TO_FIELD
+
+    migrations = pathlib.Path(__file__).resolve().parents[2] / "supabase" / "migrations"
+    declared: set[str] = set()
+    for path in sorted(migrations.glob("*.sql")):
+        sql = path.read_text()
+        block = re.search(
+            r"create type public\.opportunity_field as enum \((?P<b>.*?)\)",
+            sql,
+            re.DOTALL | re.IGNORECASE,
+        )
+        if block:
+            declared |= set(re.findall(r"'([a-z_]+)'", block.group("b")))
+        declared |= set(
+            re.findall(
+                r"alter type public\.opportunity_field add value if not exists '([a-z_]+)'",
+                sql,
+                re.IGNORECASE,
+            )
+        )
+
+    assert declared, "no opportunity_field enum values found in the migrations"
+    missing = declared - set(INTEREST_TO_FIELD.values())
+    assert not missing, (
+        "app/match.py INTEREST_TO_FIELD cannot reach these opportunity_field "
+        f"values, so no student interest can ever boost them: {sorted(missing)}"
+    )

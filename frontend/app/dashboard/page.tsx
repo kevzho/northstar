@@ -175,7 +175,7 @@ export default function DashboardPage() {
     ? {
         href: "/assessment",
         label: "Take the assessment",
-        blurb: "Fourteen prompts build the profile everything else runs on.",
+        blurb: "Twenty prompts build the profile everything else runs on.",
       }
     : outcomes.length === 0
       ? {
@@ -360,16 +360,21 @@ export default function DashboardPage() {
           </section>
         )}
 
-        {/* Outcome history makes the feedback loop visible: each logged result
-            fires the migration_004 trigger that re-weights pathway_edges. */}
+        {/* Outcome history. NOTE: logging an outcome fires the migration_004
+            trigger that writes public.pathway_edges — but nothing reads that
+            table. GET /pathways derives its edges at request time from shared
+            tags and field (main.py, "self-contained graph that renders even
+            without seeded pathway_edges"). Outcomes DO feed recommendations,
+            via the ALS collaborative term in app/collab.py. The copy below
+            says that, rather than describing the table. */}
         {outcomes.length > 0 ? (
           <section className="mb-10">
             <h2 className="h-display text-2xl text-foreground">
               Your logged outcomes
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Each result you log re-weights the pathway graph behind your
-              recommendations.
+              Logged outcomes feed the collaborative signal that nudges your
+              future rankings.
             </p>
             <ul className="mt-4 grid gap-2">
               {outcomes.slice(0, 5).map((outcome) => {
@@ -417,8 +422,8 @@ export default function DashboardPage() {
               Your pathway map
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              See your matches as a force-directed graph — programs that share a
-              field or tags are connected.
+              See your matches as orbits — each field is a star, and the
+              programs matched to you circle it. Inner orbits close soonest.
             </p>
           </Link>
           <Link href="/opportunities" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">

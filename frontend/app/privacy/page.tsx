@@ -88,6 +88,11 @@ export default function PrivacyPage() {
               If you use Team Up or add friends: who you are connected to, and
               any reports or blocks you create.
             </li>
+            <li>
+              If you use the Advisor: the questions you ask and the answers you
+              get. These are kept so that re-asking a question is free rather
+              than costing another model call.
+            </li>
           </ul>
           <p>
             We do not store your password — sign-in goes through Google or a
@@ -112,8 +117,10 @@ export default function PrivacyPage() {
             </li>
             <li>
               <strong className="text-foreground">DeepSeek</strong> receives your
-              question and your trait scores only when you use the Advisor page.
-              If you never open it, nothing is sent.
+              question, your trait scores, your field-interest shares, your
+              stated interests, your goal statement in your own words, and the
+              titles of opportunities matched to you — but only when you use the
+              Advisor page. If you never open it, nothing is sent.
             </li>
           </ul>
           <p>
@@ -125,7 +132,9 @@ export default function PrivacyPage() {
         <Section title="What is public">
           <p>
             Nothing, unless you turn it on. Public profiles are off by default.
-            If you set a handle and enable your profile, anyone with the link to{" "}
+            Turning yours on does two things: it lists you in other students&apos;
+            Discover and Team Up feeds inside Northstar, and it makes your record
+            readable by link outside it. Anyone with the link to{" "}
             <span className="font-mono">/p/your-handle</span> can see your first
             name, your trait and field scores, your chosen path, your social
             links, and the missions and positive outcomes you logged. Your
@@ -162,7 +171,8 @@ export default function PrivacyPage() {
 
         <Section title="If you are under 13">
           <p>
-            Northstar is intended for students in grades 8–12. Please do not
+            Northstar is built for high school students, and also has a college
+            track you can pick during onboarding. Either way, please do not
             create an account if you are under 13. If we learn that an account
             belongs to someone under 13, we delete it.
           </p>
@@ -171,8 +181,9 @@ export default function PrivacyPage() {
         <Section title="Changes">
           <p>
             If this policy changes in a way that affects what we collect, the
-            date at the top changes and you will be asked to review it the next
-            time you sign in.
+            date at the top changes. There is no automatic re-consent prompt
+            yet, so this page is the record — if the date above is newer than
+            when you signed up, something here changed.
           </p>
         </Section>
 

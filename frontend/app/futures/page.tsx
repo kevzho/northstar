@@ -115,7 +115,7 @@ export default function FuturesPage() {
             </h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
               Future paths are ranked against your six trait scores. Take the
-              eight-question assessment first — it takes about five minutes.
+              twenty-question assessment first — it takes about five minutes.
             </p>
             <Button render={<Link href="/assessment" />} className="mt-6 h-11 px-5 font-semibold">
               Take the assessment

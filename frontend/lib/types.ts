@@ -136,7 +136,6 @@ export type TimelineEvent = {
 export type PublicProfile = {
   handle: string | null;
   name: string;
-  audience: Audience;
   trait_scores: Record<string, number> | null;
   field_scores: Record<string, number> | null;
   chosen_archetype: string | null;

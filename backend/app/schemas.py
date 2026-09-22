@@ -58,7 +58,7 @@ class StudentProfile(BaseModel):
     audience: Audience = Audience.high_school
     location_pref: LocationPref = LocationPref.either
     # Quiz outputs synced from the frontend (shapes owned by
-    # frontend/lib/scoring.ts): six 0-100 trait signals; six field shares
+    # frontend/lib/scoring.ts): six 0-100 trait signals; ten field shares
     # summing to 100. None until the student syncs an assessment.
     trait_scores: Optional[dict[str, float]] = None
     field_scores: Optional[dict[str, float]] = None
@@ -69,7 +69,7 @@ class StudentProfile(BaseModel):
     # validated by app/social.py:clean_social_links on write.
     social_links: Optional[dict[str, str]] = None
     onboarded: bool = False
-    # ISO 8601 timestamp when the student accepted the IRB-style data policy
+    # ISO 8601 timestamp when the student accepted the privacy policy at /privacy
     # during onboarding. NULL means consent has not been recorded.
     consented_at: Optional[str] = None
 

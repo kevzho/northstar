@@ -67,7 +67,7 @@ insight: "You tend to underestimate projects requiring external
 coordination, but consistently overperform on self-directed technical
 work." Creates longitudinal behavioral data that is hard to clone.
 
-## Meridian-specific features
+## Northstar-specific features
 
 ### 5. Opportunity-to-readiness gap analysis
 "You are 2 evidence pieces away from being ready for this." Per

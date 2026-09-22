@@ -22,7 +22,7 @@
        service-role key │ (bypasses RLS)
                         ▼
               ┌────────────────────┐
-              │ Supabase Postgres  │  22 tables · 22 migrations
+              │ Supabase Postgres  │  22 tables · 26 migrations
               └─────────▲──────────┘
                         │ upsert
               ┌─────────┴──────────┐
@@ -52,13 +52,13 @@ Two credential paths into Postgres, deliberately distinct:
 | Errors | `@sentry/browser` 10.70 via `components/SentryInit.tsx` |
 | Tests | `vitest` 4.1 |
 
-**23 route segments** under `frontend/app/`: `/`, `/login`, `/auth/callback`, `/onboarding`, `/assessment`, `/dashboard`, `/discover`, `/opportunities`, `/opportunities/[id]`, `/map`, `/futures`, `/plan`, `/projects`, `/mentors`, `/advisor`, `/teamup`, `/friends`, `/profile`, `/p/[handle]`, `/contact`, `/faq`, plus `layout.tsx` and `not-found.tsx`.
+**22 page routes** under `frontend/app/`: `/`, `/login`, `/auth/callback`, `/onboarding`, `/assessment`, `/dashboard`, `/discover`, `/opportunities`, `/opportunities/[id]`, `/map`, `/futures`, `/plan`, `/projects`, `/mentors`, `/advisor`, `/teamup`, `/friends`, `/profile`, `/p/[handle]`, `/contact`, `/faq`, `/privacy`, plus `layout.tsx`, `not-found.tsx`, `robots.ts`, and a metadata-only `p/[handle]/layout.tsx` carrying `noindex`.
 
 ### Theming
 
 `next-themes` with `attribute="class"`, `defaultTheme="dark"`, `enableSystem={false}` (`app/layout.tsx`). Both palettes are CSS custom properties in `globals.css`: `:root` holds the night set, `.light` overrides the primitives. Because the semantic tokens are declared as `var()` references (`--card: var(--panel)`), overriding a primitive in `.light` re-resolves everything downstream — the light block only needs to restate primitives, not the whole token table.
 
-`ThemeToggle` is mounted via `AppNav` and `PageHeader`, plus 5 pages that render their own header. It uses `useSyncExternalStore` for the mounted check rather than setState-in-effect, which the project's lint rejects.
+`ThemeToggle` is mounted via `AppNav`, plus 5 pages that render their own header. (`components/PageHeader.tsx` exists but has zero importers — it is dead code, not a mount point.) It uses `useSyncExternalStore` for the mounted check rather than setState-in-effect, which the project's lint rejects.
 
 **The pathway map is the one place color carries data**, so its palette is themed too: `--field-*` (10 fields) + `--field-unknown`, `--on-field`, `--map-label`, `--map-meta`. Light values are the same hues darkened until each clears 4.5:1 on `--background`, saturation held so they read as ink rather than neon; `humanities` is nudged 14° toward brown because tan and gold collapse into each other once both are dark enough to read.
 
@@ -76,7 +76,7 @@ The assessment never round-trips to the server. Three steps, all local:
 
 1. **Aggregate** — sum the `TraitDeltas` attached to each chosen answer in `lib/assessment.ts`. Answers are on a 1–5 Likert scale (`LIKERT_VALUES`, weighted by `likertWeight`).
 2. **Normalize** — divide each trait by the maximum that trait could have scored had every answer been its strongest option → 0–100. Normalizing against the *achievable* maximum rather than a constant keeps traits comparable despite unequal question counts.
-3. **Rank** — cosine similarity between the student's 6-dimension trait vector and each archetype vector in `lib/archetypes.ts`, then label three: `safe` (nearest), `ambitious` (of the rest, highest overall demand), `unconventional` (of the rest, furthest from `safe`).
+3. **Rank** — inverted root-mean-square gap between the student's 6-dimension trait vector and each archetype vector in `lib/archetypes.ts` (cosine was used originally, but two all-positive 6-vectors almost always cosine above 0.9, which pinned every archetype near "99% fit"; see the comment in `lib/scoring.ts`), then label three: `safe` (nearest), `ambitious` (of the rest, highest overall demand), `unconventional` (of the rest, furthest from `safe`).
 
 Traits: `builder`, `analyst`, `riskTolerance`, `ambiguityComfort`, `collaboration`, `executionTempo`.
 
@@ -189,15 +189,15 @@ Contribution is `COLLAB_WEIGHT * (cf - 0.5)`, bounded at **±0.075**. A student 
 
 ### 4.3 Mentor matching (`app/mentors.py`)
 
-Reuses the same TF-IDF/cosine machinery so both ranking surfaces behave consistently. Student query = `interests + goals`; mentor doc = `name + bio + flattened expertise`. Boosters: +0.15 when a mentor's expertise maps to a student interest's field enum (shared `INTEREST_TO_FIELD`), +0.05 for expertise breadth. `score = min(0.5 * tfidf + boosters, 1.0)`.
+Reuses the same TF-IDF/cosine machinery so both ranking surfaces behave consistently. Student query = `interests + goals`; mentor doc = `name + bio + flattened expertise`. Boosters: +0.15 when a mentor's expertise maps to a student interest's field enum (shared `INTEREST_TO_FIELD`), +0.05 for expertise breadth. **The directory is currently empty**: the 25 seeded profiles were invented people at reserved `.example` addresses and were removed; `GET /mentors` now returns only rows with a recorded `consented_at`. `score = min(0.5 * tfidf + boosters, 1.0)`.
 
-**pgvector status:** the schema already carries a `vector(384)` `bio_embedding` column and the supporting SQL functions (`20250711134901_meridian_core_schema.sql`). It is **not populated and not on the serving path** — swapping sparse TF-IDF for sentence-transformer embeddings is a drop-in the schema is waiting for, not something running today.
+**pgvector status:** the schema carries a `vector(384)` `bio_embedding` column and an ivfflat index (`20250711134901_meridian_core_schema.sql`). There are **no** supporting SQL functions — that migration defines zero. Nothing writes the column either. It is **not populated and not on the serving path** — swapping sparse TF-IDF for sentence-transformer embeddings is a drop-in the schema is waiting for, not something running today.
 
 ---
 
 ## 5. Data layer
 
-**Supabase Postgres**, 22 migrations in `supabase/migrations/`, timestamped `20250621` → `20260822`.
+**Supabase Postgres**, 26 migrations in `supabase/migrations/`, timestamped `20250621` → `20260922`.
 
 Tables: `students`, `opportunities`, `matches`, `outcomes`, `bookmarks`, `dismissals`, `missions`, `mission_completions`, `pathway_nodes`, `pathway_edges`, `future_paths`, `latent_profiles`, `profile_history`, `behaviour_events`, `actions`, `mentors`, `mentor_sessions`, `friendships`, `blocks`, `reports`, `teamup_interest`, `advisor_calls`.
 
@@ -278,7 +278,7 @@ backend/app/main.py
 The real `next build` matters: `tsc --noEmit` does not exercise the App Router, so it will not catch a client-only import pulled into a server component, a bad route export, or a page that crashes while prerendering.
 
 **backend:** `pip install -r requirements.txt` → `python -m py_compile main.py` → `python -m pytest -q`.
-The suite runs **without Supabase credentials** — 14 test files covering the JWT layer, both ranking engines, the auth gate on every route, and static guards over the migrations and PostgREST chains:
+The suite runs **without Supabase credentials** — 16 test files, 181 tests, covering the JWT layer, both ranking engines, the auth gate on every route, and static guards over the migrations and PostgREST chains:
 
 ```
 test_advisor_budget  test_auth      test_collab           test_match
@@ -307,7 +307,7 @@ Read-only, unauthenticated, against **production**:
 | Backend (fallback) | `backend/render.yaml` | Blueprint, Oregon, free plan, `healthCheckPath: /health`, `autoDeploy: true` |
 | Backend (local/PaaS) | `backend/Procfile` | `uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}` |
 
-Sentry is initialized on both sides **only when `SENTRY_DSN` is set** (`traces_sample_rate=0.0`), so local dev and CI run without it and without noise.
+Sentry is initialized on the backend when `SENTRY_DSN` is set and in the browser when `NEXT_PUBLIC_SENTRY_DSN` is set — two different variables, because only `NEXT_PUBLIC_`-prefixed vars reach the client (`traces_sample_rate=0.0`), so local dev and CI run without it and without noise.
 
 ### Environment variables
 

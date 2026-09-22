@@ -149,7 +149,7 @@ export default function ProfilePage() {
             </h1>
             <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
               {isReal
-                ? `Six trait signals and a field-interest map scored from your seventeen answers. Your strongest signal is ${traitLabels[top].toLowerCase()}.`
+                ? `Six trait signals and a field-interest map scored from your twenty answers. Your strongest signal is ${traitLabels[top].toLowerCase()}.`
                 : "This preview shows the six interpretable signals Northstar computes from assessment choices."}
             </p>
           </div>
@@ -287,7 +287,7 @@ export default function ProfilePage() {
         <p className="mt-4 text-xs leading-5 text-muted-foreground">
           Each trait score is the sum of the trait weights on the answers you
           picked, divided by the highest total that trait could reach across
-          all seventeen questions. Field interest divides each field&apos;s
+          all twenty questions. Field interest divides each field&apos;s
           points by the total points across every field. See
           frontend/lib/scoring.ts.
         </p>

@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# frontend
 
-## Getting Started
+The Northstar web app: Next.js 16 App Router, React 19, Tailwind v4.
 
-First, run the development server:
+This file used to be unedited `create-next-app` boilerplate — it described
+editing `app/page.tsx` to "start editing", pointed at the Next.js tutorial,
+and claimed the app loads Geist via `next/font`. It loads Bricolage
+Grotesque, Onest and IBM Plex Mono (`app/layout.tsx`).
+
+Setup, environment variables and deployment live in the [root
+README](../README.md); this directory has no separate install step.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
+npm run lint
+npm test        # vitest — scoring invariants and copy-count guards
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`NEXT_PUBLIC_API_URL` must point at the running backend or every request goes
+to the Next.js server instead and 404s. See `.env.example`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Layout
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Path | What lives there |
+|---|---|
+| `app/` | 22 page routes, plus `robots.ts` and the `noindex` layout for `/p/[handle]` |
+| `components/` | Shared UI. `ui/` is the shadcn-style primitive set; `decor/` and `motion/` are presentational |
+| `lib/` | Scoring (`scoring.ts`, `assessment.ts`, `archetypes.ts`, `plan.ts`), the API client (`api.ts`), and generated API types (`api-types.gen.ts`) |
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`lib/api-types.gen.ts` is generated — run `npm run gen:api` after the backend
+schema changes, and `backend/tests/test_openapi_contract.py` fails the build if
+you forget.

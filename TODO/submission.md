@@ -10,12 +10,15 @@
       trigger for the demo).
 - [ ] **Deploy latest main** (or confirm Vercel git integration is doing it)
       — the live site must match what the video shows.
-- [ ] **Demo script rewrite in your voice** — draft at docs/DEMO_SCRIPT.md.
+- [ ] **Demo script rewrite in your voice** — draft at docs/DEMO_SCRIPT.md
+      (local only; `docs/` is gitignored and is not in a clone).
       Update it for the new landing (scroll journey, theme toggle) and the
       plan voyage; the route order and claims are otherwise still verified.
 - [ ] **Record the 2:00 video** against the deployed site, 1440px, signed
       out at start, per the script's pre-record checklist.
-- [ ] **AI disclosure finalized** — docs/CAC_AI_DISCLOSURE.md has drafts;
+- [ ] **AI disclosure finalized** — docs/CAC_AI_DISCLOSURE.md has drafts
+      (local only; `docs/` is gitignored). Decide where the final text ships,
+      because right now it ships nowhere;
       make it specific: algorithms designed/validated by you; shadcn/ui
       component base; AI-assisted implementation reviewed file-by-file
       (that's what TODO/code-review.md proves). Rename Meridian → Northstar
@@ -51,8 +54,12 @@
 
 ## Content quality passes
 
-- [ ] Verify all 35 seed opportunities still have live URLs and real
-      deadlines (a judge will click one).
-- [ ] Read every mentor bio once (they're seed data — make sure none reads
-      oddly).
+- [ ] Verify the 68 seeded opportunities still have live URLs and real
+      deadlines (a judge will click one). 31 of the 35 dated rows were
+      already past as of 2026-09-21 — that is the blocker, not the URLs.
 - [ ] Landing footer line and all judge-visible copy: final read.
+
+(The mentor-bio pass is gone: the 25 seeded mentors were invented people at
+reserved `.example` addresses and were removed in
+`20260922090000_remove_placeholder_mentors.sql`. The directory is empty until
+real mentors record a `consented_at`.)

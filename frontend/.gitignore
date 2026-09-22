@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# The example env DOES ship: README points readers at it, and `.env*` above
+# would otherwise hide it from every clone. Real values stay ignored.
+!.env.example

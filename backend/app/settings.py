@@ -2,8 +2,8 @@
 Environment settings loaded from process env via pydantic only (no extra deps).
 
 Reads directly from os.environ so the same module works in local dev, CI, and
-the eventual Railway/Fly.io deploy. Defaults are dev-safe; production should
-set every field explicitly. Sensitive values are loaded lazily and never logged.
+the Vercel serverless deploy (backend/vercel.json -> backend/api/index.py).
+Defaults are dev-safe; production should set every field explicitly. Sensitive values are loaded lazily and never logged.
 """
 
 import os
