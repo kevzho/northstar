@@ -14,6 +14,7 @@ by. Any failure raises 401 so route handlers stay free of JWT plumbing.
 """
 
 from typing import Optional
+from uuid import UUID
 
 import jwt
 from fastapi import Depends, HTTPException, Request, status
@@ -103,7 +104,24 @@ def get_current_user(request: Request) -> CurrentUser:
             detail="Token missing 'sub' claim",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    return CurrentUser(id=str(sub), email=payload.get("email"))
+
+    # `sub` is auth.users.id, which Supabase always issues as a UUID. We
+    # assert that rather than assume it, because user.id is interpolated
+    # into PostgREST filter strings in several places and postgrest-py does
+    # NOT escape filter values -- `.filter()` sanitizes only the column
+    # name, and `.or_()` takes its argument verbatim. Pinning the shape
+    # here makes every one of those interpolations provably safe, instead
+    # of safe-by-assumption about a claim we did not mint.
+    try:
+        user_id = str(UUID(str(sub)))
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token 'sub' claim is not a valid user id",
+            headers={"WWW-Authenticate": "Bearer"},
+        ) from None
+
+    return CurrentUser(id=user_id, email=payload.get("email"))
 
 
 # Convenience alias for route signatures: user: CurrentUser = RequireUser

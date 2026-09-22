@@ -6,6 +6,8 @@ working unchanged; the original top-level ``backend/main.py`` is rewritten as a
 thin entrypoint that re-exports ``app`` from this package. See PROMPTS.md #4.
 """
 
+from uuid import UUID
+
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -24,6 +26,7 @@ from .schemas import (
     StudentProfile,
     StudentProfileCreate,
 )
+from .params import either_direction, uuid_field
 from .settings import settings
 
 # Used only by POST /students to translate ``consent: True`` into the
@@ -451,7 +454,18 @@ def create_app() -> FastAPI:
         """
 
         from .db import get_supabase
-        from .social import public_payload
+        from .social import public_payload, valid_handle
+
+        # Unauthenticated, and `handle` reaches .eq() — whose criteria
+        # postgrest-py does not escape. valid_handle is an allowlist, so a
+        # handle that passes cannot carry a filter metacharacter. A reject
+        # returns the SAME uniform 404 as an unknown handle, preserving the
+        # property that this endpoint cannot be used to probe what exists.
+        if not valid_handle(handle.lower()):
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No public profile here.",
+            )
 
         sb = get_supabase()
         row = (
@@ -518,13 +532,10 @@ def create_app() -> FastAPI:
             )
         # One row per pair, whichever direction exists.
         existing = (
-            sb.table("friendships")
-            .select("id, status")
-            .or_(
-                f"and(requester.eq.{user.id},addressee.eq.{target['id']}),"
-                f"and(requester.eq.{target['id']},addressee.eq.{user.id})"
-            )
-            .execute()
+            either_direction(
+                sb.table("friendships").select("id, status"),
+                "requester", "addressee", user.id, str(target["id"]),
+            ).execute()
         ).data or []
         if existing:
             return {"id": existing[0]["id"], "status": existing[0]["status"]}
@@ -585,7 +596,7 @@ def create_app() -> FastAPI:
 
     @app.post("/friends/{friendship_id}/accept")
     def accept_friend(
-        friendship_id: str,
+        friendship_id: UUID,
         user: CurrentUser = RequireUser,
     ) -> dict:
         """Only the addressee can accept."""
@@ -595,7 +606,7 @@ def create_app() -> FastAPI:
         result = (
             sb.table("friendships")
             .update({"status": "accepted"}, returning="representation")
-            .eq("id", friendship_id)
+            .eq("id", str(friendship_id))
             .eq("addressee", user.id)
             .execute()
         )
@@ -608,14 +619,14 @@ def create_app() -> FastAPI:
 
     @app.delete("/friends/{friendship_id}", status_code=status.HTTP_204_NO_CONTENT)
     def remove_friend(
-        friendship_id: str,
+        friendship_id: UUID,
         user: CurrentUser = RequireUser,
     ):
         """Either party can decline or unfriend."""
         from .db import get_supabase
 
         sb = get_supabase()
-        sb.table("friendships").delete().eq("id", friendship_id).or_(
+        sb.table("friendships").delete().eq("id", str(friendship_id)).or_(
             f"requester.eq.{user.id},addressee.eq.{user.id}"
         ).execute()
 
@@ -659,7 +670,7 @@ def create_app() -> FastAPI:
 
     @app.get("/friends/{student_id}/compare")
     def compare_with_friend(
-        student_id: str,
+        student_id: UUID,
         user: CurrentUser = RequireUser,
     ) -> dict:
         """Side-by-side records — accepted friendships only."""
@@ -667,15 +678,16 @@ def create_app() -> FastAPI:
         from .social import compare_payload
 
         sb = get_supabase()
+        # This filter IS the authorization gate, so it must not be built by
+        # string interpolation: postgrest-py hands `.or_()` its argument
+        # verbatim, and student_id used to arrive here as an unvalidated
+        # path param. It is a UUID now, and the pair match is structural.
+        friend_id = str(student_id)
         link = (
-            sb.table("friendships")
-            .select("id")
-            .eq("status", "accepted")
-            .or_(
-                f"and(requester.eq.{user.id},addressee.eq.{student_id}),"
-                f"and(requester.eq.{student_id},addressee.eq.{user.id})"
-            )
-            .execute()
+            either_direction(
+                sb.table("friendships").select("id").eq("status", "accepted"),
+                "requester", "addressee", user.id, friend_id,
+            ).execute()
         ).data or []
         if not link:
             raise HTTPException(
@@ -685,7 +697,7 @@ def create_app() -> FastAPI:
 
         cols = "id, name, handle, audience, trait_scores, field_scores, chosen_archetype, chosen_kind"
         mine = (sb.table("students").select(cols).eq("id", user.id).maybe_single().execute())
-        theirs = (sb.table("students").select(cols).eq("id", student_id).maybe_single().execute())
+        theirs = (sb.table("students").select(cols).eq("id", friend_id).maybe_single().execute())
         me_row = mine.data if mine else None
         them_row = theirs.data if theirs else None
         if not me_row or not them_row:
@@ -828,12 +840,12 @@ def create_app() -> FastAPI:
         from .db import get_supabase
         from .social import blocked_ids
 
-        target_id = str(body.get("student_id", "")).strip()
+        target_id = uuid_field(body.get("student_id"), "student_id")
         decision = body.get("decision")
-        if not target_id or decision not in ("interested", "passed"):
+        if decision not in ("interested", "passed"):
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail="student_id and a decision of interested/passed are required.",
+                detail="decision must be one of: interested, passed.",
             )
         if target_id == user.id:
             raise HTTPException(
@@ -880,13 +892,10 @@ def create_app() -> FastAPI:
             return {"matched": False}
 
         existing = (
-            sb.table("friendships")
-            .select("id, status")
-            .or_(
-                f"and(requester.eq.{user.id},addressee.eq.{target_id}),"
-                f"and(requester.eq.{target_id},addressee.eq.{user.id})"
-            )
-            .execute()
+            either_direction(
+                sb.table("friendships").select("id, status"),
+                "requester", "addressee", user.id, target_id,
+            ).execute()
         ).data or []
         if existing:
             if existing[0]["status"] != "accepted":
@@ -913,7 +922,7 @@ def create_app() -> FastAPI:
         handle so every surface (cards, friends, public pages) can report.
         """
         from .db import get_supabase
-        from .social import REPORT_DETAILS_MAX, REPORT_REASONS
+        from .social import REPORT_DETAILS_MAX, REPORT_REASONS, valid_handle
 
         reason = body.get("reason")
         if reason not in REPORT_REASONS:
@@ -923,10 +932,14 @@ def create_app() -> FastAPI:
             )
 
         sb = get_supabase()
-        target_id = str(body.get("student_id", "")).strip()
+        raw_id = str(body.get("student_id", "")).strip()
+        target_id = uuid_field(raw_id, "student_id") if raw_id else ""
         if not target_id:
             handle = str(body.get("handle", "")).strip().lower()
-            if handle:
+            # valid_handle is an allowlist (^[a-z0-9][a-z0-9-]{2,19}$), so a
+            # handle that passes it cannot carry a PostgREST metacharacter
+            # into the .eq() below — which postgrest-py does not escape.
+            if handle and valid_handle(handle):
                 row = (
                     sb.table("students")
                     .select("id")
@@ -958,8 +971,8 @@ def create_app() -> FastAPI:
         each other in discover, team-up, and friend requests."""
         from .db import get_supabase
 
-        target_id = str(body.get("student_id", "")).strip()
-        if not target_id or target_id == user.id:
+        target_id = uuid_field(body.get("student_id"), "student_id")
+        if target_id == user.id:
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail="A student_id (not your own) is required.",
@@ -970,13 +983,16 @@ def create_app() -> FastAPI:
             {"blocker": user.id, "blocked": target_id},
             on_conflict="blocker,blocked",
         ).execute()
-        sb.table("friendships").delete().or_(
-            f"and(requester.eq.{user.id},addressee.eq.{target_id}),"
-            f"and(requester.eq.{target_id},addressee.eq.{user.id})"
+        # DELETEs driven by a request-body value. These were built by
+        # f-string into `.or_()`, which postgrest-py passes through verbatim,
+        # so a filter injection here would have widened a delete.
+        either_direction(
+            sb.table("friendships").delete(),
+            "requester", "addressee", user.id, target_id,
         ).execute()
-        sb.table("teamup_interest").delete().or_(
-            f"and(student.eq.{user.id},target.eq.{target_id}),"
-            f"and(student.eq.{target_id},target.eq.{user.id})"
+        either_direction(
+            sb.table("teamup_interest").delete(),
+            "student", "target", user.id, target_id,
         ).execute()
         return {"blocked": True}
 
@@ -1014,7 +1030,7 @@ def create_app() -> FastAPI:
 
     @app.post("/missions/{mission_id}/complete", response_model=MissionCompletion)
     def complete_mission(
-        mission_id: str,
+        mission_id: UUID,
         body: MissionCompleteBody,
         user: CurrentUser = RequireUser,
     ) -> dict:
@@ -1029,7 +1045,7 @@ def create_app() -> FastAPI:
         sb = get_supabase()
         row = {
             "student_id": user.id,
-            "mission_id": mission_id,
+            "mission_id": str(mission_id),
             "evidence": body.evidence[:1000],
         }
         result = (
@@ -1083,14 +1099,14 @@ def create_app() -> FastAPI:
 
     @app.delete("/dismissals/{opp_id}", status_code=status.HTTP_204_NO_CONTENT)
     def delete_dismissal(
-        opp_id: str,
+        opp_id: UUID,
         user: CurrentUser = RequireUser,
     ):
         """Undo a dismissal by opportunity id."""
         from .db import get_supabase
 
         sb = get_supabase()
-        sb.table("dismissals").delete().eq("student_id", user.id).eq("opportunity_id", opp_id).execute()
+        sb.table("dismissals").delete().eq("student_id", user.id).eq("opportunity_id", str(opp_id)).execute()
 
     @app.get("/match")
     def match(user: CurrentUser = RequireUser) -> list[dict]:
@@ -1241,7 +1257,7 @@ def create_app() -> FastAPI:
 
     @app.get("/opportunities/{opp_id}")
     def get_opportunity(
-        opp_id: str,
+        opp_id: UUID,
         user: CurrentUser = RequireUser,
     ) -> dict:
         """Return a single opportunity row by id.
@@ -1257,7 +1273,7 @@ def create_app() -> FastAPI:
         row = (
             sb.table("opportunities")
             .select("*")
-            .eq("id", opp_id)
+            .eq("id", str(opp_id))
             .maybe_single()
             .execute()
         )
@@ -1310,14 +1326,14 @@ def create_app() -> FastAPI:
 
     @app.delete("/bookmarks/{opp_id}", status_code=status.HTTP_204_NO_CONTENT)
     def delete_bookmark(
-        opp_id: str,
+        opp_id: UUID,
         user: CurrentUser = RequireUser,
     ):
         """Remove a bookmark by opportunity id."""
         from .db import get_supabase
 
         sb = get_supabase()
-        sb.table("bookmarks").delete().eq("student_id", user.id).eq("opportunity_id", opp_id).execute()
+        sb.table("bookmarks").delete().eq("student_id", user.id).eq("opportunity_id", str(opp_id)).execute()
 
     @app.post("/outcomes")
     def log_outcome(

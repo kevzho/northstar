@@ -103,13 +103,27 @@ def test_limit_caps_the_deck() -> None:
 
 
 def test_blocked_ids_covers_both_directions() -> None:
+    # Real uuids: students.id is a uuid column, and blocked_ids now coerces
+    # its argument through UUID() because that value is interpolated into a
+    # PostgREST filter string, which postgrest-py does not escape.
+    me = "11111111-1111-4111-8111-111111111111"
+    them = "22222222-2222-4222-8222-222222222222"
+    other = "33333333-3333-4333-8333-333333333333"
     sb = FakeSB({
         "blocks": [
-            {"blocker": "me", "blocked": "them"},
-            {"blocker": "other", "blocked": "me"},
+            {"blocker": me, "blocked": them},
+            {"blocker": other, "blocked": me},
         ]
     })
-    assert blocked_ids(sb, "me") == {"them", "other"}
+    assert blocked_ids(sb, me) == {them, other}
+
+
+def test_blocked_ids_rejects_a_non_uuid_student() -> None:
+    """The coercion is the point: a filter metacharacter must not get through."""
+    import pytest as _pytest
+
+    with _pytest.raises(ValueError):
+        blocked_ids(FakeSB({"blocks": []}), "me),or(blocker.not.is.null")
 
 
 def test_clean_social_links_normalizes_and_rejects() -> None:

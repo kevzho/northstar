@@ -804,6 +804,7 @@
             "name": "opp_id",
             "required": true,
             "schema": {
+              "format": "uuid",
               "title": "Opp Id",
               "type": "string"
             }
@@ -988,6 +989,7 @@
             "name": "opp_id",
             "required": true,
             "schema": {
+              "format": "uuid",
               "title": "Opp Id",
               "type": "string"
             }
@@ -1083,6 +1085,7 @@
             "name": "friendship_id",
             "required": true,
             "schema": {
+              "format": "uuid",
               "title": "Friendship Id",
               "type": "string"
             }
@@ -1116,6 +1119,7 @@
             "name": "friendship_id",
             "required": true,
             "schema": {
+              "format": "uuid",
               "title": "Friendship Id",
               "type": "string"
             }
@@ -1158,6 +1162,7 @@
             "name": "student_id",
             "required": true,
             "schema": {
+              "format": "uuid",
               "title": "Student Id",
               "type": "string"
             }
@@ -1359,6 +1364,7 @@
             "name": "mission_id",
             "required": true,
             "schema": {
+              "format": "uuid",
               "title": "Mission Id",
               "type": "string"
             }
@@ -1409,6 +1415,7 @@
             "name": "opp_id",
             "required": true,
             "schema": {
+              "format": "uuid",
               "title": "Opp Id",
               "type": "string"
             }

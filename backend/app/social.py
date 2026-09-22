@@ -15,6 +15,7 @@ minors:
 from __future__ import annotations
 
 import re
+from uuid import UUID
 
 HANDLE_RE = re.compile(r"^[a-z0-9][a-z0-9-]{2,19}$")
 
@@ -184,14 +185,19 @@ def blocked_ids(sb, student_id: str) -> set[str]:
     Blocks are a hard wall in both directions: neither party appears in
     the other's discover, team-up pool, or friend requests.
     """
+    # Coerced rather than trusted: this value is interpolated into a filter
+    # string, and postgrest-py passes `.or_()` through verbatim. Every caller
+    # passes the JWT-derived user.id today, but the safety of this line
+    # should not depend on remembering that.
+    sid = str(UUID(str(student_id)))
     rows = (
         sb.table("blocks")
         .select("blocker, blocked")
-        .or_(f"blocker.eq.{student_id},blocked.eq.{student_id}")
+        .or_(f"blocker.eq.{sid},blocked.eq.{sid}")
         .execute()
     ).data or []
     return {
-        (r["blocked"] if r["blocker"] == student_id else r["blocker"])
+        (r["blocked"] if r["blocker"] == sid else r["blocker"])
         for r in rows
     }
 
