@@ -931,23 +931,33 @@ def create_app() -> FastAPI:
                 detail=f"reason must be one of: {', '.join(REPORT_REASONS)}.",
             )
 
-        sb = get_supabase()
+        # Validate the whole request before building a database client. A
+        # malformed id is refused by shape alone, so it should never cost a
+        # connection — and a route that reaches for the client first cannot
+        # be tested without credentials, which is how this ordering slipped
+        # past a local run and failed in CI.
         raw_id = str(body.get("student_id", "")).strip()
         target_id = uuid_field(raw_id, "student_id") if raw_id else ""
+        handle = str(body.get("handle", "")).strip().lower()
+        if not target_id and not (handle and valid_handle(handle)):
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No such student.",
+            )
+
+        sb = get_supabase()
         if not target_id:
-            handle = str(body.get("handle", "")).strip().lower()
             # valid_handle is an allowlist (^[a-z0-9][a-z0-9-]{2,19}$), so a
             # handle that passes it cannot carry a PostgREST metacharacter
             # into the .eq() below — which postgrest-py does not escape.
-            if handle and valid_handle(handle):
-                row = (
-                    sb.table("students")
-                    .select("id")
-                    .eq("handle", handle)
-                    .maybe_single()
-                    .execute()
-                )
-                target_id = (row.data or {}).get("id", "") if row else ""
+            row = (
+                sb.table("students")
+                .select("id")
+                .eq("handle", handle)
+                .maybe_single()
+                .execute()
+            )
+            target_id = (row.data or {}).get("id", "") if row else ""
         if not target_id or target_id == user.id:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
