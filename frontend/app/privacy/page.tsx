@@ -116,7 +116,8 @@ export default function PrivacyPage() {
               reports if the app breaks. These can include the page you were on.
             </li>
             <li>
-              <strong className="text-foreground">DeepSeek</strong> receives your
+              <strong className="text-foreground">NVIDIA</strong> (via its NIM
+              model-hosting API) receives your
               question, your trait scores, your field-interest shares, your
               stated interests, your goal statement in your own words, and the
               titles of opportunities matched to you — but only when you use the

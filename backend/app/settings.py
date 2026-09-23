@@ -48,11 +48,22 @@ class Settings(BaseModel):
     advisor_global_daily: int = 150
     advisor_cache_ttl_h: int = 24
 
-    # Optional: the route advisor (POST /advisor) — any OpenAI-compatible
-    # chat API. Defaults target DeepSeek; absent key = 503, feature off.
+    # Optional: the route advisor (POST /advisor) and the nightly candidate
+    # verifier — any OpenAI-compatible chat API. Absent key = 503, feature off.
+    #
+    # Production uses NVIDIA NIM's free tier. The defaults name it rather than
+    # a provider this project has never called: the old defaults said DeepSeek
+    # while every real call went to NIM, which meant the fallback in
+    # .github/workflows/scrape.yml would have silently pointed a CI run at the
+    # wrong vendor entirely.
+    #
+    # LLM_MODEL is pinned and checked by scripts/check_llm.py before each
+    # scrape, because hosted models are retired on a schedule:
+    # meta/llama-3.1-70b-instruct reached end of life on 2026-08-26 and every
+    # verifier call returned 410 for the next four weeks, unnoticed.
     llm_api_key: str = ""
-    llm_api_base: str = "https://api.deepseek.com"
-    llm_model: str = "deepseek-v4-pro"
+    llm_api_base: str = "https://integrate.api.nvidia.com/v1"
+    llm_model: str = "openai/gpt-oss-20b"
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -76,8 +87,8 @@ class Settings(BaseModel):
             supabase_jwt_secret=os.getenv("SUPABASE_JWT_SECRET", ""),
             github_token=os.getenv("GITHUB_TOKEN", ""),
             llm_api_key=os.getenv("LLM_API_KEY", ""),
-            llm_api_base=os.getenv("LLM_API_BASE", "https://api.deepseek.com"),
-            llm_model=os.getenv("LLM_MODEL", "deepseek-v4-pro"),
+            llm_api_base=os.getenv("LLM_API_BASE", "https://integrate.api.nvidia.com/v1"),
+            llm_model=os.getenv("LLM_MODEL", "openai/gpt-oss-20b"),
             advisor_per_student_daily=_int("ADVISOR_PER_STUDENT_DAILY", 10),
             advisor_global_daily=_int("ADVISOR_GLOBAL_DAILY", 150),
             advisor_cache_ttl_h=_int("ADVISOR_CACHE_TTL_H", 24),

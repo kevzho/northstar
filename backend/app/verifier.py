@@ -20,7 +20,7 @@ set in backend/.env:
     LLM_API_BASE=https://integrate.api.nvidia.com/v1
     LLM_API_KEY=<your NIM key>
     LLM_MODEL=meta/llama-3.3-70b-instruct
-DeepSeek or any other OpenAI-compatible endpoint works the same way.
+Any OpenAI-compatible endpoint works the same way; production uses NVIDIA NIM.
 """
 
 from __future__ import annotations
@@ -166,12 +166,30 @@ def verify_candidate(candidate: dict, retries: int = 2) -> dict:
                 timeout=90,
             )
             response.raise_for_status()
-            content = response.json()["choices"][0]["message"]["content"]
+            message = response.json()["choices"][0]["message"]
+
+            # `content` can be null. Reasoning models (openai/gpt-oss-20b, the
+            # current production model) sometimes put the answer in
+            # `reasoning_content` and leave `content` None — which used to
+            # raise AttributeError: 'NoneType' has no attribute 'find' here,
+            # burning the candidate as an error rather than reading the reply
+            # that was sitting in the next field.
+            content = message.get("content") or message.get("reasoning_content") or ""
+            if not content.strip():
+                last_error = ValueError("model returned an empty message")
+                continue
+
             # Some models wrap JSON in prose or fences despite instructions.
             start, end = content.find("{"), content.rfind("}")
             if start >= 0 and end > start:
                 content = content[start : end + 1]
-            return json.loads(content)
+            try:
+                return json.loads(content)
+            except json.JSONDecodeError as error:
+                # Retry rather than discard: at temperature 0 this is usually
+                # a truncated reply, and the next attempt tends to complete.
+                last_error = error
+                continue
         except (requests.Timeout, requests.ConnectionError) as error:
             last_error = error
             continue

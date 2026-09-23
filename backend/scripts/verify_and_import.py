@@ -32,6 +32,19 @@ from app.verifier import decide, verifier_enabled, verify_candidate  # noqa: E40
 
 POOL = pathlib.Path(__file__).parent / "scraped" / "reddit_candidates.json"
 MAX_VERIFY_PER_RUN = 60   # token/rate budget per daily run
+FAIL_FAST_AFTER = 5       # consecutive errors that mean the provider, not the data
+
+# Wall-clock ceiling for the verify loop. Measured against NVIDIA NIM's free
+# tier on openai/gpt-oss-20b, a single verdict takes anywhere from 24s to 83s
+# — free capacity is shared and cold-starts are not rare. verify_candidate
+# retries twice on timeout, so a worst-case candidate can occupy several
+# minutes on its own, and a fixed count of 60 says nothing useful about how
+# long the run will take.
+#
+# The GitHub job allows 90 minutes and the scrape stage uses roughly 12, so
+# 55 leaves real headroom. Stopping on time imports fewer today and every
+# subsequent day; overrunning imports nothing and reports a timeout.
+TIME_BUDGET_S = 55 * 60
 REQUEST_DELAY_S = 1.0
 
 
@@ -93,12 +106,38 @@ def main() -> None:
     print(f"{len(candidates)} candidates to verify (cap {cap}).")
 
     imported = rejected = errored = 0
+    consecutive_failures = 0
+    first_error = ""
+    started = time.monotonic()
     for candidate in candidates:
+        elapsed = time.monotonic() - started
+        if elapsed > TIME_BUDGET_S:
+            print(
+                f"\nstopping at the {TIME_BUDGET_S // 60}-minute budget after "
+                f"{imported + rejected + errored} candidates — the rest stay in "
+                "the pool for tomorrow."
+            )
+            break
         try:
             verdict = verify_candidate(candidate)
+            consecutive_failures = 0
         except Exception as error:
-            print(f"  verify failed: {str(error)[:80]}")
+            print(f"  verify failed: {str(error)[:120]}")
             errored += 1
+            consecutive_failures += 1
+            first_error = first_error or str(error)
+            # A handful of consecutive failures is not bad luck with one
+            # posting -- it is the endpoint, the key, or the model. Stop
+            # rather than spending the rest of the run proving it 57 more
+            # times. This is how a retired model cost 28 days of imports:
+            # every call 410'd, each was logged and skipped, and the run
+            # still finished "successfully".
+            if consecutive_failures >= FAIL_FAST_AFTER:
+                print(
+                    f"\n{consecutive_failures} consecutive verify failures — "
+                    "treating this as a systemic fault, not bad candidates."
+                )
+                break
             time.sleep(REQUEST_DELAY_S)
             continue
 
@@ -121,10 +160,21 @@ def main() -> None:
         POOL.write_text(json.dumps(pool, indent=2))
         time.sleep(REQUEST_DELAY_S)
 
+    attempted = imported + rejected + errored
     print(
-        f"\nverified {len(candidates)}: {imported} imported, "
+        f"\nverified {attempted}: {imported} imported, "
         f"{rejected} rejected, {errored} errors."
     )
+
+    # Exit non-zero when nothing could be judged. Silence has to be louder
+    # than success here: the pool grows every day regardless, and the daily
+    # commit of that pool made a dead verifier look like a working one for
+    # four weeks.
+    if attempted and errored == attempted:
+        sys.exit(
+            f"every one of {attempted} verify attempts failed — the catalog "
+            f"imported nothing. First error: {first_error[:200]}"
+        )
 
 
 if __name__ == "__main__":

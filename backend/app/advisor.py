@@ -15,8 +15,8 @@ Boundaries, deliberately hard:
   the catalog has nothing relevant.
 - No key configured -> 503 and the frontend renders the feature as off.
 
-Provider: any OpenAI-compatible chat API. Defaults target DeepSeek
-(LLM_API_BASE / LLM_MODEL / LLM_API_KEY in backend/.env).
+Provider: any OpenAI-compatible chat API. Production uses NVIDIA NIM's free
+tier (LLM_API_BASE / LLM_MODEL / LLM_API_KEY in backend/.env).
 """
 
 from __future__ import annotations

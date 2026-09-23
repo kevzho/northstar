@@ -44,8 +44,8 @@ jobs:
       # Fall back rather than pass through: an unset secret would export an
       # empty string, and os.getenv returns "" instead of its default for a
       # variable that is set-but-empty — which would break the verifier.
-      LLM_API_BASE: ${{ secrets.LLM_API_BASE || 'https://api.deepseek.com' }}
-      LLM_MODEL: ${{ secrets.LLM_MODEL || 'deepseek-v4-pro' }}
+      LLM_API_BASE: ${{ secrets.LLM_API_BASE || 'https://integrate.api.nvidia.com/v1' }}
+      LLM_MODEL: ${{ secrets.LLM_MODEL || 'openai/gpt-oss-20b' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -72,13 +72,28 @@ jobs:
             exit 1
           fi
 
+      # A hosted model can be retired on a schedule, and this one was:
+      # meta/llama-3.1-70b-instruct reached end of life 2026-08-26 and every
+      # verify call 410'd for the next four weeks while this workflow stayed
+      # green. Checking the completion path up front turns the next
+      # retirement into a red build on day one, with the live list of
+      # replacements printed in the log.
+      - name: Configured LLM model is alive
+        run: python scripts/check_llm.py
+
+      # scrape_all.py now exits non-zero when the verify+import stage cannot
+      # judge anything. The scrapers are still allowed to fail softly.
       - name: Scrape, verify, import
         run: python scripts/scrape_all.py
 
       # The pool is the scrapers' memory of what they have already seen, so it
       # has to persist between runs or every day rediscovers the same posts as
       # "new". The imported opportunities themselves already went to Supabase.
+      # Only on success. Committing a grown pool after a failed verify pass
+      # is what made the outage legible as progress: 28 daily commits, each
+      # one real, none of them reaching the catalog.
       - name: Commit the refreshed candidate pool
+        if: success()
         run: |
           git config user.name "Kevin Zhou"
           git config user.email "86838731+kevzho@users.noreply.github.com"
