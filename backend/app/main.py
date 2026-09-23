@@ -26,6 +26,7 @@ from .schemas import (
     StudentProfile,
     StudentProfileCreate,
 )
+from .catalog import fetch_shelf, public_view, shelf_for
 from .params import either_direction, uuid_field
 from .settings import settings
 
@@ -35,6 +36,12 @@ from .settings import settings
 from datetime import datetime, timezone
 
 from .match import score_opportunities
+
+# How many scored rows GET /match persists into public.matches. The route used
+# to write every one (144 per call). Twenty is more than any surface renders
+# and keeps a live denominator for the impact figure — see the upsert comment
+# in match().
+MATCHES_PERSISTED = 20
 
 
 def create_app() -> FastAPI:
@@ -361,12 +368,7 @@ def create_app() -> FastAPI:
         )
         student = (prof.data if prof else None) or {}
 
-        cat = sb.table("opportunities").select("*").execute()
-        shelf = student.get("audience") or "high_school"
-        opportunities = [
-            o for o in (cat.data or [])
-            if (o.get("audience") or "high_school") == shelf
-        ]
+        opportunities = fetch_shelf(sb, shelf_for(student))
         ranked = score_opportunities(student, opportunities)
         sources = build_sources(ranked)
         key = cache_key(question, sources)
@@ -1151,15 +1153,11 @@ def create_app() -> FastAPI:
                 detail="Student profile not found. POST /students to create.",
             )
 
-        # Catalog (all opportunities; for MVP scale this is fine). Filtered
-        # in Python to the student's audience shelf — rows predating the
-        # audience column count as high_school, matching its DB default.
-        cat = sb.table("opportunities").select("*").execute()
-        shelf = student.get("audience") or "high_school"
-        opportunities = [
-            o for o in (cat.data or [])
-            if (o.get("audience") or "high_school") == shelf
-        ]
+        # The audience shelf is filtered in Postgres and cached briefly
+        # (app/catalog.py). This used to select("*") the whole catalog and
+        # filter in Python: 106 KB per call, three calls per student session,
+        # 9.8 GB/month of egress at 1,000 students against a 5 GB free tier.
+        opportunities = fetch_shelf(sb, shelf_for(student))
 
         # Behavioral signals: bookmarks nudge their fields up a little;
         # dismissed opportunities leave the list entirely. Both additive —
@@ -1174,7 +1172,7 @@ def create_app() -> FastAPI:
                 .execute()
             )
             marked_ids = {b["opportunity_id"] for b in (marks.data or [])}
-            by_id = {o.get("id"): o for o in (cat.data or [])}
+            by_id = {o.get("id"): o for o in opportunities}
             for opp_id in marked_ids:
                 field = (by_id.get(opp_id) or {}).get("opportunity_field")
                 if field:
@@ -1209,18 +1207,23 @@ def create_app() -> FastAPI:
             bookmarked_fields=bookmarked_fields,
             dismissed_ids=dismissed_ids,
         )
-        # Sanitize the opportunity dict to the shape the frontend expects.
-        # DB uses ``opportunity_field``; TS expects ``field``.
+        # Sanitize to the shape the frontend expects: ``opportunity_field``
+        # becomes ``field``, and ``description`` is dropped — it is 23% of the
+        # payload, no list view renders it, and GET /opportunities/{id} serves
+        # it to the one page that does. It stays in what was SCORED above,
+        # because app/match.py feeds it into the TF-IDF corpus.
         for r in results:
-            opp = dict(r["opportunity"])
-            if "opportunity_field" in opp:
-                opp["field"] = opp.pop("opportunity_field")
-            r["opportunity"] = opp
+            r["opportunity"] = public_view(r["opportunity"])
 
         # Persist the scored set into public.matches — upsert keyed on
         # the existing unique(student_id, opportunity_id) constraint. We
         # send only the FK columns + score + explanation so the row
         # stays valid for the matches table's check constraints.
+        # Bounded to the top MATCHES_PERSISTED. This wrote every scored row —
+        # 144 per call, 432,000 rows/day at 1,000 students — into a table no
+        # read path touches. It is NOT deleted, because it is the denominator
+        # for "opportunities served" in the impact figure; it is capped at more
+        # than any surface renders.
         if results:
             rows = [
                 {
@@ -1229,7 +1232,7 @@ def create_app() -> FastAPI:
                     "score": float(r["score"]["score"]),
                     "explanation": r["score"]["explanation"],
                 }
-                for r in results
+                for r in results[:MATCHES_PERSISTED]
                 if r["score"]["opportunity_id"] is not None
             ]
             if rows:
@@ -1437,12 +1440,7 @@ def create_app() -> FastAPI:
                 detail="Student profile not found.",
             )
 
-        cat = sb.table("opportunities").select("*").execute()
-        shelf = student.get("audience") or "high_school"
-        opportunities = [
-            o for o in (cat.data or [])
-            if (o.get("audience") or "high_school") == shelf
-        ]
+        opportunities = fetch_shelf(sb, shelf_for(student))
 
         results = score_opportunities(student, opportunities)
 

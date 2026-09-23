@@ -111,10 +111,14 @@ export async function saveStudentProfile(
     social_links?: Record<string, string>;
   },
 ): Promise<StudentProfile> {
-  return (await authedFetch("/students", {
+  const row = await (await authedFetch("/students", {
     method: "POST",
     body: JSON.stringify(profile),
   })).json();
+  // interests, goals, grade, audience and location_pref are all scoring
+  // inputs, so a profile edit changes the ranking.
+  invalidateMatches();
+  return row;
 }
 
 /**
@@ -122,9 +126,40 @@ export async function saveStudentProfile(
  *
  * Calls GET /match on the FastAPI backend, which runs the TF-IDF scoring
  * pipeline and returns MatchResult[] sorted by score desc.
+ *
+ * Cached in memory for MATCH_CACHE_MS. Three pages call this — the dashboard,
+ * /opportunities and /plan — and a student moving between them in one session
+ * re-ran the whole pipeline each time: a catalog read, four more queries, and
+ * a write, to return a list that had not changed. The ranking only moves when
+ * the profile, a bookmark, a dismissal or an outcome changes, and each of
+ * those goes through a mutation below that clears this.
+ *
+ * Deliberately a module-level variable, not sessionStorage: the point is to
+ * collapse duplicate calls inside one navigation session, and it should not
+ * survive a reload — a reload is a student asking for fresh data.
  */
+const MATCH_CACHE_MS = 60_000;
+let matchCache: { at: number; inflight: Promise<MatchResult[]> } | null = null;
+
+/** Drop the cached ranking. Called by every mutation that can change it. */
+export function invalidateMatches(): void {
+  matchCache = null;
+}
+
 export async function fetchMatches(): Promise<MatchResult[]> {
-  return (await authedFetch("/match")).json();
+  const fresh = matchCache && Date.now() - matchCache.at < MATCH_CACHE_MS;
+  if (fresh && matchCache) return matchCache.inflight;
+
+  // Store the promise, not the result, so two pages mounting at once share
+  // one request instead of racing and firing two.
+  const inflight = (async () => (await authedFetch("/match")).json())();
+  matchCache = { at: Date.now(), inflight };
+  try {
+    return await inflight;
+  } catch (error) {
+    matchCache = null; // never cache a failure
+    throw error;
+  }
 }
 
 /**
@@ -151,10 +186,12 @@ export async function fetchBookmarks(): Promise<Bookmark[]> {
  * Bookmark an opportunity.
  */
 export async function bookmarkOpportunity(opportunityId: string): Promise<Bookmark> {
-  return (await authedFetch("/bookmarks", {
+  const saved = await (await authedFetch("/bookmarks", {
     method: "POST",
     body: JSON.stringify({ opportunity_id: opportunityId }),
   })).json();
+  invalidateMatches(); // bookmarks feed the field booster in match.py
+  return saved;
 }
 
 /**
@@ -162,6 +199,7 @@ export async function bookmarkOpportunity(opportunityId: string): Promise<Bookma
  */
 export async function removeBookmark(opportunityId: string): Promise<void> {
   await authedFetch(`/bookmarks/${opportunityId}`, { method: "DELETE" });
+  invalidateMatches(); // bookmarks feed the field booster in match.py
 }
 
 /**
@@ -193,7 +231,7 @@ export async function logOutcome(
   status: string,
   impactNotes?: string,
 ): Promise<{ id: string }> {
-  return (await authedFetch("/outcomes", {
+  const logged = await (await authedFetch("/outcomes", {
     method: "POST",
     body: JSON.stringify({
       opportunity_id: opportunityId,
@@ -201,6 +239,8 @@ export async function logOutcome(
       impact_notes: impactNotes ?? null,
     }),
   })).json();
+  invalidateMatches(); // outcomes feed the ALS collaborative term
+  return logged;
 }
 
 /**
@@ -225,6 +265,7 @@ export async function syncAssessmentProfile(
     method: "POST",
     body: JSON.stringify({ trait_scores, field_scores }),
   });
+  invalidateMatches(); // field_scores scale the field booster
 }
 
 /** Opportunity ids the student marked "not for me". */
@@ -237,10 +278,12 @@ export async function dismissOpportunity(opportunityId: string): Promise<void> {
     method: "POST",
     body: JSON.stringify({ opportunity_id: opportunityId }),
   });
+  invalidateMatches(); // dismissals remove rows from the ranking entirely
 }
 
 export async function undoDismissal(opportunityId: string): Promise<void> {
   await authedFetch(`/dismissals/${opportunityId}`, { method: "DELETE" });
+  invalidateMatches();
 }
 
 /** Proof missions, optionally for one archetype (future path). */
