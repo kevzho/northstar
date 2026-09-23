@@ -320,6 +320,45 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Why this exists. Every number here is a claim about the catalog we
+            built, not about how many people have used it — there are three
+            accounts. A judge can verify each one by querying the catalog; none
+            of them inflates a userbase. When there IS usage worth reporting,
+            it belongs here too, and not before. Guarded by
+            backend/tests/test_impact_claims.py. */}
+        <section aria-label="Why Northstar exists" className="pb-16">
+          <p className="eyebrow">Why this exists</p>
+          <h2 className="h-display mt-3 text-2xl text-foreground sm:text-3xl">
+            The opportunities were always there. The map wasn&apos;t.
+          </h2>
+          <div className="mt-6 grid gap-5 sm:grid-cols-2">
+            <p className="text-base leading-8 text-muted-foreground">
+              A student with a college counselor hears about summer research in
+              tenth grade. A student without one finds out it existed after the
+              deadline, if at all. That gap is not about talent and it is not
+              about effort — it is about who happens to be told. Northstar is
+              built for the students nobody told, as a project of{" "}
+              <span className="text-foreground">Minorities in STEM</span>, a
+              fiscally sponsored non-profit.
+            </p>
+            <p className="text-base leading-8 text-muted-foreground">
+              So two things are deliberate. Almost nine in ten programs on the
+              high-school shelf cost nothing to apply to, because a catalog full
+              of $3,000 summer intensives is a list of things you cannot do. And
+              every ranking shows its reasoning — the field that matched, the
+              grade window, the tags — because a score you cannot interrogate is
+              only useful to someone who already has an adult to interpret it.
+            </p>
+          </div>
+          <p className="mt-6 max-w-3xl text-sm leading-7 text-muted-foreground">
+            What we can prove so far is about the map, not the territory: 70
+            verified opportunities on the high-school shelf, from 60 different
+            organizations, across 9 fields. No student outcomes have been logged
+            yet — Northstar has three accounts and has not run a pilot. We would
+            rather show you that number than a bigger one we made up.
+          </p>
+        </section>
+
         <section aria-label="Frequently asked questions" className="pb-16">
           <h2 className="h-display text-2xl text-foreground sm:text-3xl">
             {t("faq.title")}
