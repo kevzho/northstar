@@ -149,7 +149,12 @@ def verify_candidate(candidate: dict, retries: int = 2) -> dict:
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": text},
         ],
-        "max_tokens": 300,
+        # Generous on purpose. The production model (openai/gpt-oss-20b) is a
+        # reasoning model: it emits its thinking before the JSON object, so a
+        # 300-token ceiling truncated the reply mid-string and every retry
+        # truncated it identically at temperature 0 — a deterministic failure
+        # that looked like a flaky one. The verdict itself is ~80 tokens.
+        "max_tokens": 1200,
         "temperature": 0.0,
         "response_format": {"type": "json_object"},
     }
