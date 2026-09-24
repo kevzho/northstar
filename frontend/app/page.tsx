@@ -351,11 +351,16 @@ export default function Home() {
             </p>
           </div>
           <p className="mt-6 max-w-3xl text-sm leading-7 text-muted-foreground">
-            What we can prove so far is about the map, not the territory: 70
-            verified opportunities on the high-school shelf, from 60 different
-            organizations, across 9 fields. No student outcomes have been logged
-            yet — Northstar has three accounts and has not run a pilot. We would
-            rather show you that number than a bigger one we made up.
+            What we can prove so far is about the map, not the territory: 61
+            verified opportunities on the high-school shelf, from 52 different
+            organizations, across 9 fields. That number went{" "}
+            <span className="text-foreground">down</span> last week, on purpose:
+            we checked all 35 hand-written entries against each program&apos;s
+            own website and removed nine, including a scholarship whose last
+            cohort was the class of 2016 and two listings that turned out to be
+            teacher training. No student outcomes have been logged yet —
+            Northstar has three accounts and has not run a pilot. We would
+            rather show you these numbers than bigger ones we made up.
           </p>
         </section>
 

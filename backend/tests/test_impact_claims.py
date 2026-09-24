@@ -114,3 +114,37 @@ def test_mission_is_actually_on_the_page() -> None:
     page = " ".join(LANDING.read_text().split())
     assert "Minorities in STEM" in page
     assert "fiscally sponsored" in page
+
+
+def test_stated_catalog_counts_match_the_seed_floor() -> None:
+    """The counts on the page must not exceed what the catalog can support.
+
+    This guard had a hole, and it showed up within the hour: it checked the
+    free-share percentage and the no-usage claim, but not the raw counts. Then
+    nine rows were retired, the high-school shelf went 70 -> 61, and the page
+    still said 70 — a false claim introduced by a correctness fix.
+
+    CI has no database credentials, so the live count cannot be read here. What
+    CAN be asserted is the direction of the error that actually happened: the
+    page must not claim MORE opportunities than the seed migrations define,
+    since retirement only ever removes rows. A page claiming fewer than the
+    seed is fine and expected — that is what retirement looks like.
+    """
+    page = " ".join(LANDING.read_text().split())
+
+    claimed = re.search(r"(\d+)\s+verified opportunities", page)
+    assert claimed, "the landing page no longer states a verified-opportunity count"
+    stated = int(claimed.group(1))
+
+    seeded = len(_seeded_high_school_rows())
+    curated = (MIGRATIONS / "20260816190000_curated_noncs_seed.sql").read_text()
+    curated_rows = len(re.findall(r"^\s*\('", curated, re.MULTILINE))
+    ceiling = seeded + curated_rows
+
+    assert stated <= ceiling, (
+        f"the landing page claims {stated} verified opportunities, but the seed "
+        f"migrations define at most {ceiling} on the high-school shelf. Retiring "
+        f"rows lowers the real number — re-count against production and update "
+        f"frontend/app/page.tsx."
+    )
+    assert stated > 0
