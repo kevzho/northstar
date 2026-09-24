@@ -15,9 +15,10 @@ import { motion, useScroll, useTransform } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Planet, Ship } from "@/components/decor/voyage";
-import { fetchMatches } from "@/lib/api";
+import { fetchMatches, fetchResources } from "@/lib/api";
+import type { LearningResource } from "@/lib/api";
 import { MissionBoard } from "@/components/MissionBoard";
-import { findArchetype, generatePlan } from "@/lib/plan";
+import { findArchetype, generatePlan, skillKeyFor } from "@/lib/plan";
 import { pathLabel, rankArchetypes, scoreTraits } from "@/lib/scoring";
 import type { MatchResult } from "@/lib/types";
 import { useStoredAnswers } from "@/lib/use-assessment";
@@ -36,6 +37,9 @@ export default function PlanPage() {
   const chosen = useChosenPath();
   const [matches, setMatches] = useState<MatchResult[] | null>(null);
   const [matchesSettled, setMatchesSettled] = useState(false);
+  // Free material for this path's skill rung. Additive: the plan renders
+  // without it, because the step itself is still a real instruction.
+  const [resources, setResources] = useState<LearningResource[]>([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -58,6 +62,18 @@ export default function PlanPage() {
 
   const traits = answers ? scoreTraits(answers) : null;
   const archetype = chosen ? findArchetype(chosen.archetypeId) : null;
+  const skillKey = chosen ? skillKeyFor(chosen.archetypeId) : "";
+
+  useEffect(() => {
+    if (!skillKey) return;
+    let live = true;
+    fetchResources(skillKey).then((rows) => {
+      if (live) setResources(rows);
+    });
+    return () => {
+      live = false;
+    };
+  }, [skillKey]);
   const fit =
     traits && archetype
       ? rankArchetypes(traits).find((r) => r.archetype.id === archetype.id)
@@ -186,6 +202,63 @@ export default function PlanPage() {
                         </li>
                       ))}
                     </ul>
+
+                    {/* The skill rung used to dead-end. plan.ts says "run a
+                        focused 5-hour sprint on statistics — the hypothesis
+                        tests behind the figure you reproduced" and named no
+                        course, no book, no link: an instruction only useful to
+                        a student who already knew where to learn it. These are
+                        free, and each was checked by fetching the page — not a
+                        trial, not free-to-audit-pay-for-the-certificate.
+                        Gentlest entry point first. */}
+                    {index === 1 && resources.length > 0 ? (
+                      <div className="mt-5 max-w-3xl rounded-md border border-border bg-card p-5">
+                        <p className="font-mono text-xs uppercase tracking-[0.18em] text-star">
+                          Where to learn it — free
+                        </p>
+                        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                          {resources[0].skill_label}
+                        </p>
+                        <ul className="mt-4 grid gap-3">
+                          {resources.map((r) => (
+                            <li key={r.id}>
+                              <a
+                                href={r.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block rounded-md border border-border bg-panel-raised p-4 transition-colors hover:border-primary"
+                              >
+                                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                                  <span className="text-sm font-semibold text-foreground">
+                                    {r.title}
+                                  </span>
+                                  <span className="font-mono text-xs text-muted-foreground">
+                                    {r.kind} · {r.effort}
+                                  </span>
+                                </div>
+                                <p className="mt-1 text-xs text-muted-foreground">
+                                  {r.host}
+                                </p>
+                                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                                  {r.why_this_one}
+                                </p>
+                                {r.prerequisite &&
+                                r.prerequisite.toLowerCase() !== "none" ? (
+                                  <p className="mt-2 text-xs leading-5 text-aurora-dim">
+                                    First: {r.prerequisite}
+                                  </p>
+                                ) : null}
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                        <p className="mt-4 text-xs leading-5 text-muted-foreground">
+                          Every one of these is free to finish — no trial, no
+                          certificate fee. We checked each page rather than
+                          taking the word of a link.
+                        </p>
+                      </div>
+                    ) : null}
                   </article>
                 </div>
               ))}

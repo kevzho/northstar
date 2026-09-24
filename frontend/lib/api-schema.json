@@ -1662,6 +1662,52 @@
         "summary": "Report Student"
       }
     },
+    "/resources": {
+      "get": {
+        "description": "Free learning resources for one spine skill rung.\n\nThe plan page's skill step used to be a bare instruction -- \"run a\nfocused 5-hour sprint on statistics -- the hypothesis tests behind the\nfigure you reproduced\" -- with nowhere to go. This is the where.\n\nEvery row served is free, not retired, and carries the quoted evidence\nfrom the page that proves it (app/resources.py drops rows whose\nevidence is missing). No model is involved and nothing is ranked\nagainst the student: on a given rung there is one right set.",
+        "operationId": "list_resources_resources_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "skill",
+            "required": false,
+            "schema": {
+              "default": "",
+              "title": "Skill",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "title": "Response List Resources Resources Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Resources"
+      }
+    },
     "/sharing": {
       "post": {
         "description": "Set the handle and/or the public toggle on the student's record.",

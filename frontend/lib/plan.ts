@@ -34,7 +34,7 @@ export type PlanGroup = {
 /** Archetype-specific spine: project, publish step, and skill sprint. */
 const SPINES: Record<
   string,
-  { project: string; publish: string; skill: string }
+  { project: string; publish: string; skill: string; skillKey: string }
 > = {
   "applied-ai-builder": {
     project:
@@ -43,6 +43,7 @@ const SPINES: Record<
       "Record a 60-second demo of the tool and post it where other builders will actually see it.",
     skill:
       "evaluation — learn to measure whether an AI feature actually works, not just whether it runs",
+    skillKey: "evaluation",
   },
   "computational-biology-researcher": {
     project:
@@ -50,6 +51,7 @@ const SPINES: Record<
     publish:
       "Write a short lab-notebook post: what the data showed, what surprised you, what you would test next.",
     skill: "statistics — the hypothesis tests behind the figure you reproduced",
+    skillKey: "statistics",
   },
   "technical-founder": {
     project:
@@ -57,6 +59,7 @@ const SPINES: Record<
     publish:
       "Ship a one-page site for the idea and get ten people to react to it.",
     skill: "scoping — cutting an idea down to a one-week MVP without losing it",
+    skillKey: "scoping",
   },
   "product-minded-engineer": {
     project:
@@ -65,6 +68,7 @@ const SPINES: Record<
       "Post a before/after write-up showing the redesign and the reasoning behind each change.",
     skill:
       "user research — turning three real user conversations into one prioritized change",
+    skillKey: "user-research",
   },
   "civic-technology-designer": {
     project:
@@ -72,6 +76,7 @@ const SPINES: Record<
     publish:
       "Present the prototype to the group it serves and collect their reactions in writing.",
     skill: "accessibility — making the prototype usable by everyone it is for",
+    skillKey: "accessibility",
   },
   "research-mathematician": {
     project:
@@ -79,6 +84,7 @@ const SPINES: Record<
     publish:
       "Write up your cleanest proof and post it where other math students will critique it.",
     skill: "proof technique — induction and contradiction until they are reflexes",
+    skillKey: "proof-technique",
   },
   "experimental-physicist": {
     project:
@@ -86,6 +92,7 @@ const SPINES: Record<
     publish:
       "Write a short lab report: setup, data, error sources, and where theory and measurement disagreed.",
     skill: "error analysis — knowing how much to trust every number you record",
+    skillKey: "error-analysis",
   },
   "robotics-engineer": {
     project:
@@ -93,6 +100,7 @@ const SPINES: Record<
     publish:
       "Record it working (and failing) and post the build log with what broke.",
     skill: "control basics — why the naive approach oscillates and PID doesn't",
+    skillKey: "control-basics",
   },
   "biomedical-innovator": {
     project:
@@ -100,6 +108,7 @@ const SPINES: Record<
     publish:
       "Show it to one person in healthcare — a nurse, a PT, a school counselor — and write down their reaction.",
     skill: "regulatory literacy — why medical ideas move slowly and what that means for design",
+    skillKey: "regulatory-literacy",
   },
   "data-scientist": {
     project:
@@ -107,6 +116,7 @@ const SPINES: Record<
     publish:
       "Publish the notebook with three charts and one honest paragraph about what the data cannot say.",
     skill: "statistical honesty — confounders, base rates, and when a trend is noise",
+    skillKey: "statistical-honesty",
   },
   "science-communicator": {
     project:
@@ -114,6 +124,7 @@ const SPINES: Record<
     publish:
       "Post it publicly and ask three non-STEM friends what they understood — revise until they can repeat it back.",
     skill: "narrative structure — hook, stakes, one idea, and nothing else",
+    skillKey: "narrative-structure",
   },
   "field-research-scientist": {
     project:
@@ -121,6 +132,7 @@ const SPINES: Record<
     publish:
       "Publish the dataset with your protocol so someone else could repeat it.",
     skill: "sampling discipline — why the boring schedule is the whole experiment",
+    skillKey: "sampling-discipline",
   },
 };
 
@@ -308,4 +320,18 @@ export function parseChosenPath(raw: string | null): ChosenPath | null {
 
 export function traitLabel(trait: TraitKey): string {
   return traitLabels[trait];
+}
+
+
+/**
+ * The learning-resource key for an archetype's skill rung.
+ *
+ * Joins SPINES[].skillKey to public.learning_resources.skill_key, so the plan
+ * can show a student WHERE to learn the skill it tells them to learn. Returns
+ * "" for the 12 archetypes that still fall through to FALLBACK_SPINE — those
+ * have no authored skill rung yet, and an empty key means the plan renders
+ * without a resource block rather than showing the wrong one.
+ */
+export function skillKeyFor(archetypeId: string): string {
+  return SPINES[archetypeId]?.skillKey ?? "";
 }

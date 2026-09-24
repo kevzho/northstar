@@ -638,6 +638,35 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/resources": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Resources
+         * @description Free learning resources for one spine skill rung.
+         *
+         *     The plan page's skill step used to be a bare instruction -- "run a
+         *     focused 5-hour sprint on statistics -- the hypothesis tests behind the
+         *     figure you reproduced" -- with nowhere to go. This is the where.
+         *
+         *     Every row served is free, not retired, and carries the quoted evidence
+         *     from the page that proves it (app/resources.py drops rows whose
+         *     evidence is missing). No model is involved and nothing is ranked
+         *     against the student: on a given rung there is one right set.
+         */
+        get: operations["list_resources_resources_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/sharing": {
         parameters: {
             query?: never;
@@ -1951,6 +1980,39 @@ export interface operations {
                     "application/json": {
                         [key: string]: unknown;
                     };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_resources_resources_get: {
+        parameters: {
+            query?: {
+                skill?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    }[];
                 };
             };
             /** @description Validation Error */

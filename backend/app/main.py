@@ -1010,6 +1010,29 @@ def create_app() -> FastAPI:
         ).execute()
         return {"blocked": True}
 
+    @app.get("/resources")
+    def list_resources(
+        skill: str = "",
+        user: CurrentUser = RequireUser,
+    ) -> list[dict]:
+        """Free learning resources for one spine skill rung.
+
+        The plan page's skill step used to be a bare instruction -- "run a
+        focused 5-hour sprint on statistics -- the hypothesis tests behind the
+        figure you reproduced" -- with nowhere to go. This is the where.
+
+        Every row served is free, not retired, and carries the quoted evidence
+        from the page that proves it (app/resources.py drops rows whose
+        evidence is missing). No model is involved and nothing is ranked
+        against the student: on a given rung there is one right set.
+        """
+        from .db import get_supabase
+        from .resources import fetch_for_skill
+
+        if not skill:
+            return []
+        return fetch_for_skill(get_supabase(), skill)
+
     @app.get("/missions", response_model=list[Mission])
     def list_missions(
         archetype: str = "",

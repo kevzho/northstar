@@ -514,3 +514,42 @@ export async function blockStudent(studentId: string): Promise<void> {
 export async function fetchCatalog(): Promise<Opportunity[]> {
   return (await authedFetch("/catalog")).json();
 }
+
+/** One free, verified learning resource for a spine skill rung. */
+export type LearningResource = {
+  id: string;
+  title: string;
+  host: string;
+  url: string;
+  kind: string;
+  skill_key: string;
+  skill_label: string;
+  effort: string;
+  prerequisite: string;
+  why_this_one: string;
+  free_evidence: string;
+  verified_at: string | null;
+};
+
+/**
+ * Free learning resources for one spine skill rung.
+ *
+ * The plan's skill step used to be an instruction with nowhere to go — "run a
+ * focused 5-hour sprint on statistics" — which is only useful to a student who
+ * already knew where to learn statistics. This is the where.
+ *
+ * Returns [] rather than throwing: a plan that renders without its resources
+ * is still a plan, and this is the one call on the page that is additive.
+ */
+export async function fetchResources(
+  skillKey: string,
+): Promise<LearningResource[]> {
+  if (!skillKey) return [];
+  try {
+    return await (
+      await authedFetch(`/resources?skill=${encodeURIComponent(skillKey)}`)
+    ).json();
+  } catch {
+    return [];
+  }
+}
