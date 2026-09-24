@@ -1259,7 +1259,17 @@ def create_app() -> FastAPI:
         rows = (
             sb.table("opportunities")
             .select("*")
-            .order("deadline", desc=False)
+            # Retired programs are never browsable — see
+            # 20260923120000_opportunity_verification.sql for what "retired"
+            # found (a program that ended in 2016, one re-scoped to middle
+            # school, and two that never accepted high schoolers).
+            .is_("retired_at", "null")
+            # nullsfirst=False puts rolling/undated rows after dated ones, and
+            # ascending-by-deadline USED to mean this route opened on the single
+            # most-expired row in the catalog. The frontend filters to open
+            # opportunities by default; this ordering makes the soonest real
+            # deadline first within that.
+            .order("deadline", desc=False, nullsfirst=False)
             .execute()
         ).data or []
         catalog: list[dict] = []

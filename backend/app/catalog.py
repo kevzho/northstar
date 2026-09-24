@@ -78,6 +78,16 @@ def fetch_shelf(sb, audience: str, *, force: bool = False) -> list[dict]:
         sb.table("opportunities")
         .select("*")
         .eq("audience", shelf)
+        # Retired rows never reach a student. An audit of the seeded catalog
+        # against each program's own site found programs that had ENDED (Gates
+        # Millennium, final cohort 2016), been renamed and re-scoped to middle
+        # school (Broadcom MASTERS), or never accepted high schoolers at all
+        # (a fabricated "NSF REU High School Track"; CERN, which requires
+        # university enrolment). They are stamped rather than deleted, because
+        # outcomes/bookmarks/matches/dismissals all cascade from
+        # opportunities(id) and a DELETE would take a student's logged history
+        # with it. See 20260923120000_opportunity_verification.sql.
+        .is_("retired_at", "null")
         .limit(MAX_CATALOG_ROWS)
         .execute()
     ).data or []

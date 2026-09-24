@@ -20,7 +20,7 @@ class FakeTable:
 
     def __init__(self, rows: list[dict], log: list[dict]):
         self._rows, self._log = rows, log
-        self._call: dict = {"select": None, "eq": {}, "limit": None}
+        self._call: dict = {"select": None, "eq": {}, "is_": {}, "limit": None}
 
     def select(self, cols):
         self._call["select"] = cols
@@ -28,6 +28,10 @@ class FakeTable:
 
     def eq(self, col, val):
         self._call["eq"][col] = val
+        return self
+
+    def is_(self, col, val):
+        self._call["is_"][col] = val
         return self
 
     def limit(self, n):
@@ -38,6 +42,9 @@ class FakeTable:
         self._log.append(dict(self._call))
         eq = self._call["eq"]
         rows = [r for r in self._rows if all(r.get(k) == v for k, v in eq.items())]
+        for col, want in self._call["is_"].items():
+            if want == "null":
+                rows = [r for r in rows if r.get(col) is None]
         return type("R", (), {"data": rows})()
 
 
@@ -52,11 +59,16 @@ class FakeSB:
 
 ROWS = [
     {"id": "1", "audience": "high_school", "opportunity_field": "cs",
-     "title": "HS thing", "description": "x" * 900},
+     "title": "HS thing", "description": "x" * 900, "retired_at": None},
     {"id": "2", "audience": "college", "opportunity_field": "math",
-     "title": "College thing", "description": "y" * 900},
+     "title": "College thing", "description": "y" * 900, "retired_at": None},
     {"id": "3", "audience": "high_school", "opportunity_field": "biology",
-     "title": "Another HS thing", "description": "z" * 900},
+     "title": "Another HS thing", "description": "z" * 900, "retired_at": None},
+    # A program that ended. Gates Millennium Scholars shaped: real row, real
+    # history hanging off it, must never be ranked or shown again.
+    {"id": "4", "audience": "high_school", "opportunity_field": "cs",
+     "title": "Ended program", "description": "w" * 900,
+     "retired_at": "2026-09-23T00:00:00Z"},
 ]
 
 
@@ -130,3 +142,22 @@ def test_public_view_drops_description_but_scoring_keeps_it() -> None:
     assert view["field"] == "cs" and "opportunity_field" not in view
     assert rows[0].get("description"), "public_view must not mutate the cached row"
     assert "opportunity_field" in rows[0]
+
+
+def test_retired_rows_never_reach_a_student() -> None:
+    """A retired program is filtered in Postgres, not hidden in the UI.
+
+    The seeded catalog contained a scholarship whose final cohort was the class
+    of 2016, a competition re-scoped to middle school, and two programs that
+    never accepted high schoolers. They are stamped rather than deleted because
+    outcomes/bookmarks/matches/dismissals cascade from opportunities(id) — so
+    the read path is what has to exclude them.
+    """
+    sb = FakeSB(ROWS)
+    rows = catalog.fetch_shelf(sb, "high_school")
+
+    assert sb.queries[0]["is_"] == {"retired_at": "null"}, (
+        "retired_at must be filtered by the database"
+    )
+    assert "4" not in {r["id"] for r in rows}, "a retired program was served"
+    assert {r["id"] for r in rows} == {"1", "3"}
