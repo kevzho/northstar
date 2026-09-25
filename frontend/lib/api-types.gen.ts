@@ -667,6 +667,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/roadmap": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Roadmap
+         * @description The student's sequenced roadmap: what to do, in order.
+         *
+         *     This is the route that makes Northstar something other than a ranked
+         *     list. It assembles four kinds of step -- learn, build, publish, apply --
+         *     and orders them on the student's grade progression rather than on
+         *     catalog deadlines, because against production a 9th grader has exactly
+         *     ONE catalog row with a future deadline and 25 of 61 are locked above
+         *     their grade. A deadline-anchored sequencer has nothing to say to them.
+         *
+         *     No model runs here. Provenance is a foreign key: a step naming a
+         *     program or a course carries its id, so app/roadmap.py cannot emit a
+         *     step for something absent from the catalog and the insert would refuse
+         *     it anyway.
+         *
+         *     Steps are persisted to public.actions under a generation, merged on
+         *     step_key so completing a step survives a regeneration.
+         */
+        get: operations["roadmap_roadmap_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/sharing": {
         parameters: {
             query?: never;
@@ -2022,6 +2057,28 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    roadmap_roadmap_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
                 };
             };
         };

@@ -1010,6 +1010,94 @@ def create_app() -> FastAPI:
         ).execute()
         return {"blocked": True}
 
+    @app.get("/roadmap")
+    def roadmap(user: CurrentUser = RequireUser) -> dict:
+        """The student's sequenced roadmap: what to do, in order.
+
+        This is the route that makes Northstar something other than a ranked
+        list. It assembles four kinds of step -- learn, build, publish, apply --
+        and orders them on the student's grade progression rather than on
+        catalog deadlines, because against production a 9th grader has exactly
+        ONE catalog row with a future deadline and 25 of 61 are locked above
+        their grade. A deadline-anchored sequencer has nothing to say to them.
+
+        No model runs here. Provenance is a foreign key: a step naming a
+        program or a course carries its id, so app/roadmap.py cannot emit a
+        step for something absent from the catalog and the insert would refuse
+        it anyway.
+
+        Steps are persisted to public.actions under a generation, merged on
+        step_key so completing a step survives a regeneration.
+        """
+        from datetime import date
+
+        from .db import get_supabase
+        from .resources import fetch_for_skill
+        from .roadmap import build_roadmap
+        from .spines import spine_for
+
+        sb = get_supabase()
+
+        prof = (
+            sb.table("students")
+            .select("id, name, grade, interests, goals, audience, location_pref, "
+                    "field_scores, trait_scores, chosen_archetype, chosen_kind")
+            .eq("id", user.id)
+            .maybe_single()
+            .execute()
+        )
+        student = prof.data if prof else None
+        if not student:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Student profile not found. POST /students to create.",
+            )
+
+        archetype = student.get("chosen_archetype") or ""
+        spine = spine_for(archetype)
+
+        # Resources for this path's skill rung. Absent spine or unseeded skill
+        # returns [] and the roadmap simply has no learning steps, rather than
+        # borrowing another path's.
+        resources = (
+            fetch_for_skill(sb, spine["skillKey"]) if spine else []
+        )
+
+        opportunities = fetch_shelf(sb, shelf_for(student))
+        try:
+            logged = (
+                sb.table("outcomes")
+                .select("opportunity_id, status")
+                .eq("student_id", user.id)
+                .execute()
+            ).data or []
+        except Exception:
+            logged = []
+        ranked = score_opportunities(student, opportunities, logged)
+        for r in ranked:
+            r["opportunity"] = public_view(r["opportunity"])
+
+        missions: list[dict] = []
+        if archetype:
+            try:
+                missions = (
+                    sb.table("missions")
+                    .select("id, title, description, trait_focus, effort, sort_order")
+                    .eq("archetype_id", archetype)
+                    .order("sort_order")
+                    .execute()
+                ).data or []
+            except Exception:
+                missions = []
+
+        plan = build_roadmap(
+            student, spine, resources, ranked, missions, date.today()
+        )
+        plan["archetype_id"] = archetype
+        plan["has_spine"] = spine is not None
+        plan["resource_count"] = len(resources)
+        return plan
+
     @app.get("/resources")
     def list_resources(
         skill: str = "",

@@ -1708,6 +1708,27 @@
         "summary": "List Resources"
       }
     },
+    "/roadmap": {
+      "get": {
+        "description": "The student's sequenced roadmap: what to do, in order.\n\nThis is the route that makes Northstar something other than a ranked\nlist. It assembles four kinds of step -- learn, build, publish, apply --\nand orders them on the student's grade progression rather than on\ncatalog deadlines, because against production a 9th grader has exactly\nONE catalog row with a future deadline and 25 of 61 are locked above\ntheir grade. A deadline-anchored sequencer has nothing to say to them.\n\nNo model runs here. Provenance is a foreign key: a step naming a\nprogram or a course carries its id, so app/roadmap.py cannot emit a\nstep for something absent from the catalog and the insert would refuse\nit anyway.\n\nSteps are persisted to public.actions under a generation, merged on\nstep_key so completing a step survives a regeneration.",
+        "operationId": "roadmap_roadmap_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Roadmap Roadmap Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Roadmap"
+      }
+    },
     "/sharing": {
       "post": {
         "description": "Set the handle and/or the public toggle on the student's record.",
