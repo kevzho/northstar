@@ -26,6 +26,7 @@ from __future__ import annotations
 import sys
 import traceback
 
+import embed_catalog
 import scrape_devpost
 import scrape_reddit
 import verify_and_import
@@ -35,6 +36,11 @@ STAGES = (
     ("reddit", scrape_reddit, False),
     ("devpost", scrape_devpost, False),
     ("verify+import", verify_and_import, True),
+    # Embed whatever the import just added, so a new opportunity is matchable
+    # by meaning the next morning. Optional: a missing embedding simply means
+    # the row is absent from semantic_scores() and scoring falls back to
+    # lexical, which is how the product worked before embeddings.
+    ("embed", embed_catalog, False),
 )
 
 

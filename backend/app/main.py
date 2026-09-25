@@ -149,6 +149,14 @@ def create_app() -> FastAPI:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Failed to upsert student profile",
             )
+        # Re-embed the profile: interests and goals are both scoring inputs, and
+        # `goals` is the only free text a student writes — the only field that
+        # can express "I want to help people with cancer". Best effort: a stale
+        # embedding costs ranking precision, a 500 here costs the student their
+        # onboarding.
+        from .embeddings import refresh_student_embedding
+
+        refresh_student_embedding(sb, user.id, result.data[0])
         return result.data[0]  # upsert with representation returns a list
 
     @app.post("/assessment-profile")
@@ -1311,12 +1319,18 @@ def create_app() -> FastAPI:
         except Exception:
             outcome_rows = []
 
+        # Semantic similarity, computed in Postgres so the 2048-float vectors
+        # never cross the wire. Empty on any failure, and scoring then behaves
+        # exactly as it did before embeddings existed.
+        from .embeddings import semantic_scores
+
         results = score_opportunities(
             student,
             opportunities,
             outcome_rows,
             bookmarked_fields=bookmarked_fields,
             dismissed_ids=dismissed_ids,
+            semantic=semantic_scores(sb, user.id),
         )
         # Sanitize to the shape the frontend expects: ``opportunity_field``
         # becomes ``field``, and ``description`` is dropped — it is 23% of the

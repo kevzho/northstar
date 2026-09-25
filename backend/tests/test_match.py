@@ -255,3 +255,130 @@ def test_matcher_knows_every_field_in_the_enum() -> None:
         "app/match.py INTEREST_TO_FIELD cannot reach these opportunity_field "
         f"values, so no student interest can ever boost them: {sorted(missing)}"
     )
+
+
+# ---------------------------------------------------------------------------
+# Semantic booster. TF-IDF is lexical: measured on the live catalog, a student
+# who writes "I want to help people with cancer" gets every row after the first
+# pinned at the 0.05 noise floor, and Stanford Institutes of Medicine Summer
+# Research — the one relevant programme — sits at rank 33. With the semantic
+# term and assessment field scores present it reaches rank 1, and Broad Summer
+# Scholars moves 9 -> 4 while a maths camp moves 27 -> 20.
+# ---------------------------------------------------------------------------
+
+SEM_STUDENT = {
+    "id": "s1",
+    "grade": "11",
+    "interests": ["Health"],
+    "goals": "I want to help people with cancer",
+    "audience": "high_school",
+    "location_pref": "either",
+    "field_scores": {"health": 60},
+}
+
+
+def _sem_opp(oid, title, field="health", blurb=""):
+    return {
+        "id": oid, "title": title, "host": "H", "opportunity_field": field,
+        "type": "program", "blurb": blurb, "description": "", "cost": 0,
+        "grade_min": 9, "grade_max": 12, "tags": [], "url": "https://e.org",
+        "location_scope": "us",
+    }
+
+
+def test_absent_semantic_scores_change_nothing() -> None:
+    """The feature must degrade to exactly the previous behaviour.
+
+    A missing profile embedding, an unembedded catalog, or an unreachable
+    provider all produce {} — and none of them may alter a score.
+    """
+    opps = [_sem_opp("a", "Alpha Research"), _sem_opp("b", "Beta Program", "cs")]
+    base = score_opportunities(SEM_STUDENT, opps, [])
+    for empty in (None, {}):
+        got = score_opportunities(SEM_STUDENT, opps, [], semantic=empty)
+        assert [r["score"]["score"] for r in got] == [
+            r["score"]["score"] for r in base
+        ], f"semantic={empty!r} altered the scoring"
+
+
+def test_a_flat_similarity_set_is_ignored_not_amplified() -> None:
+    """Every row equally similar carries no information.
+
+    Min-max normalising a flat set would divide by zero or promote everything
+    uniformly; neither is a ranking signal.
+    """
+    opps = [_sem_opp("a", "Alpha"), _sem_opp("b", "Beta"), _sem_opp("c", "Gamma")]
+    base = score_opportunities(SEM_STUDENT, opps, [])
+    flat = score_opportunities(
+        SEM_STUDENT, opps, [], semantic={"a": 0.2, "b": 0.2, "c": 0.2}
+    )
+    assert [r["score"]["score"] for r in flat] == [
+        r["score"]["score"] for r in base
+    ]
+
+
+def test_a_strong_semantic_match_escapes_the_lexical_noise_floor() -> None:
+    """The floor is what made embeddings pointless without this exemption.
+
+    A row with no shared words, no field match and no tag overlap is capped at
+    0.05. That cap is what buried Stanford SIMR at rank 33 — the semantic term
+    was computed and then discarded.
+    """
+    # Nothing lexical in common with the student, and a field they did not pick.
+    far = _sem_opp("far", "Zzzz Qqqq", field="math")
+    near = _sem_opp("near", "Wwww Vvvv", field="math")
+    opps = [far, near]
+
+    without = {r["opportunity"]["id"]: r["score"]["score"]
+               for r in score_opportunities(SEM_STUDENT, opps, [])}
+    assert without["near"] <= 0.05 and without["far"] <= 0.05, without
+
+    with_sem = {r["opportunity"]["id"]: r["score"]["score"]
+                for r in score_opportunities(
+                    SEM_STUDENT, opps, [], semantic={"far": 0.05, "near": 0.90})}
+    assert with_sem["near"] > 0.05, (
+        "a strong semantic match is still capped by the lexical floor"
+    )
+    assert with_sem["far"] <= 0.05, "a weak match should stay at the floor"
+
+
+def test_a_floored_row_does_not_claim_a_semantic_lift() -> None:
+    """The explanation must not describe a contribution the floor discarded.
+
+    Before this, 28 rows read "close in meaning to what you wrote" while
+    scoring 0.050 — an unfalsifiable reason attached to a non-result.
+    """
+    opps = [_sem_opp("a", "Zzzz Qqqq", field="math"), _sem_opp("b", "Wwww Vvvv", field="math")]
+    results = score_opportunities(
+        SEM_STUDENT, opps, [], semantic={"a": 0.30, "b": 0.31}
+    )
+    for r in results:
+        if r["score"]["score"] <= 0.05:
+            assert "close in meaning" not in r["score"]["explanation"].lower(), (
+                f"floored row claims a semantic lift: {r['score']}"
+            )
+
+
+def test_the_semantic_term_is_capped() -> None:
+    """A booster, never a replacement. The deterministic engine keeps
+    authority over the score, which is what keeps every result explainable."""
+    from app.match import SEMANTIC_WEIGHT
+
+    opps = [_sem_opp("a", "Alpha Research"), _sem_opp("b", "Beta Research")]
+    low = score_opportunities(SEM_STUDENT, opps, [], semantic={"a": 0.0, "b": 0.0})
+    high = score_opportunities(SEM_STUDENT, opps, [], semantic={"a": 0.0, "b": 1.0})
+    lift = max(r["score"]["score"] for r in high) - max(
+        r["score"]["score"] for r in low
+    )
+    assert lift <= SEMANTIC_WEIGHT + 1e-6, (
+        f"semantic lifted a score by {lift:.3f}, above the {SEMANTIC_WEIGHT} cap"
+    )
+
+
+def test_tfidf_is_no_longer_described_as_semantic() -> None:
+    """It is lexical. Calling it "semantic match" was always inaccurate and
+    became actively confusing once a real semantic term existed."""
+    opps = [_sem_opp("a", "cancer research program", blurb="cancer research")]
+    student = dict(SEM_STUDENT, goals="cancer research program")
+    text = score_opportunities(student, opps, [])[0]["score"]["explanation"].lower()
+    assert "semantic match" not in text, text

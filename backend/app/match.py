@@ -42,6 +42,21 @@ from typing import Iterable
 
 from .collab import COLLAB_WEIGHT, collaborative_scores
 
+# Weight of the semantic term, matching COLLAB_WEIGHT's magnitude. It is a
+# BOOSTER, never a replacement: the deterministic engine keeps authority over
+# the score so every result still decomposes into named reasons.
+SEMANTIC_WEIGHT = 0.15
+
+# Normalised similarity above which a row escapes the lexical noise floor.
+#
+# The floor below caps a row at 0.05 when tfidf is 0 and no field or tag
+# matched. Measured on the live catalog, that pins EVERY row after the first at
+# 0.050 for a goal like "I want to help people with cancer" — including Stanford
+# Institutes of Medicine Summer Research, the one genuinely relevant programme.
+# Without this exemption the semantic term would be computed and then discarded
+# by the floor, which is the whole failure it exists to fix.
+SEMANTIC_FLOOR_ESCAPE = 0.55
+
 # Field-keyword mapping (student interest strings → opportunity_field enum)
 INTEREST_TO_FIELD = {
     "computer science": "cs",
@@ -195,12 +210,18 @@ def _cosine(v1: dict[str, float], v2: dict[str, float]) -> float:
 
 def _explain(status_tf: float, field_note: str | None, grade_fit: bool,
              tag_overlap: int, free: bool, collab_lift: bool = False,
-             bookmark_note: bool = False, location_note: str | None = None) -> str:
+             bookmark_note: bool = False, location_note: str | None = None,
+             semantic_lift: bool = False) -> str:
     bits: list[str] = []
+    # These two describe the TF-IDF term, which is LEXICAL — shared words. They
+    # used to read "strong/partial semantic match", which was never accurate and
+    # became actively confusing once a real semantic term existed alongside it.
     if status_tf > 0.3:
-        bits.append("strong semantic match")
+        bits.append("your words closely overlap this listing")
     elif status_tf > 0.1:
-        bits.append("partial semantic match")
+        bits.append("some wording overlaps this listing")
+    if semantic_lift:
+        bits.append("close in meaning to what you wrote, even without shared words")
     if field_note:
         bits.append(field_note)
     if bookmark_note:
@@ -228,6 +249,7 @@ def score_opportunities(
     outcomes: list[dict] | None = None,
     bookmarked_fields: dict[str, int] | None = None,
     dismissed_ids: set[str] | None = None,
+    semantic: dict[str, float] | None = None,
 ) -> list[dict]:
     """Score an iterable of opportunities for one student.
 
@@ -243,6 +265,12 @@ def score_opportunities(
     small behavioral nudge toward fields they keep saving. ``dismissed_ids``
     are excluded outright: "not for me" means not in the list.
 
+    ``semantic`` maps opportunity_id to cosine similarity in [0,1], from
+    public.semantic_scores(). It is normalised across the candidate set before
+    use, because the absolute scale of one embedding model means little — what
+    matters is which of THIS student's options are closest. Absent or empty, the
+    scoring is exactly what it was before embeddings existed.
+
     Returns a list of dict with keys ``opportunity``, ``score`` where
     score itself is a dict with ``opportunity_id``, ``score``, ``explanation``.
     Returns empty list if student has no interests and no goals.
@@ -252,6 +280,23 @@ def score_opportunities(
         opps = [o for o in opps if o.get("id") not in dismissed_ids]
     if not opps:
         return []
+
+    # Normalise similarity within this student's shelf. Absolute cosine values
+    # from this model sit in a narrow band (measured: 0.13-0.25 across a real
+    # catalog), so min-max scaling is what turns them into a usable ranking
+    # signal. A flat set — every row equally similar — carries no information
+    # and is dropped rather than amplified into noise.
+    sem_norm: dict[str, float] = {}
+    if semantic:
+        values = [v for v in semantic.values() if isinstance(v, (int, float))]
+        if values:
+            low, high = min(values), max(values)
+            if high - low > 1e-6:
+                sem_norm = {
+                    k: (v - low) / (high - low)
+                    for k, v in semantic.items()
+                    if isinstance(v, (int, float))
+                }
 
     # Bail-out: no signal from the student
     student_query = _query_for_student(student)
@@ -355,10 +400,25 @@ def score_opportunities(
         cf = collab.get(opp.get("id"))
         collab_term = COLLAB_WEIGHT * (cf - 0.5) if cf is not None else 0.0
 
-        score = max(0.0, min(0.5 * tfidf + boost + collab_term, 1.0))
-        # Zero-out scores below a small noise floor so we don't surface
-        # nothing-then-random entries at the very long tail.
-        if tfidf == 0.0 and not field_match and not tag_overlap:
+        # Semantic term. This is what connects "I want to help people with
+        # cancer" to a medicine research programme that shares no tokens with it.
+        sem = sem_norm.get(opp.get("id"))
+        semantic_term = SEMANTIC_WEIGHT * sem if sem is not None else 0.0
+
+        score = max(
+            0.0, min(0.5 * tfidf + boost + collab_term + semantic_term, 1.0)
+        )
+        # Noise floor: without a lexical or semantic signal, a row is tail
+        # noise and is capped rather than surfaced. A strong semantic match IS
+        # a signal, so it escapes — otherwise the term above would be computed
+        # and then thrown away by this line.
+        semantic_signal = sem is not None and sem >= SEMANTIC_FLOOR_ESCAPE
+        if (
+            tfidf == 0.0
+            and not field_match
+            and not tag_overlap
+            and not semantic_signal
+        ):
             score = min(score, 0.05)
 
         explanation = _explain(
@@ -366,6 +426,12 @@ def score_opportunities(
             collab_lift=collab_term > 0.02,
             bookmark_note=bookmark_boost > 0,
             location_note=location_note,
+            # Only claim the semantic lift if it SURVIVED the floor. Reporting a
+            # contribution the floor then discarded made the explanation
+            # contradict the score — MIT PRIMES read "close in meaning to what
+            # you wrote" while scoring 0.050, which is exactly the kind of
+            # unfalsifiable reason this product refuses to show.
+            semantic_lift=semantic_term > 0.02 and score > 0.05,
         )
         results.append({
             "opportunity": opp,
