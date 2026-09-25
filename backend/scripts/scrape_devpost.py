@@ -122,8 +122,37 @@ def main() -> None:
                 "deadline_guess": deadline,
                 "field_guess": field_for(themes),
                 "type_guess": "competition",
+                # AUDIENCE IS A CONSERVATIVE GUESS, AND DELIBERATELY SO.
+                #
+                # Devpost's JSON gives titles, URLs, themes and deadlines — no
+                # eligibility text. So there is nothing here to determine
+                # whether a hackathon accepts a 15-year-old, and the verifier
+                # cannot tell either: it is handed this blurb, which says only
+                # "Open hackathon — themes: X, Y".
+                #
+                # This used to check the title alone, which is why 134 of 138
+                # AI-imported rows landed on the college shelf: a title almost
+                # never says "high school", even when the rules do. The signal
+                # is now widened to the themes as well.
+                #
+                # But the DEFAULT stays college, on purpose. Of the nine seeded
+                # opportunities retired after an audit, four were retired
+                # precisely because high schoolers could not apply — NSF REU,
+                # CERN, Jackson Lab, Broadcom MASTERS. Guessing high_school here
+                # would repeat that error across 134 rows at once. Hiding a
+                # hackathon a student could have entered is a real cost; sending
+                # them to one that will reject them is a worse one.
+                #
+                # The honest fix is to capture each hackathon's eligibility text
+                # and judge it. That is scraper work, tracked separately.
                 "audience_guess": (
-                    "high_school" if "high school" in title.lower() else "college"
+                    "high_school"
+                    if any(
+                        marker in haystack
+                        for haystack in (title.lower(), " ".join(themes).lower())
+                        for marker in ("high school", "highschool", "teen", "k-12", "grades 9")
+                    )
+                    else "college"
                 ),
                 "location_guess": "global",
                 "needs_review": True,
