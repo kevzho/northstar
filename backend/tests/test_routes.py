@@ -51,7 +51,12 @@ def test_health_is_public(client: TestClient) -> None:
     """Render's healthCheckPath points here (backend/render.yaml)."""
     res = client.get("/health")
     assert res.status_code == 200
-    assert res.json() == {"status": "ok"}
+    body = res.json()
+    assert body["status"] == "ok"
+    # Also reports which build answered, so "is the new code deployed?" is a
+    # curl rather than a guess. "local" off Vercel; a short SHA on it.
+    assert body["commit"]
+    assert body["semantic"] in ("available", "unavailable")
 
 
 @pytest.mark.parametrize("path", PROTECTED_GETS)

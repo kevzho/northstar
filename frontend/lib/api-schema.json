@@ -1197,6 +1197,7 @@
     },
     "/health": {
       "get": {
+        "description": "Liveness, plus which build is answering.\n\n\"Is the new code actually deployed?\" was unanswerable from outside, and\nbeing unable to answer it cost real time twice: once when three files\nwere committed but never pushed while main.py imported them (Vercel kept\nserving the last good build, so the symptom was \"old behaviour\", not an\nerror), and once when the backend simply lagged the frontend and that\nlooked like a bug.\n\ncommit is Vercel's build SHA, short. semantic reports whether the\nembedding layer imported \u2014 the feature most recently at risk of being\nlive in the frontend and absent in the API.",
         "operationId": "health_health_get",
         "responses": {
           "200": {

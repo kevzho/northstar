@@ -341,7 +341,21 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Health */
+        /**
+         * Health
+         * @description Liveness, plus which build is answering.
+         *
+         *     "Is the new code actually deployed?" was unanswerable from outside, and
+         *     being unable to answer it cost real time twice: once when three files
+         *     were committed but never pushed while main.py imported them (Vercel kept
+         *     serving the last good build, so the symptom was "old behaviour", not an
+         *     error), and once when the backend simply lagged the frontend and that
+         *     looked like a bug.
+         *
+         *     commit is Vercel's build SHA, short. semantic reports whether the
+         *     embedding layer imported — the feature most recently at risk of being
+         *     live in the frontend and absent in the API.
+         */
         get: operations["health_health_get"];
         put?: never;
         post?: never;
