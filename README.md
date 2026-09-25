@@ -98,6 +98,27 @@ Production runs the FastAPI app as a Vercel serverless function:
 `backend/vercel.json` rewrites every path to `backend/api/index.py`, which
 re-exports `app` from `backend/app/main.py`.
 
+The `northstar-api` project is connected to this repository (root directory
+`backend`, production branch `main`), so a push to `main` deploys it. That was
+not always true, and the gap cost real debugging time twice: for its first 44
+days the project had **no git connection at all** and only ever deployed from
+four manual CLI runs. Code would be committed, pushed, and simply not be live,
+while Vercel kept serving the last good build — so the symptom was old
+behaviour rather than an error, which is the hardest kind to notice.
+
+Check which commit is actually answering before concluding anything about a
+backend change:
+
+```bash
+curl -s https://northstar-api-theta.vercel.app/health
+# {"status":"ok","commit":"60015a9","semantic":"available"}
+git rev-parse --short=7 HEAD    # must match `commit`
+```
+
+`semantic` reports whether `app/embeddings.py` imported, since the matching
+layer is the part most likely to be live in the frontend and missing from the
+API. A manual deploy still works and still stamps the SHA:
+
 ```bash
 cd backend
 vercel --prod
