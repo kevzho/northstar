@@ -71,7 +71,33 @@ def create_app() -> FastAPI:
 
     @app.get("/health")
     def health() -> dict[str, str]:
-        return {"status": "ok"}
+        """Liveness, plus which build is answering.
+
+        "Is the new code actually deployed?" was unanswerable from outside, and
+        being unable to answer it cost real time twice: once when three files
+        were committed but never pushed while main.py imported them (Vercel kept
+        serving the last good build, so the symptom was "old behaviour", not an
+        error), and once when the backend simply lagged the frontend and that
+        looked like a bug.
+
+        commit is Vercel's build SHA, short. semantic reports whether the
+        embedding layer imported — the feature most recently at risk of being
+        live in the frontend and absent in the API.
+        """
+        import os
+
+        try:
+            from . import embeddings  # noqa: F401
+
+            semantic = "available"
+        except Exception:
+            semantic = "unavailable"
+
+        return {
+            "status": "ok",
+            "commit": (os.getenv("VERCEL_GIT_COMMIT_SHA") or "local")[:7],
+            "semantic": semantic,
+        }
 
     @app.get("/me")
     def me(user: CurrentUser = RequireUser) -> dict:
