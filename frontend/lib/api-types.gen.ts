@@ -352,9 +352,15 @@ export interface paths {
          *     error), and once when the backend simply lagged the frontend and that
          *     looked like a bug.
          *
-         *     commit is Vercel's build SHA, short. semantic reports whether the
-         *     embedding layer imported — the feature most recently at risk of being
-         *     live in the frontend and absent in the API.
+         *     commit is Vercel's build SHA, short.
+         *
+         *     semantic and advisor report whether each feature can actually RUN, not
+         *     whether its module imports. The first version of this endpoint checked
+         *     importability and would have answered "available" on a host with no
+         *     LLM_API_KEY — a false green in the exact check written to prevent one.
+         *     Both features need that key: without it /advisor 503s and no student
+         *     ever gets a profile embedding, while the code and the frontend look
+         *     completely fine.
          */
         get: operations["health_health_get"];
         put?: never;

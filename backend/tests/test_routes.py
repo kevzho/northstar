@@ -56,7 +56,30 @@ def test_health_is_public(client: TestClient) -> None:
     # Also reports which build answered, so "is the new code deployed?" is a
     # curl rather than a guess. "local" off Vercel; a short SHA on it.
     assert body["commit"]
-    assert body["semantic"] in ("available", "unavailable")
+    assert body["semantic"] in ("available", "unconfigured", "unavailable")
+    assert body["advisor"] in ("available", "unconfigured", "unavailable")
+
+
+def test_health_reports_unconfigured_when_the_llm_key_is_absent(
+    client: TestClient,
+) -> None:
+    """The first version of /health checked whether app.embeddings IMPORTED,
+    which is true on a host with no LLM_API_KEY — so it answered "available"
+    for a feature that cannot run. Both /advisor and every profile embedding
+    need that key, and production did not have it while the code and the
+    frontend looked fine. A health check that goes green on the outage it was
+    written to catch is worse than no health check."""
+    from app import settings as settings_module
+
+    original = settings_module.settings.llm_api_key
+    try:
+        settings_module.settings.llm_api_key = ""
+        body = client.get("/health").json()
+        assert body["status"] == "ok", "a missing key is not a liveness failure"
+        assert body["semantic"] == "unconfigured"
+        assert body["advisor"] == "unconfigured"
+    finally:
+        settings_module.settings.llm_api_key = original
 
 
 @pytest.mark.parametrize("path", PROTECTED_GETS)

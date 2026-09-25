@@ -80,23 +80,39 @@ def create_app() -> FastAPI:
         error), and once when the backend simply lagged the frontend and that
         looked like a bug.
 
-        commit is Vercel's build SHA, short. semantic reports whether the
-        embedding layer imported — the feature most recently at risk of being
-        live in the frontend and absent in the API.
+        commit is Vercel's build SHA, short.
+
+        semantic and advisor report whether each feature can actually RUN, not
+        whether its module imports. The first version of this endpoint checked
+        importability and would have answered "available" on a host with no
+        LLM_API_KEY — a false green in the exact check written to prevent one.
+        Both features need that key: without it /advisor 503s and no student
+        ever gets a profile embedding, while the code and the frontend look
+        completely fine.
         """
         import os
 
-        try:
-            from . import embeddings  # noqa: F401
+        def capability(probe) -> str:
+            try:
+                return "available" if probe() else "unconfigured"
+            except Exception:
+                return "unavailable"
 
-            semantic = "available"
-        except Exception:
-            semantic = "unavailable"
+        def semantic_probe() -> bool:
+            from .embeddings import enabled
+
+            return enabled()
+
+        def advisor_probe() -> bool:
+            from .advisor import advisor_enabled
+
+            return advisor_enabled()
 
         return {
             "status": "ok",
             "commit": (os.getenv("VERCEL_GIT_COMMIT_SHA") or "local")[:7],
-            "semantic": semantic,
+            "semantic": capability(semantic_probe),
+            "advisor": capability(advisor_probe),
         }
 
     @app.get("/me")
