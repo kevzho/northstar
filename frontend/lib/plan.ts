@@ -134,6 +134,114 @@ const SPINES: Record<
     skill: "sampling discipline — why the boring schedule is the whole experiment",
     skillKey: "sampling-discipline",
   },
+  "game-designer": {
+    project:
+      "Make one level of one mechanic — not a game, a level — and put it in front of three people who did not watch you build it.",
+    publish:
+      "Post the level with a short note on the one change you made after watching someone play it badly.",
+    skill:
+      "playtesting — learning to watch someone struggle without jumping in to help them",
+    skillKey: "playtesting",
+  },
+  "product-designer": {
+    project:
+      "Take one screen of an app your school actually makes you use and redesign it — write down what each element is for before you move anything.",
+    publish:
+      "Post the before, the after, and the reasoning for each change you kept and each one you abandoned.",
+    skill:
+      "critique — separating what you like from what works, in your own designs and other people's",
+    skillKey: "design-critique",
+  },
+  "digital-media-artist": {
+    project:
+      "Build one piece where the medium is the point — generative, interactive, or time-based — and get it running somewhere a stranger can open it.",
+    publish:
+      "Publish it with a process note: what you tried first, why it failed, and what the failure taught you about the medium.",
+    skill:
+      "colour and contrast — why a palette reads instantly to everyone or quietly excludes people",
+    skillKey: "colour-contrast",
+  },
+  "social-entrepreneur": {
+    project:
+      "Pick one problem you have watched someone live with, then find the five organisations already working on it and write down honestly what is missing.",
+    publish:
+      "Share the map — who is doing what, where the gap is, and what you would try first with no money.",
+    skill:
+      "unit economics — working out what one unit of the change you want actually costs to deliver",
+    skillKey: "unit-economics",
+  },
+  "quantitative-economist": {
+    project:
+      "Take one public dataset about something you care about and answer one question with it — then write down every reason your answer might be wrong.",
+    publish:
+      "Post the chart, the code, and the caveats, with the caveats given as much room as the finding.",
+    skill:
+      "causal inference — why a correlation in observational data is almost never the answer to a policy question",
+    skillKey: "causal-inference",
+  },
+  "investigative-journalist": {
+    project:
+      "Find one claim being repeated locally that nobody has checked, and go check it against a primary source — a budget, a filing, a dataset.",
+    publish:
+      "Write it up in 600 words, link every source, and state plainly what you could not confirm.",
+    skill:
+      "public records — finding the document that already exists and that nobody has read",
+    skillKey: "public-records",
+  },
+  "science-policy-advocate": {
+    project:
+      "Read one real bill that touches science or health, all the way through, and write a one-page brief on what it actually does versus what it is described as doing.",
+    publish:
+      "Send the brief to someone whose job it is to care — a staffer, a local reporter, a teacher — and ask for one correction.",
+    skill:
+      "legislative reading — how a bill is structured, where the money is, and which clause does the real work",
+    skillKey: "legislative-reading",
+  },
+  "public-health-strategist": {
+    project:
+      "Pick one health outcome in your own county, find its rate, and compare it to the state — then work out what would have to be true for the difference to be real.",
+    publish:
+      "Publish the comparison with the denominator stated as prominently as the number.",
+    skill:
+      "rates and denominators — why per-100,000 and age-adjustment routinely reverse the obvious answer",
+    skillKey: "rates-denominators",
+  },
+  "sports-scientist": {
+    project:
+      "Measure one thing about one athlete — yourself counts — across two weeks, on a schedule you commit to before you start.",
+    publish:
+      "Post the data and the protocol, including the sessions you missed and what that does to the conclusion.",
+    skill:
+      "measurement validity — checking that your instrument measures the thing you think it measures",
+    skillKey: "measurement-validity",
+  },
+  "bioethicist": {
+    project:
+      "Take one live disagreement in biology or medicine and write the strongest version of the argument you disagree with, in its own terms.",
+    publish:
+      "Publish both sides mapped out — claims, premises, and the assumption each side will not give up.",
+    skill:
+      "argument mapping — pulling a claim apart into its premises and finding the one nobody is defending",
+    skillKey: "argument-mapping",
+  },
+  "edtech-creator": {
+    project:
+      "Teach one specific thing to one specific person who does not get it yet, then rebuild your explanation after watching where they stalled.",
+    publish:
+      "Ship the explanation as something reusable — a page, a worksheet, a small tool — and note what you cut.",
+    skill:
+      "learning science — spacing, retrieval practice, and why re-reading feels productive and mostly is not",
+    skillKey: "learning-science",
+  },
+  "conservation-storyteller": {
+    project:
+      "Document one species or one place near you over two weeks, with your own observations, and get one fact checked by someone who studies it.",
+    publish:
+      "Publish the piece with your field notes attached, so the reader can see what you saw and what you inferred.",
+    skill:
+      "getting the biology right — reading a species account well enough that a specialist would not wince",
+    skillKey: "species-accuracy",
+  },
 };
 
 const FALLBACK_SPINE = {
@@ -334,4 +442,13 @@ export function traitLabel(trait: TraitKey): string {
  */
 export function skillKeyFor(archetypeId: string): string {
   return SPINES[archetypeId]?.skillKey ?? "";
+}
+
+
+/** Archetype ids that have an authored spine. See lib/spines.test.ts. */
+export const SPINE_KEYS = Object.keys(SPINES);
+
+/** The authored spine for an archetype, or undefined if it would fall back. */
+export function spineFor(archetypeId: string) {
+  return SPINES[archetypeId];
 }
