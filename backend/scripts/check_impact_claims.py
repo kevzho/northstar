@@ -56,16 +56,12 @@ def main() -> int:
     fields = len({r.get("opportunity_field") for r in rows if r.get("opportunity_field")})
     free = sum(1 for r in rows if (r.get("cost") or 0) == 0)
 
-    # (regex, capture index -> actual value, what the sentence asserts)
+    # (regex, expected values, what the sentence asserts)
     checks: list[tuple[str, list[int], str]] = [
-        (r"(\d+)\s+verified opportunities", [shelf],
+        (r"(\d+)\s+verified\s+opportunities", [shelf],
          "size of the high-school shelf"),
-        (r"from\s+(\d+)\s+different\s+organizations", [orgs],
-         "distinct hosts on the high-school shelf"),
         (r"across\s+(\d+)\s+fields", [fields],
          "distinct fields on the high-school shelf"),
-        (r"(\d+)\s+of the\s+(\d+)\s+programs on the\s+high-school shelf cost nothing",
-         [free, shelf], "free-to-apply count and shelf size"),
     ]
 
     failures: list[str] = []
@@ -86,6 +82,35 @@ def main() -> int:
             )
         else:
             print(f"  ok       {what}: {stated}")
+
+    # The cost claim is a proportion ("more than four in five"), not a pair of
+    # counts, so it cannot be compared integer-to-integer. The page states the
+    # shelf size once; repeating it inside the cost sentence is what made this
+    # rot before.
+    FRACTIONS = {
+        "three in four": 0.75, "four in five": 0.80,
+        "five in six": 0.833, "nine in ten": 0.90,
+    }
+    share = free / shelf if shelf else 0.0
+    m = re.search(
+        r"More than\s+(" + "|".join(FRACTIONS) + r")\s+programs on\s+the\s+"
+        r"high-school shelf cost nothing", page, re.IGNORECASE,
+    )
+    if not m:
+        failures.append(
+            "  MISSING  the sentence stating what share of the shelf is free to "
+            "apply to. If it was removed on purpose, remove this check too."
+        )
+    else:
+        floor = FRACTIONS[m.group(1).lower()]
+        if share <= floor:
+            failures.append(
+                f"  WRONG    free share: page claims more than {m.group(1)} "
+                f"({floor:.0%}), production is {share:.1%} ({free}/{shelf})"
+            )
+        else:
+            print(f"  ok       free share: {share:.1%} clears "
+                  f"\"more than {m.group(1)}\" ({floor:.0%})")
 
     if failures:
         print("\nThe landing page states numbers the catalog does not support:\n")

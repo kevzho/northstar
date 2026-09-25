@@ -5,11 +5,13 @@ The landing page now states why Northstar exists, and backs it with numbers
 about the CATALOG rather than about a userbase — there are three accounts, so
 any usage figure would be either embarrassing or invented. The claims are:
 
-  - "almost nine in ten programs on the high-school shelf cost nothing to
+  - "more than four in five programs on the high-school shelf cost nothing to
     apply to"
-  - "70 verified opportunities ... from 60 different organizations, across
-    9 fields"
+  - "53 verified opportunities across 9 fields"
   - "No student outcomes have been logged yet"
+
+The audit detail that used to sit beside these lives in docs/catalog-audit.md.
+It was published, and should not have been: a landing page is not a defect log.
 
 The catalog grows daily from the scrape cron, so these drift on their own.
 That is exactly the failure this repo has already had once, at scale: six
@@ -31,8 +33,10 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 MIGRATIONS = ROOT / "supabase" / "migrations"
 LANDING = ROOT / "frontend" / "app" / "page.tsx"
 
-# The claim is "almost nine in ten". Assert a floor with headroom, so ordinary
-# curation drift is fine and a real reversal is not.
+# The claim is "more than four in five", which IS this floor. Stated as a
+# proportion rather than "45 of the 53" so the shelf size appears once on the
+# page instead of twice, and so ordinary curation drift does not falsify a
+# sentence about cost.
 FREE_SHARE_FLOOR = 0.80
 
 
@@ -69,8 +73,8 @@ def test_most_of_the_shelf_is_free_to_apply_to() -> None:
     share = len(free) / len(rows)
     assert share >= FREE_SHARE_FLOOR, (
         f"only {share:.0%} of seeded opportunities are free to apply to, but the "
-        f'landing page claims "almost nine in ten". Either re-curate toward free '
-        f"programs or change the copy in frontend/app/page.tsx."
+        f'landing page claims "more than four in five". Either re-curate toward '
+        f"free programs or change the copy in frontend/app/page.tsx."
     )
 
 
@@ -150,68 +154,92 @@ def test_stated_catalog_counts_match_the_seed_floor() -> None:
     assert stated > 0
 
 
-# --- prose counts about the audit ----------------------------------------
+# --- the audit is internal now ------------------------------------------
 #
-# The mission paragraph now narrates the audit: nine removed, ten grade ranges
-# corrected, fifteen entry routes corrected, eight duplicates. Those are all
-# derivable from the scripts that did the work, with no database — so unlike the
-# shelf size, they CAN be pinned here. Without this, the paragraph is four more
-# numbers that rot the next time the catalog is corrected.
+# The page used to narrate the audit: nine removed, ten grade ranges, fifteen
+# entry routes, eight duplicates, three accounts. Four guards pinned those
+# numbers to the scripts that did the work. The numbers were true; publishing
+# them was the wrong call — a marketing page is not a defect log, and a visitor
+# needs to know the practice exists, not read its changelog.
+#
+# So the claim shrank to one sentence ("every listing is checked against the
+# program's own website, and anything that does not hold up comes down"), and
+# the evidence moved to northstar-docs/CATALOG-AUDIT.md. What is worth guarding changed
+# with it: not the individual figures, but that the page's remaining claim is
+# backed by something real, and that the record did not vanish in the edit.
 
 SCRIPTS = pathlib.Path(__file__).resolve().parents[1] / "scripts"
-
-NUMBER_WORDS = {
-    "nine": 9, "ten": 10, "eleven": 11, "twelve": 12, "thirteen": 13,
-    "fourteen": 14, "fifteen": 15, "sixteen": 16, "seventeen": 17,
-    "eighteen": 18, "nineteen": 19, "twenty": 20, "eight": 8, "seven": 7,
-}
+AUDIT_RECORD = ROOT / "northstar-docs" / "CATALOG-AUDIT.md"
 
 
-def _correction_entries() -> list[tuple[str, str]]:
-    """(title, body) for each entry in the CORRECTIONS dict."""
-    src = (SCRIPTS / "correct_opportunity_eligibility.py").read_text()
-    body = src[src.index("CORRECTIONS: dict"):]
-    entries = re.findall(r'\n    "([^"]+)": \{(.*?)\n    \},', body, re.S)
-    assert len(entries) >= 15, f"parsed only {len(entries)} corrections — parser drifted"
-    return entries
-
-
-def _stated(pattern: str) -> int:
+def test_the_verification_claim_is_backed_by_scripts_that_exist() -> None:
+    """The page claims listings are checked and removed. If the machinery that
+    does that is deleted or renamed, the sentence becomes marketing."""
     page = " ".join(LANDING.read_text().split())
-    m = re.search(pattern, page)
-    assert m, f"the landing page no longer contains {pattern!r}"
-    raw = m.group(1)
-    return NUMBER_WORDS[raw.lower()] if raw.lower() in NUMBER_WORDS else int(raw)
-
-
-def test_the_page_states_the_real_number_of_retired_rows() -> None:
-    src = (SCRIPTS / "retire_dead_opportunities.py").read_text()
-    listed = len(re.findall(r'^\s{4}\(\s*$', src, re.MULTILINE)) or len(
-        re.findall(r'^\s{4}\(\n\s+"', src, re.MULTILINE)
+    assert "checked against the program" in page, (
+        "the landing page no longer claims listings are verified — if that is "
+        "deliberate, delete this guard; do not leave it asserting nothing"
     )
-    assert listed > 0, "could not count the RETIRE list — parser drifted"
-    assert _stated(r"removed\s+(\w+)\s*(?:&mdash;|—)") == listed
+    for name in (
+        "retire_dead_opportunities.py",
+        "correct_opportunity_eligibility.py",
+        "dedupe_opportunities.py",
+        "expire_opportunities.py",
+    ):
+        assert (SCRIPTS / name).exists(), (
+            f"the page claims listings that do not hold up come down, but "
+            f"scripts/{name} is gone"
+        )
 
 
-def test_the_page_states_the_real_number_of_grade_corrections() -> None:
-    fixed = [t for t, b in _correction_entries()
-             if "grade_min" in b or "grade_max" in b]
-    assert _stated(r"grade range on\s+(\w+)\s+more") == len(fixed), (
-        f"the page claims a different count than the {len(fixed)} rows whose "
-        "grade range correct_opportunity_eligibility.py actually changes"
+def test_the_audit_record_survives_internally() -> None:
+    """The detail left the landing page; it must not have left the repo.
+
+    It is the evidence for the public sentence, and the source for the
+    Congressional App Challenge write-up, where describing the process IS
+    appropriate. Losing it would make the claim unfalsifiable.
+    """
+    assert AUDIT_RECORD.exists(), (
+        "northstar-docs/CATALOG-AUDIT.md is missing. The landing page's "
+        "verification claim rests on it. It lives in northstar-docs/ and not "
+        "docs/ because docs/ is gitignored — a record only one laptop has is "
+        "not a record."
     )
+    record = AUDIT_RECORD.read_text()
+    # The finding that drives the whole curation policy.
+    assert "1 of 35" in record, "the audit record no longer states the hit rate"
+    for marker in ("retire_dead_opportunities.py", "entry_gate", "unique(title, host)"):
+        assert marker in record, f"the audit record no longer covers {marker}"
 
 
-def test_the_page_states_the_real_number_of_gate_corrections() -> None:
-    gated = [t for t, b in _correction_entries() if "entry_gate" in b]
-    assert _stated(r"the entry route on\s+(\w+)\b") == len(gated)
+def _rendered_text() -> str:
+    """The landing page's prose with JSX comments removed.
+
+    A guard about what the public can read must not look at {/* ... */} blocks:
+    those are source, never sent to a browser, and this file deliberately keeps
+    a comment explaining why the audit numbers are not on the page. Judging that
+    comment as a leak is how a guard starts producing false failures and gets
+    switched off.
+    """
+    raw = re.sub(r"\{/\*.*?\*/\}", " ", LANDING.read_text(), flags=re.S)
+    return " ".join(raw.split())
 
 
-def test_the_page_states_the_real_number_of_duplicates() -> None:
-    """Exact-title duplicates are found at runtime, so only the explicitly
-    listed alias pairs can be counted statically. The page's figure must be at
-    least those, and the sentence must not overstate what the script can do."""
-    src = (SCRIPTS / "dedupe_opportunities.py").read_text()
-    aliases = re.findall(r'^\s{4}\("([^"]+)",\s*$', src, re.MULTILINE)
-    assert len(aliases) >= 3, f"parsed {len(aliases)} alias pairs — parser drifted"
-    assert _stated(r"(\w+)\s+programs were listed twice") >= len(aliases)
+def test_the_defect_log_did_not_creep_back_onto_the_page() -> None:
+    """Not a style rule — a scope rule. These sentences were removed on purpose
+    because they publish internal history. If they are wanted back, that should
+    be a decision someone makes while deleting this test, not a paste."""
+    page = _rendered_text()
+    leaked = [
+        phrase for phrase in (
+            "hand-written entries",
+            "turned out to be teacher training",
+            "last cohort was the class of 2016",
+            "three accounts",
+        )
+        if phrase in page
+    ]
+    assert not leaked, (
+        f"internal audit detail is back on the landing page: {leaked}. It "
+        "lives in northstar-docs/CATALOG-AUDIT.md."
+    )

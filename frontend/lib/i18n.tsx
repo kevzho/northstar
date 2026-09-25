@@ -63,13 +63,13 @@ const dictionary: Record<LanguageCode, Dict> = {
     "faq.a3": "Nothing. Northstar is free for students.",
     "faq.q4": "Where do the opportunities come from?",
     "faq.a4":
-      "Most of the catalog is hand-picked and checked by a person. The rest is gathered from public sources through official APIs and screened by an automated verifier before it enters the catalog. Either way a real program is behind every entry — nothing unverified is shown as one.",
+      "Most of the high-school shelf is hand-picked and checked by a person. The rest of the catalog is gathered from public sources through official APIs and screened by an automated verifier before it enters the catalog. Either way a real program is behind every entry — nothing unverified is shown as one.",
     "faq.q5": "Is my data private?",
     "faq.a5":
       "Your profile is private by default. Public evidence pages and friend comparisons are opt-in, and negative outcomes are never made public.",
     "faq.q6": "Who built this?",
     "faq.a6":
-      "Northstar is a student project — built, and its algorithms designed and validated, by one person.",
+      "Northstar is a student project — built, and its algorithms designed and tested, by one person.",
   },
   es: {
     "footer.contact": "Contacto",
@@ -102,13 +102,13 @@ const dictionary: Record<LanguageCode, Dict> = {
     "faq.a3": "Nada. Northstar es gratis para estudiantes.",
     "faq.q4": "¿De dónde vienen las oportunidades?",
     "faq.a4":
-      "La mayor parte del catálogo está seleccionada y comprobada a mano. El resto se recopila de fuentes públicas mediante APIs oficiales y pasa por un verificador automático antes de entrar. En ambos casos hay un programa real detrás de cada entrada; nada sin verificar se muestra como tal.",
+      "La mayor parte de la lista de secundaria está seleccionada y comprobada a mano. El resto del catálogo se recopila de fuentes públicas mediante APIs oficiales y pasa por un verificador automático antes de entrar. En ambos casos hay un programa real detrás de cada entrada; nada sin verificar se muestra como tal.",
     "faq.q5": "¿Mis datos son privados?",
     "faq.a5":
       "Tu perfil es privado por defecto. Las páginas públicas y las comparaciones con amigos son opcionales, y los resultados negativos nunca se hacen públicos.",
     "faq.q6": "¿Quién lo creó?",
     "faq.a6":
-      "Northstar es un proyecto estudiantil — construido, y con sus algoritmos diseñados y validados, por una sola persona.",
+      "Northstar es un proyecto estudiantil — construido, y con sus algoritmos diseñados y probados, por una sola persona.",
   },
   zh: {
     "footer.contact": "联系",
@@ -141,13 +141,13 @@ const dictionary: Record<LanguageCode, Dict> = {
     "faq.a3": "免费。Northstar 对学生免费。",
     "faq.q4": "这些机会从哪里来？",
     "faq.a4":
-      "目录中的大部分条目由人工挑选并核实，其余部分通过官方 API 从公开来源收集，并经自动验证器筛查后才进入目录。无论哪种方式，每条记录背后都是真实存在的项目；未经核实的内容不会被展示为真实项目。",
+      "高中项目清单中的大部分条目由人工挑选并核实，目录的其余部分通过官方 API 从公开来源收集，并经自动验证器筛查后才进入目录。无论哪种方式，每条记录背后都是真实存在的项目；未经核实的内容不会被展示为真实项目。",
     "faq.q5": "我的数据是私密的吗？",
     "faq.a5":
       "你的档案默认是私密的。公开的成果页面和好友比较都是自愿选择的，负面结果永远不会公开。",
     "faq.q6": "这是谁做的？",
     "faq.a6":
-      "Northstar 是一个学生项目 — 由一个人构建，其算法也由这个人设计和验证。",
+      "Northstar 是一个学生项目 — 由一个人构建，其算法也由这个人设计和测试。",
   },
   fr: {
     "footer.contact": "Contact",
@@ -180,13 +180,13 @@ const dictionary: Record<LanguageCode, Dict> = {
     "faq.a3": "Rien. Northstar est gratuit pour les étudiants.",
     "faq.q4": "D'où viennent les opportunités ?",
     "faq.a4":
-      "La majeure partie du catalogue est sélectionnée et vérifiée à la main. Le reste est recueilli de sources publiques via des API officielles et passe par un vérificateur automatique avant d'entrer au catalogue. Dans les deux cas, un programme réel se trouve derrière chaque entrée ; rien de non vérifié n'est présenté comme tel.",
+      "La majeure partie de la liste lycée est sélectionnée et vérifiée à la main. Le reste du catalogue est recueilli de sources publiques via des API officielles et passe par un vérificateur automatique avant d'entrer au catalogue. Dans les deux cas, un programme réel se trouve derrière chaque entrée ; rien de non vérifié n'est présenté comme tel.",
     "faq.q5": "Mes données sont-elles privées ?",
     "faq.a5":
       "Votre profil est privé par défaut. Les pages publiques et les comparaisons entre amis sont facultatives, et les résultats négatifs ne sont jamais rendus publics.",
     "faq.q6": "Qui a créé ceci ?",
     "faq.a6":
-      "Northstar est un projet étudiant — construit, et ses algorithmes conçus et validés, par une seule personne.",
+      "Northstar est un projet étudiant — construit, et ses algorithmes conçus et testés, par une seule personne.",
   },
 };
 
