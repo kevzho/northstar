@@ -148,3 +148,70 @@ def test_stated_catalog_counts_match_the_seed_floor() -> None:
         f"frontend/app/page.tsx."
     )
     assert stated > 0
+
+
+# --- prose counts about the audit ----------------------------------------
+#
+# The mission paragraph now narrates the audit: nine removed, ten grade ranges
+# corrected, fifteen entry routes corrected, eight duplicates. Those are all
+# derivable from the scripts that did the work, with no database — so unlike the
+# shelf size, they CAN be pinned here. Without this, the paragraph is four more
+# numbers that rot the next time the catalog is corrected.
+
+SCRIPTS = pathlib.Path(__file__).resolve().parents[1] / "scripts"
+
+NUMBER_WORDS = {
+    "nine": 9, "ten": 10, "eleven": 11, "twelve": 12, "thirteen": 13,
+    "fourteen": 14, "fifteen": 15, "sixteen": 16, "seventeen": 17,
+    "eighteen": 18, "nineteen": 19, "twenty": 20, "eight": 8, "seven": 7,
+}
+
+
+def _correction_entries() -> list[tuple[str, str]]:
+    """(title, body) for each entry in the CORRECTIONS dict."""
+    src = (SCRIPTS / "correct_opportunity_eligibility.py").read_text()
+    body = src[src.index("CORRECTIONS: dict"):]
+    entries = re.findall(r'\n    "([^"]+)": \{(.*?)\n    \},', body, re.S)
+    assert len(entries) >= 15, f"parsed only {len(entries)} corrections — parser drifted"
+    return entries
+
+
+def _stated(pattern: str) -> int:
+    page = " ".join(LANDING.read_text().split())
+    m = re.search(pattern, page)
+    assert m, f"the landing page no longer contains {pattern!r}"
+    raw = m.group(1)
+    return NUMBER_WORDS[raw.lower()] if raw.lower() in NUMBER_WORDS else int(raw)
+
+
+def test_the_page_states_the_real_number_of_retired_rows() -> None:
+    src = (SCRIPTS / "retire_dead_opportunities.py").read_text()
+    listed = len(re.findall(r'^\s{4}\(\s*$', src, re.MULTILINE)) or len(
+        re.findall(r'^\s{4}\(\n\s+"', src, re.MULTILINE)
+    )
+    assert listed > 0, "could not count the RETIRE list — parser drifted"
+    assert _stated(r"removed\s+(\w+)\s*(?:&mdash;|—)") == listed
+
+
+def test_the_page_states_the_real_number_of_grade_corrections() -> None:
+    fixed = [t for t, b in _correction_entries()
+             if "grade_min" in b or "grade_max" in b]
+    assert _stated(r"grade range on\s+(\w+)\s+more") == len(fixed), (
+        f"the page claims a different count than the {len(fixed)} rows whose "
+        "grade range correct_opportunity_eligibility.py actually changes"
+    )
+
+
+def test_the_page_states_the_real_number_of_gate_corrections() -> None:
+    gated = [t for t, b in _correction_entries() if "entry_gate" in b]
+    assert _stated(r"the entry route on\s+(\w+)\b") == len(gated)
+
+
+def test_the_page_states_the_real_number_of_duplicates() -> None:
+    """Exact-title duplicates are found at runtime, so only the explicitly
+    listed alias pairs can be counted statically. The page's figure must be at
+    least those, and the sentence must not overstate what the script can do."""
+    src = (SCRIPTS / "dedupe_opportunities.py").read_text()
+    aliases = re.findall(r'^\s{4}\("([^"]+)",\s*$', src, re.MULTILINE)
+    assert len(aliases) >= 3, f"parsed {len(aliases)} alias pairs — parser drifted"
+    assert _stated(r"(\w+)\s+programs were listed twice") >= len(aliases)

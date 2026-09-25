@@ -60,6 +60,7 @@ jobs:
       # returning almost nothing; without the LLM key the verifier exits
       # cleanly and imports zero. Both look like "ran fine, found nothing".
       - name: Required secrets are present
+        id: secrets
         run: |
           missing=""
           for name in REDDIT_CLIENT_ID REDDIT_CLIENT_SECRET \
@@ -86,6 +87,27 @@ jobs:
       - name: Scrape, verify, import
         run: python scripts/scrape_all.py
 
+      # Importing only ever ADDS. Without this step the catalog grows
+      # monotonically and fills with hackathons that closed weeks ago: on
+      # 2026-09-25 that was 100 of 186 live rows, and /catalog ordered by
+      # deadline, so browse opened on the most expired one. Retiring one-off
+      # scraped events whose deadline has passed is the other half of a daily
+      # scrape. Curated annual programmes are reported, never auto-retired —
+      # see the script's docstring for why that distinction is not optional.
+      #
+      # Runs even if the scrape itself failed, because expiry is a function of
+      # the date and not of today's haul — a broken scraper is no reason to keep
+      # showing closed hackathons. Gated on the secrets check rather than
+      # always(), so a credential-less run reports one clear failure instead of
+      # two, and never a silent success.
+      - name: Retire expired scraped events
+        # always() is load-bearing: GitHub implicitly ANDs success() into any
+        # `if` that does not reference a status function, so the bare
+        # steps.secrets comparison would skip this whenever the scrape failed —
+        # the exact case where stale rows most need clearing.
+        if: always() && steps.secrets.outcome == 'success'
+        run: python scripts/expire_opportunities.py
+
       # The pool is the scrapers' memory of what they have already seen, so it
       # has to persist between runs or every day rediscovers the same posts as
       # "new". The imported opportunities themselves already went to Supabase.
@@ -108,3 +130,19 @@ jobs:
           # Land on top of anything pushed while the scrape was running.
           git pull --rebase --autostash origin main
           git push origin HEAD:main
+
+      # Last, and deliberately after the commit above. The landing page states
+      # exact counts for the high-school shelf, and the steps in this job are
+      # what change them — retiring expired events moves the number the page
+      # claims. Three times now, a correctness fix to the data has silently
+      # turned a truthful sentence on the page into a false one, because
+      # tests/test_impact_claims.py runs without credentials and can only bound
+      # the claim from above. Checking it here, where the credentials are,
+      # surfaces the drift the same day.
+      #
+      # Placed after the pool commit so a stale sentence reddens the build
+      # without also throwing away the day's scrape: the pool is the scrapers'
+      # memory, and losing it means tomorrow rediscovers everything.
+      - name: Landing page counts still match the catalog
+        if: always() && steps.secrets.outcome == 'success'
+        run: python scripts/check_impact_claims.py

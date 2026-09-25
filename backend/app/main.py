@@ -1378,6 +1378,8 @@ def create_app() -> FastAPI:
         Sanitized the same way (opportunity_field -> field).
         """
 
+        from datetime import date
+
         from .db import get_supabase
 
         sb = get_supabase()
@@ -1389,11 +1391,6 @@ def create_app() -> FastAPI:
             # found (a program that ended in 2016, one re-scoped to middle
             # school, and two that never accepted high schoolers).
             .is_("retired_at", "null")
-            # nullsfirst=False puts rolling/undated rows after dated ones, and
-            # ascending-by-deadline USED to mean this route opened on the single
-            # most-expired row in the catalog. The frontend filters to open
-            # opportunities by default; this ordering makes the soonest real
-            # deadline first within that.
             .order("deadline", desc=False, nullsfirst=False)
             .execute()
         ).data or []
@@ -1403,6 +1400,40 @@ def create_app() -> FastAPI:
             if "opportunity_field" in opp:
                 opp["field"] = opp.pop("opportunity_field")
             catalog.append(opp)
+
+        # Ascending-by-deadline alone opens this route on the single MOST
+        # expired row in the catalog. A comment here used to excuse that with
+        # "the frontend filters to open opportunities by default" — it does not.
+        # frontend/app/opportunities/page.tsx reads ?status= and falls back to
+        # "all", so the first card a student saw was the deadest one we had.
+        #
+        # Closed rows are still returned, deliberately: a sophomore needs to see
+        # that RSI exists and closed in January, which is what the roadmap is
+        # preparing them for. They just sort last, and the card dims them and
+        # says "closed <date>".
+        today_iso = date.today().isoformat()
+
+        def browse_order(opp: dict) -> tuple[int, float, str]:
+            """(bucket, within-bucket key, title) — buckets: live-dated,
+            rolling, closed."""
+            raw = opp.get("deadline")
+            deadline = str(raw) if raw else ""
+            title = str(opp.get("title") or "")
+            if not deadline:
+                # Rolling/undated: after live dated rows, before closed ones.
+                return (1, 0.0, title)
+            try:
+                ordinal = float(date.fromisoformat(deadline).toordinal())
+            except ValueError:
+                # A malformed date is not a reason to 500 a browse request.
+                return (1, 0.0, title)
+            if deadline < today_iso:
+                # Closed. Negated so the most recently closed sorts first: it is
+                # the likeliest to reopen, and the least confusing to look at.
+                return (2, -ordinal, title)
+            return (0, ordinal, title)
+
+        catalog.sort(key=browse_order)
         return catalog
 
     @app.get("/opportunities/{opp_id}")

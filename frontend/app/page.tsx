@@ -342,7 +342,7 @@ export default function Home() {
               fiscally sponsored non-profit.
             </p>
             <p className="text-base leading-8 text-muted-foreground">
-              So two things are deliberate. Almost nine in ten programs on the
+              So two things are deliberate. 45 of the 53 programs on the
               high-school shelf cost nothing to apply to, because a catalog full
               of $3,000 summer intensives is a list of things you cannot do. And
               every ranking shows its reasoning — the field that matched, the
@@ -351,15 +351,23 @@ export default function Home() {
             </p>
           </div>
           <p className="mt-6 max-w-3xl text-sm leading-7 text-muted-foreground">
-            What we can prove so far is about the map, not the territory: 61
-            verified opportunities on the high-school shelf, from 52 different
+            What we can prove so far is about the map, not the territory: 53
+            verified opportunities on the high-school shelf, from 49 different
             organizations, across 9 fields. That number went{" "}
-            <span className="text-foreground">down</span> last week, on purpose:
-            we checked all 35 hand-written entries against each program&apos;s
-            own website and removed nine, including a scholarship whose last
-            cohort was the class of 2016 and two listings that turned out to be
-            teacher training. No student outcomes have been logged yet —
-            Northstar has three accounts and has not run a pilot. We would
+            <span className="text-foreground">down</span>, on purpose, three
+            times. We checked all 35 hand-written entries against each
+            program&apos;s own website and removed nine — including a
+            scholarship whose last cohort was the class of 2016, and two
+            listings that turned out to be teacher training. We corrected the
+            grade range on ten more, because a program listed for grades
+            9&ndash;12 that takes only juniors wastes the year a sophomore spends
+            preparing for it, and the entry route on fifteen, because you do not
+            apply to the USA Mathematical Olympiad — you qualify for it by exam
+            score, and a student who waits for an application deadline misses it
+            entirely. And eight programs were listed twice, under a second name
+            or a second spelling of the same host, so the shelf was showing one
+            door and counting it as two. No student outcomes have been logged
+            yet — Northstar has three accounts and has not run a pilot. We would
             rather show you these numbers than bigger ones we made up.
           </p>
         </section>

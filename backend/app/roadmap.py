@@ -62,6 +62,29 @@ GRADUATION_MONTH = 6  # June
 # until the following June.
 ACADEMIC_YEAR_START_MONTH = 7
 
+# entry_gate -> (step wording, fallback note). The note is only used when the
+# row has no entry_note of its own, so a curated explanation always wins.
+GATE_STEP: dict[str, tuple[str, str]] = {
+    "apply": ("Apply to {title}.", ""),
+    "qualify": (
+        "Qualify for {title}.",
+        "You cannot apply directly — entry is by qualifying score or exam.",
+    ),
+    "advance": (
+        "Advance to {title} from an affiliated fair.",
+        "Entry is by winning at an affiliated regional or state fair first.",
+    ),
+    "nominate": (
+        "Get nominated for {title}.",
+        "Entry needs a nomination or recommendation — ask early, not late.",
+    ),
+    "teacher": (
+        "Find a teacher to enter {title} with you.",
+        "An adult applies or registers the team, not a student individually.",
+    ),
+}
+
+
 
 def _int_grade(raw: object) -> int | None:
     """students.grade is free text -- onboarding offers '8' through '12' and
@@ -258,6 +281,14 @@ def build_roadmap(
 
     # 4. APPLY -- only what is actually open, and only what the student is
     #    eligible for. Everything else becomes a horizon marker, not a step.
+    #
+    #    A row carrying an application deadline is not automatically a row you
+    #    can apply to. You qualify for USAMO by AMC score; you advance to ISEF
+    #    from an affiliated regional fair; a TEACHER applies for a Lemelson
+    #    InvenTeam grant. Telling a student to "Apply to USAMO" is not a wording
+    #    slip, it is a step they cannot take, in the one place this product
+    #    promises to say what to do next. See opportunities.entry_gate
+    #    (20260925140000_entry_gate.sql).
     horizon: list[dict] = []
     for result in ranked:
         opp = result.get("opportunity") or {}
@@ -270,15 +301,22 @@ def build_roadmap(
         if eligible and _is_open(opp, today):
             days = (date.fromisoformat(str(opp["deadline"])) - today).days
             soon = days <= 30
+            title = opp.get("title", "this program")
+            gate = (opp.get("entry_gate") or "apply").strip() or "apply"
+            verb, gate_note = GATE_STEP.get(gate, GATE_STEP["apply"])
+            # The gate is the binding constraint when there is one; the closing
+            # date only matters once you are allowed through it.
             add(
                 "application",
-                f"Apply to {opp.get('title', 'this program')}.",
-                step_key=f"apply:{opp_id}",
-                edge_reason="window",
+                verb.format(title=title),
+                step_key=f"{gate}:{opp_id}",
+                edge_reason="window" if gate == "apply" else "gate",
                 edge_note=(
-                    f"Closes {opp.get('deadline')} — {days} days away. "
+                    (opp.get("entry_note") or gate_note or "").strip()
+                    + (" " if (opp.get("entry_note") or gate_note) else "")
+                    + f"Closes {opp.get('deadline')} — {days} days away. "
                     + ("Start today." if soon else "Open now.")
-                ),
+                ).strip(),
                 opportunity_id=opp_id,
                 timeframe="week" if soon else "month",
                 # Placed by its deadline, so a step closing this month cannot
@@ -342,7 +380,7 @@ def build_roadmap(
         "horizon": sorted(horizon, key=lambda h: h["opens_at_grade"])[:12],
         "notes": {
             "dated_steps": sum(
-                1 for s in steps if s["edge_reason"] == "window"
+                1 for s in steps if s["edge_reason"] in ("window", "gate")
             ),
             "authored_edges": sum(
                 1 for s in steps if s["edge_reason"] in ("artifact", "ladder", "evidence")

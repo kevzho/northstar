@@ -264,3 +264,99 @@ def test_no_authored_step_is_pushed_past_the_horizon() -> None:
                         f'grade {grade}: "{step["title"][:40]}" ({step["category"]}) '
                         f"scheduled after graduation, but it is available now"
                     )
+
+
+# --- entry gates ---------------------------------------------------------
+#
+# A row carrying an application deadline is not automatically a row you can
+# apply to. Seven catalog rows are gated: you qualify for USAMO by AMC score,
+# you advance to ISEF from an affiliated fair, and a TEACHER applies for a
+# Lemelson InvenTeam grant. The sequencer read the deadline and ignored the
+# gate, so it emitted "Apply to USAMO" — a step no student can take, in the one
+# place the product promises to say what to do next.
+
+
+def gated(oid, title, gate, note=None, deadline="2026-11-01"):
+    row = {"id": oid, "title": title, "grade_min": 9, "grade_max": 12,
+           "deadline": deadline, "entry_gate": gate}
+    if note:
+        row["entry_note"] = note
+    return {"opportunity": row}
+
+
+def _application_steps(plan):
+    return [s for phase in plan["phases"] for s in phase["steps"]
+            if s["category"] == "application"]
+
+
+def test_a_qualify_row_is_never_phrased_as_an_application() -> None:
+    plan = build_roadmap(
+        {"grade": "11"}, SPINE, RESOURCES,
+        [gated("o1", "USA Mathematical Olympiad (USAMO)", "qualify")],
+        MISSIONS, TODAY,
+    )
+    steps = _application_steps(plan)
+    assert steps, "an open, eligible row must still produce a step"
+    titles = " ".join(s["title"] for s in steps)
+    assert "Apply to USA Mathematical Olympiad" not in titles
+    assert "Qualify for USA Mathematical Olympiad (USAMO)." in titles
+
+
+def test_every_gate_produces_an_actionable_verb() -> None:
+    """No gate may fall through to 'Apply', and none may produce empty text."""
+    for gate, expected in [
+        ("apply", "Apply to"),
+        ("qualify", "Qualify for"),
+        ("advance", "Advance to"),
+        ("nominate", "Get nominated for"),
+        ("teacher", "Find a teacher to enter"),
+    ]:
+        plan = build_roadmap(
+            {"grade": "11"}, SPINE, RESOURCES, [gated("o1", "Some Program", gate)], MISSIONS, TODAY,
+        )
+        steps = _application_steps(plan)
+        assert len(steps) == 1, f"{gate} produced {len(steps)} steps"
+        assert steps[0]["title"].startswith(expected), (
+            f"gate {gate!r} produced {steps[0]['title']!r}"
+        )
+
+
+def test_a_curated_entry_note_wins_over_the_generic_one() -> None:
+    """The audit wrote a specific sentence per row; it must not be discarded."""
+    curated = "You cannot apply. Qualify by score on the AMC 10 or AMC 12."
+    plan = build_roadmap(
+        {"grade": "11"}, SPINE, RESOURCES, [gated("o1", "USAMO", "qualify", note=curated)], MISSIONS, TODAY,
+    )
+    note = _application_steps(plan)[0]["edge_note"]
+    assert curated in note
+    assert "entry is by qualifying score or exam" not in note.lower()
+    # The deadline is still stated -- a gate does not excuse dropping the date.
+    assert "2026-11-01" in note
+
+
+def test_a_gated_step_still_counts_as_dated() -> None:
+    """notes.dated_steps drives the 'is this roadmap real?' display. A gated
+    step has a real deadline, so excluding it would understate the plan."""
+    plan = build_roadmap(
+        {"grade": "11"}, SPINE, RESOURCES, [gated("o1", "USAMO", "qualify")], MISSIONS, TODAY,
+    )
+    assert plan["notes"]["dated_steps"] == 1
+
+
+def test_a_missing_or_unknown_gate_falls_back_to_apply() -> None:
+    """Every row predating 20260925140000_entry_gate.sql, and any value a
+    future migration adds, must still produce a usable step."""
+    for row in (
+        {"id": "o1", "title": "Old Row", "grade_min": 9, "grade_max": 12,
+         "deadline": "2026-11-01"},                      # column absent
+        {"id": "o2", "title": "Null Row", "grade_min": 9, "grade_max": 12,
+         "deadline": "2026-11-01", "entry_gate": None},  # column null
+        {"id": "o3", "title": "Future Row", "grade_min": 9, "grade_max": 12,
+         "deadline": "2026-11-01", "entry_gate": "lottery"},  # unknown value
+    ):
+        plan = build_roadmap(
+            {"grade": "11"}, SPINE, RESOURCES, [{"opportunity": row}], MISSIONS, TODAY,
+        )
+        steps = _application_steps(plan)
+        assert len(steps) == 1
+        assert steps[0]["title"].startswith("Apply to")
