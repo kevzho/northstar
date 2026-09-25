@@ -553,3 +553,57 @@ export async function fetchResources(
     return [];
   }
 }
+
+/** One step in a student's roadmap. Provenance ids, never bare strings. */
+export type RoadmapStep = {
+  category: "skill" | "project" | "outreach" | "application";
+  title: string;
+  step_key: string;
+  edge_reason: "eligibility" | "window" | "artifact" | "ladder" | "evidence";
+  edge_note: string;
+  opportunity_id: string | null;
+  resource_id: string | null;
+  mission_id: string | null;
+  timeframe: "week" | "month";
+  due_in_months: number;
+  phase_index: number;
+  phase_label: string;
+  ordinal: number;
+};
+
+export type RoadmapPhase = { label: string; steps: RoadmapStep[] };
+
+/** A program a student is not yet eligible for, with the grade it opens at. */
+export type RoadmapHorizon = {
+  title: string;
+  opens_at_grade: number;
+  opportunity_id: string;
+  edge_reason: string;
+  edge_note: string;
+};
+
+export type Roadmap = {
+  horizon_months: number;
+  grade: number | null;
+  phases: RoadmapPhase[];
+  horizon: RoadmapHorizon[];
+  notes: { dated_steps: number; authored_edges: number; outcomes_logged: number };
+  archetype_id: string;
+  has_spine: boolean;
+  resource_count: number;
+};
+
+/**
+ * The student's sequenced roadmap — what to do, in order.
+ *
+ * Returns null rather than throwing, so /plan can fall back to the client-side
+ * generatePlan() when signed out or when the backend is unreachable. A student
+ * who is not signed in still gets a plan; it just has no application steps.
+ */
+export async function fetchRoadmap(): Promise<Roadmap | null> {
+  try {
+    return await (await authedFetch("/roadmap")).json();
+  } catch {
+    return null;
+  }
+}

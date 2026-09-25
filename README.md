@@ -3,10 +3,6 @@
 Personalized opportunity map for high school students. A project of Minorities
 in STEM, a fiscally sponsored non-profit.
 
-**[AI-USE.md](AI-USE.md) — how AI was used to build this, what I designed, and
-what this project does not do.** Read that first if you are evaluating the
-submission.
-
 ## Development
 
 ### Frontend

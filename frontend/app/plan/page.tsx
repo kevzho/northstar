@@ -15,8 +15,8 @@ import { motion, useScroll, useTransform } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Planet, Ship } from "@/components/decor/voyage";
-import { fetchMatches, fetchResources } from "@/lib/api";
-import type { LearningResource } from "@/lib/api";
+import { fetchMatches, fetchResources, fetchRoadmap } from "@/lib/api";
+import type { LearningResource, Roadmap } from "@/lib/api";
 import { MissionBoard } from "@/components/MissionBoard";
 import { findArchetype, generatePlan, skillKeyFor } from "@/lib/plan";
 import { pathLabel, rankArchetypes, scoreTraits } from "@/lib/scoring";
@@ -25,6 +25,31 @@ import { useStoredAnswers } from "@/lib/use-assessment";
 import { useChosenPath } from "@/lib/use-chosen-path";
 
 const LEG_PLANETS = ["moon", "ringed", "giant"] as const;
+
+/** Step kind, as a student reads it. */
+const STEP_LABEL: Record<string, string> = {
+  skill: "Learn",
+  project: "Build",
+  outreach: "Reach out",
+  application: "Apply",
+};
+
+const STEP_CHIP: Record<string, string> = {
+  skill: "rounded border border-input bg-panel px-2 py-0.5 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-aurora",
+  project: "rounded border border-input bg-panel px-2 py-0.5 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-aurora",
+  outreach: "rounded border border-input bg-panel px-2 py-0.5 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-aurora",
+  application: "rounded border border-polaris/40 bg-panel px-2 py-0.5 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-polaris",
+};
+
+/**
+ * Edge reasons that are authored generalisations rather than computed facts.
+ *
+ * 'window' and 'eligibility' come from a deadline or a grade range — they are
+ * checkable. These three are claims about how students get from one thing to
+ * the next, backed by 24 hand-written spines and zero logged outcomes, so the
+ * copy says "a common route" and never "required".
+ */
+const AUTHORED_EDGES = ["artifact", "ladder", "evidence"];
 
 export default function PlanPage() {
   const voyageRef = useRef<HTMLDivElement>(null);
@@ -40,6 +65,11 @@ export default function PlanPage() {
   // Free material for this path's skill rung. Additive: the plan renders
   // without it, because the step itself is still a real instruction.
   const [resources, setResources] = useState<LearningResource[]>([]);
+  // The sequenced roadmap from the backend. null while loading, or when signed
+  // out / unreachable — in which case the client-side generatePlan() below
+  // still renders something, minus the application steps.
+  const [roadmap, setRoadmap] = useState<Roadmap | null>(null);
+  const [roadmapSettled, setRoadmapSettled] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -74,6 +104,20 @@ export default function PlanPage() {
       live = false;
     };
   }, [skillKey]);
+
+  useEffect(() => {
+    let live = true;
+    fetchRoadmap()
+      .then((data) => {
+        if (live) setRoadmap(data);
+      })
+      .finally(() => {
+        if (live) setRoadmapSettled(true);
+      });
+    return () => {
+      live = false;
+    };
+  }, [chosen?.archetypeId]);
   const fit =
     traits && archetype
       ? rankArchetypes(traits).find((r) => r.archetype.id === archetype.id)
@@ -178,90 +222,147 @@ export default function PlanPage() {
               >
                 <Ship className="h-7 w-5 text-star" />
               </motion.div>
-              {plan?.map((group, index) => (
-                <div
-                  key={group.timeframe}
-                  className="relative flex gap-6 pb-14 last:pb-0 sm:gap-10"
-                >
-                  <Planet kind={LEG_PLANETS[index] ?? "moon"} />
-                  <article className="min-w-0 flex-1 pt-1">
-                    <p className="font-mono text-xs uppercase tracking-[0.2em] text-star">
-                      {group.timeframe}
-                    </p>
-                    <h2 className="h-display mt-1 text-2xl text-foreground">
-                      {group.focus}
-                    </h2>
-                    <ul className="mt-4 grid max-w-3xl gap-3">
-                      {group.items.map((item) => (
-                        <li
-                          key={item}
-                          className="flex gap-3 rounded-md border border-border bg-panel-raised p-4 text-sm leading-6 text-foreground"
-                        >
-                          <span className="mt-1 h-4 w-4 shrink-0 rounded border border-star" />
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
+              {/* THE ROADMAP. This replaced a list of plain strings that
+                  generatePlan() built client-side. Steps now come from
+                  GET /roadmap, which sequences four kinds of work — learn,
+                  build, publish, apply — on the student's grade progression
+                  rather than on catalog deadlines. Against production only 4 of
+                  61 high-school opportunities carry a usable future deadline
+                  and 25 are locked above a 9th grader's grade, so a
+                  deadline-anchored plan had nothing to tell a freshman.
 
-                    {/* The skill rung used to dead-end. plan.ts says "run a
-                        focused 5-hour sprint on statistics — the hypothesis
-                        tests behind the figure you reproduced" and named no
-                        course, no book, no link: an instruction only useful to
-                        a student who already knew where to learn it. These are
-                        free, and each was checked by fetching the page — not a
-                        trial, not free-to-audit-pay-for-the-certificate.
-                        Gentlest entry point first. */}
-                    {index === 1 && resources.length > 0 ? (
-                      <div className="mt-5 max-w-3xl rounded-md border border-border bg-card p-5">
-                        <p className="font-mono text-xs uppercase tracking-[0.18em] text-star">
-                          Where to learn it — free
+                  generatePlan() is kept as the signed-out fallback below. */}
+              {roadmap && roadmap.phases.length > 0
+                ? roadmap.phases.map((phase, index) => (
+                    <div
+                      key={`${phase.label}-${index}`}
+                      className="relative flex gap-6 pb-14 last:pb-0 sm:gap-10"
+                    >
+                      <Planet kind={LEG_PLANETS[index] ?? "moon"} />
+                      <article className="min-w-0 flex-1 pt-1">
+                        <p className="font-mono text-xs uppercase tracking-[0.2em] text-star">
+                          {phase.label}
                         </p>
-                        <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                          {resources[0].skill_label}
-                        </p>
-                        <ul className="mt-4 grid gap-3">
-                          {resources.map((r) => (
-                            <li key={r.id}>
-                              <a
-                                href={r.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="block rounded-md border border-border bg-panel-raised p-4 transition-colors hover:border-primary"
-                              >
-                                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                                  <span className="text-sm font-semibold text-foreground">
-                                    {r.title}
+                        <ul className="mt-4 grid max-w-3xl gap-3">
+                          {phase.steps.map((step) => (
+                            <li
+                              key={step.step_key}
+                              className="rounded-md border border-border bg-panel-raised p-4"
+                            >
+                              <div className="flex flex-wrap items-center gap-2">
+                                <span className={STEP_CHIP[step.category]}>
+                                  {STEP_LABEL[step.category]}
+                                </span>
+                                {step.timeframe === "week" ? (
+                                  <span className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-polaris">
+                                    this week
                                   </span>
-                                  <span className="font-mono text-xs text-muted-foreground">
-                                    {r.kind} · {r.effort}
-                                  </span>
-                                </div>
-                                <p className="mt-1 text-xs text-muted-foreground">
-                                  {r.host}
-                                </p>
-                                <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                                  {r.why_this_one}
-                                </p>
-                                {r.prerequisite &&
-                                r.prerequisite.toLowerCase() !== "none" ? (
-                                  <p className="mt-2 text-xs leading-5 text-aurora-dim">
-                                    First: {r.prerequisite}
-                                  </p>
                                 ) : null}
-                              </a>
+                              </div>
+                              {(() => {
+                                // A learning step names a free resource. Link
+                                // it: the whole point of the resource catalog
+                                // is that "learn statistics" now has a where.
+                                const linked = step.resource_id
+                                  ? resources.find((r) => r.id === step.resource_id)
+                                  : undefined;
+                                return linked ? (
+                                  <a
+                                    href={linked.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="mt-2 block text-sm leading-6 text-foreground underline decoration-border underline-offset-4 hover:decoration-primary"
+                                  >
+                                    {step.title}
+                                    <span className="ml-2 font-mono text-xs text-muted-foreground">
+                                      {linked.host} · free
+                                    </span>
+                                  </a>
+                                ) : (
+                                  <p className="mt-2 text-sm leading-6 text-foreground">
+                                    {step.title}
+                                  </p>
+                                );
+                              })()}
+                              {step.edge_note ? (
+                                <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                                  {step.edge_note}
+                                  {AUTHORED_EDGES.includes(step.edge_reason) ? (
+                                    <span className="text-aurora-dim">
+                                      {" "}
+                                      (a common route, not a requirement)
+                                    </span>
+                                  ) : null}
+                                </p>
+                              ) : null}
                             </li>
                           ))}
                         </ul>
-                        <p className="mt-4 text-xs leading-5 text-muted-foreground">
-                          Every one of these is free to finish — no trial, no
-                          certificate fee. We checked each page rather than
-                          taking the word of a link.
+                      </article>
+                    </div>
+                  ))
+                : roadmapSettled
+                ? plan?.map((group, index) => (
+                    <div
+                      key={group.timeframe}
+                      className="relative flex gap-6 pb-14 last:pb-0 sm:gap-10"
+                    >
+                      <Planet kind={LEG_PLANETS[index] ?? "moon"} />
+                      <article className="min-w-0 flex-1 pt-1">
+                        <p className="font-mono text-xs uppercase tracking-[0.2em] text-star">
+                          {group.timeframe}
                         </p>
-                      </div>
-                    ) : null}
+                        <h2 className="h-display mt-1 text-2xl text-foreground">
+                          {group.focus}
+                        </h2>
+                        <ul className="mt-4 grid max-w-3xl gap-3">
+                          {group.items.map((item) => (
+                            <li
+                              key={item}
+                              className="flex gap-3 rounded-md border border-border bg-panel-raised p-4 text-sm leading-6 text-foreground"
+                            >
+                              <span className="mt-1 h-4 w-4 shrink-0 rounded border border-star" />
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </article>
+                    </div>
+                  ))
+                : null}
+
+              {/* Locked programs become horizon markers instead of noise. A 9th
+                  grader has 25 of 61 rows above their grade; ranking them with
+                  no indication they are unreachable is what this replaces. */}
+              {roadmap && roadmap.horizon.length > 0 ? (
+                <div className="relative flex gap-6 pb-4 sm:gap-10">
+                  <Planet kind="moon" />
+                  <article className="min-w-0 flex-1 pt-1">
+                    <p className="font-mono text-xs uppercase tracking-[0.2em] text-star">
+                      Opens later
+                    </p>
+                    <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+                      You are not eligible for these yet. That is what the work
+                      above is for.
+                    </p>
+                    <ul className="mt-4 grid max-w-3xl gap-2">
+                      {roadmap.horizon.map((item) => (
+                        <li
+                          key={item.opportunity_id}
+                          className="flex flex-wrap items-baseline gap-x-3 rounded-md border border-border bg-card px-4 py-3"
+                        >
+                          <span className="font-mono text-xs text-polaris">
+                            grade {item.opens_at_grade}
+                          </span>
+                          <span className="text-sm text-foreground">
+                            {item.title}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
                   </article>
                 </div>
-              ))}
+              ) : null}
             </section>
           </>
         )}
