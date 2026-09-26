@@ -46,6 +46,15 @@ jobs:
       # variable that is set-but-empty — which would break the verifier.
       LLM_API_BASE: ${{ secrets.LLM_API_BASE || 'https://integrate.api.nvidia.com/v1' }}
       LLM_MODEL: ${{ secrets.LLM_MODEL || 'openai/gpt-oss-20b' }}
+      # Optional per-job override for the VERIFIER only. Unset, it falls back to
+      # LLM_* above and nothing changes. Set, the nightly verify+import runs on
+      # Azure AI Foundry while /advisor stays on NIM — which matters because the
+      # verifier reads public listings and sends no student data, whereas the
+      # advisor sends a student's own words and the privacy page names its
+      # recipient by vendor.
+      VERIFIER_API_KEY: ${{ secrets.VERIFIER_API_KEY }}
+      VERIFIER_API_BASE: ${{ secrets.VERIFIER_API_BASE }}
+      VERIFIER_MODEL: ${{ secrets.VERIFIER_MODEL }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -64,9 +73,15 @@ jobs:
         run: |
           missing=""
           for name in REDDIT_CLIENT_ID REDDIT_CLIENT_SECRET \
-                      SUPABASE_URL SUPABASE_SECRET_KEY LLM_API_KEY; do
+                      SUPABASE_URL SUPABASE_SECRET_KEY; do
             [ -n "${!name}" ] || missing="$missing $name"
           done
+          # The verifier needs A provider, not a specific one. Either key will
+          # do, and demanding LLM_API_KEY would block a host that had moved the
+          # verifier to Azure and deliberately unset the shared key.
+          if [ -z "$LLM_API_KEY" ] && [ -z "$VERIFIER_API_KEY" ]; then
+            missing="$missing LLM_API_KEY-or-VERIFIER_API_KEY"
+          fi
           if [ -n "$missing" ]; then
             echo "Missing repo secrets:$missing"
             echo "Add them under Settings -> Secrets and variables -> Actions."

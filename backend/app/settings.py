@@ -65,6 +65,33 @@ class Settings(BaseModel):
     llm_api_base: str = "https://integrate.api.nvidia.com/v1"
     llm_model: str = "openai/gpt-oss-20b"
 
+    # Per-job provider override for the VERIFIER only, falling back to the
+    # LLM_* values above when unset.
+    #
+    # The two jobs have different constraints and it stopped being honest to
+    # pretend otherwise. The verifier reads scraped public listings and sends no
+    # student data anywhere, so it can move to a paid-but-stable provider today.
+    # The advisor sends a student's trait scores, interests and goal statement in
+    # their own words, and frontend/app/privacy/page.tsx names NVIDIA as the
+    # recipient — so moving it requires changing a promise made to minors about
+    # where their words go, in four languages, and that is a deliberate act and
+    # not a config change.
+    #
+    # Set VERIFIER_* and the nightly scrape switches provider while /advisor
+    # does not.
+    verifier_api_key: str = ""
+    verifier_api_base: str = ""
+    verifier_model: str = ""
+
+    @property
+    def verifier_provider(self) -> tuple[str, str, str]:
+        """(base, key, model) for the verifier — its own, else the shared one."""
+        return (
+            self.verifier_api_base or self.llm_api_base,
+            self.verifier_api_key or self.llm_api_key,
+            self.verifier_model or self.llm_model,
+        )
+
     @classmethod
     def from_env(cls) -> "Settings":
         def _int(name: str, default: int) -> int:
@@ -86,6 +113,9 @@ class Settings(BaseModel):
             supabase_secret_key=os.getenv("SUPABASE_SECRET_KEY", ""),
             supabase_jwt_secret=os.getenv("SUPABASE_JWT_SECRET", ""),
             github_token=os.getenv("GITHUB_TOKEN", ""),
+            verifier_api_key=os.getenv("VERIFIER_API_KEY", ""),
+            verifier_api_base=os.getenv("VERIFIER_API_BASE", ""),
+            verifier_model=os.getenv("VERIFIER_MODEL", ""),
             llm_api_key=os.getenv("LLM_API_KEY", ""),
             llm_api_base=os.getenv("LLM_API_BASE", "https://integrate.api.nvidia.com/v1"),
             llm_model=os.getenv("LLM_MODEL", "openai/gpt-oss-20b"),

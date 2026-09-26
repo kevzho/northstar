@@ -28,8 +28,7 @@ from __future__ import annotations
 import json
 from urllib.parse import urlparse
 
-import requests
-
+from .llm import LLMUnavailable, chat
 from .settings import settings
 
 FIELDS = ["cs", "biology", "math", "physics", "engineering",
@@ -73,7 +72,14 @@ invent details not supported by the text."""
 
 
 def verifier_enabled() -> bool:
-    return bool(settings.llm_api_key)
+    """Whether the verifier has a provider. Checks ITS key, not the advisor's.
+
+    These are separate credentials now: the scrape can run on Azure while
+    /advisor stays on NIM, and vice versa. Reading llm_api_key here would have
+    disabled the nightly import on any host that configured only VERIFIER_*.
+    """
+    _, key, _ = settings.verifier_provider
+    return bool(key)
 
 
 def _external_host(url: str) -> str:
@@ -143,46 +149,41 @@ def verify_candidate(candidate: dict, retries: int = 2) -> dict:
     so a single timeout shouldn't drop an otherwise-fine candidate.
     """
     text = f"Title: {candidate.get('title', '')}\n\n{candidate.get('blurb', '')[:1500]}"
-    payload = {
-        "model": settings.llm_model,
-        "messages": [
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": text},
-        ],
-        # Generous on purpose. The production model (openai/gpt-oss-20b) is a
-        # reasoning model: it emits its thinking before the JSON object, so a
-        # 300-token ceiling truncated the reply mid-string and every retry
-        # truncated it identically at temperature 0 — a deterministic failure
-        # that looked like a flaky one. The verdict itself is ~80 tokens.
-        "max_tokens": 1200,
-        "temperature": 0.0,
-        "response_format": {"type": "json_object"},
-    }
+    base, key, model = settings.verifier_provider
+    messages = [
+        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "user", "content": text},
+    ]
     last_error: Exception | None = None
     for attempt in range(retries + 1):
         try:
-            response = requests.post(
-                f"{settings.llm_api_base}/chat/completions",
-                headers={
-                    "Authorization": f"Bearer {settings.llm_api_key}",
-                    "Content-Type": "application/json",
-                },
-                json=payload,
+            content = chat(
+                base=base,
+                key=key,
+                model=model,
+                messages=messages,
+                # Generous on purpose. Reasoning models emit their thinking
+                # before the JSON object, so a 300-token ceiling truncated the
+                # reply mid-string and every retry truncated it identically at
+                # temperature 0 — a deterministic failure that looked flaky. The
+                # verdict itself is ~80 tokens.
+                max_tokens=1200,
+                # DETERMINISM IS BEST-EFFORT, NOT GUARANTEED. NIM honours
+                # temperature 0; Azure gpt-5.6 refuses any value but its default
+                # of 1 ("Unsupported value: 'temperature' does not support 0.0"),
+                # so app/llm.py drops the parameter for that provider. On Azure
+                # the same candidate can therefore get different verdicts on
+                # different runs. Acceptable here — decide() re-checks every
+                # verdict against hard guardrails (confidence floor, usable link,
+                # non-reddit host), so a wobbly verdict cannot import anything
+                # the rules would reject. It does mean the JSON-truncation retry
+                # below is now genuinely a retry rather than a repeat.
+                temperature=0.0,
+                # Verified working on Azure gpt-5.6 and on NIM. Notably NOT
+                # supported by DeepSeek-R1, which is why that plan was dropped.
+                response_format={"type": "json_object"},
                 timeout=90,
             )
-            response.raise_for_status()
-            message = response.json()["choices"][0]["message"]
-
-            # `content` can be null. Reasoning models (openai/gpt-oss-20b, the
-            # current production model) sometimes put the answer in
-            # `reasoning_content` and leave `content` None — which used to
-            # raise AttributeError: 'NoneType' has no attribute 'find' here,
-            # burning the candidate as an error rather than reading the reply
-            # that was sitting in the next field.
-            content = message.get("content") or message.get("reasoning_content") or ""
-            if not content.strip():
-                last_error = ValueError("model returned an empty message")
-                continue
 
             # Some models wrap JSON in prose or fences despite instructions.
             start, end = content.find("{"), content.rfind("}")
@@ -191,11 +192,12 @@ def verify_candidate(candidate: dict, retries: int = 2) -> dict:
             try:
                 return json.loads(content)
             except json.JSONDecodeError as error:
-                # Retry rather than discard: at temperature 0 this is usually
-                # a truncated reply, and the next attempt tends to complete.
+                # Retry rather than discard: at temperature 0 this is usually a
+                # truncated reply, and the next attempt tends to complete.
                 last_error = error
                 continue
-        except (requests.Timeout, requests.ConnectionError) as error:
+        except LLMUnavailable as error:
             last_error = error
             continue
+
     raise last_error if last_error else RuntimeError("verify failed")

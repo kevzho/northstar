@@ -30,61 +30,93 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
 import requests  # noqa: E402
 
+from app.llm import LLMUnavailable, chat, dialect_for  # noqa: E402
 from app.settings import settings  # noqa: E402
 
 
-def main() -> int:
-    base = settings.llm_api_base.rstrip("/")
-    model = settings.llm_model
-    key = settings.llm_api_key
-
-    if not key:
-        print("LLM_API_KEY is unset — the verifier cannot run.")
-        return 1
-
-    print(f"provider: {base}")
-    print(f"model:    {model}")
-
-    headers = {"Authorization": f"Bearer {key}"}
-
-    # The real check is a completion, not a catalog lookup: a model can be
-    # listed and still refuse, and it is the completion path that matters.
+def probe(label: str, base: str, key: str, model: str) -> bool:
+    """One real completion against one provider. True if it answered."""
+    print(f"\n[{label}]")
+    print(f"  provider: {base}")
+    print(f"  model:    {model}")
     try:
-        response = requests.post(
-            f"{base}/chat/completions",
-            headers=headers,
-            json={
-                "model": model,
-                "messages": [{"role": "user", "content": "Reply with the single word: ok"}],
-                "max_tokens": 5,
-                "temperature": 0,
-            },
-            timeout=60,
+        # Through app.llm.chat deliberately, NOT a hand-rolled POST. The old
+        # version sent max_tokens and temperature 0 directly, which Azure
+        # gpt-5.6 rejects with a 400 — so the preflight would have failed the
+        # whole nightly workflow the moment the verifier moved provider, and the
+        # printed diagnosis would have been "model unavailable" when the model
+        # was fine. A health check that cannot speak the dialect the real caller
+        # speaks is not checking anything.
+        text = chat(
+            base=base, key=key, model=model,
+            messages=[{"role": "user", "content": "Reply with the single word: ok"}],
+            max_tokens=2000, temperature=0.0, timeout=60,
         )
-    except requests.RequestException as error:
-        print(f"\nFAIL: could not reach {base} — {error}")
-        return 1
+    except LLMUnavailable as error:
+        print(f"  FAIL: {error}")
+        _print_catalog(base, key)
+        return False
 
-    if response.status_code == 200:
-        print("\nOK: the model answered.")
-        return 0
+    print(f"  OK: answered {text.strip()[:40]!r}")
+    learned = dialect_for(base, model)
+    if learned and (learned["token"] != "max_tokens" or learned["drop"]):
+        print(f"  dialect:  {learned['token']}"
+              + (f", omits {sorted(learned['drop'])}" if learned["drop"] else ""))
+    return True
 
-    print(f"\nFAIL: HTTP {response.status_code}")
-    print(response.text[:400])
 
-    # A retired or renamed model is the common case, so print what IS
-    # available rather than making someone go and look it up.
+def _print_catalog(base: str, key: str) -> None:
+    """A retired or renamed model is the common case, so print what IS
+    available rather than making someone go and look it up."""
     try:
-        listing = requests.get(f"{base}/models", headers=headers, timeout=30)
-        if listing.ok:
-            ids = sorted(m.get("id", "") for m in listing.json().get("data", []))
-            print(f"\n{len(ids)} models currently available at this endpoint:")
+        listing = requests.get(
+            f"{base}/models", headers={"Authorization": f"Bearer {key}"}, timeout=30
+        )
+        if not listing.ok:
+            return
+        ids = sorted(m.get("id", "") for m in listing.json().get("data", []))
+        if ids:
+            print(f"  {len(ids)} models the key can see:")
             for model_id in ids:
-                print(f"  {model_id}")
-            print("\nSet LLM_MODEL (repo secret, and backend/.env) to one of these.")
-    except requests.RequestException:
+                print(f"    {model_id}")
+            print("  Set the model env var to one of these.")
+    except (requests.RequestException, ValueError):
         pass
 
+
+def main() -> int:
+    """Check every CONFIGURED provider, not just the shared one.
+
+    The advisor and the verifier can now point at different vendors: the
+    verifier moved to Azure because it handles no student data, while /advisor
+    stays on NIM until the privacy page names a new recipient. Checking only
+    one would leave the other free to be broken for weeks, which is the exact
+    outage this script exists to prevent.
+    """
+    v_base, v_key, v_model = settings.verifier_provider
+    targets = []
+    if settings.llm_api_key:
+        targets.append(("advisor", settings.llm_api_base.rstrip("/"),
+                        settings.llm_api_key, settings.llm_model))
+    if v_key:
+        entry = ("verifier", v_base.rstrip("/"), v_key, v_model)
+        # Same provider for both is the common case; do not pay for it twice.
+        if not any(t[1:] == entry[1:] for t in targets):
+            targets.append(entry)
+        else:
+            print("verifier shares the advisor's provider — one check covers both.")
+
+    if not targets:
+        print("No LLM configured. Set LLM_API_KEY, or VERIFIER_API_KEY for the "
+              "nightly verifier alone. The verifier cannot run without one.")
+        return 1
+
+    results = [probe(*t) for t in targets]
+    print()
+    if all(results):
+        print(f"OK: {len(results)} provider(s) answered.")
+        return 0
+    print(f"FAIL: {results.count(False)} of {len(results)} provider(s) did not answer.")
     return 1
 
 
