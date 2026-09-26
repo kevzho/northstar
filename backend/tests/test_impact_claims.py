@@ -136,8 +136,8 @@ def test_stated_catalog_counts_match_the_seed_floor() -> None:
     """
     page = " ".join(LANDING.read_text().split())
 
-    claimed = re.search(r"(\d+)\s+verified opportunities", page)
-    assert claimed, "the landing page no longer states a verified-opportunity count"
+    claimed = re.search(r"more than\s+(\d+)\s+opportunities", page)
+    assert claimed, "the landing page no longer states a shelf-size claim"
     stated = int(claimed.group(1))
 
     seeded = len(_seeded_high_school_rows())
@@ -176,9 +176,19 @@ def test_the_verification_claim_is_backed_by_scripts_that_exist() -> None:
     """The page claims listings are checked and removed. If the machinery that
     does that is deleted or renamed, the sentence becomes marketing."""
     page = " ".join(LANDING.read_text().split())
-    assert "checked against the program" in page, (
+    assert "checked against each program" in page, (
         "the landing page no longer claims listings are verified — if that is "
         "deliberate, delete this guard; do not leave it asserting nothing"
+    )
+    # The claim must stay scoped. "Every listing is checked" was on this page
+    # and was false: 22 of 55 high-school rows carry a verified_at stamp, the
+    # curated seed was never audited row by row, and scraped rows are screened
+    # by an LLM rather than read off the program's own site. An unscoped claim
+    # here is the most damaging kind, because it is the sentence that asks to
+    # be trusted about all the others.
+    assert "Every listing is checked" not in page, (
+        "the verification claim lost its scope — the hand-picked and scraped "
+        "paths are verified differently and the page must say so"
     )
     for name in (
         "retire_dead_opportunities.py",

@@ -76,8 +76,17 @@
 /*
  * Light theme — the same monochrome atlas, printed on paper: white sky,
  * ink stars. Applied by next-themes via the .light class on <html>.
+ *
+ * `.panel-paper` shares this declaration block rather than copying it, so one
+ * section can render in the paper palette while the page around it stays
+ * night — the alternating register the landing page uses. Sharing the block is
+ * the point: two copies of a palette drift, and a half-drifted palette is the
+ * kind of bug you only see on the section nobody scrolls to. Safe to scope to
+ * a subtree because nothing in this file uses `.light` as an ancestor
+ * selector, and page.tsx uses zero `dark:` utilities.
  */
-.light {
+.light,
+.panel-paper {
   color-scheme: light;
 
   --star: #141414;
@@ -197,6 +206,68 @@ button:disabled {
 }
 
 @layer components {
+  /*
+   * An inverted full-bleed band. The palette comes from the shared `.light`
+   * block above; this only paints it and escapes the column.
+   *
+   * The landing page's content lives in a centred max-w-6xl column, so a band
+   * that should span the viewport has to break out of it: left 50%, 100vw,
+   * translate back by half. 100vw counts the scrollbar, so the page root needs
+   * `overflow-x: clip` or this produces a horizontal scrollbar on every
+   * desktop browser — see `.bleed-root`.
+   */
+  .panel-paper {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  .bleed-x {
+    position: relative;
+    left: 50%;
+    width: 100vw;
+    transform: translateX(-50%);
+  }
+
+  .bleed-root {
+    /* clip, not hidden: `hidden` on an ancestor kills `position: sticky` on
+       the nav, which is the bug this replaced. */
+    overflow-x: clip;
+  }
+
+  /*
+   * When the page is ALREADY paper, an inverted band would need the night
+   * palette, and the honest way to get it is not to paste those literals here
+   * — that is the drift this file avoids. So in light mode the band separates
+   * by elevation and hairlines instead of by hue.
+   */
+  .light .panel-paper {
+    background-color: var(--panel-raised);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  /*
+   * Deadline ticker. The track holds the list twice and slides exactly -50%,
+   * so the second copy lands where the first began and the loop has no seam.
+   * Pauses on hover and on focus-within, because a moving strip you cannot stop
+   * is unreadable — and unusable with a keyboard, since a link scrolling out
+   * from under the focus ring is a trap.
+   */
+  .marquee-band {
+    overflow-x: hidden;
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee-x 60s linear infinite;
+  }
+
+  .marquee-band:hover .marquee-track,
+  .marquee-band:focus-within .marquee-track {
+    animation-play-state: paused;
+  }
+
   /* Display face for page titles — the atlas voice. */
   .h-display {
     font-family: var(--font-atlas), sans-serif;
@@ -338,7 +409,27 @@ button:disabled {
   animation: comet-pass 90s linear 12s infinite;
 }
 
+@keyframes marquee-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  /*
+   * The ticker stops and becomes an ordinary horizontal scroller. Stopping it
+   * without restoring overflow would hide every item past the fold, which is
+   * how a reduced-motion accommodation turns into a content loss.
+   */
+  .marquee-track {
+    animation: none;
+  }
+  .marquee-band {
+    overflow-x: auto;
+  }
   .constellation-line {
     animation: none;
     stroke-dashoffset: 0;

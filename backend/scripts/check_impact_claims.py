@@ -58,8 +58,6 @@ def main() -> int:
 
     # (regex, expected values, what the sentence asserts)
     checks: list[tuple[str, list[int], str]] = [
-        (r"(\d+)\s+verified\s+opportunities", [shelf],
-         "size of the high-school shelf"),
         (r"across\s+(\d+)\s+fields", [fields],
          "distinct fields on the high-school shelf"),
     ]
@@ -82,6 +80,36 @@ def main() -> int:
             )
         else:
             print(f"  ok       {what}: {stated}")
+
+    # The shelf size is stated as a FLOOR ("more than 50"), not an exact count.
+    # It was exact for about four hours: the daily scrape added two high-school
+    # rows and the page was wrong the same afternoon. An exact number in static
+    # copy cannot survive a catalog that grows every morning — it would redden
+    # the build on any day the scraper found something, which trains people to
+    # ignore the build. A floor is monotonic in the direction the catalog moves,
+    # so it only fails when the shelf actually SHRINKS past it, which is a real
+    # problem worth failing for.
+    m = re.search(r"more than\s+(\d+)\s+opportunities", page, re.I)
+    if not m:
+        failures.append(
+            "  MISSING  the sentence stating the shelf size. If it was removed "
+            "on purpose, remove this check too."
+        )
+    else:
+        floor = int(m.group(1))
+        if shelf <= floor:
+            failures.append(
+                f"  WRONG    shelf size: page claims more than {floor}, "
+                f"production has {shelf}"
+            )
+        elif shelf >= floor * 2:
+            failures.append(
+                f"  STALE    page claims more than {floor} but the shelf is now "
+                f"{shelf}. Not false, just needlessly modest — raise the floor."
+            )
+        else:
+            print(f"  ok       shelf size: {shelf} clears "
+                  f'"more than {floor}"')
 
     # The cost claim is a proportion ("more than four in five"), not a pair of
     # counts, so it cannot be compared integer-to-integer. The page states the

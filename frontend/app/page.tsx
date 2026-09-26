@@ -15,6 +15,8 @@ import { AnimatedGroup } from "@/components/motion/animated-group";
 import { InView } from "@/components/motion/in-view";
 import { TextEffect } from "@/components/motion/text-effect";
 import { Planet, Ship } from "@/components/decor/voyage";
+import { DeadlineTicker, RecentlyAdded } from "@/components/CatalogSignals";
+import { PILLAR_FIGURES } from "@/components/decor/pillar-diagrams";
 import { StarGlyph } from "@/components/decor/star-glyph";
 import { SiteFooter } from "@/components/SiteFooter";
 
@@ -196,7 +198,7 @@ export default function Home() {
 
   return (
     <MotionConfig reducedMotion="user">
-    <main className="min-h-screen">
+    <main className="bleed-root min-h-screen">
       <Starfield ink={ink} className="pointer-events-none fixed inset-0 -z-10" />
       <section className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-6 py-8 sm:px-8 lg:px-10">
         <nav className="sticky top-0 z-40 -mx-2 flex items-center justify-between border-b border-border bg-background/80 px-2 py-4 backdrop-blur">
@@ -229,8 +231,12 @@ export default function Home() {
             >
               A student-built opportunity map
             </TextEffect>
+            {/* One italic word carries the thesis. The emphasis is on
+                "deserves", not on "north star": the claim this project makes
+                is about entitlement, not about navigation. */}
             <h1 className="h-display mt-5 max-w-3xl text-5xl leading-[1.05] text-foreground sm:text-6xl lg:text-7xl">
-              Every student deserves a{" "}
+              Every student{" "}
+              <em className="font-normal italic text-star">deserves</em> a{" "}
               <span className="whitespace-nowrap text-star">
                 north star
                 <StarGlyph className="ml-2 inline-block h-[0.45em] w-[0.45em] align-baseline" />
@@ -256,6 +262,15 @@ export default function Home() {
           <motion.div style={{ y: constellationY, opacity: constellationOpacity }}>
             <Constellation />
           </motion.div>
+        </div>
+
+        {/* Real deadlines, soonest first, straight from the shelf. Placed here
+            because the hero makes a claim and this is the first thing that can
+            check it — and because a visitor who scrolls past the fold should hit
+            evidence, not another paragraph. Renders nothing at all if the query
+            fails or nothing is open; see CatalogSignals. */}
+        <div className="bleed-x mb-14">
+          <DeadlineTicker />
         </div>
 
         <section aria-label="How Northstar works" className="pb-16">
@@ -313,6 +328,23 @@ export default function Home() {
                     <p className="mt-3 text-base leading-8 text-muted-foreground">
                       {waypoint.description}
                     </p>
+                    {/* The figure repeats the paragraph's shape rather than
+                        decorating it — six bars for six traits, three paths for
+                        three directions, ranked rows with their reasons. Capped
+                        narrow so it reads as a diagram in the margin, not an
+                        illustration competing with the type. */}
+                    {(() => {
+                      const Figure = PILLAR_FIGURES[
+                        waypoint.mark as keyof typeof PILLAR_FIGURES
+                      ];
+                      return Figure ? (
+                        <Figure
+                          className={`mt-6 h-auto w-full max-w-[13rem] text-foreground ${
+                            index % 2 === 0 ? "lg:ml-auto" : ""
+                          }`}
+                        />
+                      ) : null;
+                    })()}
                   </div>
                 </div>
               </InView>
@@ -320,13 +352,22 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Why this exists. Every number here is a claim about the catalog we
-            built, not about how many people have used it — there are three
-            accounts. A judge can verify each one by querying the catalog; none
-            of them inflates a userbase. When there IS usage worth reporting,
-            it belongs here too, and not before. Guarded by
-            backend/tests/test_impact_claims.py. */}
-        <section aria-label="Why Northstar exists" className="pb-16">
+        {/* Why this exists — the one band printed on paper rather than sky.
+            The register change is the section break: the page around it stays
+            night, so this reads as a page from the atlas rather than another
+            scroll of the same surface. Palette comes from the shared `.light`
+            block in globals.css, never a second copy of it.
+
+            Every number here is a claim about the CATALOG, not about how many
+            people have used it. A judge can verify each one by querying the
+            catalog. The audit that produced these numbers lives in
+            northstar-docs/CATALOG-AUDIT.md — it was on this page and should
+            not have been. Guarded by backend/tests/test_impact_claims.py. */}
+        <div className="panel-paper bleed-x">
+          <section
+            aria-label="Why Northstar exists"
+            className="mx-auto w-full max-w-6xl px-6 py-20 sm:px-8 lg:px-10"
+          >
           <p className="eyebrow">Why this exists</p>
           <h2 className="h-display mt-3 text-2xl text-foreground sm:text-3xl">
             The opportunities were always there. The map wasn&apos;t.
@@ -352,11 +393,12 @@ export default function Home() {
             </p>
           </div>
           <p className="mt-6 max-w-3xl text-sm leading-7 text-muted-foreground">
-            What we can prove so far is about the map, not the territory.
-            Every listing is checked against the program&apos;s own website, and
-            anything that does not hold up{" "}
+            What we can prove so far is about the map, not the territory. The
+            hand-picked part of the shelf is checked against each program&apos;s
+            own website, the scraped part is screened before it lands, and
+            anything that stops holding up{" "}
             <span className="text-foreground">comes down</span> rather than pad a
-            total — which is why the high-school shelf holds 53 verified
+            total — which is why the high-school shelf holds more than 50
             opportunities across 9 fields instead of a directory of thousands. A
             listing you cannot act on is worse than one you never saw, because it
             costs you the season you spent planning around it. No student
@@ -364,9 +406,15 @@ export default function Home() {
             would rather show you a number we can stand behind than a bigger one
             we made up.
           </p>
-        </section>
+          {/* The paragraph above says listings are checked and removed. These
+              three dated rows are the other half of that: things that arrived.
+              Together they say the shelf is tended, which is the only claim
+              here a visitor can verify in one click. */}
+          <RecentlyAdded />
+          </section>
+        </div>
 
-        <section aria-label="Frequently asked questions" className="pb-16">
+        <section aria-label="Frequently asked questions" className="pb-16 pt-16">
           <h2 className="h-display text-2xl text-foreground sm:text-3xl">
             {t("faq.title")}
           </h2>
