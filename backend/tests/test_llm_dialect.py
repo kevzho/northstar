@@ -26,9 +26,10 @@ from app import llm
 
 
 class FakeResponse:
-    def __init__(self, status: int, payload: dict | str):
+    def __init__(self, status: int, payload: dict | str, headers: dict | None = None):
         self.status_code = status
         self._payload = payload
+        self.headers = headers or {}
         self.text = payload if isinstance(payload, str) else json.dumps(payload)
 
     @property
@@ -41,8 +42,12 @@ class FakeResponse:
         return self._payload
 
 
-def reply(text: str) -> dict:
-    return {"choices": [{"message": {"content": text}}]}
+def reply(text: str, total: int = 42) -> dict:
+    return {
+        "choices": [{"message": {"content": text}}],
+        "usage": {"prompt_tokens": total - 12, "completion_tokens": 12,
+                  "total_tokens": total},
+    }
 
 
 @pytest.fixture(autouse=True)
@@ -69,8 +74,8 @@ def run(monkeypatch, responses: list[FakeResponse], **over):
 
 
 def test_a_cooperative_provider_is_called_once(monkeypatch) -> None:
-    text, sent = run(monkeypatch, [FakeResponse(200, reply("ok"))])
-    assert text == "ok"
+    result, sent = run(monkeypatch, [FakeResponse(200, reply("ok"))])
+    assert result.text == "ok"
     assert len(sent) == 1
     assert sent[0]["max_tokens"] == 100
     assert sent[0]["temperature"] == 0.0
@@ -80,8 +85,8 @@ def test_the_token_parameter_is_renamed_on_request(monkeypatch) -> None:
     refusal = FakeResponse(400, {"error": {"message":
         "Unsupported parameter: 'max_tokens' is not supported with this model. "
         "Use 'max_completion_tokens' instead."}})
-    text, sent = run(monkeypatch, [refusal, FakeResponse(200, reply("ok"))])
-    assert text == "ok"
+    result, sent = run(monkeypatch, [refusal, FakeResponse(200, reply("ok"))])
+    assert result.text == "ok"
     assert "max_tokens" not in sent[1]
     assert sent[1]["max_completion_tokens"] == 100
 
@@ -90,8 +95,8 @@ def test_an_unsupported_temperature_is_dropped_not_guessed(monkeypatch) -> None:
     refusal = FakeResponse(400, {"error": {"message":
         "Unsupported value: 'temperature' does not support 0.0 with this model. "
         "Only the default (1) value is supported."}})
-    text, sent = run(monkeypatch, [refusal, FakeResponse(200, reply("ok"))])
-    assert text == "ok"
+    result, sent = run(monkeypatch, [refusal, FakeResponse(200, reply("ok"))])
+    assert result.text == "ok"
     assert "temperature" not in sent[1], "temperature should be omitted, not altered"
 
 
@@ -101,8 +106,8 @@ def test_both_disagreements_are_learned_in_one_call(monkeypatch) -> None:
         "Unsupported parameter: 'max_tokens' ... Use 'max_completion_tokens' instead."}})
     temp = FakeResponse(400, {"error": {"message":
         "Unsupported value: 'temperature' does not support 0.0 with this model."}})
-    text, sent = run(monkeypatch, [tok, temp, FakeResponse(200, reply("ok"))])
-    assert text == "ok"
+    result, sent = run(monkeypatch, [tok, temp, FakeResponse(200, reply("ok"))])
+    assert result.text == "ok"
     assert sent[2]["max_completion_tokens"] == 100
     assert "temperature" not in sent[2]
     assert llm.dialect_for("https://x.test/v1", "m") == {
@@ -116,8 +121,8 @@ def test_what_was_learned_is_reused_for_the_next_call(monkeypatch) -> None:
     tok = FakeResponse(400, {"error": {"message":
         "Use 'max_completion_tokens' instead."}})
     run(monkeypatch, [tok, FakeResponse(200, reply("first"))])
-    text, sent = run(monkeypatch, [FakeResponse(200, reply("second"))])
-    assert text == "second"
+    result, sent = run(monkeypatch, [FakeResponse(200, reply("second"))])
+    assert result.text == "second"
     assert len(sent) == 1, "the second call renegotiated instead of remembering"
     assert sent[0]["max_completion_tokens"] == 100
 
@@ -146,8 +151,8 @@ def test_a_reasoning_model_answer_is_read_from_the_other_field(monkeypatch) -> N
     reasoning_content. This raised AttributeError once and burned a candidate."""
     payload = {"choices": [{"message": {"content": None,
                                         "reasoning_content": "the answer"}}]}
-    text, _ = run(monkeypatch, [FakeResponse(200, payload)])
-    assert text == "the answer"
+    result, _ = run(monkeypatch, [FakeResponse(200, payload)])
+    assert result.text == "the answer"
 
 
 def test_an_empty_message_raises_rather_than_returning_nothing(monkeypatch) -> None:
@@ -165,3 +170,121 @@ def test_a_network_error_becomes_llm_unavailable(monkeypatch) -> None:
     with pytest.raises(llm.LLMUnavailable):
         llm.chat(base="https://x.test/v1", key="k", model="m",
                  messages=[{"role": "user", "content": "hi"}], max_tokens=10)
+
+
+def test_usage_is_reported_so_spend_can_be_governed(monkeypatch) -> None:
+    """A call count cannot govern spend once questions vary in length. The
+    advisor budget needs tokens, so chat() must surface them."""
+    result, _ = run(monkeypatch, [FakeResponse(200, reply("ok", total=900))])
+    assert result.total_tokens == 900
+    assert result.prompt_tokens == 888
+    assert result.completion_tokens == 12
+
+
+def test_missing_usage_does_not_crash(monkeypatch) -> None:
+    """Not every provider returns usage; a missing block means "unknown", and
+    unknown must not take down a working answer."""
+    result, _ = run(monkeypatch, [FakeResponse(200, {"choices": [{"message": {"content": "ok"}}]})])
+    assert result.text == "ok"
+    assert result.total_tokens == 0
+
+
+def test_a_429_waits_and_retries_once(monkeypatch) -> None:
+    """A 429 is the provider asking us to wait, not a failed candidate. On a
+    shared deployment another caller's burst is routine."""
+    slept: list[float] = []
+    monkeypatch.setattr(llm.time, "sleep", lambda s: slept.append(s))
+    busy = FakeResponse(429, {"error": {"message": "rate limited"}}, {"Retry-After": "3"})
+    result, sent = run(monkeypatch, [busy, FakeResponse(200, reply("ok"))])
+    assert result.text == "ok"
+    assert slept == [3.0], f"expected one 3s wait, got {slept}"
+    assert len(sent) == 2
+
+
+def test_a_retry_after_wait_is_capped(monkeypatch) -> None:
+    """A provider asking for ten minutes must not stall the nightly job."""
+    slept: list[float] = []
+    monkeypatch.setattr(llm.time, "sleep", lambda s: slept.append(s))
+    busy = FakeResponse(429, "slow down", {"Retry-After": "600"})
+    run(monkeypatch, [busy, FakeResponse(200, reply("ok"))])
+    assert slept == [float(llm.MAX_RETRY_WAIT_S)]
+
+
+def test_repeated_429s_eventually_surface(monkeypatch) -> None:
+    """Retrying forever turns a busy minute into a stuck job."""
+    monkeypatch.setattr(llm.time, "sleep", lambda s: None)
+    busy = FakeResponse(429, "slow down", {"Retry-After": "1"})
+    with pytest.raises(llm.LLMUnavailable):
+        run(monkeypatch, [busy, busy, busy, busy, busy, busy])
+
+
+def test_reasoning_effort_is_sent_and_is_droppable(monkeypatch) -> None:
+    """Reasoning tokens are pure cost on a classification prompt, but a provider
+    that does not know the parameter must not be broken by it."""
+    result, sent = run(monkeypatch, [FakeResponse(200, reply("ok"))],
+                       reasoning_effort="none")
+    assert sent[0]["reasoning_effort"] == "none"
+
+    llm._DIALECT.clear()
+    refusal = FakeResponse(400, {"error": {"message":
+        "Unsupported parameter: 'reasoning_effort' is not supported."}})
+    result, sent = run(monkeypatch, [refusal, FakeResponse(200, reply("ok"))],
+                       reasoning_effort="none")
+    assert result.text == "ok"
+    assert "reasoning_effort" not in sent[1]
+
+
+# --- the advisor budget counts money, not requests -----------------------
+
+
+def test_unpriced_rows_are_charged_rather_than_ignored() -> None:
+    """A NULL total_tokens means "unknown", not "free".
+
+    Rows written before 20260926190000 have no token counts, and some providers
+    return no usage block at all. Counting those as zero would let an unmeasured
+    provider spend without limit — the budget would read 0 tokens spent no matter
+    how many calls were made.
+    """
+    from app import advisor
+
+    class FakeTable:
+        def select(self, *a, **k): return self
+        def gte(self, *a, **k): return self
+        def execute(self):
+            class R: data = [
+                {"total_tokens": 900},
+                {"total_tokens": None},   # pre-migration row
+                {"total_tokens": 0},      # provider returned no usage
+                {},                       # column absent entirely
+            ]
+            return R()
+
+    class FakeSB:
+        def table(self, name): return FakeTable()
+
+    assumed = advisor.settings.advisor_assumed_tokens_per_call
+    spent = advisor._tokens_spent(FakeSB(), "2026-09-26T00:00:00Z")
+    assert spent == 900 + assumed * 3, (
+        f"expected the three unpriced rows to cost {assumed} each, got {spent}"
+    )
+
+
+def test_the_assumed_cost_sits_above_the_measured_average() -> None:
+    """Measured on gpt-6-luna a real advisor turn is ~925 tokens. An assumption
+    BELOW that would make unmeasured traffic look cheaper than it is, which is
+    the wrong direction for a safety limit to be wrong in."""
+    from app import advisor
+
+    assert advisor.settings.advisor_assumed_tokens_per_call >= 925
+
+
+def test_the_token_budget_is_large_enough_to_be_useful() -> None:
+    """A budget under a few hundred thousand tokens cannot serve hundreds of
+    students at the per-student call cap, and would turn the money limit into an
+    availability outage that looks like a bug."""
+    from app import advisor
+
+    per_student = advisor.settings.advisor_per_student_daily
+    budget = advisor.settings.advisor_daily_token_budget
+    # ~925 tokens/call measured; 100 students at the cap is the floor to clear.
+    assert budget >= 100 * per_student * 925

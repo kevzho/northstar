@@ -47,17 +47,19 @@ def probe(label: str, base: str, key: str, model: str) -> bool:
         # printed diagnosis would have been "model unavailable" when the model
         # was fine. A health check that cannot speak the dialect the real caller
         # speaks is not checking anything.
-        text = chat(
+        result = chat(
             base=base, key=key, model=model,
             messages=[{"role": "user", "content": "Reply with the single word: ok"}],
             max_tokens=2000, temperature=0.0, timeout=60,
         )
+        text = result.text
     except LLMUnavailable as error:
         print(f"  FAIL: {error}")
         _print_catalog(base, key)
         return False
 
-    print(f"  OK: answered {text.strip()[:40]!r}")
+    print(f"  OK: answered {text.strip()[:40]!r} "
+          f"({result.total_tokens} tokens)")
     learned = dialect_for(base, model)
     if learned and (learned["token"] != "max_tokens" or learned["drop"]):
         print(f"  dialect:  {learned['token']}"

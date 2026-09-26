@@ -29,6 +29,9 @@ this. Handled here so every caller gets text or an explicit failure.
 
 from __future__ import annotations
 
+import time
+from typing import NamedTuple
+
 import requests
 
 # Per-(base, model) record of how this provider likes to be spoken to.
@@ -44,9 +47,32 @@ _ALT = {"max_tokens": "max_completion_tokens", "max_completion_tokens": "max_tok
 # and dropping `response_format` would let a non-JSON reply through to a parser
 # that expects JSON. Losing `temperature` costs determinism, which is a real
 # cost and is documented at the verifier's call site.
-_DROPPABLE = frozenset({"temperature", "top_p"})
+_DROPPABLE = frozenset({"temperature", "top_p", "reasoning_effort"})
 
 MAX_ATTEMPTS = 4
+
+# A 429 is the provider asking us to wait, not an error. Honour Retry-After once
+# rather than failing the candidate: on a shared deployment a burst from another
+# caller is routine, and dropping work because someone else was busy is the
+# wrong response. One retry only — a queue that retries forever turns a busy
+# minute into a stuck nightly job.
+RATE_LIMIT_RETRIES = 1
+MAX_RETRY_WAIT_S = 30
+
+
+class ChatResult(NamedTuple):
+    """Text plus what it cost. Usage is why this is not a bare str.
+
+    Spend has to be measurable per call to be governable: public.advisor_calls
+    counts CALLS, which was fine while the ceiling was 150 a day and stops being
+    fine at hundreds of users, because a long question and a short one are not
+    the same purchase.
+    """
+
+    text: str
+    prompt_tokens: int
+    completion_tokens: int
+    total_tokens: int
 
 
 class LLMUnavailable(RuntimeError):
@@ -93,8 +119,9 @@ def chat(
     max_tokens: int,
     temperature: float = 0.0,
     response_format: dict | None = None,
+    reasoning_effort: str | None = None,
     timeout: int = 90,
-) -> str:
+) -> ChatResult:
     """Return the assistant's text. Raises LLMUnavailable on failure.
 
     ``base`` is the OpenAI-compatible root, e.g.
@@ -106,14 +133,22 @@ def chat(
     root = base.rstrip("/")
     ckey = (root, model)
     dialect = _DIALECT.setdefault(ckey, {"token": "max_tokens", "drop": set()})
+    rate_limited = 0
 
-    for attempt in range(1, MAX_ATTEMPTS + 1):
+    for attempt in range(1, MAX_ATTEMPTS + RATE_LIMIT_RETRIES + 1):
         payload: dict = {"model": model, "messages": messages}
         payload[dialect["token"]] = max_tokens
         if "temperature" not in dialect["drop"]:
             payload["temperature"] = temperature
         if response_format:
             payload["response_format"] = response_format
+        # Reasoning models spend tokens thinking before they answer. On a tight
+        # classification prompt that thinking buys nothing: measured on
+        # gpt-6-luna, effort "none" returned the same verdict as "high" using
+        # 611 tokens instead of 690 and 1.3s instead of 2.1s. Providers that do
+        # not know the parameter reject it, and it is droppable for that reason.
+        if reasoning_effort and "reasoning_effort" not in dialect["drop"]:
+            payload["reasoning_effort"] = reasoning_effort
 
         try:
             response = requests.post(
@@ -134,20 +169,37 @@ def chat(
             if _adapt(dialect, response.text, payload):
                 continue
 
+        if response.status_code == 429 and rate_limited < RATE_LIMIT_RETRIES:
+            rate_limited += 1
+            wait = MAX_RETRY_WAIT_S
+            try:
+                wait = min(float(response.headers.get("Retry-After", 5)), MAX_RETRY_WAIT_S)
+            except (TypeError, ValueError):
+                wait = 5.0
+            time.sleep(max(0.0, wait))
+            continue
+
         if not response.ok:
             raise LLMUnavailable(
                 f"{model}: HTTP {response.status_code} {response.text[:200]}"
             )
 
         try:
-            message = response.json()["choices"][0]["message"]
+            body = response.json()
+            message = body["choices"][0]["message"]
         except (ValueError, KeyError, IndexError) as error:
             raise LLMUnavailable(f"{model}: unreadable response") from error
 
         text = message.get("content") or message.get("reasoning_content") or ""
         if not text.strip():
             raise LLMUnavailable(f"{model}: empty message")
-        return text
+        usage = body.get("usage") or {}
+        return ChatResult(
+            text=text,
+            prompt_tokens=int(usage.get("prompt_tokens") or 0),
+            completion_tokens=int(usage.get("completion_tokens") or 0),
+            total_tokens=int(usage.get("total_tokens") or 0),
+        )
 
     raise LLMUnavailable(
         f"{model}: gave up after {MAX_ATTEMPTS} attempts negotiating parameters"

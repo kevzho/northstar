@@ -441,15 +441,26 @@ def create_app() -> FastAPI:
             )
 
         try:
-            answer = ask_advisor(question, student, sources)
+            result = ask_advisor(question, student, sources)
         except Exception:
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
                 detail="The advisor's model call failed; try again shortly.",
             )
 
-        record_call(sb, user.id, key, question, answer, sources)
-        return {"answer": answer, "sources": sources, "cached": False}
+        # The usage block is what lets the daily TOKEN budget mean anything. A
+        # call ceiling limits how many questions are asked; this limits what they
+        # cost, and at hundreds of users those stop being the same number.
+        record_call(
+            sb,
+            user.id,
+            key,
+            question,
+            result.text,
+            sources,
+            usage=(result.prompt_tokens, result.completion_tokens, result.total_tokens),
+        )
+        return {"answer": result.text, "sources": sources, "cached": False}
 
     @app.post("/sharing")
     def update_sharing(

@@ -46,6 +46,30 @@ class Settings(BaseModel):
     # smoothing. Raise them once the key's own quota is raised.
     advisor_per_student_daily: int = 10
     advisor_global_daily: int = 150
+
+    # The ceiling that actually governs spend, and the one to raise as the app
+    # grows. Calls are a fairness limit; tokens are the money.
+    #
+    # Measured on gpt-6-luna, a realistic advisor turn is ~640 prompt + ~285
+    # completion = ~925 tokens. So:
+    #
+    #     100 users x 10/day  ~=   0.9M tokens/day
+    #     300 users x 10/day  ~=   2.8M tokens/day
+    #   1,000 users x 10/day  ~=   9.3M tokens/day
+    #
+    # The default below is ~3M/day, which covers roughly 300 active students at
+    # the per-student cap and is about 0.2% of a 1,000-unit GlobalStandard
+    # deployment's daily TPM. The provider is not the constraint here; the wallet
+    # is, so this number should be derived from a monthly dollar budget divided
+    # by the provider's per-token rate, not guessed.
+    advisor_daily_token_budget: int = 3_000_000
+
+    # What an un-measured call is assumed to have cost. Rows written before
+    # 20260926190000 have NULL tokens, as do providers that return no usage
+    # block. Treating unknown as zero would let an unmeasured provider spend
+    # without limit, so unknown is priced ABOVE the measured average.
+    advisor_assumed_tokens_per_call: int = 1_200
+
     advisor_cache_ttl_h: int = 24
 
     # Optional: the route advisor (POST /advisor) and the nightly candidate
@@ -121,6 +145,8 @@ class Settings(BaseModel):
             llm_model=os.getenv("LLM_MODEL", "openai/gpt-oss-20b"),
             advisor_per_student_daily=_int("ADVISOR_PER_STUDENT_DAILY", 10),
             advisor_global_daily=_int("ADVISOR_GLOBAL_DAILY", 150),
+            advisor_daily_token_budget=_int("ADVISOR_DAILY_TOKEN_BUDGET", 3_000_000),
+            advisor_assumed_tokens_per_call=_int("ADVISOR_ASSUMED_TOKENS_PER_CALL", 1_200),
             advisor_cache_ttl_h=_int("ADVISOR_CACHE_TTL_H", 24),
         )
 

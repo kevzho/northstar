@@ -27,6 +27,7 @@ from datetime import datetime, timedelta, timezone
 
 import requests
 
+from .llm import ChatResult, chat
 from .settings import settings
 
 # --- Spend control -------------------------------------------------------
@@ -91,6 +92,26 @@ def _spent(sb, since: str, student: str | None = None) -> int:
     return query.execute().count or 0
 
 
+def _tokens_spent(sb, since: str) -> int:
+    """Tokens billed since `since`, pricing unknown rows rather than ignoring them.
+
+    A row's total_tokens is NULL if it predates 20260926190000 or if the
+    provider returned no usage block. Counting those as zero would let an
+    unmeasured provider spend without limit, so each is charged
+    advisor_assumed_tokens_per_call, which sits deliberately above the measured
+    average (~925 on gpt-6-luna).
+    """
+    rows = (
+        sb.table("advisor_calls")
+        .select("total_tokens")
+        .gte("created_at", since)
+        .execute()
+    ).data or []
+    assumed = settings.advisor_assumed_tokens_per_call
+    return sum(int(r["total_tokens"]) if r.get("total_tokens") else assumed
+               for r in rows)
+
+
 def budget_block(sb, student: str) -> str | None:
     """Why this call must be refused, or None to let it through.
 
@@ -106,23 +127,50 @@ def budget_block(sb, student: str) -> str | None:
         )
     if _spent(sb, _since(days=1)) >= settings.advisor_global_daily:
         return "The advisor has reached today's shared limit. Try again tomorrow."
+
+    # The money limit, checked last because it is the most expensive to compute
+    # (it reads rows rather than a count) and the least likely to fire. A call
+    # ceiling is a FAIRNESS limit — it stops one student using everything. This
+    # is the spend ceiling, and it is the one to raise as the app grows: at
+    # hundreds of users the two diverge, because a long question with twelve
+    # matched sources costs several times a one-line one and the provider bills
+    # tokens either way.
+    budget = settings.advisor_daily_token_budget
+    if budget > 0 and _tokens_spent(sb, _since(days=1)) >= budget:
+        return "The advisor has reached today's shared limit. Try again tomorrow."
     return None
 
 
 def record_call(
-    sb, student: str, key: str, question: str, answer: str, sources: list[dict]
+    sb,
+    student: str,
+    key: str,
+    question: str,
+    answer: str,
+    sources: list[dict],
+    usage: tuple[int, int, int] | None = None,
 ) -> None:
-    """Log a billed call. This row is both the ledger entry and the cache."""
+    """Log a billed call. This row is both the ledger entry and the cache.
+
+    ``usage`` is (prompt, completion, total) from the provider. Optional so an
+    older caller still records the call rather than dropping it — an unpriced
+    row is charged an assumed cost by the budget, which is a better failure than
+    a missing row that is charged nothing.
+    """
+    row = {
+        "student": student,
+        "cache_key": key,
+        "question": question[:1000],
+        "answer": answer,
+        "sources": sources,
+    }
+    if usage:
+        prompt, completion, total = usage
+        row["prompt_tokens"] = prompt
+        row["completion_tokens"] = completion
+        row["total_tokens"] = total
     try:
-        sb.table("advisor_calls").insert(
-            {
-                "student": student,
-                "cache_key": key,
-                "question": question[:1000],
-                "answer": answer,
-                "sources": sources,
-            }
-        ).execute()
+        sb.table("advisor_calls").insert(row).execute()
     except Exception:
         # Never lose the student an answer we already paid for. The cost is
         # that this call goes uncounted against the quota, which is the
@@ -163,7 +211,7 @@ def build_sources(matches: list[dict], limit: int = 12) -> list[dict]:
     return sources
 
 
-def ask_advisor(question: str, profile: dict, sources: list[dict]) -> str:
+def ask_advisor(question: str, profile: dict, sources: list[dict]) -> ChatResult:
     """One grounded chat completion; raises requests exceptions upward."""
     source_lines = "\n".join(
         f"[{s['n']}] {s['title']} — {s['field']}/{s['type']}"
@@ -178,29 +226,31 @@ def ask_advisor(question: str, profile: dict, sources: list[dict]) -> str:
         f"Goals, in their words: {profile.get('goals') or '(none written)'}"
     )
 
-    response = requests.post(
-        f"{settings.llm_api_base}/chat/completions",
-        headers={
-            "Authorization": f"Bearer {settings.llm_api_key}",
-            "Content-Type": "application/json",
-        },
-        json={
-            "model": settings.llm_model,
-            "messages": [
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {
-                    "role": "user",
-                    "content": (
-                        f"Student profile:\n{profile_lines}\n\n"
-                        f"Verified sources (their matched opportunities):\n{source_lines}\n\n"
-                        f"Question: {question[:1000]}"
-                    ),
-                },
-            ],
-            "max_tokens": 700,
-            "temperature": 0.7,
-        },
+    # Through app.llm.chat, same as the verifier. Two reasons beyond tidiness:
+    # the provider's usage block is the only way the token budget can know what
+    # this cost, and the parameter negotiation means moving the advisor to
+    # another vendor later is a config change rather than an edit here.
+    #
+    # temperature stays 0.7 — this is the one place a little variation is wanted,
+    # since an advisor that answers two students identically reads like a
+    # template. A provider that refuses the value simply omits it.
+    result = chat(
+        base=settings.llm_api_base,
+        key=settings.llm_api_key,
+        model=settings.llm_model,
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {
+                "role": "user",
+                "content": (
+                    f"Student profile:\n{profile_lines}\n\n"
+                    f"Verified sources (their matched opportunities):\n{source_lines}\n\n"
+                    f"Question: {question[:1000]}"
+                ),
+            },
+        ],
+        max_tokens=700,
+        temperature=0.7,
         timeout=45,
     )
-    response.raise_for_status()
-    return response.json()["choices"][0]["message"]["content"]
+    return result
