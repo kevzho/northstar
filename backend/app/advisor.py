@@ -92,24 +92,56 @@ def _spent(sb, since: str, student: str | None = None) -> int:
     return query.execute().count or 0
 
 
+# Ceiling on the fallback row scan. Only reached when the RPC is absent, which
+# means a deploy landed before the migration; large enough to be accurate for a
+# normal day, small enough that it cannot itself become the slow query.
+MAX_LEDGER_SCAN = 5000
+
+
 def _tokens_spent(sb, since: str) -> int:
-    """Tokens billed since `since`, pricing unknown rows rather than ignoring them.
+    """Tokens billed since `since`, summed in Postgres.
 
     A row's total_tokens is NULL if it predates 20260926190000 or if the
-    provider returned no usage block. Counting those as zero would let an
-    unmeasured provider spend without limit, so each is charged
-    advisor_assumed_tokens_per_call, which sits deliberately above the measured
-    average (~925 on gpt-6-luna).
+    provider returned no usage block. Those are charged
+    advisor_assumed_tokens_per_call — above the measured ~925 — because counting
+    unknown as free would let an unmeasured provider spend without limit.
+
+    The sum happens in the database on purpose. Reading the rows and adding them
+    up in Python is fine at 150 calls a day and indefensible at scale: 1,000
+    students at the per-student cap is ~10,000 rows, and this runs on EVERY
+    advisor request, so the cost of asking "may I spend?" would grow with how
+    much had already been spent that day.
+
+    Falls back to the row scan if the RPC is missing, so a deploy that lands
+    before `supabase db push` degrades in speed rather than refusing every
+    question. Bounded by MAX_LEDGER_SCAN so the fallback cannot become the
+    outage it is meant to avoid.
     """
+    assumed = settings.advisor_assumed_tokens_per_call
+    try:
+        result = sb.rpc(
+            "advisor_tokens_since", {"p_since": since, "p_assumed": assumed}
+        ).execute()
+        if result.data is not None:
+            return int(result.data if not isinstance(result.data, list) else result.data[0])
+    except Exception:
+        pass
+
     rows = (
         sb.table("advisor_calls")
         .select("total_tokens")
         .gte("created_at", since)
+        .limit(MAX_LEDGER_SCAN)
         .execute()
     ).data or []
-    assumed = settings.advisor_assumed_tokens_per_call
-    return sum(int(r["total_tokens"]) if r.get("total_tokens") else assumed
-               for r in rows)
+    spent = sum(int(r["total_tokens"]) if r.get("total_tokens") else assumed
+                for r in rows)
+    if len(rows) >= MAX_LEDGER_SCAN:
+        # The scan was truncated, so this is a floor, not a total. Treat a
+        # truncated ledger as over budget rather than under: the alternative is
+        # spending without a ceiling because the ceiling could not be measured.
+        return max(spent, settings.advisor_daily_token_budget)
+    return spent
 
 
 def budget_block(sb, student: str) -> str | None:

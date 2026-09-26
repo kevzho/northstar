@@ -241,15 +241,17 @@ def test_unpriced_rows_are_charged_rather_than_ignored() -> None:
     """A NULL total_tokens means "unknown", not "free".
 
     Rows written before 20260926190000 have no token counts, and some providers
-    return no usage block at all. Counting those as zero would let an unmeasured
-    provider spend without limit — the budget would read 0 tokens spent no matter
-    how many calls were made.
+    return no usage block. Counting those as zero would let an unmeasured
+    provider spend without limit — the budget would read 0 spent no matter how
+    many calls were made. This exercises the FALLBACK path, which runs when the
+    aggregate RPC is absent because a deploy landed before the migration.
     """
     from app import advisor
 
     class FakeTable:
         def select(self, *a, **k): return self
         def gte(self, *a, **k): return self
+        def limit(self, *a, **k): return self
         def execute(self):
             class R: data = [
                 {"total_tokens": 900},
@@ -259,14 +261,70 @@ def test_unpriced_rows_are_charged_rather_than_ignored() -> None:
             ]
             return R()
 
-    class FakeSB:
+    class NoRpcSB:
         def table(self, name): return FakeTable()
+        def rpc(self, *a, **k):
+            # What Postgres says when the migration has not been applied.
+            raise RuntimeError("function public.advisor_tokens_since does not exist")
 
     assumed = advisor.settings.advisor_assumed_tokens_per_call
-    spent = advisor._tokens_spent(FakeSB(), "2026-09-26T00:00:00Z")
+    spent = advisor._tokens_spent(NoRpcSB(), "2026-09-26T00:00:00Z")
     assert spent == 900 + assumed * 3, (
         f"expected the three unpriced rows to cost {assumed} each, got {spent}"
     )
+
+
+def test_the_aggregate_rpc_is_preferred_over_scanning_rows() -> None:
+    """At 1,000 students the day's ledger is ~10,000 rows and this runs on every
+    request. Summing in Postgres keeps the cost of asking "may I spend?" from
+    growing with how much has already been spent."""
+    from app import advisor
+
+    called: dict = {}
+
+    class RpcResult:
+        data = 4321
+
+    class RpcBuilder:
+        # postgrest's rpc() returns a builder; the caller chains .execute().
+        def execute(self):
+            return RpcResult()
+
+    class RpcSB:
+        def rpc(self, name, params):
+            called["name"] = name
+            called["params"] = params
+            return RpcBuilder()
+
+        def table(self, name):
+            raise AssertionError("fell back to a row scan despite a working RPC")
+
+    spent = advisor._tokens_spent(RpcSB(), "2026-09-26T00:00:00Z")
+    assert spent == 4321
+    assert called["name"] == "advisor_tokens_since"
+    assert called["params"]["p_since"] == "2026-09-26T00:00:00Z"
+    assert called["params"]["p_assumed"] == advisor.settings.advisor_assumed_tokens_per_call
+
+
+def test_a_truncated_fallback_scan_reads_as_over_budget() -> None:
+    """If the ledger cannot be measured, the safe answer is "stop", not
+    "continue" — otherwise an unmeasurable day spends without a ceiling."""
+    from app import advisor
+
+    class BigTable:
+        def select(self, *a, **k): return self
+        def gte(self, *a, **k): return self
+        def limit(self, *a, **k): return self
+        def execute(self):
+            class R: data = [{"total_tokens": 1}] * advisor.MAX_LEDGER_SCAN
+            return R()
+
+    class NoRpcSB:
+        def table(self, name): return BigTable()
+        def rpc(self, *a, **k): raise RuntimeError("missing")
+
+    spent = advisor._tokens_spent(NoRpcSB(), "2026-09-26T00:00:00Z")
+    assert spent >= advisor.settings.advisor_daily_token_budget
 
 
 def test_the_assumed_cost_sits_above_the_measured_average() -> None:

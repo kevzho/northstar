@@ -31,3 +31,45 @@ comment on column public.advisor_calls.total_tokens is
 -- recent rows, newest first.
 create index if not exists advisor_calls_recent_idx
     on public.advisor_calls (created_at desc);
+
+-- Sum the day's spend in Postgres, not in Python.
+--
+-- The first version of the budget did
+--     select total_tokens where created_at >= since
+-- and summed the rows in the application. That is fine at 150 calls a day and
+-- indefensible at scale: 1,000 students at the per-student cap is ~10,000 rows,
+-- and the budget is consulted on EVERY advisor request, so each question would
+-- drag the whole day's ledger over the wire to add it up. The cost of asking
+-- "may I spend?" would grow with how much had already been spent.
+--
+-- COALESCE on two levels, deliberately:
+--   - sum() over zero rows returns NULL, which must read as 0 spent, not as
+--     "unknown" — an empty day is a genuinely empty day.
+--   - a NULL total_tokens on an individual row means the call was never priced
+--     (written before this migration, or a provider that returned no usage
+--     block). Those are charged p_assumed rather than skipped, because counting
+--     unknown as free would let an unmeasured provider spend without limit.
+create or replace function public.advisor_tokens_since(
+    p_since timestamptz,
+    p_assumed integer default 1200
+)
+returns bigint
+language sql
+stable
+security invoker
+set search_path = public
+as $$
+    select coalesce(sum(coalesce(total_tokens, p_assumed)), 0)::bigint
+    from public.advisor_calls
+    where created_at >= p_since;
+$$;
+
+comment on function public.advisor_tokens_since(timestamptz, integer) is
+    'Tokens billed since p_since, pricing un-measured rows at p_assumed rather '
+    'than treating them as free. Used by the advisor daily token budget so the '
+    'check is one aggregate rather than a full-day row scan per request.';
+
+-- security invoker, not definer: the caller is the service role, and the
+-- function should never grant a student the ability to read the whole ledger.
+revoke all on function public.advisor_tokens_since(timestamptz, integer) from public;
+grant execute on function public.advisor_tokens_since(timestamptz, integer) to service_role;
