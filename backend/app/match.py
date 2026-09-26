@@ -57,6 +57,12 @@ SEMANTIC_WEIGHT = 0.15
 # by the floor, which is the whole failure it exists to fix.
 SEMANTIC_FLOOR_ESCAPE = 0.55
 
+# The lexical noise floor itself, named so other modules can ASK rather than
+# hardcode 0.05. app/roadmap.py needs it: a row pinned here matched nothing —
+# no shared words, no field, no tag, no meaning — and the roadmap must not turn
+# a row the matcher called noise into "Apply to this".
+NOISE_FLOOR = 0.05
+
 # Field-keyword mapping (student interest strings → opportunity_field enum)
 INTEREST_TO_FIELD = {
     "computer science": "cs",
@@ -419,7 +425,7 @@ def score_opportunities(
             and not tag_overlap
             and not semantic_signal
         ):
-            score = min(score, 0.05)
+            score = min(score, NOISE_FLOOR)
 
         explanation = _explain(
             tfidf, field_note, grade_fit, tag_overlap, free,

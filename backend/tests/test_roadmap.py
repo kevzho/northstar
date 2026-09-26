@@ -360,3 +360,88 @@ def test_a_missing_or_unknown_gate_falls_back_to_apply() -> None:
         steps = _application_steps(plan)
         assert len(steps) == 1
         assert steps[0]["title"].startswith("Apply to")
+
+
+# --- the plan is not an inbox -------------------------------------------
+#
+# app/match.py pins a row at NOISE_FLOOR when nothing matched: no shared words,
+# no field, no tag, no semantic signal. build_roadmap used to iterate every open,
+# grade-eligible row regardless of score, so a biology-focused 10th grader's
+# personalised learning path was nine capture-the-flag competitions at 0.0500
+# each, every one captioned "Start today." The matcher had already called them
+# noise; the roadmap never asked.
+#
+# Latent while four rows were open. Adding recurring competition feeds made it
+# visible — the plan was always willing to do this, it just lacked the material.
+
+
+def scored(oid, title, score, deadline="2026-11-01", grade_min=9):
+    return {
+        "opportunity": {"id": oid, "title": title, "grade_min": grade_min,
+                        "grade_max": 12, "deadline": deadline},
+        "score": {"score": score, "opportunity_id": oid, "explanation": ""},
+    }
+
+
+def test_a_row_the_matcher_called_noise_never_becomes_a_step() -> None:
+    from app.match import NOISE_FLOOR
+
+    plan = build_roadmap(
+        {"grade": "10"}, SPINE, RESOURCES,
+        [scored(f"o{i}", f"Irrelevant CTF {i}", NOISE_FLOOR) for i in range(9)],
+        MISSIONS, TODAY,
+    )
+    apps = [s for p in plan["phases"] for s in p["steps"]
+            if s["category"] == "application"]
+    assert apps == [], (
+        f"{len(apps)} noise-floor rows became application steps: "
+        f"{[s['title'] for s in apps][:3]}"
+    )
+    # And the student still gets real work rather than an empty page.
+    actionable = [s for p in plan["phases"] for s in p["steps"]
+                  if s["category"] in ("skill", "project", "outreach")]
+    assert actionable, "filtering noise must not empty the plan"
+
+
+def test_applications_are_capped_so_a_plan_stays_a_plan() -> None:
+    from app.roadmap import MAX_APPLICATION_STEPS
+
+    plan = build_roadmap(
+        {"grade": "10"}, SPINE, RESOURCES,
+        [scored(f"o{i}", f"Good Match {i}", 0.5 - i * 0.01) for i in range(12)],
+        MISSIONS, TODAY,
+    )
+    apps = [s for p in plan["phases"] for s in p["steps"]
+            if s["category"] == "application"]
+    assert len(apps) == MAX_APPLICATION_STEPS, (
+        f"expected {MAX_APPLICATION_STEPS} application steps, got {len(apps)}"
+    )
+
+
+def test_the_cap_keeps_the_best_matches_not_the_first_ones() -> None:
+    """``ranked`` arrives sorted by score, so the cap must preserve that order —
+    otherwise the plan's four applications are arbitrary."""
+    ranked = [scored("best", "Best Match", 0.90),
+              scored("mid", "Middling Match", 0.50),
+              scored("low", "Weak Match", 0.20),
+              scored("low2", "Weaker Match", 0.15),
+              scored("low3", "Weakest Match", 0.10)]
+    plan = build_roadmap({"grade": "10"}, SPINE, RESOURCES, ranked, MISSIONS, TODAY)
+    titles = [s["title"] for p in plan["phases"] for s in p["steps"]
+              if s["category"] == "application"]
+    assert any("Best Match" in t for t in titles)
+    assert not any("Weakest Match" in t for t in titles)
+
+
+def test_a_result_without_a_score_is_still_shown() -> None:
+    """Older callers and tests pass bare {"opportunity": ...}. Silently hiding
+    those would be a worse failure than showing them."""
+    plan = build_roadmap(
+        {"grade": "10"}, SPINE, RESOURCES,
+        [{"opportunity": {"id": "o1", "title": "Unscored", "grade_min": 9,
+                          "grade_max": 12, "deadline": "2026-11-01"}}],
+        MISSIONS, TODAY,
+    )
+    apps = [s for p in plan["phases"] for s in p["steps"]
+            if s["category"] == "application"]
+    assert len(apps) == 1

@@ -167,6 +167,44 @@ def _is_open(opp: dict, today: date) -> bool:
         return False
 
 
+# How many "apply to this" steps a plan may contain.
+#
+# A plan is a sequence, not an inbox. Ten applications in the Now phase is a
+# list of links with a deadline attached — the thing this product exists to
+# replace. Four is enough to be useful and few enough to be a decision.
+MAX_APPLICATION_STEPS = 4
+
+
+def _worth_applying(result: dict, already: int) -> bool:
+    """Whether a ranked row earns a place in the plan.
+
+    TWO RULES, AND THE FIRST IS THE IMPORTANT ONE.
+
+    Respect the matcher's own verdict. app/match.py pins a row at NOISE_FLOOR
+    when it matched nothing at all — no shared words, no field, no tag, no
+    semantic signal. The roadmap used to iterate every open, grade-eligible row
+    regardless of score, so a biology-focused 10th grader's personalised learning
+    path was nine capture-the-flag security competitions, each scored 0.0500,
+    each presented as "Apply to this. Start today." The matcher had already
+    called them noise; the roadmap simply did not ask.
+
+    That bug was latent while only four rows were open. Adding recurring
+    competition feeds made it visible, which is the useful kind of regression:
+    the plan was always willing to do this, it just never had the material.
+
+    Then cap the count, because a plan with ten applications is not a plan.
+    ``ranked`` arrives sorted by score, so the cap keeps the best matches.
+    """
+    from .match import NOISE_FLOOR
+
+    if already >= MAX_APPLICATION_STEPS:
+        return False
+    score = (result.get("score") or {}).get("score")
+    if score is None:
+        return True  # no score available (tests, older callers) — do not hide it
+    return score > NOISE_FLOOR
+
+
 def build_roadmap(
     student: dict,
     spine: dict | None,
@@ -290,6 +328,7 @@ def build_roadmap(
     #    promises to say what to do next. See opportunities.entry_gate
     #    (20260925140000_entry_gate.sql).
     horizon: list[dict] = []
+    applications = 0
     for result in ranked:
         opp = result.get("opportunity") or {}
         opp_id = opp.get("id")
@@ -298,7 +337,7 @@ def build_roadmap(
         unlock = _unlock_grade(opp)
         eligible = grade is None or unlock <= grade
 
-        if eligible and _is_open(opp, today):
+        if eligible and _is_open(opp, today) and _worth_applying(result, applications):
             days = (date.fromisoformat(str(opp["deadline"])) - today).days
             soon = days <= 30
             title = opp.get("title", "this program")
@@ -323,6 +362,7 @@ def build_roadmap(
                 # land in a phase after one closing next year.
                 due_in_months=max(0.0, days / 30.0),
             )
+            applications += 1
         elif not eligible:
             horizon.append({
                 "title": opp.get("title", ""),
