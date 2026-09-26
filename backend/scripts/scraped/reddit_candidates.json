@@ -126718,5 +126718,47 @@
     "location_guess": "global",
     "needs_review": true,
     "review": "auto-kept"
+  },
+  {
+    "source": "r/scholarships",
+    "reddit_permalink": "https://www.reddit.com/r/scholarships/comments/1wpvyi6/has_anyone_from_ghana_successfully_received_the/",
+    "posted_utc": "2026-09-25T13:10:30+00:00",
+    "score": 1,
+    "title": "Has anyone from Ghana successfully received the DAAD Study Scholarship for STEM Disciplines?",
+    "url": "/r/DAAD/comments/1wpvy6a/has_anyone_from_ghana_successfully_received_the/",
+    "blurb": "Has anyone from Ghana successfully received the DAAD Study Scholarship for STEM Disciplines?",
+    "field_guess": "interdisciplinary",
+    "type_guess": "scholarship",
+    "audience_guess": "high_school",
+    "location_guess": "us",
+    "needs_review": true
+  },
+  {
+    "source": "r/scholarships",
+    "reddit_permalink": "https://www.reddit.com/r/scholarships/comments/1wprh41/how_hard_it_is_to_get_a_scholarship_in_thailand/",
+    "posted_utc": "2026-09-25T09:09:30+00:00",
+    "score": 1,
+    "title": "How hard it is to get a scholarship in thailand unis as a international undergraduate student",
+    "url": "/r/InternationalStudents/comments/1wprg37/how_hard_it_is_to_get_a_scholarship_in_thailand/",
+    "blurb": "How hard it is to get a scholarship in thailand unis as a international undergraduate student",
+    "field_guess": "interdisciplinary",
+    "type_guess": "scholarship",
+    "audience_guess": "high_school",
+    "location_guess": "international",
+    "needs_review": true
+  },
+  {
+    "source": "r/EngineeringStudents",
+    "reddit_permalink": "https://www.reddit.com/r/EngineeringStudents/comments/1wptpsg/at_what_point_did_engineering_school_go_from_this/",
+    "posted_utc": "2026-09-25T11:21:37+00:00",
+    "score": 1,
+    "title": "At what point did engineering school go from \"this is tough\" to \"how is this even humanly manageable\"?",
+    "url": "https://www.reddit.com/r/EngineeringStudents/comments/1wptpsg/at_what_point_did_engineering_school_go_from_this/",
+    "blurb": "Is it just me, or is there a specific semester where the workload hits an absolute vertical wall? For me, it was sophomore year\u2014jumping straight from general calculus and physics into Mechanics of Materials, Thermodynami",
+    "field_guess": "physics",
+    "type_guess": "program",
+    "audience_guess": "college",
+    "location_guess": "us",
+    "needs_review": true
   }
 ]
