@@ -63,12 +63,36 @@ Return ONLY a JSON object, no prose, with these keys:
   host: string — the organization running it, or "" if unknown
   field: one of cs, biology, math, physics, engineering, interdisciplinary, design, business, humanities, health
   type: one of program, scholarship, competition, mentorship, internship, volunteer, journal
+  entry_gate: WHO can start this, one of:
+      apply     — a student can enter or apply by themselves, unaided
+      qualify   — entry is by exam score or a prior round (you cannot apply directly)
+      advance   — you reach it by placing at an affiliated or regional event first
+      nominate  — a nomination or recommendation from someone else is required
+      teacher   — a teacher, coach or other adult registers the team or applies
+  entry_note: string — one short sentence on the FIRST thing a student must do,
+      or "" if entry_gate is apply. Only what the text supports.
   confidence: number 0..1 — your confidence it is a real, applyable opportunity
   reason: string — one short sentence
 
 Be strict. If it reads like a discussion or you are unsure it is a real \
 applyable opportunity, set is_opportunity false and confidence low. Never \
-invent details not supported by the text."""
+invent details not supported by the text.
+
+ENTRY_GATE IS NOT A FORMALITY. "Teachers apply for a $10,000 grant for a team \
+of students" is entry_gate teacher, not apply: a student who waits for a student \
+application form will wait forever. A national olympiad you reach by scoring on \
+a qualifying exam is qualify. A science fair you reach by winning a regional is \
+advance. If a competition is entered by a school team with an adult coach rather \
+than by individuals, that is teacher. Only use apply when an individual student \
+can genuinely start it on their own. When the text does not say, use apply and \
+lower your confidence."""
+
+
+# Mirrors the public.entry_gate enum in
+# supabase/migrations/20260925140000_entry_gate.sql. A value outside this set
+# would be rejected by Postgres and fail the whole import batch, so it is
+# validated here rather than discovered at insert time.
+ENTRY_GATES = frozenset({"apply", "qualify", "advance", "nominate", "teacher"})
 
 
 def verifier_enabled() -> bool:
@@ -121,6 +145,28 @@ def decide(candidate: dict, verdict: dict) -> dict | None:
     if opp_type not in TYPES:
         opp_type = candidate.get("type_guess", "program")
 
+    # ENTRY GATE. Twenty-two catalog rows were corrected by hand because they
+    # carried an application deadline for something a student cannot apply to:
+    # you qualify for USAMO by exam score, you advance to ISEF from a regional
+    # fair, and a TEACHER applies for a Lemelson-MIT InvenTeam grant. app/
+    # roadmap.py reads this column to pick the step verb, so without it the plan
+    # says "Apply to USAMO" — a step no student can take, in the one place this
+    # product promises to say what to do next.
+    #
+    # The verifier had no notion of it, so every AI-imported row took the column
+    # default. Tested against Azure gpt-5.6, it accepted the Lemelson grant as a
+    # student opportunity at 0.98 confidence — so the scraper could quietly
+    # reintroduce the whole class of defect the hand corrections removed.
+    #
+    # An unrecognised or missing value falls back to "apply", which is both the
+    # column default and the common case. That is a deliberate floor, not a
+    # guess: the prompt tells the model to lower its confidence when the text
+    # does not say, and CONFIDENCE_FLOOR then keeps the unclear ones out.
+    gate = str(verdict.get("entry_gate") or "").strip().lower()
+    if gate not in ENTRY_GATES:
+        gate = "apply"
+    note = str(verdict.get("entry_note") or "").strip()[:300]
+
     title = (verdict.get("title") or candidate.get("title") or "").strip()[:200]
     if not title:
         return None
@@ -134,6 +180,10 @@ def decide(candidate: dict, verdict: dict) -> dict | None:
         "description": candidate.get("blurb", ""),
         "deadline": candidate.get("deadline_guess"),
         "cost": 0,
+        "entry_gate": gate,
+        # Only stored when it says something. An empty note would displace the
+        # generic per-gate wording in roadmap.py, which is better than nothing.
+        **({"entry_note": note} if note and gate != "apply" else {}),
         "url": url,
         "audience": candidate.get("audience_guess", "high_school"),
         "location_scope": candidate.get("location_guess", "us"),
