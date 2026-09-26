@@ -412,7 +412,7 @@ export default function Home() {
             own website, the scraped part is screened before it lands, and
             anything that stops holding up{" "}
             <span className="text-foreground">comes down</span> rather than pad a
-            total — which is why the high-school shelf holds more than 50
+            total — which is why the high-school shelf holds more than 90
             opportunities across 9 fields instead of a directory of thousands. A
             listing you cannot act on is worse than one you never saw, because it
             costs you the season you spent planning around it. No student
