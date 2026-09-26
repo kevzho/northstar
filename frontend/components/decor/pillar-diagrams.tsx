@@ -157,8 +157,52 @@ export function RankedReasons({ className = "" }: { className?: string }) {
   );
 }
 
+/**
+ * 04 — Students on the same path. Two routes that converge on shared worlds.
+ *
+ * Deliberately NOT a pair of avatars: the product matches on path, fields and
+ * working style, never on identity, and a figure showing two people would imply
+ * a social graph the matcher does not build.
+ */
+export function SharedOrbit({ className = "" }: { className?: string }) {
+  const worlds = [46, 100, 154];
+  return (
+    <svg aria-hidden viewBox="0 0 200 92" className={className} role="presentation">
+      {/* Two travellers, separate starts, same waypoints, different arrival. */}
+      <path
+        d="M6 26 C 50 26, 70 46, 100 46 C 130 46, 150 22, 194 20"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1"
+        className="opacity-70"
+      />
+      <path
+        d="M6 70 C 50 70, 70 46, 100 46 C 130 46, 150 72, 194 74"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1"
+        strokeDasharray="3 4"
+        className="opacity-55"
+      />
+      {/* The shared middle world is larger: the overlap is the point. */}
+      {worlds.map((cx, i) => (
+        <circle
+          key={cx}
+          cx={cx}
+          cy="46"
+          r={i === 1 ? 6 : 3.5}
+          className={i === 1 ? "fill-current opacity-85" : "fill-current opacity-45"}
+        />
+      ))}
+      <rect x="2" y="23" width="6" height="6" className="fill-current opacity-70" />
+      <rect x="2" y="67" width="6" height="6" className="fill-current opacity-55" />
+    </svg>
+  );
+}
+
 export const PILLAR_FIGURES = {
   "01": TraitBars,
   "02": ThreePaths,
   "03": RankedReasons,
+  "04": SharedOrbit,
 } as const;

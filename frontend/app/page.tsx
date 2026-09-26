@@ -47,6 +47,19 @@ const waypoints = [
     description:
       "A TF-IDF match engine ranks curated STEM programs against your interests and goals, explains every score, and maps the pathways between them.",
   },
+  // 04 exists because the feature did, and nobody could find it. Team-up has
+  // matched on chosen_archetype, chosen_kind and field_scores since it shipped
+  // — the same signals that build the plan — and it was reachable only from the
+  // nav on a signed-in page. A student who never signs in never learns the
+  // product has other students in it at all, which is the part that turns a
+  // list of programmes into a reason to come back.
+  {
+    mark: "04",
+    planet: "ringed" as const,
+    title: "Students on the same path",
+    description:
+      "Team-up matches you against students whose path, fields and working style line up with yours — not by school or grade. Compare plans, split a project, or just have someone to ask. Opt-in, and you can leave at any time.",
+  },
 ];
 
 /*
@@ -246,8 +259,9 @@ export default function Home() {
               Most students never hear about the research programs,
               scholarships, and competitions they were qualified for. Northstar
               starts with how you actually think and work — twenty behavioral
-              questions — and charts a course to real, ranked STEM
-              opportunities with a reason attached to every one.
+              questions — charts a course to real, ranked STEM opportunities with
+              a reason attached to every one, and puts you next to the students
+              walking the same route.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <Button render={<Link href="/login" />} className="h-12 px-7">

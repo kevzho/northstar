@@ -14,6 +14,7 @@ import Link from "next/link";
 import { motion, useScroll, useTransform } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { JourneyMap } from "@/components/JourneyMap";
 import { Planet, Ship } from "@/components/decor/voyage";
 import { fetchMatches, fetchResources, fetchRoadmap } from "@/lib/api";
 import type { LearningResource, Roadmap } from "@/lib/api";
@@ -207,6 +208,66 @@ export default function PlanPage() {
                 weeks one and four.
               </p>
             ) : null}
+
+            {/* THE MAP, before the list.
+                One solar system per phase, one world per step, the rocket
+                parked on the first step not yet done. A student who opens this
+                page should be able to see where they are before reading
+                anything — the detailed cards below are the same steps, in the
+                same order, with the reasons attached.
+
+                Completion state is not wired yet: roadmap_steps has no
+                completed_at column, so nothing is marked done and the rocket
+                sits on step one. That is honest rather than decorative — a map
+                that claimed progress it cannot observe would be worse than one
+                that shows the start. */}
+            {roadmap && roadmap.phases.length > 0 ? (
+              <JourneyMap
+                className="mt-10 border-y border-border py-8"
+                phases={roadmap.phases.map((phase) => ({
+                  label: phase.label,
+                  steps: phase.steps.map((step) => ({
+                    step_key: step.step_key,
+                    title: step.title,
+                    category: step.category,
+                    timeframe: step.timeframe,
+                  })),
+                }))}
+              />
+            ) : null}
+
+            {/* Travelling together. The matcher behind /teamup already pairs on
+                chosen_archetype, chosen_kind and field_scores — the same signals
+                that built this plan — so the students it surfaces are on this
+                journey, not merely on this website. It was reachable only from
+                the nav, which is why nobody used it. */}
+            <section
+              aria-label="Find students on the same path"
+              className="mt-10 border border-border bg-panel-raised p-5"
+            >
+              <p className="eyebrow">Nobody does this alone</p>
+              <h2 className="h-display mt-2 text-xl text-foreground">
+                Other students are on this same path.
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm leading-7 text-muted-foreground">
+                Team-up matches on the same signals that built this plan — your
+                path, your fields, how you work — so the people it finds are
+                working through the same steps you are. Compare plans, split a
+                project, or just have someone to ask.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <Button render={<Link href="/teamup" />} className="h-10 px-5">
+                  Find students on this path
+                </Button>
+                <Button
+                  variant="outline"
+                  render={<Link href="/friends" />}
+                  className="h-10 px-5"
+                >
+                  Compare with a friend
+                </Button>
+              </div>
+            </section>
 
             {/* The voyage: three legs along a dashed course, the rocket
                 riding scroll from launch to arrival. */}
