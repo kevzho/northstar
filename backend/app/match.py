@@ -442,5 +442,27 @@ def score_opportunities(
             },
         })
 
-    results.sort(key=lambda r: r["score"]["score"], reverse=True)
+    # Primary order is the score. Ties break by soonest deadline, then title, so
+    # the order is meaningful and stable rather than whatever the catalog query
+    # happened to return.
+    #
+    # A diversity pass was tried here and removed. Recurring-competition feeds
+    # emit templated text, so nine CTFs scored an identical 0.4219 and a
+    # CS-focused 10th grader got six of them consecutively, pushing MIT THINK and
+    # the Congressional App Challenge off the top. Interleaving them with
+    # lower-scoring rows fixed the look and broke the contract: it placed 0.4186
+    # above 0.4219, and this product's whole claim is that a student can
+    # interrogate the ranking. A list where a lower number outranks a higher one
+    # for reasons the explanation does not mention is the black box we say we are
+    # not. The cause was the templated blurbs, not the ordering, and it was fixed
+    # in scripts/scrape_ctftime.py by giving each event distinguishing text.
+    def order_key(r: dict) -> tuple:
+        opp = r["opportunity"]
+        return (
+            -r["score"]["score"],
+            str(opp.get("deadline") or "9999-12-31"),
+            str(opp.get("title") or ""),
+        )
+
+    results.sort(key=order_key)
     return results

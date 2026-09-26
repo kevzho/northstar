@@ -27,6 +27,8 @@ import sys
 import traceback
 
 import embed_catalog
+import scrape_codeforces
+import scrape_ctftime
 import scrape_devpost
 import scrape_reddit
 import verify_and_import
@@ -35,6 +37,13 @@ import verify_and_import
 STAGES = (
     ("reddit", scrape_reddit, False),
     ("devpost", scrape_devpost, False),
+    # Recurring competitions, added because the shelf's real problem was never
+    # the row count — it was that four of 55 high-school rows were open at once.
+    # Annual programmes cannot fix that; their deadlines cluster in winter by
+    # nature. These two feeds always have something open, need no auth, and
+    # publish whether an unaffiliated individual may enter.
+    ("ctftime", scrape_ctftime, False),
+    ("codeforces", scrape_codeforces, False),
     ("verify+import", verify_and_import, True),
     # Embed whatever the import just added, so a new opportunity is matchable
     # by meaning the next morning. Optional: a missing embedding simply means

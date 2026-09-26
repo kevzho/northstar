@@ -31,6 +31,11 @@ from app.db import get_supabase  # noqa: E402
 from app.verifier import decide, verifier_enabled, verify_candidate  # noqa: E402
 
 POOL = pathlib.Path(__file__).parent / "scraped" / "reddit_candidates.json"
+
+# Sources that come from a structured API of real, dated events rather than from
+# somebody's post about one. These are trusted enough to skip the reddit-host
+# screen and to be verified before the open-ended pool.
+KNOWN_REAL_SOURCES = frozenset({"devpost", "ctftime", "codeforces"})
 MAX_VERIFY_PER_RUN = 60   # token/rate budget per daily run
 FAIL_FAST_AFTER = 5       # consecutive errors that mean the provider, not the data
 
@@ -65,7 +70,7 @@ def promising(candidate: dict) -> bool:
     """
     if candidate.get("review"):
         return False  # already judged (human or a prior auto run)
-    if candidate.get("source") == "devpost":
+    if candidate.get("source") in KNOWN_REAL_SOURCES:
         return True
     host = urlparse(candidate.get("url", "")).netloc.lower()
     if not host or host.endswith("redd.it") or host.endswith("reddit.com"):
@@ -76,14 +81,25 @@ def promising(candidate: dict) -> bool:
 def rank_key(candidate: dict) -> tuple:
     """Verify the likeliest opportunities first, not the top-upvoted memes.
 
-    Devpost (known-real) first, then external links whose text actually
-    reads like an opportunity — so the per-run token budget is spent where
-    it pays off.
+    Structured-feed candidates first, then external links whose text actually
+    reads like an opportunity — so the per-run token budget is spent where it
+    pays off.
+
+    KNOWN_REAL_SOURCES, not just devpost. When the ctftime and codeforces feeds
+    were added they inherited the generic tier, which sounds harmless and is
+    not: the pool holds 9,000+ reddit candidates, the per-run cap is 60, and
+    ordering inside a tier falls back to pool order, which is score-descending
+    — and a structured feed has no upvotes, so its entries sort last of all.
+    The feeds would have run daily, written candidates nobody ever verified,
+    and imported nothing, which is indistinguishable from working.
     """
-    is_devpost = candidate.get("source") == "devpost"
+    known_real = candidate.get("source") in KNOWN_REAL_SOURCES
     text = f"{candidate.get('title', '')} {candidate.get('blurb', '')}"
     has_keyword = bool(OPP_KEYWORDS.search(text))
-    return (0 if is_devpost else 1, 0 if has_keyword else 1)
+    # Soonest deadline first within a tier: a contest starting tomorrow is worth
+    # a token before one three months out.
+    deadline = candidate.get("deadline_guess") or "9999-12-31"
+    return (0 if known_real else 1, 0 if has_keyword else 1, deadline)
 
 
 def main() -> None:
