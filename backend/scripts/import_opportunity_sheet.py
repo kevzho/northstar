@@ -58,6 +58,17 @@ COUNTRIES = ("United States", "Global")
 # organisation wrote about itself, so there is less excuse for uncertainty.
 CONFIDENCE_FLOOR = 0.75
 
+# Every lead this importer has already judged, so a rerun does not pay to reach
+# the same verdict twice. Without it, batching is broken by its own refusals:
+# a refused lead is never written, so it stays in the "not in the catalog" set and
+# reappears at the head of the next batch forever, and the run never advances past
+# the first fifty.
+#
+# Also the record of what was rejected and why, which is the part worth a human's
+# time — a lead whose page no longer mentions high schoolers is a fact about the
+# programme, not noise.
+LEDGER = pathlib.Path(__file__).parent / "scraped" / "sheet_import_ledger.json"
+
 PAGE_CHARS = 7000
 USER_AGENT = "northstar-catalog/1.0 (student nonprofit; verifying a listing before publishing it)"
 
@@ -167,11 +178,28 @@ def norm_title(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", " ", value).strip()
 
 
+# Scopes whose rows cannot be verified from the URL the sheet supplies.
+#
+# The sheet's README says it plainly: "State-level rows are rounds of a national
+# program (MATHCOUNTS, Science Olympiad, TSA, HOSA, Envirothon, FIRST Tech
+# Challenge)." What it does not say is that every one of those rows carries the
+# NATIONAL url. So "TSA State Conference - Alabama" points at tsaweb.org, which
+# describes TSA and says nothing about Alabama.
+#
+# Measured in batch one: the model refused all ten TSA state rows it reached, each
+# for the same correct reason, at the cost of a page fetch and a completion each.
+# There are 369 such rows. Verifying them needs a state-specific URL the sheet
+# does not have, so they are skipped before the spend rather than after it — and
+# reported, because a state round is genuinely useful once someone finds its page.
+TEMPLATE_SCOPES = ("State", "Regional")
+
+
 def wanted(row: dict) -> bool:
     return (
         str(row.get("country") or "") in COUNTRIES
         and any(t in str(row.get("level") or "") for t in AUDIENCE_TOKENS)
         and bool(str(row.get("website") or "").strip())
+        and str(row.get("scope") or "") not in TEMPLATE_SCOPES
     )
 
 
@@ -211,6 +239,16 @@ def extract(name: str, url: str, text: str, hint: str = "") -> dict | None:
         return json.loads(raw[start : end + 1])
     except json.JSONDecodeError:
         return None
+
+
+def note(ledger: dict, lead: dict, outcome: str, detail: str) -> None:
+    ledger[str(lead.get("id"))] = {
+        "name": str(lead.get("name") or "")[:120],
+        "url": str(lead.get("website") or "")[:300],
+        "outcome": outcome,
+        "detail": detail,
+        "at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+    }
 
 
 def to_row(lead: dict, verdict: dict, stamp: str) -> dict | None:
@@ -294,12 +332,28 @@ def to_row(lead: dict, verdict: dict, stamp: str) -> dict | None:
     return row
 
 
+def load_ledger() -> dict[str, dict]:
+    try:
+        return json.loads(LEDGER.read_text())
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+
+
+def save_ledger(ledger: dict[str, dict]) -> None:
+    LEDGER.parent.mkdir(parents=True, exist_ok=True)
+    LEDGER.write_text(json.dumps(ledger, indent=2, sort_keys=True) + "\n")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("path")
     parser.add_argument("--sheet", default=None)
     parser.add_argument("--limit", type=int, default=10)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument(
+        "--retry-refused", action="store_true",
+        help="re-judge leads the ledger already refused (after a prompt change)",
+    )
     parser.add_argument("--min-confidence", default="", help="High to take only those")
     parser.add_argument(
         "--include-known-hosts",
@@ -308,7 +362,18 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    leads = [r for r in read_rows(args.path, args.sheet) if wanted(r)]
+    all_rows = read_rows(args.path, args.sheet)
+    leads = [r for r in all_rows if wanted(r)]
+    skipped_template = [
+        r for r in all_rows
+        if str(r.get("scope") or "") in TEMPLATE_SCOPES
+        and str(r.get("country") or "") in COUNTRIES
+        and any(t in str(r.get("level") or "") for t in AUDIENCE_TOKENS)
+        and str(r.get("website") or "").strip()
+    ]
+    if skipped_template:
+        print(f"  skipped {len(skipped_template)} state/regional rows: they carry "
+              f"the national URL, which cannot confirm a local round")
     if args.min_confidence:
         leads = [r for r in leads if r.get("confidence") == args.min_confidence]
 
@@ -335,6 +400,16 @@ def main() -> int:
     # They are held back by default and reported, because deciding between "the
     # generic row is redundant" and "this is a different programme at the same
     # university" is a judgement, not a rule.
+    # Drop what has already been judged. Keeps a batch moving forward.
+    ledger = load_ledger()
+    if not args.retry_refused:
+        before = len(fresh)
+        fresh = [r for r in fresh if str(r.get("id")) not in ledger]
+        if before != len(fresh):
+            print(f"  ledger: skipping {before - len(fresh)} already judged "
+                  f"({sum(1 for v in ledger.values() if v['outcome'] != 'written')} "
+                  f"of them previously refused or unreadable)")
+
     collide = [r for r in fresh if host_of(r.get("website")) in seen_hosts]
     if not args.include_known_hosts:
         fresh = [r for r in fresh if host_of(r.get("website")) not in seen_hosts]
@@ -358,6 +433,7 @@ def main() -> int:
         if not text:
             print(f"  -- unreadable  {name:54} {url[:44]}")
             unreadable += 1
+            note(ledger, lead, "unreadable", "page could not be fetched or held no text")
             continue
         hint = " / ".join(
             v for v in (lead.get("typical_deadline"), lead.get("typical_event_timing"))
@@ -367,11 +443,13 @@ def main() -> int:
         if not verdict:
             print(f"  -- no verdict  {name:54}")
             unreadable += 1
+            note(ledger, lead, "unreadable", "model returned no usable JSON")
             continue
         row = to_row(lead, verdict, stamp)
         if not row:
             print(f"  ✗  refused    {name:54} {str(verdict.get('reason'))[:56]}")
             refused += 1
+            note(ledger, lead, "refused", str(verdict.get("reason") or "")[:300])
             continue
         print(f"  +  {name:54} g{row['grade_min']}-{row['grade_max']} "
               f"{row['entry_gate']:8} {row['opportunity_field']:14} "
@@ -380,8 +458,11 @@ def main() -> int:
             free += 1
         if not args.dry_run:
             sb.table("opportunities").upsert(row, on_conflict="title,host").execute()
+            note(ledger, lead, "written", row["entry_gate"])
         written += 1
 
+    if not args.dry_run:
+        save_ledger(ledger)
     print(f"\n  {'would write' if args.dry_run else 'wrote'}: {written}   "
           f"refused: {refused}   unreadable: {unreadable}")
     if written:

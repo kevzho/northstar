@@ -1,0 +1,380 @@
+{
+  "STEM-0001": {
+    "at": "2026-09-27T21:29:52+00:00",
+    "detail": "advance",
+    "name": "International Mathematical Olympiad (IMO)",
+    "outcome": "written",
+    "url": "https://www.imo-official.org"
+  },
+  "STEM-0002": {
+    "at": "2026-09-27T21:29:55+00:00",
+    "detail": "nominate",
+    "name": "European Girls' Mathematical Olympiad (EGMO)",
+    "outcome": "written",
+    "url": "https://www.egmo.org"
+  },
+  "STEM-0039": {
+    "at": "2026-09-27T21:29:57+00:00",
+    "detail": "qualify",
+    "name": "International Biology Olympiad (IBO)",
+    "outcome": "written",
+    "url": "https://www.ibo-info.org"
+  },
+  "STEM-0041": {
+    "at": "2026-09-27T21:29:57+00:00",
+    "detail": "page could not be fetched or held no text",
+    "name": "iGEM Grand Jamboree",
+    "outcome": "unreadable",
+    "url": "https://igem.org"
+  },
+  "STEM-0046": {
+    "at": "2026-09-27T21:29:59+00:00",
+    "detail": "qualify",
+    "name": "International Olympiad in Informatics (IOI)",
+    "outcome": "written",
+    "url": "https://ioinformatics.org"
+  },
+  "STEM-0053": {
+    "at": "2026-09-27T21:30:03+00:00",
+    "detail": "qualify",
+    "name": "International Olympiad in Artificial Intelligence (IOAI)",
+    "outcome": "written",
+    "url": "https://ioai-official.org"
+  },
+  "STEM-0056": {
+    "at": "2026-09-27T21:30:06+00:00",
+    "detail": "apply",
+    "name": "Advent of Code",
+    "outcome": "written",
+    "url": "https://adventofcode.com"
+  },
+  "STEM-0057": {
+    "at": "2026-09-27T21:30:09+00:00",
+    "detail": "The page text contains only the single word 'Bebras' with no programme details, eligibility, dates, or costs.",
+    "name": "Bebras International Challenge on Informatics and Computational Thinking",
+    "outcome": "refused",
+    "url": "https://www.bebras.org"
+  },
+  "STEM-0058": {
+    "at": "2026-09-27T21:30:11+00:00",
+    "detail": "The page is a real, running competitions hub, but the provided text is only a title with no eligibility, grade, deadline, or cost details.",
+    "name": "Kaggle Competitions",
+    "outcome": "refused",
+    "url": "https://www.kaggle.com/competitions"
+  },
+  "STEM-0060": {
+    "at": "2026-09-27T21:30:11+00:00",
+    "detail": "page could not be fetched or held no text",
+    "name": "NASA International Space Apps Challenge",
+    "outcome": "unreadable",
+    "url": "https://www.spaceappschallenge.org"
+  },
+  "STEM-0061": {
+    "at": "2026-09-27T21:30:14+00:00",
+    "detail": "apply",
+    "name": "AtCoder Contests",
+    "outcome": "written",
+    "url": "https://atcoder.jp"
+  },
+  "STEM-0062": {
+    "at": "2026-09-27T21:33:29+00:00",
+    "detail": "apply",
+    "name": "Codeforces Rounds",
+    "outcome": "written",
+    "url": "https://codeforces.com"
+  },
+  "STEM-0069": {
+    "at": "2026-09-27T21:30:16+00:00",
+    "detail": "The page is raw CMS/translation configuration JSON from a staging domain, not a programme description.",
+    "name": "Technovation Girls",
+    "outcome": "refused",
+    "url": "https://technovationchallenge.org"
+  },
+  "STEM-0071": {
+    "at": "2026-09-27T21:30:18+00:00",
+    "detail": "qualify",
+    "name": "International Linguistics Olympiad (IOL)",
+    "outcome": "written",
+    "url": "https://ioling.org"
+  },
+  "STEM-0075": {
+    "at": "2026-09-27T21:30:20+00:00",
+    "detail": "apply",
+    "name": "Breakthrough Junior Challenge",
+    "outcome": "written",
+    "url": "https://breakthroughjuniorchallenge.org"
+  },
+  "STEM-0088": {
+    "at": "2026-09-27T21:33:29+00:00",
+    "detail": "page could not be fetched or held no text",
+    "name": "VEX V5 Robotics Competition",
+    "outcome": "unreadable",
+    "url": "https://www.roboticseducation.org"
+  },
+  "STEM-0110": {
+    "at": "2026-09-27T21:30:23+00:00",
+    "detail": "The page confirms HiMCM exists for high school teams but gives no eligibility grades, deadline, cost, or registration details.",
+    "name": "High School Mathematical Contest in Modeling (HiMCM)",
+    "outcome": "refused",
+    "url": "https://www.comap.com"
+  },
+  "STEM-0113": {
+    "at": "2026-09-27T21:33:31+00:00",
+    "detail": "teacher",
+    "name": "AMC 10",
+    "outcome": "written",
+    "url": "https://maa.org/student-programs/amc/"
+  },
+  "STEM-0114": {
+    "at": "2026-09-27T21:33:34+00:00",
+    "detail": "teacher",
+    "name": "AMC 12",
+    "outcome": "written",
+    "url": "https://maa.org/student-programs/amc/"
+  },
+  "STEM-0115": {
+    "at": "2026-09-27T21:33:35+00:00",
+    "detail": "teacher",
+    "name": "American Invitational Mathematics Examination (AIME)",
+    "outcome": "written",
+    "url": "https://maa.org/student-programs/amc/"
+  },
+  "STEM-0117": {
+    "at": "2026-09-27T21:33:37+00:00",
+    "detail": "teacher",
+    "name": "USA Junior Mathematical Olympiad (USAJMO)",
+    "outcome": "written",
+    "url": "https://maa.org/student-programs/amc/"
+  },
+  "STEM-0118": {
+    "at": "2026-09-27T21:30:27+00:00",
+    "detail": "apply",
+    "name": "USA Mathematical Talent Search (USAMTS)",
+    "outcome": "written",
+    "url": "https://www.usamts.org"
+  },
+  "STEM-0121": {
+    "at": "2026-09-27T21:30:29+00:00",
+    "detail": "apply",
+    "name": "Math Kangaroo USA",
+    "outcome": "written",
+    "url": "https://mathkangaroo.org"
+  },
+  "STEM-0122": {
+    "at": "2026-09-27T21:30:29+00:00",
+    "detail": "page could not be fetched or held no text",
+    "name": "American Regions Mathematics League (ARML)",
+    "outcome": "unreadable",
+    "url": "https://www.arml.com"
+  },
+  "STEM-0123": {
+    "at": "2026-09-27T21:30:30+00:00",
+    "detail": "page could not be fetched or held no text",
+    "name": "ARML Local",
+    "outcome": "unreadable",
+    "url": "https://www.arml.com"
+  },
+  "STEM-0124": {
+    "at": "2026-09-27T21:30:30+00:00",
+    "detail": "page could not be fetched or held no text",
+    "name": "ARML Power Contest",
+    "outcome": "unreadable",
+    "url": "https://www.arml.com"
+  },
+  "STEM-0125": {
+    "at": "2026-09-27T21:30:33+00:00",
+    "detail": "apply",
+    "name": "HMMT February",
+    "outcome": "written",
+    "url": "https://www.hmmt.org"
+  },
+  "STEM-0126": {
+    "at": "2026-09-27T21:30:36+00:00",
+    "detail": "apply",
+    "name": "HMMT November",
+    "outcome": "written",
+    "url": "https://www.hmmt.org"
+  },
+  "STEM-0149": {
+    "at": "2026-09-27T21:30:39+00:00",
+    "detail": "The page describes NSBE's real ongoing programs and pre-collegiate membership, but does not mention Try-Math-A-Lon or give eligibility grades, deadlines, or costs.",
+    "name": "NSBE Try-Math-A-Lon",
+    "outcome": "refused",
+    "url": "https://www.nsbe.org"
+  },
+  "STEM-0159": {
+    "at": "2026-09-27T21:33:39+00:00",
+    "detail": "The page is AAPT's general homepage and contains no information about the PhysicsBowl programme itself.",
+    "name": "AAPT PhysicsBowl",
+    "outcome": "refused",
+    "url": "https://www.aapt.org"
+  },
+  "STEM-0160": {
+    "at": "2026-09-27T21:33:41+00:00",
+    "detail": "The page is AAPT's general homepage and contains no information about the High School Physics Photo Contest.",
+    "name": "AAPT High School Physics Photo Contest",
+    "outcome": "refused",
+    "url": "https://www.aapt.org"
+  },
+  "STEM-0161": {
+    "at": "2026-09-27T21:30:40+00:00",
+    "detail": "teacher",
+    "name": "USA Astronomy and Astrophysics Organization Olympiad (USAAAO)",
+    "outcome": "written",
+    "url": "https://usaaao.org"
+  },
+  "STEM-0166": {
+    "at": "2026-09-27T21:33:41+00:00",
+    "detail": "page could not be fetched or held no text",
+    "name": "ACS National Chemistry Week Illustrated Poem Contest",
+    "outcome": "unreadable",
+    "url": "https://www.acs.org"
+  },
+  "STEM-0176": {
+    "at": "2026-09-27T21:30:42+00:00",
+    "detail": "apply",
+    "name": "USA Computing Olympiad (USACO)",
+    "outcome": "written",
+    "url": "https://usaco.org"
+  },
+  "STEM-0177": {
+    "at": "2026-09-27T21:30:44+00:00",
+    "detail": "teacher",
+    "name": "American Computer Science League (ACSL)",
+    "outcome": "written",
+    "url": "https://www.acsl.org"
+  },
+  "STEM-0178": {
+    "at": "2026-09-27T21:30:47+00:00",
+    "detail": "teacher",
+    "name": "CyberPatriot National Youth Cyber Defense Competition",
+    "outcome": "written",
+    "url": "https://www.uscyberpatriot.org"
+  },
+  "STEM-0179": {
+    "at": "2026-09-27T21:30:49+00:00",
+    "detail": "The page confirms the programme continues as CyLab Security Academy and is free, but gives no eligibility grades, dates, or entry details.",
+    "name": "picoCTF",
+    "outcome": "refused",
+    "url": "https://picoctf.org"
+  },
+  "STEM-0181": {
+    "at": "2026-09-27T21:30:50+00:00",
+    "detail": "The page describes an active awards programme open to high school students, but gives no grade range, deadline, or cost details.",
+    "name": "NCWIT Award for Aspirations in Computing",
+    "outcome": "refused",
+    "url": "https://www.aspirations.org"
+  },
+  "STEM-0197": {
+    "at": "2026-09-27T21:30:53+00:00",
+    "detail": "apply",
+    "name": "Junior Science and Humanities Symposium (JSHS) \u2013 National",
+    "outcome": "written",
+    "url": "https://jshs.org"
+  },
+  "STEM-0206": {
+    "at": "2026-09-27T21:30:55+00:00",
+    "detail": "teacher",
+    "name": "National Science Bowl",
+    "outcome": "written",
+    "url": "https://science.osti.gov/wdts/nsb"
+  },
+  "STEM-0232": {
+    "at": "2026-09-27T21:30:57+00:00",
+    "detail": "The page describes TSA and its middle/high school competitions but gives no eligibility grades, dates, or costs, and the TEAMS competition itself is not mentioned.",
+    "name": "TEAMS Competition",
+    "outcome": "refused",
+    "url": "https://tsaweb.org"
+  },
+  "STEM-0233": {
+    "at": "2026-09-27T21:30:59+00:00",
+    "detail": "The page confirms TSA runs middle and high school competitions but gives no eligibility grades, dates, or costs.",
+    "name": "TSA National Conference",
+    "outcome": "refused",
+    "url": "https://tsaweb.org"
+  },
+  "STEM-0234": {
+    "at": "2026-09-27T21:31:01+00:00",
+    "detail": "The page is HOSA's real national site describing its mission, competitions and conferences, but it does not state eligibility grades, deadlines, or costs.",
+    "name": "HOSA International Leadership Conference",
+    "outcome": "refused",
+    "url": "https://hosa.org"
+  },
+  "STEM-0258": {
+    "at": "2026-09-27T21:31:01+00:00",
+    "detail": "page could not be fetched or held no text",
+    "name": "LeetCode Weekly & Biweekly Contests",
+    "outcome": "unreadable",
+    "url": "https://leetcode.com/contest/"
+  },
+  "STEM-0575": {
+    "at": "2026-09-27T21:31:04+00:00",
+    "detail": "The page is TSA's real national site describing middle and high school competitions, but it gives no eligibility grades, dates, or costs, and the Alabama state conference details are not on this page.",
+    "name": "TSA State Conference \u2013 Alabama",
+    "outcome": "refused",
+    "url": "https://tsaweb.org"
+  },
+  "STEM-0576": {
+    "at": "2026-09-27T21:31:05+00:00",
+    "detail": "The page is TSA's real national site describing middle and high school competitions, but it gives no eligibility grades, dates, or costs.",
+    "name": "TSA State Conference \u2013 Alaska",
+    "outcome": "refused",
+    "url": "https://tsaweb.org"
+  },
+  "STEM-0577": {
+    "at": "2026-09-27T21:31:08+00:00",
+    "detail": "The page is TSA's real national site describing middle and high school competitions, but it gives no eligibility grades, deadlines, or costs, and the Arizona state conference details are not on this page.",
+    "name": "TSA State Conference \u2013 Arizona",
+    "outcome": "refused",
+    "url": "https://tsaweb.org"
+  },
+  "STEM-0578": {
+    "at": "2026-09-27T21:31:10+00:00",
+    "detail": "The page is TSA's real national site describing middle and high school competitions, but it gives no eligibility grades, dates, or costs, and the specific Arkansas state conference page is not shown.",
+    "name": "TSA State Conference \u2013 Arkansas",
+    "outcome": "refused",
+    "url": "https://tsaweb.org"
+  },
+  "STEM-0579": {
+    "at": "2026-09-27T21:31:11+00:00",
+    "detail": "The page describes TSA and its middle/high school competitions but gives no eligibility grades, dates, or costs, and the specific California state conference page is not shown.",
+    "name": "TSA State Conference \u2013 California",
+    "outcome": "refused",
+    "url": "https://tsaweb.org"
+  },
+  "STEM-0580": {
+    "at": "2026-09-27T21:31:13+00:00",
+    "detail": "The page confirms TSA runs middle and high school competitions and that chapters are started by adults, but gives no dates, costs, or grade ranges.",
+    "name": "TSA State Conference \u2013 Colorado",
+    "outcome": "refused",
+    "url": "https://tsaweb.org"
+  },
+  "STEM-0581": {
+    "at": "2026-09-27T21:31:15+00:00",
+    "detail": "The page is TSA's real national site describing middle and high school competitions, but it gives no eligibility grades, dates, or costs for the Connecticut state conference.",
+    "name": "TSA State Conference \u2013 Connecticut",
+    "outcome": "refused",
+    "url": "https://tsaweb.org"
+  },
+  "STEM-0582": {
+    "at": "2026-09-27T21:31:17+00:00",
+    "detail": "The page is TSA's real national site describing middle and high school competitions, but it gives no eligibility grades, deadlines, or costs, and the specific Delaware state conference page is not shown.",
+    "name": "TSA State Conference \u2013 Delaware",
+    "outcome": "refused",
+    "url": "https://tsaweb.org"
+  },
+  "STEM-0583": {
+    "at": "2026-09-27T21:31:19+00:00",
+    "detail": "The page is the real TSA site and mentions high school competitions and starting a chapter, but gives no eligibility grades, deadlines, or costs.",
+    "name": "TSA State Conference \u2013 Florida",
+    "outcome": "refused",
+    "url": "https://tsaweb.org"
+  },
+  "STEM-0584": {
+    "at": "2026-09-27T21:31:20+00:00",
+    "detail": "The page confirms TSA runs middle and high school competitions but gives no eligibility grades, deadlines, or costs, and the specific Georgia state conference page is not shown.",
+    "name": "TSA State Conference \u2013 Georgia",
+    "outcome": "refused",
+    "url": "https://tsaweb.org"
+  }
+}
