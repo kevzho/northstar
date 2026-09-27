@@ -145,3 +145,88 @@ def test_the_real_sheets_parse_if_present() -> None:
     rows = read_rows(str(real), "Competitions")
     assert len(rows) == 1000
     assert {"name", "website", "level", "country", "confidence"} <= set(rows[0])
+
+
+# --- sheet timing must never become a deadline ---------------------------
+#
+# stem_database_2000_with_timing.xlsx adds typical_deadline and
+# typical_event_timing, and its README grades them: "Known typical annual cycle"
+# (the programme's usual month, from past cycles), "Estimate based on program
+# type" (a placeholder), "Not known". It then says plainly: "None of these are
+# verified dates for the 2026-27 cycle."
+#
+# opportunities.deadline is a real date that app/roadmap.py renders as "Closes
+# 2026-12-15 - 79 days away. Start today." Deriving that from "~mid-December"
+# would put an invented date in front of a student and let expire_opportunities
+# retire the row when the invented date passed. recurrence_month is the column
+# for an unverified usual month, and recurrence_verified_at stays NULL because
+# that is the licence for a date claim and no human has given it.
+
+import sys as _sys
+_sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "scripts"))
+
+
+def test_only_a_known_cycle_yields_a_month() -> None:
+    from import_opportunity_sheet import recurrence_month_of
+
+    known = "Known typical annual cycle — confirm this year's exact date"
+    assert recurrence_month_of(
+        {"timing_basis": known, "typical_deadline": "Application ~mid-December"}
+    ) == 12
+    # An estimate about a CATEGORY is not a claim about this programme.
+    assert recurrence_month_of(
+        {"timing_basis": "Estimate based on program type — placeholder",
+         "typical_deadline": "Application ~mid-December"}
+    ) is None
+    assert recurrence_month_of(
+        {"timing_basis": "Not known — check organizer",
+         "typical_deadline": "Application ~mid-December"}
+    ) is None
+
+
+def test_prose_without_a_month_yields_nothing() -> None:
+    """886 of the 1,000 competition rows read "Via national team selection" —
+    which is entry-gate information, not timing, and must not be coerced."""
+    from import_opportunity_sheet import recurrence_month_of
+
+    known = "Known typical annual cycle"
+    for prose in ("Via national team selection", "Rolling / open enrollment",
+                  "Application ~spring", "Via national coordinator", ""):
+        assert recurrence_month_of(
+            {"timing_basis": known, "typical_deadline": prose}
+        ) is None, f"{prose!r} should not produce a month"
+
+
+def test_the_first_month_named_wins() -> None:
+    """"Registration November, event March" is about closing in November."""
+    from import_opportunity_sheet import recurrence_month_of
+
+    assert recurrence_month_of({
+        "timing_basis": "Known typical annual cycle",
+        "typical_deadline": "Registration closes November, contest held March",
+    }) == 11
+
+
+def test_the_importer_never_writes_deadline_from_the_sheet() -> None:
+    """The guard that matters. to_row must take its deadline only from the page
+    reading, and must refuse a past one even then."""
+    import inspect
+
+    import import_opportunity_sheet as mod
+
+    src = inspect.getsource(mod.to_row)
+    assert 'verdict.get("deadline")' in src, "deadline must come from the page verdict"
+    assert "typical_deadline" not in src, (
+        "to_row references the sheet's unverified timing prose for the deadline "
+        "column — that is a fabricated date in front of a student"
+    )
+    # Assignment, not mention: to_row carries a comment explaining why this
+    # column is deliberately left alone, and a test that banned the words would
+    # punish the explanation rather than the behaviour.
+    assert 'row["recurrence_verified_at"]' not in src, (
+        "recurrence_verified_at is being written: it is the licence for a "
+        "forward-looking date claim, and no human has checked these pages"
+    )
+    assert 'row["recurrence_month"]' in src, (
+        "the sheet's usual month should still be recorded, just unverified"
+    )

@@ -118,6 +118,45 @@ def page_text(url: str) -> str | None:
     return text[:PAGE_CHARS] or None
 
 
+_MONTHS = {m: i + 1 for i, m in enumerate(
+    "january february march april may june july august september october "
+    "november december".split()
+)}
+_MONTHS.update({m[:3]: i for m, i in list(_MONTHS.items())})
+
+# Only this basis licenses a forward-looking claim. The sheet's README grades
+# its own timing: "Known typical annual cycle" (the programme's usual month,
+# from past cycles), "Estimate based on program type" (a placeholder), and "Not
+# known". The middle one is a guess about a category, not about this programme.
+KNOWN_CYCLE = "known typical annual cycle"
+
+
+def recurrence_month_of(row: dict) -> int | None:
+    """A month for opportunities.recurrence_month, or None.
+
+    WHY NOT deadline. `typical_deadline` is prose — "Application ~mid-December",
+    "Via national team selection", "Rolling / open enrollment" — and the sheet's
+    README is explicit: "None of these are verified dates for the 2026-27 cycle.
+    Deadlines shift year to year and some programs change format or pause."
+
+    opportunities.deadline is a real date that app/roadmap.py turns into "Closes
+    2026-12-15 - 79 days away. Start today." Deriving that from "~mid-December"
+    would put a fabricated date in front of a student and let
+    expire_opportunities retire the row when the invented date passed.
+
+    recurrence_month is the column for exactly this: 20260923120000 defines it as
+    "may we make a claim about when this opens NEXT year?" — and pairs it with
+    recurrence_verified_at, which stays NULL here because no human checked the
+    programme's site. NULL there means the UI says "no confirmed window" instead
+    of projecting a date, which is the truth about this data.
+    """
+    if KNOWN_CYCLE not in str(row.get("timing_basis") or "").lower():
+        return None
+    text = str(row.get("typical_deadline") or "").lower()
+    hits = [(text.find(k), v) for k, v in _MONTHS.items() if re.search(rf"\b{k}", text)]
+    return min(hits)[1] if hits else None
+
+
 def host_of(url: str) -> str:
     match = re.match(r"https?://(?:www\.)?([^/]+)", str(url or ""))
     return match.group(1).lower() if match else ""
@@ -136,7 +175,7 @@ def wanted(row: dict) -> bool:
     )
 
 
-def extract(name: str, url: str, text: str) -> dict | None:
+def extract(name: str, url: str, text: str, hint: str = "") -> dict | None:
     try:
         result = chat(
             base=settings.verifier_provider[0],
@@ -144,7 +183,17 @@ def extract(name: str, url: str, text: str) -> dict | None:
             model=settings.verifier_provider[2],
             messages=[
                 {"role": "system", "content": EXTRACT_PROMPT},
-                {"role": "user", "content": f"Programme: {name}\nURL: {url}\n\nPage text:\n{text}"},
+                {"role": "user", "content": (
+                    f"Programme: {name}\nURL: {url}\n"
+                    # A hint, not an answer. The sheet's own timing is
+                    # unverified prose; the page is what decides. Given to the
+                    # model because "applications usually close in December" makes
+                    # it far likelier to find and trust a real December date on a
+                    # long page than to skip past it.
+                    + (f"Curator's note on its usual cycle (UNVERIFIED, do not "
+                       f"copy as a date): {hint}\n" if hint else "")
+                    + f"\nPage text:\n{text}"
+                )},
             ],
             max_tokens=1500,
             temperature=0.0,
@@ -235,6 +284,13 @@ def to_row(lead: dict, verdict: dict, stamp: str) -> dict | None:
     }
     if note and gate != "apply":
         row["entry_note"] = note
+
+    # The sheet's typical month, when its own basis says "known annual cycle".
+    # recurrence_verified_at is deliberately NOT set: nobody has confirmed this
+    # programme's site, and that column is the licence for a date claim.
+    month = recurrence_month_of(lead)
+    if month:
+        row["recurrence_month"] = month
     return row
 
 
@@ -303,7 +359,11 @@ def main() -> int:
             print(f"  -- unreadable  {name:54} {url[:44]}")
             unreadable += 1
             continue
-        verdict = extract(str(lead.get("name")), url, text)
+        hint = " / ".join(
+            v for v in (lead.get("typical_deadline"), lead.get("typical_event_timing"))
+            if str(v or "").strip()
+        )
+        verdict = extract(str(lead.get("name")), url, text, hint)
         if not verdict:
             print(f"  -- no verdict  {name:54}")
             unreadable += 1
