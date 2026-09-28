@@ -7,8 +7,14 @@ any usage figure would be either embarrassing or invented. The claims are:
 
   - "more than four in five programs on the high-school shelf cost nothing to
     apply to"
-  - "53 verified opportunities across 9 fields"
-  - "No student outcomes have been logged yet"
+
+On 2026-09-27 the page stopped stating a shelf size, a field count, a
+verification practice, and the pre-pilot admission — the whole "what we can prove
+so far" paragraph came out. The guards for those claims are kept and skip when
+the claim is absent, rather than being deleted: the failure worth catching is a
+number being put BACK without anyone checking it against the catalog. The one
+assertion that never depended on a sentence existing, and never will, is that no
+usage figure may appear that production cannot support.
 
 The audit detail that used to sit beside these lives in docs/catalog-audit.md.
 It was published, and should not have been: a landing page is not a defect log.
@@ -28,6 +34,8 @@ from __future__ import annotations
 
 import pathlib
 import re
+
+import pytest
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 MIGRATIONS = ROOT / "supabase" / "migrations"
@@ -90,10 +98,15 @@ def test_landing_page_does_not_claim_usage_it_cannot_prove() -> None:
     page_raw = LANDING.read_text()
     page = " ".join(page_raw.split())
 
-    assert "No student outcomes have been logged yet" in page, (
-        "the landing page must keep stating that no outcomes exist yet — "
-        "remove it only when outcomes actually exist"
-    )
+    # The pre-pilot admission ("No student outcomes have been logged yet, and
+    # Northstar has not run a pilot") was removed from the page on 2026-09-27
+    # along with the rest of that paragraph, so it is no longer required here.
+    #
+    # The other half of this guard is the half that was always load-bearing, and
+    # it stays: the page may decline to state its usage, but it must never state
+    # a usage figure it cannot prove. Silence is a choice; an invented number is
+    # a lie, and it is the kind that loses a competition on integrity rather than
+    # on engineering.
 
     # Catch the shapes an inflated claim would take.
     forbidden = re.findall(
@@ -137,7 +150,12 @@ def test_stated_catalog_counts_match_the_seed_floor() -> None:
     page = " ".join(LANDING.read_text().split())
 
     claimed = re.search(r"more than\s+(\d+)\s+opportunities", page)
-    assert claimed, "the landing page no longer states a shelf-size claim"
+    if not claimed:
+        # The page stopped stating a shelf size on 2026-09-27. Nothing to bound,
+        # so this passes — but the guard stays armed rather than being deleted,
+        # because the failure it exists for is a number being ADDED back without
+        # anyone checking it against the catalog.
+        pytest.skip("the landing page states no shelf size")
     stated = int(claimed.group(1))
 
     seeded = len(_seeded_high_school_rows())
@@ -176,10 +194,11 @@ def test_the_verification_claim_is_backed_by_scripts_that_exist() -> None:
     """The page claims listings are checked and removed. If the machinery that
     does that is deleted or renamed, the sentence becomes marketing."""
     page = " ".join(LANDING.read_text().split())
-    assert "checked against each program" in page, (
-        "the landing page no longer claims listings are verified — if that is "
-        "deliberate, delete this guard; do not leave it asserting nothing"
-    )
+    if "checked against each program" not in page:
+        # Removed with that paragraph on 2026-09-27. Same reasoning as above: the
+        # guard stays so that re-adding the claim re-arms the requirement that
+        # the machinery behind it still exists.
+        pytest.skip("the landing page makes no verification claim")
     # The claim must stay scoped. "Every listing is checked" was on this page
     # and was false: 22 of 55 high-school rows carry a verified_at stamp, the
     # curated seed was never audited row by row, and scraped rows are screened

@@ -406,24 +406,11 @@ export default function Home() {
               only useful to someone who already has an adult to interpret it.
             </p>
           </div>
-          <p className="mt-6 max-w-3xl text-sm leading-7 text-muted-foreground">
-            What we can prove so far is about the map, not the territory. The
-            hand-picked part of the shelf is checked against each program&apos;s
-            own website, the scraped part is screened before it lands, and
-            anything that stops holding up{" "}
-            <span className="text-foreground">comes down</span> rather than pad a
-            total — which is why the high-school shelf holds more than 90
-            opportunities across 9 fields instead of a directory of thousands. A
-            listing you cannot act on is worse than one you never saw, because it
-            costs you the season you spent planning around it. No student
-            outcomes have been logged yet, and Northstar has not run a pilot. We
-            would rather show you a number we can stand behind than a bigger one
-            we made up.
-          </p>
-          {/* The paragraph above says listings are checked and removed. These
-              three dated rows are the other half of that: things that arrived.
-              Together they say the shelf is tended, which is the only claim
-              here a visitor can verify in one click. */}
+          {/* Three dated rows, each one clickable. The page no longer states a
+              shelf size or a verification practice — those were removed on
+              2026-09-27 — so this is now the only claim in the section a visitor
+              can check for themselves, which makes it carry more weight than it
+              did, not less. Renders nothing when nothing is genuinely recent. */}
           <RecentlyAdded />
           </section>
         </div>

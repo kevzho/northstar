@@ -6,6 +6,7 @@ Architecture reference. **These files ship with the repo** — unlike `docs/`, t
 |---|---|---|
 | [PLAIN-ENGLISH.md](PLAIN-ENGLISH.md) | Non-engineers, judges, a demo walkthrough | You need to explain what Northstar is made of without assuming a CS background |
 | [TECHNICAL.md](TECHNICAL.md) | You, six months from now | You need exact modules, scoring formulas, env vars, cron schedules, or deploy topology |
+| [SHEET-SPEC.md](SHEET-SPEC.md) | Whoever maintains the curated spreadsheet | You are about to export a new version of the opportunity sheet and want it to actually import |
 | [CATALOG-AUDIT.md](CATALOG-AUDIT.md) | You, a judge, a skeptic | You need the evidence behind the landing page's claim that listings are verified — what was wrong, what was removed, and why the shelf is 53 rows and not thousands |
 
 Both were written against commit `3746d27` (2026-08-24) by reading the tree directly, and refreshed 2026-09-22 after a security and consistency pass.

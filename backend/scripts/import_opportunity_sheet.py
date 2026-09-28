@@ -24,6 +24,10 @@ machine so it can run over hundreds of rows instead of thirty-five.
 Rows that fail are reported, not silently dropped: a lead whose page no longer
 mentions high schoolers is worth knowing about.
 
+The column contract, and what the last run's 24-of-2000 conversion rate was
+caused by, are in northstar-docs/SHEET-SPEC.md. Read that before changing the
+filters here — most of the loss is in the sheet, not in this script.
+
 Usage:
     cd backend && .venv/bin/python scripts/import_opportunity_sheet.py \
         ~/Downloads/stem_competitions_1000.xlsx --sheet Competitions --limit 10 --dry-run
