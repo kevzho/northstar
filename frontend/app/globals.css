@@ -228,6 +228,40 @@ button:disabled {
     transform: translateX(-50%);
   }
 
+  /*
+   * A sticky bar that lives inside the centred column but has to paint across
+   * the whole viewport.
+   *
+   * `.bleed-x` cannot do this job. It sets `position: relative`, which would
+   * cancel the `position: sticky` that makes the bar a bar, so the bleed moves
+   * to a pseudo-element instead: the bar stays sticky and its contents stay
+   * aligned with the column, while only the background escapes to the edges.
+   *
+   * Why it is needed at all: over the night page the bar and the page are the
+   * same colour, so a background stopping at the column edge is invisible and
+   * the bug hides. Scroll the bar over a `.panel-paper` band and it stops
+   * hiding — the bar becomes a dark rectangle floating in the middle of the
+   * viewport with paper either side of it.
+   *
+   * The bar already carries `z-40`, so it forms a stacking context; that is
+   * what keeps `z-index: -1` underneath its own contents while still painting
+   * above the page behind it. 100vw counts the scrollbar, so this relies on
+   * `.bleed-root` clipping the overflow, exactly as `.bleed-x` does.
+   */
+  .bleed-bg::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 100vw;
+    transform: translateX(-50%);
+    z-index: -1;
+    background-color: color-mix(in srgb, var(--background) 80%, transparent);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(8px);
+  }
+
   .bleed-root {
     /* clip, not hidden: `hidden` on an ancestor kills `position: sticky` on
        the nav, which is the bug this replaced. */

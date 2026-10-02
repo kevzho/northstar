@@ -214,7 +214,7 @@ export default function Home() {
     <main className="bleed-root min-h-screen">
       <Starfield ink={ink} className="pointer-events-none fixed inset-0 -z-10" />
       <section className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-6 py-8 sm:px-8 lg:px-10">
-        <nav className="sticky top-0 z-40 -mx-2 flex items-center justify-between border-b border-border bg-background/80 px-2 py-4 backdrop-blur">
+        <nav className="bleed-bg sticky top-0 z-40 flex items-center justify-between py-4">
           <Link
             href="/"
             className="flex items-center gap-2 text-lg tracking-tight text-foreground"
