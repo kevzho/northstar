@@ -14,8 +14,11 @@
  * are derived at request time from shared tags and field. This page uses
  * the nodes and ignores the edges.
  *
- * Accessibility: the SVG is decorative and mouse-only. Keyboard and screen
- * reader users need the conforming list alternative; see the roadmap.
+ * Accessibility: the SVG is decorative and mouse-only, so it is aria-hidden
+ * and the page ships a conforming text alternative beside it — see
+ * components/PathwayList.tsx, which carries the same data in the same order
+ * with the same links. The view toggle is the first control after the nav, and
+ * the choice is remembered, so a keyboard user does not re-make it every visit.
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -25,6 +28,7 @@ import { AppNav } from "@/components/AppNav";
 import { useRouter } from "next/navigation";
 import * as d3 from "d3";
 import { LoadingSection } from "@/components/decor/orbit-loader";
+import { PathwayList } from "@/components/PathwayList";
 
 type GraphNode = {
   id: string;
@@ -67,6 +71,26 @@ export default function MapPage() {
   const svgRef = useRef<SVGSVGElement>(null);
   const [data, setData] = useState<GraphData>(null);
   const [loading, setLoading] = useState(true);
+  // The picture is the default because it is what the page is for, but the
+  // choice is sticky: someone who needs the list needs it every time, and
+  // making them re-toggle on every visit is its own barrier. Reads are wrapped
+  // because storage throws in private windows rather than returning null.
+  const [view, setView] = useState<"map" | "list">("map");
+  useEffect(() => {
+    try {
+      if (localStorage.getItem("pathway-view") === "list") setView("list");
+    } catch {
+      /* no stored preference available; the default stands */
+    }
+  }, []);
+  function chooseView(next: "map" | "list") {
+    setView(next);
+    try {
+      localStorage.setItem("pathway-view", next);
+    } catch {
+      /* preference simply will not persist */
+    }
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -92,6 +116,7 @@ export default function MapPage() {
   }, []);
 
   useEffect(() => {
+    if (view !== "map") return;
     if (!data || !svgRef.current || data.nodes.length === 0) return;
 
     /* Solar systems: one per field the student matches. A central sun
@@ -261,7 +286,7 @@ export default function MapPage() {
       .on("zoom", (event) => viewport.attr("transform", event.transform));
     svg.call(zoom as any);
     /* eslint-enable @typescript-eslint/no-explicit-any */
-  }, [data, router]);
+  }, [data, router, view]);
 
   return (
     <main className="min-h-screen px-4 py-8 sm:px-6">
@@ -286,12 +311,42 @@ export default function MapPage() {
           <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
             Each field is a star; the opportunities matched to you orbit it.
             Inner orbits are the soonest deadlines — the closest planets are
-            the most urgent. Click any planet to open it.
+            the most urgent. Open any of them to see the opportunity.
           </p>
         </header>
 
+        {/* The toggle sits before the legend and the figure, so the first
+            thing a keyboard user reaches is the control that gives them a
+            view they can actually operate. */}
+        <div
+          role="group"
+          aria-label="Choose how to view your pathways"
+          className="mt-6 flex gap-2"
+        >
+          {([["map", "Map"], ["list", "List"]] as const).map(([value, label]) => (
+            <button
+              key={value}
+              type="button"
+              aria-pressed={view === value}
+              onClick={() => chooseView(value)}
+              className={
+                view === value
+                  ? "border border-foreground bg-foreground px-4 py-2 text-sm font-medium text-background"
+                  : "border border-border bg-transparent px-4 py-2 text-sm font-medium text-foreground"
+              }
+            >
+              {label}
+              <span className="sr-only">
+                {value === "list"
+                  ? " view: the same matches as a keyboard-navigable list"
+                  : " view: an orbital diagram, mouse and touch only"}
+              </span>
+            </button>
+          ))}
+        </div>
+
         {/* Legend */}
-        <section className="mt-6 flex flex-wrap gap-3">
+        <section aria-hidden={view === "list"} className="mt-6 flex flex-wrap gap-3">
           {Object.entries(fieldColors).map(([field, color]) => (
             <div key={field} className="flex items-center gap-2">
               <span
@@ -322,12 +377,28 @@ export default function MapPage() {
           </section>
         ) : (
           <section className="rounded-lg border bg-card mt-8 p-4">
-            <svg ref={svgRef} className="block w-full min-h-[70vh]" />
-            <p className="mt-3 text-xs leading-5 text-muted-foreground">
-              Scroll or pinch to zoom, drag the background to pan. Planet size
-              is fit; the sun labels the field. Tap a planet to open the
-              opportunity.
-            </p>
+            {view === "map" ? (
+              <>
+                {/* Decorative by construction: every planet's meaning is in
+                    the list, so exposing the shapes would only hand a screen
+                    reader several hundred unlabelled nodes. */}
+                <div aria-hidden="true">
+                  <svg ref={svgRef} className="block w-full min-h-[70vh]" />
+                </div>
+                <p className="sr-only">
+                  The map is a decorative diagram and cannot be operated by
+                  keyboard. Choose List view above for the same{" "}
+                  {data.nodes.length} matches as a navigable list.
+                </p>
+                <p className="mt-3 text-xs leading-5 text-muted-foreground">
+                  Scroll or pinch to zoom, drag the background to pan. Planet
+                  size is fit; the sun labels the field. Tap a planet to open
+                  the opportunity.
+                </p>
+              </>
+            ) : (
+              <PathwayList nodes={data.nodes} fieldColors={fieldColors} />
+            )}
           </section>
         )}
       </div>
