@@ -178,7 +178,7 @@ def decide(candidate: dict, verdict: dict) -> dict | None:
         "type": opp_type,
         "blurb": (candidate.get("blurb") or title)[:400],
         "description": candidate.get("blurb", ""),
-        "deadline": candidate.get("deadline_guess"),
+        "deadline": clean_date(candidate.get("deadline_guess")),
         "cost": 0,
         "entry_gate": gate,
         # Only stored when it says something. An empty note would displace the
@@ -186,10 +186,51 @@ def decide(candidate: dict, verdict: dict) -> dict | None:
         **({"entry_note": note} if note and gate != "apply" else {}),
         "url": url,
         "audience": candidate.get("audience_guess", "high_school"),
-        "location_scope": candidate.get("location_guess", "us"),
+        "location_scope": normalise_scope(candidate.get("location_guess")),
         "tags": [],
         "added_by": "ai",
     }
+
+
+# public.location_scope is an enum of exactly three values (20260816140000).
+# Candidates carry a free-text hint instead -- "Mono County, CA" from the fair
+# directory, "Woods Hole, MA" from Pathways, "onsite" from CTFtime -- and
+# postgres rejects every one of them with 22P02. Until 2026-10-04 that meant a
+# silent, total loss: 29 of 60 verdicts in one run were spent on rows that could
+# never be inserted, and the ctftime feed had never once imported an onsite
+# event, because "onsite" has never been a valid value.
+#
+# The hint is normalised here rather than in each scraper, because this is the
+# one place every candidate passes through on its way into a strict schema.
+SCOPES = frozenset({"us", "international", "global"})
+
+
+def normalise_scope(hint: object) -> str:
+    """A free-text location hint -> the location_scope enum.
+
+    Defaults to "us", which is both the column's prior default and the truth
+    about this catalog: a county, a state or a campus is a US listing.
+    """
+    text = str(hint or "").strip().lower()
+    if text in SCOPES:
+        return text
+    if "global" in text or "worldwide" in text or "anywhere" in text:
+        return "global"
+    if "international" in text:
+        return "international"
+    return "us"
+
+
+def clean_date(value: object) -> str | None:
+    """A date string, or None.
+
+    The scrapers write "" for "no date known", which is honest in JSON and
+    invalid in a date column -- postgres answers 22007 and the row is lost. NULL
+    is what "no date" means here, and the rest of the product already reads it
+    that way: a null deadline renders as "Rolling deadline".
+    """
+    text = str(value or "").strip()
+    return text or None
 
 
 def verify_candidate(candidate: dict, retries: int = 2) -> dict:

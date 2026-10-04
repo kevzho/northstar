@@ -300,3 +300,77 @@ def test_the_fair_import_stays_capped() -> None:
         f"MAX_IMPORT is {fairs.MAX_IMPORT}; the cap is the product constraint, "
         "not politeness to the server"
     )
+
+
+def test_every_structured_scraper_is_trusted_by_the_verifier() -> None:
+    """The failure this prevents is silent, which is why it needs a test.
+
+    verify_and_import.rank_key explains it against ctftime and codeforces: a
+    structured feed writes score 0, the generic tier falls back to pool order,
+    pool order is score-descending, and the pool holds ten thousand upvoted
+    reddit threads. A source missing from KNOWN_REAL_SOURCES therefore sorts
+    below all of them, is never reached by the per-run budget, and the daily job
+    stays green while importing nothing from it.
+
+    It happened once when ctftime and codeforces were added, and again on
+    2026-10-04 when pathways and sciencefairs were. So the rule is now checked
+    rather than remembered: whatever source string a scraper writes into the
+    pool must be a source the verifier trusts.
+    """
+    import re
+
+    verify = importlib.import_module("verify_and_import")
+
+    emitted: dict[str, str] = {}
+    for script in sorted(SCRIPTS.glob("scrape_*.py")):
+        # scrape_reddit emits a subreddit name per candidate ("r/premed"), which
+        # is the open-ended tier by design -- a thread is not a listing.
+        if script.name in {"scrape_reddit.py", "scrape_all.py"}:
+            continue
+        for match in re.finditer(r'"source":\s*"([a-z0-9_.-]+)"', script.read_text()):
+            emitted[match.group(1)] = script.name
+
+    assert emitted, "no structured scrapers found; has the naming changed?"
+    missing = {src: where for src, where in emitted.items()
+               if src not in verify.KNOWN_REAL_SOURCES}
+    assert not missing, (
+        f"these scrapers write a source the verifier does not trust: {missing}. "
+        "Their candidates will sort below every reddit thread in the pool and "
+        "never be verified, while the daily run reports success."
+    )
+
+
+def test_a_location_hint_never_reaches_the_enum_raw() -> None:
+    """Postgres answers 22P02 and the row is simply lost.
+
+    public.location_scope has three values. Candidates carry free text: "Mono
+    County, CA" from the fair directory, "Woods Hole, MA" from Pathways,
+    "onsite" from CTFtime since the day that feed was written. On 2026-10-04,
+    29 of 60 verdicts in one run were spent on rows that could never be
+    inserted, and no onsite CTF had ever imported. The verdict cost was paid and
+    the failure was invisible, which is the expensive combination.
+    """
+    import sys as _s
+    _s.path.insert(0, str(SCRIPTS.parent))
+    from app.verifier import SCOPES, clean_date, normalise_scope
+
+    for hint in ("Mono County, CA", "onsite", "Woods Hole, MA", "", None,
+                 "united states", "Orange County", "global", "international"):
+        assert normalise_scope(hint) in SCOPES, f"{hint!r} escaped the enum"
+
+    assert normalise_scope("global") == "global"
+    assert normalise_scope("International (online)") == "international"
+    assert normalise_scope("Searcy County, AR") == "us"
+
+
+def test_an_absent_deadline_is_null_not_empty_string() -> None:
+    """"" is honest in JSON and invalid in a date column (22007). NULL is what
+    the rest of the product already reads as "Rolling deadline"."""
+    import sys as _s
+    _s.path.insert(0, str(SCRIPTS.parent))
+    from app.verifier import clean_date
+
+    assert clean_date("") is None
+    assert clean_date("   ") is None
+    assert clean_date(None) is None
+    assert clean_date("2027-02-04") == "2027-02-04"

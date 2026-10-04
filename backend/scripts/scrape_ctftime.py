@@ -35,6 +35,7 @@ from __future__ import annotations
 
 import json
 import pathlib
+import re
 from datetime import datetime, timedelta, timezone
 
 import requests
@@ -164,7 +165,20 @@ def main() -> None:
             # shelf is the one starved of open deadlines — but see the field
             # note in the module docstring: this is capped for a reason.
             "audience_guess": "high_school",
-            "location_guess": "global" if not onsite else "onsite",
+            # public.location_scope takes us/international/global and nothing
+            # else. This field said "onsite" from the day the feed was written,
+            # so every in-person CTF was rejected by postgres on insert and the
+            # loss was invisible -- the run reported a verdict, the row never
+            # landed. An online CTF is genuinely global; an onsite one is placed
+            # by its own location string, and defaults to international because
+            # most of this feed is not American.
+            "location_guess": (
+                "global" if not onsite
+                else "us" if re.search(
+                    r"\b(usa|united states|u\.s\.|[A-Z]{2})\s*$", where or "", re.I
+                )
+                else "international"
+            ),
             "needs_review": True,
         }
         added += 1

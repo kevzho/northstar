@@ -141612,7 +141612,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "onsite",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "ctftime",
@@ -141787,7 +141788,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "onsite",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "ctftime",
@@ -142311,7 +142313,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "onsite",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "ctftime",
@@ -145127,7 +145130,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Riverside, OH",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "pathwaystoscience",
@@ -145157,7 +145161,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Bethesda, MD",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145172,7 +145177,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Washington, DC",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "pathwaystoscience",
@@ -145187,7 +145193,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Tempe, AZ",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "pathwaystoscience",
@@ -145202,7 +145209,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Lisle, IL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145232,7 +145240,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "West Boothbay Harbor, ME",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145247,7 +145256,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Boston, MA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "pathwaystoscience",
@@ -145262,7 +145272,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Cambridge, MA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "pathwaystoscience",
@@ -145292,7 +145303,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Pasadena, CA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145307,7 +145319,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Chico, CA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145337,7 +145350,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Worcester, MA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145352,7 +145366,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Atlanta, GA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "pathwaystoscience",
@@ -145382,7 +145397,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Hanover, NH",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145397,7 +145413,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Reno, NV",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "pathwaystoscience",
@@ -145427,7 +145444,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "united states",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145442,7 +145460,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Tallahassee, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "pathwaystoscience",
@@ -145457,7 +145476,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Mountain View, CA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145487,7 +145507,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "New York, NY",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "pathwaystoscience",
@@ -145502,7 +145523,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Berkeley, CA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "pathwaystoscience",
@@ -145517,7 +145539,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Los Alamos, NM",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "pathwaystoscience",
@@ -145532,7 +145555,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Orono, ME",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145547,7 +145571,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Augusta, ME",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145592,7 +145617,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "East Lansing, MI",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "pathwaystoscience",
@@ -145607,7 +145633,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Redmond, WA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "pathwaystoscience",
@@ -145622,7 +145649,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Portland, ME",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145637,7 +145665,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Lisle, IL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145667,7 +145696,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Fort Lauderdale, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145697,7 +145727,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Charleston, WV",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145712,7 +145743,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "New York, NY",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "pathwaystoscience",
@@ -145727,7 +145759,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Durham, NC",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "pathwaystoscience",
@@ -145742,7 +145775,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Evanston, IL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145787,7 +145821,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Santa Clara, CA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "pathwaystoscience",
@@ -145802,7 +145837,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Wellesley, MA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145817,7 +145853,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Stanford, CA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145832,7 +145869,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Oneonta, NY",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145847,7 +145885,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Tuskegee, AL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145862,7 +145901,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Tucson, AZ",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "pathwaystoscience",
@@ -145877,7 +145917,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Chicago, IL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "pathwaystoscience",
@@ -145892,7 +145933,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Urbana, IL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145907,7 +145949,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Orono, ME",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145922,7 +145965,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Amherst, MA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145937,7 +145981,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Ann Arbor, MI",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145952,7 +145997,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Durham, NH",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "pathwaystoscience",
@@ -145967,7 +146013,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Philadelphia, PA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145982,7 +146029,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Los Angeles, CA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145997,7 +146045,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "San Antonio, TX",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -146012,7 +146061,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Houston, TX",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -146057,7 +146107,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Villanova, PA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "pathwaystoscience",
@@ -146072,7 +146123,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "united states",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "pathwaystoscience",
@@ -146087,7 +146139,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "New Haven, CT",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146102,7 +146155,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Bullock County, AL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146117,7 +146171,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Coosa County, AL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146132,7 +146187,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Lawrence County, AL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146147,7 +146203,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Conecuh County, AL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146162,7 +146219,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "State, AL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146177,7 +146235,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "State, AK",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146192,7 +146251,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Cochise County, AZ",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146207,7 +146267,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Greenlee County, AZ",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -146222,7 +146283,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "State, AZ",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146237,7 +146299,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Dallas County, AR",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -146252,7 +146315,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Searcy County, AR",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146267,7 +146331,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Stone County, AR",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146282,7 +146347,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Monroe County, AR",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -146297,7 +146363,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Calhoun County, AR",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146312,7 +146379,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Arkansas School for Mathematics, AR",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146327,7 +146395,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "State, AR",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146342,7 +146411,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Orange County, CA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -146357,7 +146427,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Los Angeles County, CA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146372,7 +146443,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Kings County, CA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146387,7 +146459,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Amador County, CA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146402,7 +146475,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Imperial County, CA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -146417,7 +146491,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Napa County, CA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146432,7 +146507,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Santa Clara County, CA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146447,7 +146523,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Contra Costa County, CA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -146462,7 +146539,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Alameda County, CA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146477,7 +146555,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Santa Cruz County, CA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -146492,7 +146571,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Monterey County, CA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146507,7 +146587,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Mono County, CA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146522,7 +146603,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Riverside County, CA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -146537,7 +146619,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Kern County, CA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146552,7 +146635,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Ventura County, CA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -146612,7 +146696,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Crowley County, CO",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -146717,7 +146802,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Desoto County, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146942,7 +147028,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Seminole County, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147527,7 +147614,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Terrebonne Parish, LA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147602,7 +147690,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Queen Anne's County, MD",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147917,7 +148006,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Stone County, MS",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -148052,7 +148142,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Arthur County, NE",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",

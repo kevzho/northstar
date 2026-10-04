@@ -35,7 +35,22 @@ POOL = pathlib.Path(__file__).parent / "scraped" / "reddit_candidates.json"
 # Sources that come from a structured API of real, dated events rather than from
 # somebody's post about one. These are trusted enough to skip the reddit-host
 # screen and to be verified before the open-ended pool.
-KNOWN_REAL_SOURCES = frozenset({"devpost", "ctftime", "codeforces"})
+KNOWN_REAL_SOURCES = frozenset(
+    {
+        "devpost",
+        "ctftime",
+        "codeforces",
+        # Added 2026-10-04 with the scrapers that emit them. They belong here
+        # for the same reason the three above do -- a directory listing is not
+        # somebody's post about one -- and they would hit the exact failure
+        # rank_key's docstring describes if they were left out: both write
+        # score 0, so inside the generic tier they sort below ten thousand
+        # upvoted reddit threads and would never be reached by a 60-verdict
+        # budget. The scrape would succeed daily and import nothing.
+        "pathwaystoscience",
+        "sciencefairs",
+    }
+)
 MAX_VERIFY_PER_RUN = 60   # token/rate budget per daily run
 FAIL_FAST_AFTER = 5       # consecutive errors that mean the provider, not the data
 
