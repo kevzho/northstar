@@ -1117,6 +1117,41 @@ def create_app() -> FastAPI:
         archetype = student.get("chosen_archetype") or ""
         spine = spine_for(archetype)
 
+        # A spine written for THIS student, when one has been generated, else
+        # the authored one for their archetype.
+        #
+        # The fallback is a designed state, not a degraded one. Generation is
+        # refused outright when the model picks a skill key with no verified
+        # resources, writes a url, or returns prose that will not parse -- and in
+        # each of those cases the hand-written spine is the better answer. See
+        # app/spine_generation.py.
+        #
+        # Wrapped because the table arrives in 20261004120000 and this endpoint
+        # must keep serving every student before that migration is applied.
+        try:
+            generated = (
+                sb.table("generated_spines")
+                .select("project, publish, skill, skill_key, model, generated_at")
+                .eq("user_id", user.id)
+                .maybe_single()
+                .execute()
+            )
+            row = generated.data if generated else None
+        except Exception:
+            row = None
+        if row and row.get("project") and row.get("skill_key"):
+            spine = {
+                "project": row["project"],
+                "publish": row["publish"],
+                "skill": row["skill"],
+                "skillKey": row["skill_key"],
+                # roadmap.py words authored edges as "a common route, not a
+                # requirement". No human wrote this one, so it must not inherit
+                # that sentence -- see the edge note in build_steps.
+                "source": "generated",
+                "model": row.get("model") or "",
+            }
+
         # Resources for this path's skill rung. Absent spine or unseeded skill
         # returns [] and the roadmap simply has no learning steps, rather than
         # borrowing another path's.

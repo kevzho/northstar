@@ -283,21 +283,39 @@ def build_roadmap(
                 resource_id=extra["id"],
             )
 
-    # 2. BUILD, then 3. PUBLISH. Authored, and labelled as such.
+    # 2. BUILD, then 3. PUBLISH. Labelled by who actually wrote them.
+    #
+    # "A common route" is a claim about what students generally do, and it is
+    # true of the twenty-four authored spines because a person wrote each one
+    # after looking at the field. It is NOT true of a spine the model wrote for
+    # one student this week: nobody has seen anyone follow it, and
+    # public.outcomes still has no rows. Giving both the same sentence would
+    # launder a guess into a pattern, which is the same error as a deadline no
+    # human confirmed being shown as though one had.
     if spine:
+        written_for_you = spine.get("source") == "generated"
         add(
             "project",
             spine["project"],
             step_key="spine:project",
             edge_reason="artifact",
-            edge_note="A common route: the thing you make is what an application asks about.",
+            edge_note=(
+                "Written for you from your assessment and your matches — a "
+                "suggestion, not a route anyone has walked."
+                if written_for_you
+                else "A common route: the thing you make is what an application asks about."
+            ),
         )
         add(
             "project",
             spine["publish"],
             step_key="spine:publish",
             edge_reason="evidence",
-            edge_note="A common route: work nobody can see is hard to point at later.",
+            edge_note=(
+                "Written for you. Work nobody can see is hard to point at later."
+                if written_for_you
+                else "A common route: work nobody can see is hard to point at later."
+            ),
         )
 
     # Missions, ordered so the one matching the student's strongest trait lands
