@@ -4933,20 +4933,6 @@
     "needs_review": true
   },
   {
-    "source": "r/EngineeringStudents",
-    "reddit_permalink": "https://www.reddit.com/r/EngineeringStudents/comments/1wwx6h4/got_nvidia_for_next_summer_with_no_prior/",
-    "posted_utc": "2026-10-03T20:29:36+00:00",
-    "score": 52,
-    "title": "Got NVIDIA for next summer with no prior internships",
-    "url": "https://www.reddit.com/r/EngineeringStudents/comments/1wwx6h4/got_nvidia_for_next_summer_with_no_prior/",
-    "blurb": "Hey guys, 4th year undergrad here. Going into recruiting most of my resume was basically just projects. The main thing on it was a Roblox game I worked on that ended up getting 20M+ visits, plus a few other projects I\u2019d ",
-    "field_guess": "engineering",
-    "type_guess": "internship",
-    "audience_guess": "college",
-    "location_guess": "us",
-    "needs_review": true
-  },
-  {
     "source": "r/REU",
     "reddit_permalink": "https://www.reddit.com/r/REU/comments/1tbxd9q/i_was_disappointed/",
     "posted_utc": "2026-05-13T11:53:49+00:00",
@@ -5089,20 +5075,6 @@
     "blurb": "This is based on Cellpose. The utility of it being on Colab is that you can process 100s of images more quickly than you would be able to on your laptop. Let me know if you find it useful :). [https://colab.research.goog",
     "field_guess": "biology",
     "type_guess": "program",
-    "audience_guess": "college",
-    "location_guess": "us",
-    "needs_review": true
-  },
-  {
-    "source": "r/premed",
-    "reddit_permalink": "https://www.reddit.com/r/premed/comments/1wwrb7g/dont_let_anyone_here_or_anywhere_else_discourage/",
-    "posted_utc": "2026-10-03T16:23:34+00:00",
-    "score": 50,
-    "title": "Don\u2019t let anyone here (or anywhere else) discourage you!",
-    "url": "https://www.reddit.com/r/premed/comments/1wwrb7g/dont_let_anyone_here_or_anywhere_else_discourage/",
-    "blurb": "I just got into my dream US MD program through early decision and here\u2019s an extensive list of things the internet tried to make me believe made my application DOA: \\- took the MCAT 3x (started sub 500 and ended at 508) \\",
-    "field_guess": "cs",
-    "type_guess": "journal",
     "audience_guess": "college",
     "location_guess": "us",
     "needs_review": true
@@ -6884,20 +6856,6 @@
     "title": "I feel like an idiot and I feel so defeated",
     "url": "https://www.reddit.com/r/EngineeringStudents/comments/1wttimx/i_feel_like_an_idiot_and_i_feel_so_defeated/",
     "blurb": "I know it\u2019s common for engineering students to feel this way but I can\u2019t escape it. I feel like everyone around me just gets ***it*** whereas I\u2019m still stuck on trying to practically apply what we\u2019re learning in class. I",
-    "field_guess": "engineering",
-    "type_guess": "program",
-    "audience_guess": "college",
-    "location_guess": "us",
-    "needs_review": true
-  },
-  {
-    "source": "r/EngineeringStudents",
-    "reddit_permalink": "https://www.reddit.com/r/EngineeringStudents/comments/1wwscld/teaching_statics_this_winter_whats_most_helpful/",
-    "posted_utc": "2026-10-03T17:08:03+00:00",
-    "score": 35,
-    "title": "Teaching statics this winter - what\u2019s most helpful for students?",
-    "url": "https://www.reddit.com/r/EngineeringStudents/comments/1wwscld/teaching_statics_this_winter_whats_most_helpful/",
-    "blurb": "hi all, im teaching two statics classes this winter (quarter system out west) and expect to have approx 100 students. I havent formally taught at the college level since 2019 but have been instructor of record over 10 ti",
     "field_guess": "engineering",
     "type_guess": "program",
     "audience_guess": "college",
@@ -10125,7 +10083,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/csMajors",
     "reddit_permalink": "https://www.reddit.com/r/csMajors/comments/1wx6prn/how_do_yall_do_it/",
     "posted_utc": "2026-10-04T04:33:41+00:00",
@@ -10134,16 +10091,6 @@
     "url": "https://www.reddit.com/r/csMajors/comments/1wx6prn/how_do_yall_do_it/",
     "blurb": "I never learned proper time management and now it\u2019s hitting me like a truck. How does one manage to achieve all of this at once: \\- prep for interviews \\- do homework and study for tests \\- get good sleep \\- having fun a",
     "field_guess": "cs",
-=======
-    "source": "r/premed",
-    "reddit_permalink": "https://www.reddit.com/r/premed/comments/1wwwtgd/mcat_as_a_passfail_metric/",
-    "posted_utc": "2026-10-03T20:14:16+00:00",
-    "score": 22,
-    "title": "MCAT as a pass/fail metric",
-    "url": "https://www.reddit.com/r/premed/comments/1wwwtgd/mcat_as_a_passfail_metric/",
-    "blurb": "My university has several collaborative programs with the local academic medical hospital, OHSU. The dean of admissions for the MD program came and gave a talk to the honors department and he said their program views the",
-    "field_guess": "biology",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "type_guess": "program",
     "audience_guess": "college",
     "location_guess": "us",
@@ -12417,7 +12364,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/ApplyingToCollege",
     "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwzf8g/valedictorian_average_act_in_my_school_is_1819/",
     "posted_utc": "2026-10-03T22:10:04+00:00",
@@ -12429,19 +12375,6 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "us",
-=======
-    "source": "r/csMajors",
-    "reddit_permalink": "https://www.reddit.com/r/csMajors/comments/1wx4atu/2026_new_grad_int_students/",
-    "posted_utc": "2026-10-04T02:19:33+00:00",
-    "score": 16,
-    "title": "2026 new grad int students",
-    "url": "https://www.reddit.com/r/csMajors/comments/1wx4atu/2026_new_grad_int_students/",
-    "blurb": "I know the market is pretty rough right now, especially for int students, but I\u2019m trying to get a realistic sense of what people are actually seeing. Im graduating this December ans i honestly don\u2019t have a great sense of",
-    "field_guess": "cs",
-    "type_guess": "internship",
-    "audience_guess": "college",
-    "location_guess": "international",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "needs_review": true
   },
   {
@@ -13536,20 +13469,6 @@
     "field_guess": "cs",
     "type_guess": "program",
     "audience_guess": "college",
-    "location_guess": "us",
-    "needs_review": true
-  },
-  {
-    "source": "r/ApplyingToCollege",
-    "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwzf8g/valedictorian_average_act_in_my_school_is_1819/",
-    "posted_utc": "2026-10-03T22:10:04+00:00",
-    "score": 14,
-    "title": "valedictorian: average ACT in my school is 18~19, cooked for Princeton REA?",
-    "url": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwzf8g/valedictorian_average_act_in_my_school_is_1819/",
-    "blurb": "for context, ap courses/exams are NOT offered at my school (only honors/standard) the only prep courses we have outside of honors are ACT prep classes in spring of our 9th and 11th grade years in March of junior year, i ",
-    "field_guess": "math",
-    "type_guess": "program",
-    "audience_guess": "high_school",
     "location_guess": "us",
     "needs_review": true
   },
@@ -15366,20 +15285,6 @@
     "url": "https://www.reddit.com/r/EngineeringStudents/comments/1wv6310/what_types_of_pure_math_do_you_use_in_later/",
     "blurb": "Civil Taking calculus 2 now. I feel like I am really just learning how to solve these random problems and not the concepts to pass. When I solve an integral or whatever I don\u2019t \\*actually\\* know what\u2019s happening and can\u2019",
     "field_guess": "math",
-    "type_guess": "program",
-    "audience_guess": "college",
-    "location_guess": "us",
-    "needs_review": true
-  },
-  {
-    "source": "r/PhysicsStudents",
-    "reddit_permalink": "https://www.reddit.com/r/PhysicsStudents/comments/1wwuuks/how_do_u_choose_ur_field_in_physics/",
-    "posted_utc": "2026-10-03T18:52:13+00:00",
-    "score": 12,
-    "title": "How do u choose ur field in physics?",
-    "url": "https://www.reddit.com/r/PhysicsStudents/comments/1wwuuks/how_do_u_choose_ur_field_in_physics/",
-    "blurb": "Hi i am a final year undergrad student and i was wondering how does one choose which field they wanna research or work in? For some context i am not from such a great school,our labs are very old and half the machines do",
-    "field_guess": "physics",
     "type_guess": "program",
     "audience_guess": "college",
     "location_guess": "us",
@@ -17722,20 +17627,6 @@
     "type_guess": "program",
     "audience_guess": "college",
     "location_guess": "us",
-    "needs_review": true
-  },
-  {
-    "source": "r/FinancialCareers",
-    "reddit_permalink": "https://www.reddit.com/r/FinancialCareers/comments/1wwnloe/off_cycle_trading_interview_buy_side_asset/",
-    "posted_utc": "2026-10-03T13:43:13+00:00",
-    "score": 10,
-    "title": "Off cycle trading interview buy side (Asset management) Frankfurt",
-    "url": "https://www.reddit.com/r/FinancialCareers/comments/1wwnloe/off_cycle_trading_interview_buy_side_asset/",
-    "blurb": "Hi Buy-side folks, I\u2019ve been shortlisted for the final interview round a top asset manager in Frankfurt for a trading internship starting spring 2027. The role is basically execution trading, supporting PMs, a lot of dat",
-    "field_guess": "engineering",
-    "type_guess": "internship",
-    "audience_guess": "college",
-    "location_guess": "international",
     "needs_review": true
   },
   {
@@ -20626,7 +20517,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/ApplyingToCollege",
     "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wx523j/would_it_be_weird_if_i_put_down_a_chinese_award/",
     "posted_utc": "2026-10-04T03:00:16+00:00",
@@ -20638,19 +20528,6 @@
     "type_guess": "scholarship",
     "audience_guess": "high_school",
     "location_guess": "us",
-=======
-    "source": "r/premed",
-    "reddit_permalink": "https://www.reddit.com/r/premed/comments/1wx3fsq/is_anyone_here_applying_at_28_do_you_think_it/",
-    "posted_utc": "2026-10-04T01:33:17+00:00",
-    "score": 8,
-    "title": "Is anyone here applying at 28? Do you think it hurts chances in any way for top med schools?",
-    "url": "https://www.reddit.com/r/premed/comments/1wx3fsq/is_anyone_here_applying_at_28_do_you_think_it/",
-    "blurb": "I am an international, and have had lots of health issues. Want to make sure my app is competitive enough, but feel bad that I might have to apply in 2028 (when I am 28)",
-    "field_guess": "biology",
-    "type_guess": "program",
-    "audience_guess": "college",
-    "location_guess": "international",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "needs_review": true
   },
   {
@@ -23167,7 +23044,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/highschool",
     "reddit_permalink": "https://www.reddit.com/r/highschool/comments/1wx0hxy/free_coding_lessons_taught_by_boston_university/",
     "posted_utc": "2026-10-03T23:02:22+00:00",
@@ -23191,23 +23067,11 @@
     "blurb": "My entire high school career, I've been focused on CS. I did hackathons, built apps, and did competitions that all related to it. But all of a sudden, right in the middle of peak application season I'm feeling like I sho",
     "field_guess": "cs",
     "type_guess": "program",
-=======
-    "source": "r/ApplyingToCollege",
-    "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wx523j/would_it_be_weird_if_i_put_down_a_chinese_award/",
-    "posted_utc": "2026-10-04T03:00:16+00:00",
-    "score": 7,
-    "title": "Would it be weird if I put down a Chinese award in my honors section even though I'm not Chinese?",
-    "url": "https://www.reddit.com/r/ApplyingToCollege/comments/1wx523j/would_it_be_weird_if_i_put_down_a_chinese_award/",
-    "blurb": "I got a scholarship by a Chinese organization. The scholarship has a title related to my major, but it has Chinese in the name.",
-    "field_guess": "interdisciplinary",
-    "type_guess": "scholarship",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "audience_guess": "high_school",
     "location_guess": "us",
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/csMajors",
     "reddit_permalink": "https://www.reddit.com/r/csMajors/comments/1wwyk6j/startup_return_offer_vs_fortune_500_for_big_tech/",
     "posted_utc": "2026-10-03T21:30:20+00:00",
@@ -23216,16 +23080,6 @@
     "url": "https://www.reddit.com/r/csMajors/comments/1wwyk6j/startup_return_offer_vs_fortune_500_for_big_tech/",
     "blurb": "Hi, I'm a junior at a T5. I interned at a Series B last summer as an AI Engineer, and had high ownership (with very good pay, somehow). I'm recruiting right now and have also landed an offer at Principal Financial. My go",
     "field_guess": "cs",
-=======
-    "source": "r/biology",
-    "reddit_permalink": "https://www.reddit.com/r/biology/comments/1wx8y4r/could_i_major_in_astrobiology_and_still_keep_my/",
-    "posted_utc": "2026-10-04T06:48:03+00:00",
-    "score": 7,
-    "title": "Could I major in astrobiology and still keep my career options open?",
-    "url": "https://www.reddit.com/r/biology/comments/1wx8y4r/could_i_major_in_astrobiology_and_still_keep_my/",
-    "blurb": "I\u2019m a high school senior trying to figure out what I want to study in college. I honestly don\u2019t know if I want to become a doctor, work in a lab, or pursue research, but I know that I love biology. I\u2019ve realized, though,",
-    "field_guess": "biology",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "type_guess": "program",
     "audience_guess": "college",
     "location_guess": "us",
@@ -26303,7 +26157,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/premed",
     "reddit_permalink": "https://www.reddit.com/r/premed/comments/1wx3fsq/is_anyone_here_applying_at_28_do_you_think_it/",
     "posted_utc": "2026-10-04T01:33:17+00:00",
@@ -26356,18 +26209,6 @@
     "field_guess": "biology",
     "type_guess": "program",
     "audience_guess": "college",
-=======
-    "source": "r/highschool",
-    "reddit_permalink": "https://www.reddit.com/r/highschool/comments/1wx0hxy/free_coding_lessons_taught_by_boston_university/",
-    "posted_utc": "2026-10-03T23:02:22+00:00",
-    "score": 6,
-    "title": "Free coding lessons taught by Boston University students!",
-    "url": "https://www.reddit.com/r/highschool/comments/1wx0hxy/free_coding_lessons_taught_by_boston_university/",
-    "blurb": "Hi everyone! My name is Wynn and I am a member of Boston University's Girls Who Code chapter. You may have seen my post last spring about our coding program we run for students of all genders from grades 3-12. I would li",
-    "field_guess": "cs",
-    "type_guess": "program",
-    "audience_guess": "high_school",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "location_guess": "us",
     "needs_review": true
   },
@@ -30967,7 +30808,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/FinancialCareers",
     "reddit_permalink": "https://www.reddit.com/r/FinancialCareers/comments/1wwnloe/off_cycle_trading_interview_buy_side_asset/",
     "posted_utc": "2026-10-03T13:43:13+00:00",
@@ -30978,23 +30818,10 @@
     "field_guess": "engineering",
     "type_guess": "internship",
     "audience_guess": "college",
-=======
-    "source": "r/summerprogramresults",
-    "reddit_permalink": "https://www.reddit.com/r/summerprogramresults/comments/1wwokpk/nsliy_summer_2027/",
-    "posted_utc": "2026-10-03T14:26:38+00:00",
-    "score": 5,
-    "title": "NSLI-Y Summer 2027",
-    "url": "https://www.reddit.com/r/summerprogramresults/comments/1wwokpk/nsliy_summer_2027/",
-    "blurb": "Usually, the application is open by this time of year (Sep/Oct in the preceding Fall) for next Summer's NSLI-Y program, but it has not opened this year. Does anyone know if this program still exists or will run for Summe",
-    "field_guess": "interdisciplinary",
-    "type_guess": "program",
-    "audience_guess": "high_school",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "location_guess": "international",
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/FinancialCareers",
     "reddit_permalink": "https://www.reddit.com/r/FinancialCareers/comments/1wxid44/how_to_break_into_risk_management_with_a_business/",
     "posted_utc": "2026-10-04T15:26:04+00:00",
@@ -31005,23 +30832,10 @@
     "field_guess": "business",
     "type_guess": "program",
     "audience_guess": "college",
-=======
-    "source": "r/ApplyingToCollege",
-    "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wxb35s/im_so_tired_of_my_school_being_a_shitty_ass/",
-    "posted_utc": "2026-10-04T09:02:42+00:00",
-    "score": 5,
-    "title": "im so tired of my school being a shitty ass public hs",
-    "url": "https://www.reddit.com/r/ApplyingToCollege/comments/1wxb35s/im_so_tired_of_my_school_being_a_shitty_ass/",
-    "blurb": "i know a lot of ppl say \"going to a title 1/bad public hs raises your chances\" and i guess true (i dont to what extent it helps though) but i genuinely genuinely wished i went to a more competitive/richer school because ",
-    "field_guess": "cs",
-    "type_guess": "competition",
-    "audience_guess": "high_school",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "location_guess": "us",
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/FinancialCareers",
     "reddit_permalink": "https://www.reddit.com/r/FinancialCareers/comments/1wxdkot/ive_still_not_got_a_job_after_graduation_would/",
     "posted_utc": "2026-10-04T11:37:48+00:00",
@@ -31029,29 +30843,6 @@
     "title": "I've still not got a job after graduation. Would appreciate some tips.",
     "url": "https://www.reddit.com/r/FinancialCareers/comments/1wxdkot/ive_still_not_got_a_job_after_graduation_would/",
     "blurb": "Hi Guys. Forgive me for a rather grim post. 24M Business and Pol Science graduate from a top Asian university with slightly above average (but not 2:1) grades. Nothing to write home about. I graduated in 2025 and have no",
-=======
-    "source": "r/ApplyingToCollege",
-    "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wx5dmg/i_might_switch_majors_at_the_last_minute/",
-    "posted_utc": "2026-10-04T03:17:37+00:00",
-    "score": 5,
-    "title": "I Might Switch Majors at the Last Minute",
-    "url": "https://www.reddit.com/r/ApplyingToCollege/comments/1wx5dmg/i_might_switch_majors_at_the_last_minute/",
-    "blurb": "My entire high school career, I've been focused on CS. I did hackathons, built apps, and did competitions that all related to it. But all of a sudden, right in the middle of peak application season I'm feeling like I sho",
-    "field_guess": "cs",
-    "type_guess": "program",
-    "audience_guess": "high_school",
-    "location_guess": "us",
-    "needs_review": true
-  },
-  {
-    "source": "r/csMajors",
-    "reddit_permalink": "https://www.reddit.com/r/csMajors/comments/1wx6prn/how_do_yall_do_it/",
-    "posted_utc": "2026-10-04T04:33:41+00:00",
-    "score": 5,
-    "title": "How do yall do it.",
-    "url": "https://www.reddit.com/r/csMajors/comments/1wx6prn/how_do_yall_do_it/",
-    "blurb": "I never learned proper time management and now it\u2019s hitting me like a truck. How does one manage to achieve all of this at once: \\- prep for interviews \\- do homework and study for tests \\- get good sleep \\- having fun a",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "field_guess": "cs",
     "type_guess": "program",
     "audience_guess": "college",
@@ -31059,7 +30850,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/EngineeringStudents",
     "reddit_permalink": "https://www.reddit.com/r/EngineeringStudents/comments/1wxh22l/i_hate_every_second_of_my_engineering_degree/",
     "posted_utc": "2026-10-04T14:29:24+00:00",
@@ -31083,17 +30873,6 @@
     "blurb": "Hey guys, I\u2019m from Jordan \ud83c\uddef\ud83c\uddf4, and I\u2019m currently deciding whether to pursue Industrial Engineering or Mechanical Engineering. I don\u2019t really care about passion or similar things. My main priority is which degree would giv",
     "field_guess": "cs",
     "type_guess": "journal",
-=======
-    "source": "r/premed",
-    "reddit_permalink": "https://www.reddit.com/r/premed/comments/1wx0ol1/how_did_yall_build_your_oos_list_as_texas/",
-    "posted_utc": "2026-10-03T23:11:17+00:00",
-    "score": 5,
-    "title": "How did y'all build your OOS list as Texas applicants?",
-    "url": "https://www.reddit.com/r/premed/comments/1wx0ol1/how_did_yall_build_your_oos_list_as_texas/",
-    "blurb": "Hey y'all, I will be applying this upcoming May for the 2027-2028 cycle. Now I reside in Texas and of course will prioritize Texas Schools, but I also want to apply OOS. How did y'all select what schools to apply to OOS?",
-    "field_guess": "biology",
-    "type_guess": "program",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "audience_guess": "college",
     "location_guess": "us",
     "needs_review": true
@@ -36298,7 +36077,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/ApplyingToCollege",
     "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wxj9k4/paid_research_program_how_beneficial_is_it/",
     "posted_utc": "2026-10-04T16:03:37+00:00",
@@ -36309,23 +36087,10 @@
     "field_guess": "business",
     "type_guess": "journal",
     "audience_guess": "high_school",
-=======
-    "source": "r/csMajors",
-    "reddit_permalink": "https://www.reddit.com/r/csMajors/comments/1wwyk6j/startup_return_offer_vs_fortune_500_for_big_tech/",
-    "posted_utc": "2026-10-03T21:30:20+00:00",
-    "score": 4,
-    "title": "Startup Return Offer vs. Fortune 500 for Big Tech?",
-    "url": "https://www.reddit.com/r/csMajors/comments/1wwyk6j/startup_return_offer_vs_fortune_500_for_big_tech/",
-    "blurb": "Hi, I'm a junior at a T5. I interned at a Series B last summer as an AI Engineer, and had high ownership (with very good pay, somehow). I'm recruiting right now and have also landed an offer at Principal Financial. My go",
-    "field_guess": "cs",
-    "type_guess": "program",
-    "audience_guess": "college",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "location_guess": "us",
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/FinancialCareers",
     "reddit_permalink": "https://www.reddit.com/r/FinancialCareers/comments/1wx6ffq/profile_for_masters/",
     "posted_utc": "2026-10-04T04:16:46+00:00",
@@ -36335,31 +36100,6 @@
     "blurb": "Hello. I\u2019ll get straight to the point. My goal is to prepare for Financial Mathematics or Mathematical Economics programs in Europe; what steps can I take to strengthen my profile and aim for top-tier institutions? To su",
     "field_guess": "physics",
     "type_guess": "scholarship",
-=======
-    "source": "r/premed",
-    "reddit_permalink": "https://www.reddit.com/r/premed/comments/1wwpsg2/advice_on_volunteeringresearch_hrs_how_to_manage/",
-    "posted_utc": "2026-10-03T15:18:43+00:00",
-    "score": 4,
-    "title": "advice on volunteering/research hrs &amp; how to manage time",
-    "url": "https://www.reddit.com/r/premed/comments/1wwpsg2/advice_on_volunteeringresearch_hrs_how_to_manage/",
-    "blurb": "hello, for context, im 21 and a sophomore at a cc, transferring to a uni next fall. i got my cna in hs and started working as a tech at a hospital since i graduated hs at 18, it has been my main source of income. my curr",
-    "field_guess": "biology",
-    "type_guess": "volunteer",
-    "audience_guess": "college",
-    "location_guess": "us",
-    "needs_review": true
-  },
-  {
-    "source": "r/EngineeringStudents",
-    "reddit_permalink": "https://www.reddit.com/r/EngineeringStudents/comments/1wx9k98/fed_up_with_incompetent_and_lazy_group_mates/",
-    "posted_utc": "2026-10-04T07:25:14+00:00",
-    "score": 4,
-    "title": "Fed up with incompetent and lazy group mates",
-    "url": "https://www.reddit.com/r/EngineeringStudents/comments/1wx9k98/fed_up_with_incompetent_and_lazy_group_mates/",
-    "blurb": "Posting this because I can\u2019t sleep due to anxiety. I\u2019m in my final year of my engineering degree program. Currently, I am the team lead for our senior capstone designing a plane and it\u2019s propulsion system. It\u2019s been two ",
-    "field_guess": "engineering",
-    "type_guess": "program",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "audience_guess": "college",
     "location_guess": "us",
     "needs_review": true
@@ -36379,7 +36119,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/MathOlympiad",
     "reddit_permalink": "https://www.reddit.com/r/MathOlympiad/comments/1wx01ie/idea_for_an_imolevel_problem_inspired_by_my/",
     "posted_utc": "2026-10-03T22:39:44+00:00",
@@ -36394,8 +36133,6 @@
     "needs_review": true
   },
   {
-=======
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "source": "r/scholarships",
     "reddit_permalink": "https://www.reddit.com/r/scholarships/comments/1vncc58/georgia_dream_scholarship/",
     "posted_utc": "2026-08-13T14:30:13+00:00",
@@ -48228,7 +47965,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/ApplyingToCollege",
     "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwrs81/372_uw_high_sat_is_it_geeg_for_t20s/",
     "posted_utc": "2026-10-03T16:44:01+00:00",
@@ -48257,8 +47993,6 @@
     "needs_review": true
   },
   {
-=======
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "source": "r/summerprogramresults",
     "reddit_permalink": "https://www.reddit.com/r/summerprogramresults/comments/1wwwzol/leaf_program/",
     "posted_utc": "2026-10-03T20:21:26+00:00",
@@ -48288,7 +48022,6 @@
   },
   {
     "source": "r/ApplyingToCollege",
-<<<<<<< HEAD
     "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wxmc9i/international_student_with_a_688_ged_score/",
     "posted_utc": "2026-10-04T18:10:34+00:00",
     "score": 3,
@@ -48303,8 +48036,6 @@
   },
   {
     "source": "r/ApplyingToCollege",
-=======
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wx7auq/opinion_on_taking_a_gap_year_to_apply_to_uni_with/",
     "posted_utc": "2026-10-04T05:07:53+00:00",
     "score": 3,
@@ -48332,7 +48063,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/premed",
     "reddit_permalink": "https://www.reddit.com/r/premed/comments/1wx3kk1/what_am_i_missing/",
     "posted_utc": "2026-10-04T01:40:25+00:00",
@@ -48384,53 +48114,11 @@
     "blurb": "Most figure work ends in Illustrator, but the bitmap still has to be prepared somewhere else. PaperFig is a free GPL-3.0 panel that does that step on the placed image. It writes an 8-bit display file for layout and leave",
     "field_guess": "biology",
     "type_guess": "program",
-=======
-    "source": "r/ApplyingToCollege",
-    "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwtby9/i_want_to_do_business_and_apparel_but_what/",
-    "posted_utc": "2026-10-03T17:49:05+00:00",
-    "score": 3,
-    "title": "I want to do business and apparel, but what schools do both?",
-    "url": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwtby9/i_want_to_do_business_and_apparel_but_what/",
-    "blurb": "Hi! So obviously, I've done research into both subjects and have been trying to find colleges that have a balance of both, but I'm having trouble. I've only just decided that I seriously want to go to a fashion/apparel s",
-    "field_guess": "design",
-    "type_guess": "program",
-    "audience_guess": "high_school",
-    "location_guess": "us",
-    "needs_review": true
-  },
-  {
-    "source": "r/premed",
-    "reddit_permalink": "https://www.reddit.com/r/premed/comments/1wwtlkc/i_feel_numb/",
-    "posted_utc": "2026-10-03T18:00:18+00:00",
-    "score": 3,
-    "title": "I feel numb",
-    "url": "https://www.reddit.com/r/premed/comments/1wwtlkc/i_feel_numb/",
-    "blurb": "I recently found out that I don\u2019t qualify for a state scholarship that would\u2019ve covered all of my tuition for college. I\u2019d been working towards said scholarship since I started ninth grade, and now I\u2019m a senior in hs/fre",
-    "field_guess": "biology",
-    "type_guess": "scholarship",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "audience_guess": "college",
     "location_guess": "us",
     "needs_review": true
   },
   {
-<<<<<<< HEAD
-=======
-    "source": "r/MathOlympiad",
-    "reddit_permalink": "https://www.reddit.com/r/MathOlympiad/comments/1wx01ie/idea_for_an_imolevel_problem_inspired_by_my/",
-    "posted_utc": "2026-10-03T22:39:44+00:00",
-    "score": 3,
-    "title": "Idea for an IMO-level problem inspired by my puzzle game, Tile Wipeout",
-    "url": "https://www.reddit.com/r/MathOlympiad/comments/1wx01ie/idea_for_an_imolevel_problem_inspired_by_my/",
-    "blurb": "My puzzle game, Tile Wipeout, led to the following proposed math olympiad problem. The rules are elementary, but proving that every starting arrangement can be solved seems surprisingly challenging. The problem statement",
-    "field_guess": "math",
-    "type_guess": "competition",
-    "audience_guess": "high_school",
-    "location_guess": "us",
-    "needs_review": true
-  },
-  {
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "source": "r/scholarships",
     "reddit_permalink": "https://www.reddit.com/r/scholarships/comments/1vncc7u/scholarship_websites/",
     "posted_utc": "2026-08-13T14:30:17+00:00",
@@ -69267,7 +68955,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/ApplyingToCollege",
     "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwpmi4/research_on_a_publication/",
     "posted_utc": "2026-10-03T15:11:42+00:00",
@@ -69338,8 +69025,6 @@
     "needs_review": true
   },
   {
-=======
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "source": "r/scholarships",
     "reddit_permalink": "https://www.reddit.com/r/scholarships/comments/1wx74po/are_there_existing_senior_high_school/",
     "posted_utc": "2026-10-04T04:58:01+00:00",
@@ -69354,7 +69039,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/ApplyingToCollege",
     "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wxnq4x/cs_ecs_vs_showing_the_whole_me/",
     "posted_utc": "2026-10-04T19:06:26+00:00",
@@ -69364,24 +69048,12 @@
     "blurb": "Intended CS major + gap year applicant here. I\u2019ve done multiple CS-related research/projects during my gap year, but I also have meaningful non-CS activities (cultural, debate, leadership, humanitarian work, etc.). I hav",
     "field_guess": "cs",
     "type_guess": "program",
-=======
-    "source": "r/highschool",
-    "reddit_permalink": "https://www.reddit.com/r/highschool/comments/1wwrgpt/how_to_do_real_research_for_free_in_high_school/",
-    "posted_utc": "2026-10-03T16:30:02+00:00",
-    "score": 2,
-    "title": "How to do real research for free in high school?",
-    "url": "https://www.reddit.com/r/highschool/comments/1wwrgpt/how_to_do_real_research_for_free_in_high_school/",
-    "blurb": "Hi everyone, I'm really interested in UX engineering, digital systems, front-end development, and HCI, and I'm wondering how I can get a mentor with a lab or get a mentor that I can work with on projects and case studies",
-    "field_guess": "design",
-    "type_guess": "mentorship",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "audience_guess": "high_school",
     "location_guess": "us",
     "needs_review": true
   },
   {
     "source": "r/ApplyingToCollege",
-<<<<<<< HEAD
     "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wxkkhl/question_about_transfer_standing_after_a_gap/",
     "posted_utc": "2026-10-04T16:57:48+00:00",
     "score": 2,
@@ -69452,8 +69124,6 @@
   },
   {
     "source": "r/ApplyingToCollege",
-=======
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wx4ppp/online_ecs_worries/",
     "posted_utc": "2026-10-04T02:41:57+00:00",
     "score": 2,
@@ -69495,7 +69165,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/internships",
     "reddit_permalink": "https://www.reddit.com/r/internships/comments/1wxi9hy/2029_btech_grad_3rd_sem_ai_at_top_7_iiit_73_cgpa/",
     "posted_utc": "2026-10-04T15:21:51+00:00",
@@ -69506,18 +69175,6 @@
     "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
-=======
-    "source": "r/ApplyingToCollege",
-    "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwpmi4/research_on_a_publication/",
-    "posted_utc": "2026-10-03T15:11:42+00:00",
-    "score": 2,
-    "title": "Research on a publication",
-    "url": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwpmi4/research_on_a_publication/",
-    "blurb": "What should i do like ion get like what is a good publication site and how do i like what is all needed in a research paper to publish it like i wanna publish it not a very highkey one just for my college application",
-    "field_guess": "interdisciplinary",
-    "type_guess": "journal",
-    "audience_guess": "high_school",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "location_guess": "us",
     "needs_review": true
   },
@@ -69537,7 +69194,6 @@
   },
   {
     "source": "r/csMajors",
-<<<<<<< HEAD
     "reddit_permalink": "https://www.reddit.com/r/csMajors/comments/1wxf2vh/what_are_some_skills_that_are_really_important/",
     "posted_utc": "2026-10-04T12:57:49+00:00",
     "score": 2,
@@ -69566,8 +69222,6 @@
   },
   {
     "source": "r/csMajors",
-=======
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "reddit_permalink": "https://www.reddit.com/r/csMajors/comments/1wxbdwm/help_me_out_please_phd_in_us_has_been_my_dream/",
     "posted_utc": "2026-10-04T09:22:18+00:00",
     "score": 2,
@@ -69581,7 +69235,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/premed",
     "reddit_permalink": "https://www.reddit.com/r/premed/comments/1wxo1xj/asking_for_letters_of_rec/",
     "posted_utc": "2026-10-04T19:19:42+00:00",
@@ -69605,17 +69258,6 @@
     "blurb": "I just want to see if people think I\u2019m being ridiculous or not\u2026 I work pretty high up at a large academic health system and hold an adjunct faculty title at the medical school. The school is competitive (515+ median MCAT",
     "field_guess": "biology",
     "type_guess": "volunteer",
-=======
-    "source": "r/csMajors",
-    "reddit_permalink": "https://www.reddit.com/r/csMajors/comments/1wwqjt9/are_the_internship_applications_to_rejections/",
-    "posted_utc": "2026-10-03T15:51:32+00:00",
-    "score": 2,
-    "title": "Are the internship applications to rejections ratio for someone who has no internships really that bad or is it just people only feel a need to post when their ratios are extremely bad?",
-    "url": "https://www.reddit.com/r/csMajors/comments/1wwqjt9/are_the_internship_applications_to_rejections/",
-    "blurb": "Title",
-    "field_guess": "cs",
-    "type_guess": "internship",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "audience_guess": "college",
     "location_guess": "us",
     "needs_review": true
@@ -69636,23 +69278,6 @@
   },
   {
     "source": "r/premed",
-<<<<<<< HEAD
-=======
-    "reddit_permalink": "https://www.reddit.com/r/premed/comments/1wx3kk1/what_am_i_missing/",
-    "posted_utc": "2026-10-04T01:40:25+00:00",
-    "score": 2,
-    "title": "What am I missing?",
-    "url": "https://www.reddit.com/r/premed/comments/1wx3kk1/what_am_i_missing/",
-    "blurb": "I am applying next cycle and wondering what I need to or MUST do to get everything ready for my application. What am I missing? My stats: 23M, BS in Microbiology + BS in Political Science cGPA 3.69, sGPA 3.74 I had 3 Cs ",
-    "field_guess": "cs",
-    "type_guess": "journal",
-    "audience_guess": "college",
-    "location_guess": "international",
-    "needs_review": true
-  },
-  {
-    "source": "r/premed",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "reddit_permalink": "https://www.reddit.com/r/premed/comments/1wx16bp/how_to_apply_for_university_research_labs_if_you/",
     "posted_utc": "2026-10-03T23:36:40+00:00",
     "score": 2,
@@ -69709,23 +69334,6 @@
   },
   {
     "source": "r/FinancialCareers",
-<<<<<<< HEAD
-=======
-    "reddit_permalink": "https://www.reddit.com/r/FinancialCareers/comments/1wx6ffq/profile_for_masters/",
-    "posted_utc": "2026-10-04T04:16:46+00:00",
-    "score": 2,
-    "title": "Profile for masters",
-    "url": "https://www.reddit.com/r/FinancialCareers/comments/1wx6ffq/profile_for_masters/",
-    "blurb": "Hello. I\u2019ll get straight to the point. My goal is to prepare for Financial Mathematics or Mathematical Economics programs in Europe; what steps can I take to strengthen my profile and aim for top-tier institutions? To su",
-    "field_guess": "physics",
-    "type_guess": "scholarship",
-    "audience_guess": "college",
-    "location_guess": "us",
-    "needs_review": true
-  },
-  {
-    "source": "r/FinancialCareers",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "reddit_permalink": "https://www.reddit.com/r/FinancialCareers/comments/1wwyamb/girls_who_invest_as_a_freshman/",
     "posted_utc": "2026-10-03T21:18:30+00:00",
     "score": 2,
@@ -69753,7 +69361,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/MathOlympiad",
     "reddit_permalink": "https://www.reddit.com/r/MathOlympiad/comments/1wx6471/online_math_olympiads/",
     "posted_utc": "2026-10-04T03:59:37+00:00",
@@ -69764,18 +69371,6 @@
     "field_guess": "math",
     "type_guess": "competition",
     "audience_guess": "high_school",
-=======
-    "source": "r/EngineeringStudents",
-    "reddit_permalink": "https://www.reddit.com/r/EngineeringStudents/comments/1wx508p/why_do_companies_even_lobby_to_students/",
-    "posted_utc": "2026-10-04T02:57:34+00:00",
-    "score": 2,
-    "title": "Why do companies even lobby to students?",
-    "url": "https://www.reddit.com/r/EngineeringStudents/comments/1wx508p/why_do_companies_even_lobby_to_students/",
-    "blurb": "why do engineering firms even lobby to students when the job market is so bad. Like who isn't going to apply for lockheed martin? is it just because they can or? I feel like they're going to get flooded with qualified ap",
-    "field_guess": "engineering",
-    "type_guess": "program",
-    "audience_guess": "college",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "location_guess": "us",
     "needs_review": true
   },
@@ -69808,7 +69403,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/biology",
     "reddit_permalink": "https://www.reddit.com/r/biology/comments/1wxk03j/im_in_my_second_year_of_my_biology_major_and_i/",
     "posted_utc": "2026-10-04T16:34:15+00:00",
@@ -69823,8 +69417,6 @@
     "needs_review": true
   },
   {
-=======
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "source": "r/scholarships",
     "reddit_permalink": "https://www.reddit.com/r/scholarships/comments/1vob37f/scholarship_and_financial_aid_resources_for_an/",
     "posted_utc": "2026-08-14T15:54:08+00:00",
@@ -123172,7 +122764,6 @@
   },
   {
     "source": "r/summerprogramresults",
-<<<<<<< HEAD
     "reddit_permalink": "https://www.reddit.com/r/summerprogramresults/comments/1wwurb4/still_no_thinkneuro_response/",
     "posted_utc": "2026-10-03T18:48:20+00:00",
     "score": 1,
@@ -123481,8 +123072,6 @@
   },
   {
     "source": "r/summerprogramresults",
-=======
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "reddit_permalink": "https://www.reddit.com/r/summerprogramresults/comments/1wx9rcs/has_anyone_been_to_sstp_iowa/",
     "posted_utc": "2026-10-04T07:37:50+00:00",
     "score": 1,
@@ -123566,7 +123155,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/scholarships",
     "reddit_permalink": "https://www.reddit.com/r/scholarships/comments/1wxndui/pakistani_student_12th_grade_ongoing_expected_84/",
     "posted_utc": "2026-10-04T18:52:53+00:00",
@@ -123576,66 +123164,18 @@
     "blurb": "Pakistani student, 12th grade ongoing (expected ~84%), Matric 89% \u2014 what are my chances for a Turkiye Burslari Scholarship?",
     "field_guess": "interdisciplinary",
     "type_guess": "scholarship",
-=======
-    "source": "r/summerprogramresults",
-    "reddit_permalink": "https://www.reddit.com/r/summerprogramresults/comments/1wwurb4/still_no_thinkneuro_response/",
-    "posted_utc": "2026-10-03T18:48:20+00:00",
-    "score": 1,
-    "title": "Still no Thinkneuro response???",
-    "url": "https://www.reddit.com/r/summerprogramresults/comments/1wwurb4/still_no_thinkneuro_response/",
-    "blurb": "I literally applied for early action and got deferred to regular action where (I thought) my application was going to be reviewed first in the RD pool. My application portal still has the pending status. According to sch",
-    "field_guess": "interdisciplinary",
-    "type_guess": "program",
-    "audience_guess": "high_school",
-    "location_guess": "us",
-    "needs_review": true
-  },
-  {
-    "source": "r/summerprogramresults",
-    "reddit_permalink": "https://www.reddit.com/r/summerprogramresults/comments/1wwt8e0/nysli_alumni_please_rise_i_need_help/",
-    "posted_utc": "2026-10-03T17:44:59+00:00",
-    "score": 1,
-    "title": "NYSLI ALUMNI PLEASE RISE!! (i need help)",
-    "url": "https://www.reddit.com/r/summerprogramresults/comments/1wwt8e0/nysli_alumni_please_rise_i_need_help/",
-    "blurb": "Hiii, if anyone has done the academic year or the summer program, can you let me know what it took to get in and what ur essays were like!! Including how you got to choose Summer or AY, I am still a little confused on th",
-    "field_guess": "interdisciplinary",
-    "type_guess": "program",
-    "audience_guess": "high_school",
-    "location_guess": "us",
-    "needs_review": true
-  },
-  {
-    "source": "r/summerprogramresults",
-    "reddit_permalink": "https://www.reddit.com/r/summerprogramresults/comments/1wwmw37/survey_science_communication_selfefficacy_scale/",
-    "posted_utc": "2026-10-03T13:10:02+00:00",
-    "score": 1,
-    "title": "Survey: SCIENCE COMMUNICATION SELF-EFFICACY SCALE (SCSES-HS) (Ages 14-18)",
-    "url": "https://www.reddit.com/r/summerprogramresults/comments/1wwmw37/survey_science_communication_selfefficacy_scale/",
-    "blurb": "Hi!!! I'm a high school student conducting an academic research project on science communication. It would be greatly appreciated if I could receive some responses to the linked anonymous survey. **Details of survey:** Y",
-    "field_guess": "interdisciplinary",
-    "type_guess": "program",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "audience_guess": "high_school",
     "location_guess": "us",
     "needs_review": true
   },
   {
     "source": "r/scholarships",
-<<<<<<< HEAD
     "reddit_permalink": "https://www.reddit.com/r/scholarships/comments/1wxhst5/jack_kent_cooke_scholarship/",
     "posted_utc": "2026-10-04T15:02:12+00:00",
     "score": 1,
     "title": "jack Kent cooke scholarship",
     "url": "https://www.reddit.com/r/scholarships/comments/1wxhst5/jack_kent_cooke_scholarship/",
     "blurb": "does anyone know if you can still win the jack kent cooke scholarship if you haven\u2019t taken any major tests like the SAT, ACT, or IB ?",
-=======
-    "reddit_permalink": "https://www.reddit.com/r/scholarships/comments/1wxf417/question_about_golden_door_scholarship/",
-    "posted_utc": "2026-10-04T12:59:32+00:00",
-    "score": 1,
-    "title": "Question about Golden Door scholarship",
-    "url": "https://www.reddit.com/r/scholarships/comments/1wxf417/question_about_golden_door_scholarship/",
-    "blurb": "Hi everyone, I got a notification through collegeboard the golden door scholarship opened but when I click the link/website. It tells me thay the page can't be found and can't find anywhere to apply. Is anyone having the",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "field_guess": "interdisciplinary",
     "type_guess": "scholarship",
     "audience_guess": "high_school",
@@ -123728,7 +123268,6 @@
   },
   {
     "source": "r/highschool",
-<<<<<<< HEAD
     "reddit_permalink": "https://www.reddit.com/r/highschool/comments/1wxmp4z/whats_your_best_homecoming_story/",
     "posted_utc": "2026-10-04T18:25:15+00:00",
     "score": 1,
@@ -123743,8 +123282,6 @@
   },
   {
     "source": "r/highschool",
-=======
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "reddit_permalink": "https://www.reddit.com/r/highschool/comments/1wxef5j/good_for_a_freshman_in_an_honors_program/",
     "posted_utc": "2026-10-04T12:23:32+00:00",
     "score": 1,
@@ -123787,7 +123324,6 @@
   },
   {
     "source": "r/ApplyingToCollege",
-<<<<<<< HEAD
     "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wxo7hb/css_profile_asking_for_college_id/",
     "posted_utc": "2026-10-04T19:26:02+00:00",
     "score": 1,
@@ -123808,14 +123344,6 @@
     "title": "Does this count as lying on my activites list? Is it a big deal?",
     "url": "https://www.reddit.com/r/ApplyingToCollege/comments/1wxllea/does_this_count_as_lying_on_my_activites_list_is/",
     "blurb": "My cross country coach, at the end of summer, said I was going to be a captain. Therefore, when creating my acitives list, I put captain as my position in 12th grade. However, my coach is really weird and for some reason",
-=======
-    "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wxdfgb/duke_ed_or_princeton_rea_with_legacy/",
-    "posted_utc": "2026-10-04T11:29:18+00:00",
-    "score": 1,
-    "title": "Duke ED or Princeton REA with legacy?",
-    "url": "https://www.reddit.com/r/ApplyingToCollege/comments/1wxdfgb/duke_ed_or_princeton_rea_with_legacy/",
-    "blurb": "i have ok stats, not exceptional but definitely within range in all the categories to somehow manage my way into an ivy. I'm doing AFROTC no matter where i end up and applying from east asia. my dad graduated from prince",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "field_guess": "interdisciplinary",
     "type_guess": "competition",
     "audience_guess": "high_school",
@@ -123824,7 +123352,6 @@
   },
   {
     "source": "r/ApplyingToCollege",
-<<<<<<< HEAD
     "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wxj9vc/b_in_precalc/",
     "posted_utc": "2026-10-04T16:04:00+00:00",
     "score": 1,
@@ -123853,8 +123380,6 @@
   },
   {
     "source": "r/ApplyingToCollege",
-=======
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wxcj41/uchicago_ed0_application_portal/",
     "posted_utc": "2026-10-04T10:35:07+00:00",
     "score": 1,
@@ -123966,7 +123491,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/internships",
     "reddit_permalink": "https://www.reddit.com/r/internships/comments/1wxkwn4/taxes_for_interns_what_am_i_supposed_to_file/",
     "posted_utc": "2026-10-04T17:11:33+00:00",
@@ -123977,23 +123501,10 @@
     "field_guess": "interdisciplinary",
     "type_guess": "internship",
     "audience_guess": "college",
-=======
-    "source": "r/ApplyingToCollege",
-    "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwtu57/are_the_scholarships_on_these_sites_worth_it/",
-    "posted_utc": "2026-10-03T18:09:50+00:00",
-    "score": 1,
-    "title": "Are the scholarships on these sites worth it?",
-    "url": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwtu57/are_the_scholarships_on_these_sites_worth_it/",
-    "blurb": "Lately I've tried to step away from applying to scholarships on Niche and College Board just because I know so many people use it. Is it still worth it to apply there? I haven't gotten a single penny from those I've appl",
-    "field_guess": "humanities",
-    "type_guess": "program",
-    "audience_guess": "high_school",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "location_guess": "us",
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/internships",
     "reddit_permalink": "https://www.reddit.com/r/internships/comments/1wxkapi/makemytrip_project_based_internship_analytics/",
     "posted_utc": "2026-10-04T16:46:29+00:00",
@@ -124074,23 +123585,10 @@
     "field_guess": "interdisciplinary",
     "type_guess": "program",
     "audience_guess": "college",
-=======
-    "source": "r/ApplyingToCollege",
-    "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwsx9i/submitting_harvard_research_supplement_its/",
-    "posted_utc": "2026-10-03T17:32:13+00:00",
-    "score": 1,
-    "title": "submitting harvard research supplement - ITS IMPOSSIBLE!?",
-    "url": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwsx9i/submitting_harvard_research_supplement_its/",
-    "blurb": "hi i have limited technological abilities so this might not be a surprise but i simply cannot figure out how to submit a harvard research supplement... online it tells us to go to the applicant portal and submit it there",
-    "field_guess": "interdisciplinary",
-    "type_guess": "program",
-    "audience_guess": "high_school",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "location_guess": "us",
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/internships",
     "reddit_permalink": "https://www.reddit.com/r/internships/comments/1wxg9vi/nfl_2027_rotational_program_thread/",
     "posted_utc": "2026-10-04T13:55:04+00:00",
@@ -124101,95 +123599,10 @@
     "field_guess": "interdisciplinary",
     "type_guess": "program",
     "audience_guess": "college",
-=======
-    "source": "r/ApplyingToCollege",
-    "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wws45e/why_am_i_becoming_more_involved_with_kids/",
-    "posted_utc": "2026-10-03T16:58:28+00:00",
-    "score": 1,
-    "title": "Why am I becoming more involved with kids",
-    "url": "https://www.reddit.com/r/ApplyingToCollege/comments/1wws45e/why_am_i_becoming_more_involved_with_kids/",
-    "blurb": "My major is in economics so I tried to do as many business-y things as possible (like marketing events and business organizations), but recently everything I do is becoming for kids?? Like I\u2019m doing a research project on",
-    "field_guess": "business",
-    "type_guess": "volunteer",
-    "audience_guess": "high_school",
     "location_guess": "us",
     "needs_review": true
   },
   {
-    "source": "r/ApplyingToCollege",
-    "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwp1ex/is_it_possible_that_a_reader_doesnt_know_certain/",
-    "posted_utc": "2026-10-03T14:46:50+00:00",
-    "score": 1,
-    "title": "Is it possible that a reader doesn't know certain things in their school that I write about?",
-    "url": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwp1ex/is_it_possible_that_a_reader_doesnt_know_certain/",
-    "blurb": "For \"Why Us\" essays, I'm mentioning some very specific things to the school, like student-led groups. The group in question has been pretty well-established for a few years, but uses a website built with Wix. Could a rea",
-    "field_guess": "interdisciplinary",
-    "type_guess": "program",
-    "audience_guess": "high_school",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
-    "location_guess": "us",
-    "needs_review": true
-  },
-  {
-<<<<<<< HEAD
-=======
-    "source": "r/ApplyingToCollege",
-    "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwhtfe/for_international_students_in_us/",
-    "posted_utc": "2026-10-03T08:13:20+00:00",
-    "score": 1,
-    "title": "For International Students in US",
-    "url": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwhtfe/for_international_students_in_us/",
-    "blurb": "Hi everyone, I\u2019m planning to apply to US universities for a bachelor\u2019s degree in Computer Science / Computer Engineering / AI. I\u2019m trying to understand what I should realistically do now to maximize my chances of getting",
-    "field_guess": "cs",
-    "type_guess": "scholarship",
-    "audience_guess": "high_school",
-    "location_guess": "international",
-    "needs_review": true
-  },
-  {
-    "source": "r/ApplyingToCollege",
-    "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwffg1/is_an_ib_score_of_3845_enough_for_stanford/",
-    "posted_utc": "2026-10-03T05:46:15+00:00",
-    "score": 1,
-    "title": "Is an IB score of 38/45 enough for Stanford?",
-    "url": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwffg1/is_an_ib_score_of_3845_enough_for_stanford/",
-    "blurb": "I currently have an IB score of 38/45 and an SAT score of 1500. I don't think it's enough for the school I want to go to, so should I just apply REA to Stanford? But if there's basically no chance of me getting in, I don",
-    "field_guess": "interdisciplinary",
-    "type_guess": "program",
-    "audience_guess": "high_school",
-    "location_guess": "us",
-    "needs_review": true
-  },
-  {
-    "source": "r/ApplyingToCollege",
-    "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwei6l/good_activities_meh_sat_need_opinions_for/",
-    "posted_utc": "2026-10-03T04:51:58+00:00",
-    "score": 1,
-    "title": "Good activities, meh SAT, need opinions for colleges; Public Health/ Government",
-    "url": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwei6l/good_activities_meh_sat_need_opinions_for/",
-    "blurb": "Hey everyone! I'm a senior and really stressed out rn looking for some good school recommendations and just feedback in general for my application. I\u2019m especially interested in schools with strong programs in **public po",
-    "field_guess": "biology",
-    "type_guess": "scholarship",
-    "audience_guess": "high_school",
-    "location_guess": "international",
-    "needs_review": true
-  },
-  {
-    "source": "r/ApplyingToCollege",
-    "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1ww458o/summer_commitments_dilemma/",
-    "posted_utc": "2026-10-02T20:21:38+00:00",
-    "score": 1,
-    "title": "Summer commitments dilemma",
-    "url": "https://www.reddit.com/r/ApplyingToCollege/comments/1ww458o/summer_commitments_dilemma/",
-    "blurb": "So there are two things my boarding school offers that I\u2019ve both been wanting to do for a long time and they both just so happen to conflict during the summer. One is a two week trip to China, and the other is a scholars",
-    "field_guess": "interdisciplinary",
-    "type_guess": "program",
-    "audience_guess": "high_school",
-    "location_guess": "international",
-    "needs_review": true
-  },
-  {
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "source": "r/internships",
     "reddit_permalink": "https://www.reddit.com/r/internships/comments/1wx5zvg/pg_fa_bta_internship/",
     "posted_utc": "2026-10-04T03:52:43+00:00",
@@ -124204,7 +123617,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/csMajors",
     "reddit_permalink": "https://www.reddit.com/r/csMajors/comments/1wxml7w/is_nasdaq_visiting_anyones_college_for_internship/",
     "posted_utc": "2026-10-04T18:20:50+00:00",
@@ -124213,16 +123625,6 @@
     "url": "/r/Btechtards/comments/1wxmku7/is_nasdaq_visiting_anyones_college_for_internship/",
     "blurb": "Is nasdaq visiting anyone's college for internship hiring?",
     "field_guess": "cs",
-=======
-    "source": "r/internships",
-    "reddit_permalink": "https://www.reddit.com/r/internships/comments/1wx3uw7/pg_internship_toronto/",
-    "posted_utc": "2026-10-04T01:55:45+00:00",
-    "score": 1,
-    "title": "P&amp;G Internship Toronto",
-    "url": "https://www.reddit.com/r/internships/comments/1wx3uw7/pg_internship_toronto/",
-    "blurb": "Anyone interview for P&amp;G internships for summer 2027 toronto?",
-    "field_guess": "interdisciplinary",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "type_guess": "internship",
     "audience_guess": "college",
     "location_guess": "us",
@@ -124230,7 +123632,6 @@
   },
   {
     "source": "r/csMajors",
-<<<<<<< HEAD
     "reddit_permalink": "https://www.reddit.com/r/csMajors/comments/1wxk9ha/makemytrip_project_based_internship_analytics/",
     "posted_utc": "2026-10-04T16:45:07+00:00",
     "score": 1,
@@ -124239,37 +123640,18 @@
     "blurb": "Has anyone given the assessment what was asked? Can anyone tell me?",
     "field_guess": "cs",
     "type_guess": "internship",
-=======
-    "reddit_permalink": "https://www.reddit.com/r/csMajors/comments/1wxf2vh/what_are_some_skills_that_are_really_important/",
-    "posted_utc": "2026-10-04T12:57:49+00:00",
-    "score": 1,
-    "title": "What are some skills that are really important right now or can get important in the following years.",
-    "url": "https://i.redd.it/1deiqhjc7gth1.png",
-    "blurb": "For those people who are working at top positions and top companies as quants, research, engineers, leaders, who have worked with smart colleagues and hardworking people, what do you think from your experience are the MO",
-    "field_guess": "cs",
-    "type_guess": "program",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "audience_guess": "college",
     "location_guess": "us",
     "needs_review": true
   },
   {
     "source": "r/csMajors",
-<<<<<<< HEAD
     "reddit_permalink": "https://www.reddit.com/r/csMajors/comments/1wxk8j3/microsoft_internship_offer_can_i_still_interview/",
     "posted_utc": "2026-10-04T16:44:02+00:00",
     "score": 1,
     "title": "Microsoft internship offer \u2014 can I still interview for another role at Microsoft?",
     "url": "https://www.reddit.com/r/csMajors/comments/1wxk8j3/microsoft_internship_offer_can_i_still_interview/",
     "blurb": "I recently received a **Software Engineering internship offer from Microsoft**, but I\u2019m more interested in eventually moving toward Product Management. Before accepting the SWE offer, I applied to a **Product Manager int",
-=======
-    "reddit_permalink": "https://www.reddit.com/r/csMajors/comments/1wxddyc/anyone_heard_back_from_atlassian_swe_intern/",
-    "posted_utc": "2026-10-04T11:26:41+00:00",
-    "score": 1,
-    "title": "Anyone heard back from Atlassian SWE Intern Summer 2027 US?",
-    "url": "https://www.reddit.com/r/csMajors/comments/1wxddyc/anyone_heard_back_from_atlassian_swe_intern/",
-    "blurb": "I applied the day they opened the role but still haven\u2019t heard anyrhjng. was wondering if anyone heard back about OA or next steps",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "field_guess": "cs",
     "type_guess": "internship",
     "audience_guess": "college",
@@ -124305,7 +123687,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/premed",
     "reddit_permalink": "https://www.reddit.com/r/premed/comments/1wxmob3/30yearold_nontrad_33_cgpa_with_downward_trend/",
     "posted_utc": "2026-10-04T18:24:20+00:00",
@@ -124315,17 +123696,6 @@
     "blurb": "I\u2019m 30 and seriously considering changing careers and pursuing medicine, with neurology being my current primary interest. I\u2019m looking for realistic advice about whether my academic record is repairable and what route wo",
     "field_guess": "biology",
     "type_guess": "program",
-=======
-    "source": "r/csMajors",
-    "reddit_permalink": "https://www.reddit.com/r/csMajors/comments/1wwoisn/urbn_internship_process/",
-    "posted_utc": "2026-10-03T14:24:19+00:00",
-    "score": 1,
-    "title": "URBN Internship Process",
-    "url": "https://www.reddit.com/r/csMajors/comments/1wwoisn/urbn_internship_process/",
-    "blurb": "I recently applied to URBN's swe internship and completed my virtual interview this morning. To anyone who's also been a part of URBN's internship program before, how long does it take for them to get back to you after t",
-    "field_guess": "cs",
-    "type_guess": "internship",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "audience_guess": "college",
     "location_guess": "us",
     "needs_review": true
@@ -124387,23 +123757,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
-=======
-    "source": "r/premed",
-    "reddit_permalink": "https://www.reddit.com/r/premed/comments/1wwnx3f/premed_course_schedule/",
-    "posted_utc": "2026-10-03T13:58:00+00:00",
-    "score": 1,
-    "title": "pre-med course schedule",
-    "url": "https://www.reddit.com/r/premed/comments/1wwnx3f/premed_course_schedule/",
-    "blurb": "hey guys sorry if this is dumb, but i'm a bio major at my university and i'm currently trying to figure out my schedule for next year. so far, i've taken bio 1 + lab, chem 1, and calc 1 next semester, i'm planning on tak",
-    "field_guess": "biology",
-    "type_guess": "program",
-    "audience_guess": "college",
-    "location_guess": "us",
-    "needs_review": true
-  },
-  {
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "source": "r/REU",
     "reddit_permalink": "https://www.reddit.com/r/REU/comments/1wwwp3z/best_way_to_apply_to_a_specific_mentor/",
     "posted_utc": "2026-10-03T20:09:04+00:00",
@@ -124419,7 +123772,6 @@
   },
   {
     "source": "r/FinancialCareers",
-<<<<<<< HEAD
     "reddit_permalink": "https://www.reddit.com/r/FinancialCareers/comments/1wxok99/academic_earlycareer_financial_services/",
     "posted_utc": "2026-10-04T19:40:46+00:00",
     "score": 1,
@@ -124443,23 +123795,11 @@
     "field_guess": "engineering",
     "type_guess": "internship",
     "audience_guess": "college",
-=======
-    "reddit_permalink": "https://www.reddit.com/r/FinancialCareers/comments/1wxdkot/ive_still_not_got_a_job_after_graduation_would/",
-    "posted_utc": "2026-10-04T11:37:48+00:00",
-    "score": 1,
-    "title": "I've still not got a job after graduation. Would appreciate some tips.",
-    "url": "https://www.reddit.com/r/FinancialCareers/comments/1wxdkot/ive_still_not_got_a_job_after_graduation_would/",
-    "blurb": "Hi Guys. Forgive me for a rather grim post. 24M Business and Pol Science graduate from a top Asian university with slightly above average (but not 2:1) grades. Nothing to write home about. I graduated in 2025 and have no",
-    "field_guess": "cs",
-    "type_guess": "program",
-    "audience_guess": "college",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "location_guess": "us",
     "needs_review": true
   },
   {
     "source": "r/EngineeringStudents",
-<<<<<<< HEAD
     "reddit_permalink": "https://www.reddit.com/r/EngineeringStudents/comments/1wxkg4l/taking_calculus_2_and_physics_1_over_the_summer/",
     "posted_utc": "2026-10-04T16:52:54+00:00",
     "score": 1,
@@ -124468,16 +123808,6 @@
     "blurb": "I am an aerospace engineering student at KU pursuing a bachelors. I talked to my advisor recently and she recommended to take both calculus 2 and physics 1 over the summer. I plan to take them at my community college the",
     "field_guess": "physics",
     "type_guess": "program",
-=======
-    "reddit_permalink": "https://www.reddit.com/r/EngineeringStudents/comments/1wxcyl9/industrial_vs_mechanical/",
-    "posted_utc": "2026-10-04T11:01:07+00:00",
-    "score": 1,
-    "title": "Industrial vs Mechanical",
-    "url": "https://www.reddit.com/r/EngineeringStudents/comments/1wxcyl9/industrial_vs_mechanical/",
-    "blurb": "Hey guys, I\u2019m from Jordan \ud83c\uddef\ud83c\uddf4, and I\u2019m currently deciding whether to pursue Industrial Engineering or Mechanical Engineering. I don\u2019t really care about passion or similar things. My main priority is which degree would giv",
-    "field_guess": "cs",
-    "type_guess": "journal",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "audience_guess": "college",
     "location_guess": "us",
     "needs_review": true
@@ -124554,23 +123884,6 @@
   },
   {
     "source": "r/EngineeringStudents",
-<<<<<<< HEAD
-=======
-    "reddit_permalink": "https://www.reddit.com/r/EngineeringStudents/comments/1wwy2sb/best_course_of_action/",
-    "posted_utc": "2026-10-03T21:08:47+00:00",
-    "score": 1,
-    "title": "Best course of action",
-    "url": "https://www.reddit.com/r/EngineeringStudents/comments/1wwy2sb/best_course_of_action/",
-    "blurb": "right now i am thinking of changing my major from accounting to mechanical engineering ill have around 72 credits after this semester with this being my first semester of my third year im at Rutgers currently and i could",
-    "field_guess": "math",
-    "type_guess": "program",
-    "audience_guess": "college",
-    "location_guess": "us",
-    "needs_review": true
-  },
-  {
-    "source": "r/EngineeringStudents",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "reddit_permalink": "https://www.reddit.com/r/EngineeringStudents/comments/1wwvoqc/is_the_asme_sdc_competition_or_super_mileage/",
     "posted_utc": "2026-10-03T19:26:51+00:00",
     "score": 1,
@@ -124584,7 +123897,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/MathOlympiad",
     "reddit_permalink": "https://www.reddit.com/r/MathOlympiad/comments/1wxnvcd/maths/",
     "posted_utc": "2026-10-04T19:12:15+00:00",
@@ -124592,29 +123904,6 @@
     "title": "Maths",
     "url": "https://www.reddit.com/r/MathOlympiad/comments/1wxnvcd/maths/",
     "blurb": "Hi, I\u2019m going to take the Mathematics Superintendent\u2019s Competition around October 20th. I\u2019d like some advice on how I can practice besides doing previous years\u2019 papers. You can reply in Polish or English. I\u2019d really appr",
-=======
-    "source": "r/labrats",
-    "reddit_permalink": "https://www.reddit.com/r/labrats/comments/1wwo5ed/advice_on_internship_opportunity/",
-    "posted_utc": "2026-10-03T14:08:00+00:00",
-    "score": 1,
-    "title": "Advice on internship opportunity",
-    "url": "https://www.reddit.com/r/labrats/comments/1wwo5ed/advice_on_internship_opportunity/",
-    "blurb": "Hello! I am a future lab technician in dire need of some perspective and guidance. I live in Europe and I'm nearly at the end of my education which is a vocational school, so higher than high school level but lower than ",
-    "field_guess": "biology",
-    "type_guess": "internship",
-    "audience_guess": "college",
-    "location_guess": "international",
-    "needs_review": true
-  },
-  {
-    "source": "r/MathOlympiad",
-    "reddit_permalink": "https://www.reddit.com/r/MathOlympiad/comments/1wx6471/online_math_olympiads/",
-    "posted_utc": "2026-10-04T03:59:37+00:00",
-    "score": 1,
-    "title": "Online Math Olympiads",
-    "url": "https://www.reddit.com/r/MathOlympiad/comments/1wx6471/online_math_olympiads/",
-    "blurb": "Just finished TIMO and it\u2019s my first time ever going to any math olympiad. It was held online and I was honestly sweating like crazy. Since im on mac, I accidentally clicked an app (was loading, quit it immediately), and",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "field_guess": "math",
     "type_guess": "competition",
     "audience_guess": "high_school",
@@ -124664,7 +123953,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/PhysicsStudents",
     "reddit_permalink": "https://www.reddit.com/r/PhysicsStudents/comments/1wxns7e/indian_undergrad_routes_into_condensed_matter/",
     "posted_utc": "2026-10-04T19:08:43+00:00",
@@ -124676,19 +123964,6 @@
     "type_guess": "program",
     "audience_guess": "college",
     "location_guess": "international",
-=======
-    "source": "r/MathOlympiad",
-    "reddit_permalink": "https://www.reddit.com/r/MathOlympiad/comments/1wwpnxa/ukmt_imc/",
-    "posted_utc": "2026-10-03T15:13:25+00:00",
-    "score": 1,
-    "title": "UKMT IMC",
-    "url": "https://www.reddit.com/r/MathOlympiad/comments/1wwpnxa/ukmt_imc/",
-    "blurb": "Would doing AMC 10 be helpful for preparation if my goal is Maclaurin olympiad?",
-    "field_guess": "math",
-    "type_guess": "competition",
-    "audience_guess": "high_school",
-    "location_guess": "us",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "needs_review": true
   },
   {
@@ -145334,65 +144609,6 @@
     "review": "auto-kept"
   },
   {
-<<<<<<< HEAD
-=======
-    "source": "r/summerprogramresults",
-    "reddit_permalink": "https://www.reddit.com/r/summerprogramresults/comments/1wx4ijz/secrets_of_isef_winners_rsi_alumni_and/",
-    "posted_utc": "2026-10-04T02:31:07+00:00",
-    "score": 0,
-    "title": "Secrets of ISEF winners, RSI alumni, and Harvard/MIT/Yale admits, compiled into one free book",
-    "url": "https://www.reddit.com/r/summerprogramresults/comments/1wx4ijz/secrets_of_isef_winners_rsi_alumni_and/",
-    "blurb": "At 14, I wanted to do real research and had no idea where to start. I had no lab, no mentor, and no one to ask. I taught myself to read papers I barely understood, sent cold emails that went unanswered, and kept going un",
-    "field_guess": "interdisciplinary",
-    "type_guess": "mentorship",
-    "audience_guess": "high_school",
-    "location_guess": "us",
-    "needs_review": true
-  },
-  {
-    "source": "r/scholarships",
-    "reddit_permalink": "https://www.reddit.com/r/scholarships/comments/1www6tb/do_anyone_got_scholarship_of_delhi_higher_and/",
-    "posted_utc": "2026-10-03T19:48:03+00:00",
-    "score": 0,
-    "title": "Do anyone got scholarship of delhi higher and technical education support scheme 2026",
-    "url": "/r/u_The-Vansh-Gaming-15/comments/1www3rn/do_anyone_got_scholarship_of_delhi_higher_and/",
-    "blurb": "Do anyone got scholarship of delhi higher and technical education support scheme 2026",
-    "field_guess": "interdisciplinary",
-    "type_guess": "scholarship",
-    "audience_guess": "high_school",
-    "location_guess": "us",
-    "needs_review": true
-  },
-  {
-    "source": "r/ApplyingToCollege",
-    "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwy7os/i_want_to_study_for_free/",
-    "posted_utc": "2026-10-03T21:14:55+00:00",
-    "score": 0,
-    "title": "I want to study for free",
-    "url": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwy7os/i_want_to_study_for_free/",
-    "blurb": "hiii! I got a 1500+ score on my SAT, and my school GPA is 3.3. I have also done volunteer work, such as Each One, Teach One a literacy program under the Prime Minister\u2019s Roshan Pakistan National Literacy Drive, where I h",
-    "field_guess": "interdisciplinary",
-    "type_guess": "volunteer",
-    "audience_guess": "high_school",
-    "location_guess": "us",
-    "needs_review": true
-  },
-  {
-    "source": "r/ApplyingToCollege",
-    "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwqb49/ea_vs_rd/",
-    "posted_utc": "2026-10-03T15:41:02+00:00",
-    "score": 0,
-    "title": "EA vs RD",
-    "url": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwqb49/ea_vs_rd/",
-    "blurb": "Is applying to EA actually giving a boost in chances? Ive heard its just that less and more competitive people apply, so acceptance rate just increases on paper; it doesnt actually boost chances of getting in. For contex",
-    "field_guess": "interdisciplinary",
-    "type_guess": "program",
-    "audience_guess": "high_school",
-    "location_guess": "international",
-    "needs_review": true
-  },
-  {
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "source": "r/ApplyingToCollege",
     "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wwq8hc/ea_deadline_coming_up/",
     "posted_utc": "2026-10-03T15:37:55+00:00",
@@ -145450,23 +144666,6 @@
   },
   {
     "source": "r/csMajors",
-<<<<<<< HEAD
-=======
-    "reddit_permalink": "https://www.reddit.com/r/csMajors/comments/1wxc0oo/google_job_is_a_scam/",
-    "posted_utc": "2026-10-04T10:03:08+00:00",
-    "score": 0,
-    "title": "GOOGLE JOB IS A SCAM \ud83d\udea8",
-    "url": "https://www.reddit.com/r/csMajors/comments/1wxc0oo/google_job_is_a_scam/",
-    "blurb": "Guys, I'm genuinely sorry for the clickbait and please dont get mad, here's the actual reason I'm posting. I want to get into Google. But I don't want to follow a saturated roadmap that tells me to apply -&gt; wait -&gt;",
-    "field_guess": "cs",
-    "type_guess": "internship",
-    "audience_guess": "college",
-    "location_guess": "us",
-    "needs_review": true
-  },
-  {
-    "source": "r/csMajors",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "reddit_permalink": "https://www.reddit.com/r/csMajors/comments/1wwq0kg/can_someone_help_me_out_hi_im_a_20f_and_im_cs/",
     "posted_utc": "2026-10-03T15:28:23+00:00",
     "score": 0,
@@ -145480,7 +144679,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "devpost",
     "reddit_permalink": "",
     "posted_utc": "2026-10-03T19:26:57.987086+00:00",
@@ -145627,8 +144825,6 @@
     "needs_review": true
   },
   {
-=======
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "source": "r/EngineeringStudents",
     "reddit_permalink": "https://www.reddit.com/r/EngineeringStudents/comments/1wx7ynx/fourier_series_and_heat_transfer/",
     "posted_utc": "2026-10-04T05:47:03+00:00",
@@ -145644,7 +144840,6 @@
   },
   {
     "source": "r/EngineeringStudents",
-<<<<<<< HEAD
     "reddit_permalink": "https://www.reddit.com/r/EngineeringStudents/comments/1wx508p/why_do_companies_even_lobby_to_students/",
     "posted_utc": "2026-10-04T02:57:34+00:00",
     "score": 0,
@@ -145659,8 +144854,6 @@
   },
   {
     "source": "r/EngineeringStudents",
-=======
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "reddit_permalink": "https://www.reddit.com/r/EngineeringStudents/comments/1wwzlik/confused_about_languages_to_learn/",
     "posted_utc": "2026-10-03T22:18:20+00:00",
     "score": 0,
@@ -145674,7 +144867,6 @@
     "needs_review": true
   },
   {
-<<<<<<< HEAD
     "source": "r/labrats",
     "reddit_permalink": "https://www.reddit.com/r/labrats/comments/1wxhxh2/researching_diabetic_foot_ulcers_would_really/",
     "posted_utc": "2026-10-04T15:07:40+00:00",
@@ -145712,15 +144904,6 @@
     "title": "Future innovators hackothon",
     "url": "https://future-innovators-hackothon.devpost.com/",
     "blurb": "Open hackathon on Devpost \u2014 themes: Cybersecurity, Education, Fintech. Submissions close 2026-10-04.",
-=======
-    "source": "devpost",
-    "reddit_permalink": "",
-    "posted_utc": "2026-10-04T13:30:05.178709+00:00",
-    "score": 0,
-    "title": "StormHacks 2026",
-    "url": "https://stormhacks2026.devpost.com/",
-    "blurb": "Open hackathon on Devpost \u2014 themes: Beginner Friendly. Submissions close 2026-10-04.",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "deadline_guess": "2026-10-04",
     "field_guess": "cs",
     "type_guess": "competition",
@@ -145732,7 +144915,6 @@
   {
     "source": "devpost",
     "reddit_permalink": "",
-<<<<<<< HEAD
     "posted_utc": "2026-10-04T19:51:55.615698+00:00",
     "score": 0,
     "title": "InterWell Hack2.0",
@@ -145740,19 +144922,133 @@
     "blurb": "Open hackathon on Devpost \u2014 themes: Communication, Machine Learning/AI, Web. Submissions close 2026-10-31.",
     "deadline_guess": "2026-10-31",
     "field_guess": "humanities",
-=======
-    "posted_utc": "2026-10-04T13:30:09.700306+00:00",
-    "score": 0,
-    "title": "MHacks 2026",
-    "url": "https://mhacks-2026.devpost.com/",
-    "blurb": "Open hackathon on Devpost \u2014 themes: Beginner Friendly, Open Ended. Submissions close 2026-10-04.",
-    "deadline_guess": "2026-10-04",
-    "field_guess": "cs",
     "type_guess": "competition",
     "audience_guess": "college",
     "location_guess": "global",
     "needs_review": true,
     "review": "auto-kept"
+  },
+  {
+    "source": "ctftime",
+    "reddit_permalink": "",
+    "posted_utc": "2026-10-04T19:51:57.753516+00:00",
+    "score": 0,
+    "title": "cruXipher 2026 - ATMoS '26, BITS Hyderabad",
+    "url": "https://cruxipher.crux-bphc.com/",
+    "blurb": "Jeopardy security competition, online, open entry. Runs 48h. 1 teams registered. Starts 2026-10-23. Solo entry is permitted. cruXipher: A development-style Capture-the-Flag competition where teams of people come together to solve challenges that involve the skills of problem-solving, programming, cybersecurity, and general knowledge of computers to rise to the to",
+    "deadline_guess": "2026-10-23",
+    "field_guess": "cs",
+    "type_guess": "competition",
+    "audience_guess": "high_school",
+    "location_guess": "global",
+    "needs_review": true,
+    "review": "auto-kept"
+  },
+  {
+    "source": "ctftime",
+    "reddit_permalink": "",
+    "posted_utc": "2026-10-04T19:51:57.753516+00:00",
+    "score": 0,
+    "title": "2026 Qiangwang Challenge on Cyber Mimic Defense Qualification",
+    "url": "https://nest.pmlabs.com.cn/en/events/qiangwang-9/registration",
+    "blurb": "Jeopardy security competition, online, open entry. Runs 24h. Starts 2026-10-31. Solo entry is permitted. The 2026 Qiangwang Challenge on Cyber Mimic Defense Qualification is the online qualifying round of the 9th Qiangwang International Elite Challenge on Cyber Mimic Defense. This team-based Jeopardy CTF features standard CTF challenges and se",
+    "deadline_guess": "2026-10-31",
+    "field_guess": "cs",
+    "type_guess": "competition",
+    "audience_guess": "high_school",
+    "location_guess": "global",
+    "needs_review": true,
+    "review": "auto-kept"
+  },
+  {
+    "source": "ctftime",
+    "reddit_permalink": "",
+    "posted_utc": "2026-10-04T19:51:57.753516+00:00",
+    "score": 0,
+    "title": "Russian CTF Cup X Qualifier",
+    "url": "https://ctfcup.ru/",
+    "blurb": "Jeopardy security competition, online, open entry. Runs 24h. Starts 2026-10-31. Solo entry is permitted. Russian CTF Cup X, Qualifier. https://ctfcup.ru/registration 12:00 UTC+3 (Moscow) 31 October - 12:00 UTC+3 (Moscow) 01 November. Online. The top 10 teams from each category (academic, mixed, school, and secondary vocational) will be invited",
+    "deadline_guess": "2026-10-31",
+    "field_guess": "cs",
+    "type_guess": "competition",
+    "audience_guess": "high_school",
+    "location_guess": "global",
+    "needs_review": true,
+    "review": "auto-kept"
+  },
+  {
+    "source": "ctftime",
+    "reddit_permalink": "",
+    "posted_utc": "2026-10-04T19:51:57.753516+00:00",
+    "score": 0,
+    "title": "Mimic",
+    "url": "https://ctf.rarebytehub.com/events/mimic",
+    "blurb": "Jeopardy security competition, online, open entry. Runs 24h. Starts 2026-11-07. Solo entry is permitted. Mimic is an online Jeopardy-style CTF by Rare Byte Hub. Some challenges are exactly what they look like, and some aren't. Figure out which is which. There's something for everyone, from beginners to experienced players. Teams of 1-4 members",
+    "deadline_guess": "2026-11-07",
+    "field_guess": "cs",
+    "type_guess": "competition",
+    "audience_guess": "high_school",
+    "location_guess": "global",
+    "needs_review": true,
+    "review": "auto-kept"
+  },
+  {
+    "source": "ctftime",
+    "reddit_permalink": "",
+    "posted_utc": "2026-10-04T19:51:57.753516+00:00",
+    "score": 0,
+    "title": "InIt CTF",
+    "url": "https://hackersinindia.com/init-ctf",
+    "blurb": "Jeopardy security competition, online, open entry. Runs 8h. Starts 2026-11-14. Solo entry is permitted. InIt CTF is HII's (Hackers in India) beginner-focused Capture The Flag event, free and open to participants across India and internationally. 8 hours, Jeopardy-style, solo or teams of up to 4, across Web, Crypto, Forensics, OSINT, and Misc ",
+    "deadline_guess": "2026-11-14",
+    "field_guess": "cs",
+    "type_guess": "competition",
+    "audience_guess": "high_school",
+    "location_guess": "global",
+    "needs_review": true,
+    "review": "auto-kept"
+  },
+  {
+    "source": "r/internships",
+    "reddit_permalink": "https://www.reddit.com/r/internships/comments/1wx3uw7/pg_internship_toronto/",
+    "posted_utc": "2026-10-04T01:55:45+00:00",
+    "score": 1,
+    "title": "P&amp;G Internship Toronto",
+    "url": "https://www.reddit.com/r/internships/comments/1wx3uw7/pg_internship_toronto/",
+    "blurb": "Anyone interview for P&amp;G internships for summer 2027 toronto?",
+    "field_guess": "interdisciplinary",
+    "type_guess": "internship",
+    "audience_guess": "college",
+    "location_guess": "us",
+    "needs_review": true
+  },
+  {
+    "source": "r/EngineeringStudents",
+    "reddit_permalink": "https://www.reddit.com/r/EngineeringStudents/comments/1wwy2sb/best_course_of_action/",
+    "posted_utc": "2026-10-03T21:08:47+00:00",
+    "score": 1,
+    "title": "Best course of action",
+    "url": "https://www.reddit.com/r/EngineeringStudents/comments/1wwy2sb/best_course_of_action/",
+    "blurb": "right now i am thinking of changing my major from accounting to mechanical engineering ill have around 72 credits after this semester with this being my first semester of my third year im at Rutgers currently and i could",
+    "field_guess": "math",
+    "type_guess": "program",
+    "audience_guess": "college",
+    "location_guess": "us",
+    "needs_review": true
+  },
+  {
+    "source": "r/csMajors",
+    "reddit_permalink": "https://www.reddit.com/r/csMajors/comments/1wxc0oo/google_job_is_a_scam/",
+    "posted_utc": "2026-10-04T10:03:08+00:00",
+    "score": 0,
+    "title": "GOOGLE JOB IS A SCAM \ud83d\udea8",
+    "url": "https://www.reddit.com/r/csMajors/comments/1wxc0oo/google_job_is_a_scam/",
+    "blurb": "Guys, I'm genuinely sorry for the clickbait and please dont get mad, here's the actual reason I'm posting. I want to get into Google. But I don't want to follow a saturated roadmap that tells me to apply -&gt; wait -&gt;",
+    "field_guess": "cs",
+    "type_guess": "internship",
+    "audience_guess": "college",
+    "location_guess": "us",
+    "needs_review": true
   },
   {
     "source": "devpost",
@@ -145789,22 +145085,6 @@
   {
     "source": "devpost",
     "reddit_permalink": "",
-    "posted_utc": "2026-10-04T13:30:09.700730+00:00",
-    "score": 0,
-    "title": "CodeML",
-    "url": "https://codeml-31598.devpost.com/",
-    "blurb": "Open hackathon on Devpost \u2014 themes: Beginner Friendly, Education, Machine Learning/AI. Submissions close 2026-10-04.",
-    "deadline_guess": "2026-10-04",
-    "field_guess": "interdisciplinary",
-    "type_guess": "competition",
-    "audience_guess": "college",
-    "location_guess": "global",
-    "needs_review": true,
-    "review": "auto-kept"
-  },
-  {
-    "source": "devpost",
-    "reddit_permalink": "",
     "posted_utc": "2026-10-04T13:30:12.045471+00:00",
     "score": 0,
     "title": "Hack Dearborn: Conjure Reality",
@@ -145828,126 +145108,11 @@
     "blurb": "Open hackathon on Devpost \u2014 themes: Beginner Friendly. Submissions close 2026-10-04.",
     "deadline_guess": "2026-10-04",
     "field_guess": "cs",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
     "type_guess": "competition",
     "audience_guess": "college",
     "location_guess": "global",
     "needs_review": true,
     "review": "auto-kept"
-  },
-  {
-    "source": "ctftime",
-    "reddit_permalink": "",
-<<<<<<< HEAD
-    "posted_utc": "2026-10-04T19:51:57.753516+00:00",
-=======
-    "posted_utc": "2026-10-04T13:30:14.345748+00:00",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
-    "score": 0,
-    "title": "cruXipher 2026 - ATMoS '26, BITS Hyderabad",
-    "url": "https://cruxipher.crux-bphc.com/",
-    "blurb": "Jeopardy security competition, online, open entry. Runs 48h. 1 teams registered. Starts 2026-10-23. Solo entry is permitted. cruXipher: A development-style Capture-the-Flag competition where teams of people come together to solve challenges that involve the skills of problem-solving, programming, cybersecurity, and general knowledge of computers to rise to the to",
-    "deadline_guess": "2026-10-23",
-    "field_guess": "cs",
-    "type_guess": "competition",
-    "audience_guess": "high_school",
-    "location_guess": "global",
-    "needs_review": true,
-<<<<<<< HEAD
-    "review": "auto-kept"
-=======
-    "review": "auto-skip"
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
-  },
-  {
-    "source": "ctftime",
-    "reddit_permalink": "",
-<<<<<<< HEAD
-    "posted_utc": "2026-10-04T19:51:57.753516+00:00",
-=======
-    "posted_utc": "2026-10-04T13:30:14.345748+00:00",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
-    "score": 0,
-    "title": "2026 Qiangwang Challenge on Cyber Mimic Defense Qualification",
-    "url": "https://nest.pmlabs.com.cn/en/events/qiangwang-9/registration",
-    "blurb": "Jeopardy security competition, online, open entry. Runs 24h. Starts 2026-10-31. Solo entry is permitted. The 2026 Qiangwang Challenge on Cyber Mimic Defense Qualification is the online qualifying round of the 9th Qiangwang International Elite Challenge on Cyber Mimic Defense. This team-based Jeopardy CTF features standard CTF challenges and se",
-    "deadline_guess": "2026-10-31",
-    "field_guess": "cs",
-    "type_guess": "competition",
-    "audience_guess": "high_school",
-    "location_guess": "global",
-    "needs_review": true,
-<<<<<<< HEAD
-    "review": "auto-kept"
-=======
-    "review": "auto-skip"
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
-  },
-  {
-    "source": "ctftime",
-    "reddit_permalink": "",
-<<<<<<< HEAD
-    "posted_utc": "2026-10-04T19:51:57.753516+00:00",
-=======
-    "posted_utc": "2026-10-04T13:30:14.345748+00:00",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
-    "score": 0,
-    "title": "Russian CTF Cup X Qualifier",
-    "url": "https://ctfcup.ru/",
-    "blurb": "Jeopardy security competition, online, open entry. Runs 24h. Starts 2026-10-31. Solo entry is permitted. Russian CTF Cup X, Qualifier. https://ctfcup.ru/registration 12:00 UTC+3 (Moscow) 31 October - 12:00 UTC+3 (Moscow) 01 November. Online. The top 10 teams from each category (academic, mixed, school, and secondary vocational) will be invited",
-    "deadline_guess": "2026-10-31",
-    "field_guess": "cs",
-    "type_guess": "competition",
-    "audience_guess": "high_school",
-    "location_guess": "global",
-    "needs_review": true,
-    "review": "auto-kept"
-  },
-  {
-    "source": "ctftime",
-    "reddit_permalink": "",
-<<<<<<< HEAD
-    "posted_utc": "2026-10-04T19:51:57.753516+00:00",
-=======
-    "posted_utc": "2026-10-04T13:30:14.345748+00:00",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
-    "score": 0,
-    "title": "Mimic",
-    "url": "https://ctf.rarebytehub.com/events/mimic",
-    "blurb": "Jeopardy security competition, online, open entry. Runs 24h. Starts 2026-11-07. Solo entry is permitted. Mimic is an online Jeopardy-style CTF by Rare Byte Hub. Some challenges are exactly what they look like, and some aren't. Figure out which is which. There's something for everyone, from beginners to experienced players. Teams of 1-4 members",
-    "deadline_guess": "2026-11-07",
-    "field_guess": "cs",
-    "type_guess": "competition",
-    "audience_guess": "high_school",
-    "location_guess": "global",
-    "needs_review": true,
-<<<<<<< HEAD
-    "review": "auto-kept"
-=======
-    "review": "auto-skip"
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
-  },
-  {
-    "source": "ctftime",
-    "reddit_permalink": "",
-<<<<<<< HEAD
-    "posted_utc": "2026-10-04T19:51:57.753516+00:00",
-=======
-    "posted_utc": "2026-10-04T13:30:14.345748+00:00",
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
-    "score": 0,
-    "title": "InIt CTF",
-    "url": "https://hackersinindia.com/init-ctf",
-    "blurb": "Jeopardy security competition, online, open entry. Runs 8h. Starts 2026-11-14. Solo entry is permitted. InIt CTF is HII's (Hackers in India) beginner-focused Capture The Flag event, free and open to participants across India and internationally. 8 hours, Jeopardy-style, solo or teams of up to 4, across Web, Crypto, Forensics, OSINT, and Misc ",
-    "deadline_guess": "2026-11-14",
-    "field_guess": "cs",
-    "type_guess": "competition",
-    "audience_guess": "high_school",
-    "location_guess": "global",
-    "needs_review": true,
-    "review": "auto-kept"
-<<<<<<< HEAD
-=======
   },
   {
     "source": "pathwaystoscience",
@@ -149173,6 +148338,5 @@
     "audience_guess": "high_school",
     "location_guess": "Monroe County, NY",
     "needs_review": true
->>>>>>> db486f8 (Two non-CS feeds, because every dated candidate we had was computer science)
   }
 ]
