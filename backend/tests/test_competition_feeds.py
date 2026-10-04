@@ -135,3 +135,168 @@ def test_sooner_deadlines_are_verified_first() -> None:
     later = {"source": "ctftime", "title": "B", "blurb": "competition",
              "url": "https://b.org/", "deadline_guess": "2026-12-01"}
     assert vi.rank_key(soon) < vi.rank_key(later)
+
+
+# --- Pathways to Science: the non-CS counterweight -----------------------
+#
+# The docstring above says volume is the easy half and every free, auth-free
+# competition feed is computer science. Measured on 2026-10-04, that had become
+# the catalog's shape: of 34 high-school rows open to apply, 33 were cs and one
+# was biology. Every dated candidate in the 10,568-row pool came from ctftime,
+# devpost or codeforces; Reddit supplied the other 10,310 and has never supplied
+# a deadline.
+#
+# scrape_pathways is the correction: a directory, not a forum, filtered to the
+# programmes that take high schoolers. Of its first 65 candidates exactly one
+# was cs. These guard the two things that would quietly break it -- the HTML
+# parse, which has no classes worth anchoring to and reads inline background
+# colours instead, and the rule that it never invents a deadline.
+
+LISTING_FIXTURE = (
+    "<div class='progigert' style='background: #dedede; padding: 2px;'>"
+    "<h2 style='font-size:9pt;display:inline'>Woods Hole Oceanographic</h2>"
+    "<i><span style='font-size:8pt;'> (Woods Hole, MA)</span></i></div>"
+    "<div class='progigert' style='background: #efefef;'>"
+    "<a href='programhub.aspx?sort=SUM-WHOI-Summer'>Summer Student Fellowship</a>"
+    "<div style='padding-left:0px;'>Marine biology research for students."
+    "<a href='programhub.aspx?sort=SUM-WHOI-Summer'> ...read more</a></div>"
+    "<span style='float:right'><i>Application Deadline: 2/15/2027</i></span></div>"
+    "<div class='progigert' style='background: #dedede; padding: 2px;'>"
+    "<h2 style='font-size:9pt;display:inline'>Fermilab</h2>"
+    "<i><span style='font-size:8pt;'> (Batavia, IL)</span></i></div>"
+    "<div class='progigert' style='background: #efefef;'>"
+    "<a href='programhub.aspx?sort=SUM-Fermilab-TARGET'>TARGET Program</a>"
+    "<div style='padding-left:0px;'>Particle physics for high schoolers.</div></div>"
+)
+
+
+def test_the_listing_parse_survives_its_own_markup() -> None:
+    pathways = importlib.import_module("scrape_pathways")
+    rows = pathways.parse_listing(LISTING_FIXTURE)
+
+    assert len(rows) == 2, "one record per programme block"
+    first, second = rows
+    assert first["title"] == "Summer Student Fellowship"
+    assert first["institution"] == "Woods Hole Oceanographic"
+    assert first["location"] == "Woods Hole, MA"
+    assert first["slug"] == "SUM-WHOI-Summer"
+    # The "...read more" anchor points at the same slug and must not become a row.
+    assert "read more" not in first["blurb"]
+    assert first["listing_deadline"] == "2/15/2027"
+    # A programme with no printed deadline yields none, rather than a guess.
+    assert second["listing_deadline"] == ""
+
+
+def test_a_deadline_is_only_ever_the_printed_one() -> None:
+    """The listing prints a date for a handful of rows and the detail page for
+    none. Anything this scraper cannot read, it leaves for the verifier to take
+    off the organiser's own page -- see northstar-docs/SHEET-SPEC.md."""
+    pathways = importlib.import_module("scrape_pathways")
+
+    assert pathways.us_date("2/15/2027") == "2027-02-15"
+    for junk in ("", "Rolling", "spring 2027", "2/2027", "31/31/2027"):
+        assert pathways.us_date(junk) == "", f"{junk!r} must not become a date"
+
+
+def test_the_field_hint_does_not_default_everything_to_cs() -> None:
+    """The whole point of this source. A wrong specific guess is worse than
+    declining to guess, so anything unrecognised lands on interdisciplinary."""
+    pathways = importlib.import_module("scrape_pathways")
+
+    assert pathways.field_guess("Marine biology research fellowship") == "biology"
+    assert pathways.field_guess("Particle physics at Fermilab") == "physics"
+    assert pathways.field_guess("Biomedical engineering internship") == "engineering"
+    assert pathways.field_guess("Summer Student Fellowship") == "interdisciplinary"
+    # Ordered hints: "biomedical engineering" is engineering, not health.
+    assert pathways.field_guess("biomedical engineering") == "engineering"
+
+
+def test_the_scraper_prefers_the_organisers_own_url() -> None:
+    """A deep link is the field that makes a row verifiable. The directory page
+    is a fallback, not the goal, and social links are never the answer."""
+    import inspect
+
+    pathways = importlib.import_module("scrape_pathways")
+    src = inspect.getsource(pathways.official_url)
+    assert "pathwaystoscience" in src, "must exclude the directory's own domain"
+    assert "facebook" in src, "must skip social links"
+    assert 'split("#", 1)[0]' in src, "must drop scroll-to-text fragments"
+
+
+# --- Society for Science fairs: non-CS, dated AND local ------------------
+#
+# The directory re-affiliates fairs each autumn, so in October most rows still
+# show LAST cycle: "Entry Deadline 2/4/2026" on a fair whose 2027 date nobody has
+# published yet. Of 163 fairs seen on 2026-10-04, 138 were in that state and 12
+# carried a real future date.
+#
+# Carrying the stale one forward a year is the specific mistake this catalog has
+# already made and undone -- a date no human confirmed, shown to a student as
+# though someone had. So it is dropped, the fair's own site goes in the row, and
+# the verifier reads the real date from the organiser.
+
+FAIR_FIXTURE = (
+    '<div class="formListFair"><div class="row" id="divFairDisplay">'
+    "<div><h4>USCA01</h4><h4><b>"
+    '<a href="http://www.ocsef.org/#section" target="_blank">'
+    "<u>Orange County Science and Engineering Fair</u></a></b></h4>"
+    "<h4>Orange County</h4></div>"
+    "<div><span><strong>Competition Dates</strong></span><br />"
+    "<span>3/11/2027 — 3/22/2027</span><br />"
+    "<span><strong>Entry Deadline</strong></span><br /><span>2/4/2027 </span><br />"
+    "<span><strong>Contact Person</strong></span><br /><span>Elizabeth Cronin</span><br />"
+    "<span><b>Territory</b></span><br /><span>Orange County</span>"
+    "</div></div></div>"
+)
+
+
+def test_a_fair_block_yields_its_own_site_and_dates() -> None:
+    fairs = importlib.import_module("scrape_sciencefairs")
+    [fair] = fairs.parse_fairs(FAIR_FIXTURE)
+
+    assert fair["name"] == "Orange County Science and Engineering Fair"
+    assert fair["code"] == "USCA01"
+    # Its OWN site, not the directory's, and without the fragment.
+    assert fair["url"] == "http://www.ocsef.org/"
+    assert fair["deadline"] == "2027-02-04"
+    assert fair["window"] == "3/11/2027 — 3/22/2027"
+    assert fair["territory"] == "Orange County"
+
+
+def test_a_contact_email_is_never_mistaken_for_the_fair_site() -> None:
+    """Every block carries a mailto: link. Taking it as the url would make a row
+    whose only destination is somebody's inbox."""
+    fairs = importlib.import_module("scrape_sciencefairs")
+    block = (
+        '<div class="formListFair"><h4>USXX01</h4>'
+        '<a href="mailto:info@example.org">info@example.org</a></div>'
+    )
+    assert fairs.parse_fairs(block) == []
+
+
+def test_last_cycles_deadline_is_dropped_not_advanced() -> None:
+    import inspect
+
+    fairs = importlib.import_module("scrape_sciencefairs")
+    src = inspect.getsource(fairs.main)
+    assert 'fair["deadline"] >= today' in src, (
+        "a past entry deadline must be dropped; the directory shows last cycle "
+        "for most of the autumn"
+    )
+    # And it must never be reconstructed with a bumped year.
+    assert "+ 1" not in src.replace("index + 1", ""), (
+        "no year arithmetic: a date nobody confirmed is not a date"
+    )
+    assert fairs.us_date("2/4/2027") == "2027-02-04"
+    for junk in ("", "TBD", "spring", "2/2027"):
+        assert fairs.us_date(junk) == ""
+
+
+def test_the_fair_import_stays_capped() -> None:
+    """~400 affiliated fairs exist. Arriving at once they would do to
+    `interdisciplinary` what an uncapped CTFtime does to `cs`."""
+    fairs = importlib.import_module("scrape_sciencefairs")
+    assert fairs.MAX_IMPORT <= 200, (
+        f"MAX_IMPORT is {fairs.MAX_IMPORT}; the cap is the product constraint, "
+        "not politeness to the server"
+    )

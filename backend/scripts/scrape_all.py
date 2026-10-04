@@ -30,7 +30,9 @@ import embed_catalog
 import scrape_codeforces
 import scrape_ctftime
 import scrape_devpost
+import scrape_pathways
 import scrape_reddit
+import scrape_sciencefairs
 import verify_and_import
 
 # (name, module, required). A required stage failing fails the whole run.
@@ -44,6 +46,19 @@ STAGES = (
     # publish whether an unaffiliated individual may enter.
     ("ctftime", scrape_ctftime, False),
     ("codeforces", scrape_codeforces, False),
+    # The counterweight to the three above. Every dated candidate in the pool
+    # came from ctftime, devpost or codeforces, and all three are computer
+    # science -- which is why 33 of the 34 open high-school rows were cs and
+    # exactly one was not. Pathways is a directory of funded STEM programmes
+    # filtered to the ones that take high schoolers: of its first 65 candidates,
+    # one was cs. It adds about 90 seconds, because the per-programme fetch that
+    # finds the organiser's own url is deliberately serialised.
+    ("pathways", scrape_pathways, False),
+    # The only feed found so far that is non-CS, dated AND local at once. Each
+    # ISEF-affiliated fair publishes its own entry deadline and its own site, so
+    # it does not repeat the spreadsheet's 250 state rows that all pointed at one
+    # national url. Capped per run; see the module docstring.
+    ("sciencefairs", scrape_sciencefairs, False),
     ("verify+import", verify_and_import, True),
     # Embed whatever the import just added, so a new opportunity is matchable
     # by meaning the next morning. Optional: a missing embedding simply means
