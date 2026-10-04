@@ -374,3 +374,29 @@ def test_an_absent_deadline_is_null_not_empty_string() -> None:
     assert clean_date("   ") is None
     assert clean_date(None) is None
     assert clean_date("2027-02-04") == "2027-02-04"
+
+
+def test_a_fair_without_an_upcoming_date_is_not_imported() -> None:
+    """Tried the other way on 2026-10-04, and it made the shelf worse.
+
+    89 fair rows landed and 3 of them had a date. `interdisciplinary` went to
+    54% of the high-school shelf. Every one of the 89 contains the words
+    "science" and "fair" and 64 contain "engineering", so to the matcher they
+    are one row repeated — and location_scope is us/international/global, with
+    no state granularity, so a student in Alabama is shown all 89 rather than
+    the four that are theirs.
+
+    The 94 undated rows were retired and the rule moved into the scraper. This
+    costs nothing: the directory republishes dates each autumn, and a fair comes
+    back on the first run after it posts one, with a date a student can act on.
+    """
+    import inspect
+
+    fairs = importlib.import_module("scrape_sciencefairs")
+    src = inspect.getsource(fairs.main)
+    assert "if not upcoming:" in src and "continue" in src, (
+        "a fair with no confirmed upcoming deadline must be skipped, not stored"
+    )
+    # And the skip must be driven by a real comparison against today, so it
+    # cannot be satisfied by storing a stale date and calling it upcoming.
+    assert 'fair["deadline"] >= today' in src

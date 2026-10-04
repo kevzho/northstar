@@ -191,8 +191,23 @@ def main(argv: list[str] | None = None) -> int:
             # Last cycle's date is not this cycle's date. See the module
             # docstring: it is dropped, not carried forward.
             upcoming = fair["deadline"] if fair["deadline"] >= today else ""
-            if fair["deadline"] and not upcoming:
+            if not upcoming:
+                # A fair with no confirmed upcoming date is not yet a listing.
+                #
+                # Importing them anyway was tried on 2026-10-04 and made the
+                # shelf worse: 89 fair rows landed, 3 of them dated, and
+                # `interdisciplinary` went to 54% of the high-school shelf. All
+                # 89 share the words "science" and "fair" and 64 share
+                # "engineering", so to the matcher they are one row repeated,
+                # and the schema has no state granularity -- location_scope is
+                # us/international/global -- so a student in Alabama is shown
+                # all 89 rather than theirs.
+                #
+                # The directory re-affiliates each autumn and publishes the new
+                # dates then. Waiting costs nothing: the fair will be picked up
+                # on the run after it posts, with a date a student can act on.
                 stale += 1
+                continue
             where = fair["territory"] or state
             pool[fair["url"]] = {
                 "source": "sciencefairs",
@@ -232,7 +247,7 @@ def main(argv: list[str] | None = None) -> int:
     POOL.write_text(json.dumps(ordered, indent=2))
     print(
         f"sciencefairs: {seen} fairs seen across {len(states)} states, {added} new "
-        f"candidates, {stale} had only last cycle's deadline (dropped) "
+        f"candidates, {stale} skipped for having no confirmed upcoming deadline "
         f"(pool {known} -> {len(pool)})"
     )
     return 0
