@@ -123967,6 +123967,34 @@
     "needs_review": true
   },
   {
+    "source": "r/internships",
+    "reddit_permalink": "https://www.reddit.com/r/internships/comments/1wx3uw7/pg_internship_toronto/",
+    "posted_utc": "2026-10-04T01:55:45+00:00",
+    "score": 1,
+    "title": "P&amp;G Internship Toronto",
+    "url": "https://www.reddit.com/r/internships/comments/1wx3uw7/pg_internship_toronto/",
+    "blurb": "Anyone interview for P&amp;G internships for summer 2027 toronto?",
+    "field_guess": "interdisciplinary",
+    "type_guess": "internship",
+    "audience_guess": "college",
+    "location_guess": "us",
+    "needs_review": true
+  },
+  {
+    "source": "r/EngineeringStudents",
+    "reddit_permalink": "https://www.reddit.com/r/EngineeringStudents/comments/1wwy2sb/best_course_of_action/",
+    "posted_utc": "2026-10-03T21:08:47+00:00",
+    "score": 1,
+    "title": "Best course of action",
+    "url": "https://www.reddit.com/r/EngineeringStudents/comments/1wwy2sb/best_course_of_action/",
+    "blurb": "right now i am thinking of changing my major from accounting to mechanical engineering ill have around 72 credits after this semester with this being my first semester of my third year im at Rutgers currently and i could",
+    "field_guess": "math",
+    "type_guess": "program",
+    "audience_guess": "college",
+    "location_guess": "us",
+    "needs_review": true
+  },
+  {
     "source": "r/scholarships",
     "reddit_permalink": "https://www.reddit.com/r/scholarships/comments/1vnv9og/got_into_harvard_but_struggling_to_fund_it/",
     "posted_utc": "2026-08-14T02:50:54+00:00",
@@ -145012,34 +145040,6 @@
     "review": "auto-kept"
   },
   {
-    "source": "r/internships",
-    "reddit_permalink": "https://www.reddit.com/r/internships/comments/1wx3uw7/pg_internship_toronto/",
-    "posted_utc": "2026-10-04T01:55:45+00:00",
-    "score": 1,
-    "title": "P&amp;G Internship Toronto",
-    "url": "https://www.reddit.com/r/internships/comments/1wx3uw7/pg_internship_toronto/",
-    "blurb": "Anyone interview for P&amp;G internships for summer 2027 toronto?",
-    "field_guess": "interdisciplinary",
-    "type_guess": "internship",
-    "audience_guess": "college",
-    "location_guess": "us",
-    "needs_review": true
-  },
-  {
-    "source": "r/EngineeringStudents",
-    "reddit_permalink": "https://www.reddit.com/r/EngineeringStudents/comments/1wwy2sb/best_course_of_action/",
-    "posted_utc": "2026-10-03T21:08:47+00:00",
-    "score": 1,
-    "title": "Best course of action",
-    "url": "https://www.reddit.com/r/EngineeringStudents/comments/1wwy2sb/best_course_of_action/",
-    "blurb": "right now i am thinking of changing my major from accounting to mechanical engineering ill have around 72 credits after this semester with this being my first semester of my third year im at Rutgers currently and i could",
-    "field_guess": "math",
-    "type_guess": "program",
-    "audience_guess": "college",
-    "location_guess": "us",
-    "needs_review": true
-  },
-  {
     "source": "r/csMajors",
     "reddit_permalink": "https://www.reddit.com/r/csMajors/comments/1wxc0oo/google_job_is_a_scam/",
     "posted_utc": "2026-10-04T10:03:08+00:00",
@@ -145146,7 +145146,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Normal, AL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145225,7 +145226,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "North Newton, KS",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145288,7 +145290,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Bryn Mawr, PA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145335,7 +145338,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Riverton, WY",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145382,7 +145386,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Columbus, OH",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "pathwaystoscience",
@@ -145429,7 +145434,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Denver, CO",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "pathwaystoscience",
@@ -145492,7 +145498,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Fairfax, VA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "pathwaystoscience",
@@ -145587,7 +145594,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "Falmouth, MA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "pathwaystoscience",
@@ -146651,7 +146659,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "State, CA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146666,7 +146675,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Mineral County, CO",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146681,7 +146691,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Park County, CO",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146712,7 +146723,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Gilpin County, CO",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -146727,7 +146739,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Clear Creek County, CO",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -146742,7 +146755,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Pueblo County, CO",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -146757,7 +146771,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "State, CO",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146772,7 +146787,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "State, CT",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146787,7 +146803,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "District Of Columbia, DC",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146818,7 +146835,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Manatee County, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146833,7 +146851,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Flagler County, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146848,7 +146867,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Charlotte County, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -146863,7 +146883,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Okaloosa County, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146878,7 +146899,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Alachua County, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146893,7 +146915,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Broward County, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146908,7 +146931,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Nassau County, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -146923,7 +146947,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Polk County, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -146938,7 +146963,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Southern Brevard County, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -146953,7 +146979,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "North Brevard County, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146968,7 +146995,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Miami-Dade County, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -146983,7 +147011,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Marion County, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -146998,7 +147027,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Orange County, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147013,7 +147043,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "St. Johns County, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147044,7 +147075,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Martin County, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147059,7 +147091,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Jefferson County, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147074,7 +147107,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Hillsborough County, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147089,7 +147123,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Central Brevard County, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147104,7 +147139,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Palm Beach County, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147119,7 +147155,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Pasco County, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147134,7 +147171,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Sarasota County, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147149,7 +147187,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Collier County, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147164,7 +147203,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "State, FL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147179,7 +147219,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "City of Atlanta in Fulton County, GA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147194,7 +147235,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Dekalb County, GA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147209,7 +147251,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Twiggs County, GA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147224,7 +147267,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Newton County, GA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147239,7 +147283,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Gwinnett County, GA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147254,7 +147299,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Cobb County, GA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147269,7 +147315,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Clayton County, GA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147284,7 +147331,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "State, GA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147299,7 +147347,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "All Private Schools On The Island Of Oahu, HI",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147314,7 +147363,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Maui County, HI",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147329,7 +147379,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Kauai County, HI",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147344,7 +147395,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Hawaii County, HI",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147359,7 +147411,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Public Schools In The Windward Oahu District, HI",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147374,7 +147427,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Public High and Middle Schools in Honolulu, HI",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147389,7 +147443,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Hamakua County District, HI",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147404,7 +147459,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "State, HI",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147419,7 +147475,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Benewah County, ID",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147434,7 +147491,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "State of Illinois, IL",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147449,7 +147507,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Crawford County, IN",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147464,7 +147523,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Boone County, IN",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147479,7 +147539,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Van Buren County, IA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147494,7 +147555,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Story County, IA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147509,7 +147571,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Washington County, KY",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147524,7 +147587,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Dupont Manual High School, KY",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147539,7 +147603,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Jackson County, KY",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147554,7 +147619,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Lawrence County, KY",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147569,7 +147635,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "State, KY",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147584,7 +147651,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "East Feliciana Parish, LA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147599,7 +147667,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Red River Parish, LA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147630,7 +147699,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Evangeline Parish, LA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147645,7 +147715,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Cameron Parish, LA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147660,7 +147731,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Plaquemines Parish, LA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147675,7 +147747,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "The State of Louisiana, LA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147706,7 +147779,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Frederick County, MD",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147721,7 +147795,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Montgomery County, MD",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147736,7 +147811,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Prince George's County, MD",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147751,7 +147827,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Baltimore City, MD",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147766,7 +147843,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "State, MA",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147781,7 +147859,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Macomb County, MI",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147796,7 +147875,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Eaton County, MI",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147811,7 +147891,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Kalamazoo County, MI",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147826,7 +147907,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "State, MI",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147841,7 +147923,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Cook County, MN",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147856,7 +147939,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Lincoln County, MN",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147871,7 +147955,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Anoka County (which includes Anoka-Hennepin School District), MN",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147886,7 +147971,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Traverse County, MN",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147901,7 +147987,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "City Of Rochester, MN",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147916,7 +148003,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "City Of St. Paul In Ramsey County, MN",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147931,7 +148019,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "State, MN",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147946,7 +148035,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Chickasaw County, MS",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147961,7 +148051,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Claiborne County, MS",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -147976,7 +148067,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Webster County, MS",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -147991,7 +148083,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Benton County, MS",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -148022,7 +148115,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "State, MS",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -148037,7 +148131,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Reynolds County, MO",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -148052,7 +148147,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Wyandotte County in Kansas, MO",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -148067,7 +148163,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Warren County, MO",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -148082,7 +148179,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "St. Louis City, MO",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -148097,7 +148195,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Morgan County, MO",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -148112,7 +148211,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Judith Basin County, MT",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -148127,7 +148227,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "State, MT",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -148158,7 +148259,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Stanton County, NE",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -148173,7 +148275,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Elko County, NV",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -148188,7 +148291,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Esmeralda County, NV",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -148203,7 +148307,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "State of New Hampshire, NH",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -148218,7 +148323,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Hudson County, NJ",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -148233,7 +148339,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Mercer County, NJ",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -148248,7 +148355,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Bergen County Academies, NJ",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -148263,7 +148371,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Socorro County, NM",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -148278,7 +148387,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "San Juan County, NM",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -148293,7 +148403,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Catron County, NM",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-skip"
   },
   {
     "source": "sciencefairs",
@@ -148308,7 +148419,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Harding County, NM",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -148323,7 +148435,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "State, NM",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -148338,7 +148451,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Dutchess County, NY",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -148353,7 +148467,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Nassau County, NY",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -148368,7 +148483,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Putnam County, NY",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -148383,7 +148499,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Cortland County, NY",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -148398,7 +148515,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Rensselaer County, NY",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -148413,7 +148531,8 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Oneida County, NY",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   },
   {
     "source": "sciencefairs",
@@ -148428,6 +148547,7 @@
     "type_guess": "competition",
     "audience_guess": "high_school",
     "location_guess": "Monroe County, NY",
-    "needs_review": true
+    "needs_review": true,
+    "review": "auto-kept"
   }
 ]
