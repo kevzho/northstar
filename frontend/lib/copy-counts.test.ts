@@ -15,7 +15,7 @@
  * Anything else fails.
  */
 
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { assessmentQuestions } from "./assessment";
@@ -90,5 +90,40 @@ describe("copy counts match the assessment bank", () => {
     const split = page.match(/nine[\s\S]{0,120}?eleven/i);
     expect(split, "the nine/eleven split copy moved or changed").not.toBeNull();
     expect(9 + 11).toBe(TOTAL);
+  });
+});
+
+/**
+ * The judge-facing script counts too, and nothing was checking it.
+ *
+ * docs/DEMO_SCRIPT.md is read aloud on camera for the Congressional App
+ * Challenge, and its "numbers you can defend" table said "Six traits, eight
+ * questions" while the bank held twenty. That is the identical drift the test
+ * above exists to catch — it just scans app/, components/ and lib/, which are
+ * .tsx and .ts, and a Markdown file in docs/ was outside it.
+ *
+ * A wrong number in shipped copy is a bug. A wrong number said out loud to a
+ * judge is the same bug with a worse audience, so it gets the same guard.
+ */
+describe("the demo script", () => {
+  const SCRIPT = join(ROOT, "..", "docs", "DEMO_SCRIPT.md");
+
+  it("states the real size of the assessment bank", () => {
+    // docs/ is gitignored, so the script exists on the author's machine and not
+    // in CI. Skipping where it is absent keeps the guard useful exactly where it
+    // matters -- on the machine the recording is made from -- without failing a
+    // build for a file the repo does not carry.
+    if (!existsSync(SCRIPT)) return;
+    const text = readFileSync(SCRIPT, "utf8");
+    const wrong: string[] = [];
+    text.split("\n").forEach((line, i) => {
+      for (const hit of line.matchAll(COUNTED)) {
+        const claimed = WORDS[hit[1].toLowerCase()];
+        if (claimed !== TOTAL) {
+          wrong.push(`DEMO_SCRIPT.md:${i + 1} says "${hit[0]}" but the bank holds ${TOTAL}`);
+        }
+      }
+    });
+    expect(wrong, "a number in the script you read to a judge is wrong").toEqual([]);
   });
 });
