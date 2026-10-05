@@ -515,6 +515,29 @@ export async function fetchCatalog(): Promise<Opportunity[]> {
   return (await authedFetch("/catalog")).json();
 }
 
+/**
+ * The high-school shelf, without an account.
+ *
+ * Every catalog route was auth-gated until 2026-10-05, so a visitor who clicked
+ * "Opportunities" before signing up got a heading and nothing: /opportunities,
+ * /discover and /plan each rendered zero rows while the API answered 401. That
+ * reads as broken rather than as gated, and the shelf is the strongest thing
+ * this project has to show someone deciding whether to make an account.
+ *
+ * A plain fetch, not authedFetch: there is no session to attach, and sending an
+ * Authorization header of `undefined` is how a public route starts 401ing for
+ * the people it exists for. The server returns an allowlist of fields — no
+ * curation bookkeeping — and marks each row `is_open` so the client does not
+ * re-derive today's date.
+ */
+export async function fetchPublicCatalog(): Promise<Opportunity[]> {
+  const res = await fetch(`${API_URL}/catalog/public`, {
+    headers: { "content-type": "application/json" },
+  });
+  if (!res.ok) return [];
+  return res.json();
+}
+
 /** One free, verified learning resource for a spine skill rung. */
 export type LearningResource = {
   id: string;

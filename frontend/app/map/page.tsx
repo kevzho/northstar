@@ -29,6 +29,7 @@ import { useRouter } from "next/navigation";
 import * as d3 from "d3";
 import { LoadingSection } from "@/components/decor/orbit-loader";
 import { PathwayList } from "@/components/PathwayList";
+import { useRequireAuth } from "@/lib/use-require-auth";
 
 type GraphNode = {
   id: string;
@@ -67,6 +68,10 @@ const fieldColors: Record<string, string> = {
 };
 
 export default function MapPage() {
+  // Built from this student's own assessment, so it needs an account.
+  // Signed out this used to render a heading and an empty shell while the
+  // API answered 401 — gated and broken look identical from there.
+  useRequireAuth();
   const router = useRouter();
   const svgRef = useRef<SVGSVGElement>(null);
   const [data, setData] = useState<GraphData>(null);

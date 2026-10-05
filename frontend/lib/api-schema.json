@@ -852,6 +852,30 @@
         "summary": "Catalog"
       }
     },
+    "/catalog/public": {
+      "get": {
+        "description": "The high-school shelf, to anyone, signed in or not.\n\nNOT under /public/. That prefix already has `/public/{handle}`, which\ntakes any string, is registered earlier, and therefore swallowed\n`/public/catalog` as a profile lookup for the handle \"catalog\" \u2014\nanswering with its uniform 404. Ordering could fix it; a path that\ncannot collide fixes it permanently.\n\nWHY THIS EXISTS. Every catalog route was auth-gated, so a visitor who\nclicked \"Opportunities\" before making an account got a heading and an\nempty page -- not a locked door, just nothing. Measured on 2026-10-05:\n/opportunities, /discover and /plan each rendered zero rows signed out,\nwhile the API answered 401 to /match, /discover and /roadmap. Some\npeople read that as broken rather than as gated, and the catalog is the\nstrongest thing this project has to show.\n\nWHY IT IS A SEPARATE ROUTE RATHER THAN /catalog WITH OPTIONAL AUTH.\n/catalog returns dict(row) -- the whole record, including added_by,\nverified_at, retired_reason and the recurrence columns. None of that is\nsecret, and all of it is curation bookkeeping that the open internet has\nno reason to receive. The fields below are an allowlist, so a column\nadded to the table later is private until someone decides otherwise.\n\nUnranked by construction: ranking needs a student, and there isn't one.",
+        "operationId": "public_catalog_catalog_public_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "title": "Response Public Catalog Catalog Public Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Public Catalog"
+      }
+    },
     "/chosen-path": {
       "post": {
         "description": "Persist the charted path so friends can compare career choices.",

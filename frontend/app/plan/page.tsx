@@ -25,6 +25,7 @@ import { pathLabel, rankArchetypes, scoreTraits } from "@/lib/scoring";
 import type { MatchResult } from "@/lib/types";
 import { useStoredAnswers } from "@/lib/use-assessment";
 import { useChosenPath } from "@/lib/use-chosen-path";
+import { useRequireAuth } from "@/lib/use-require-auth";
 
 const LEG_PLANETS = ["moon", "ringed", "giant"] as const;
 
@@ -62,6 +63,10 @@ export default function PlanPage() {
   const shipTop = useTransform(scrollYProgress, [0, 1], ["1%", "97%"]);
   const answers = useStoredAnswers();
   const chosen = useChosenPath();
+  // Built from this student's own assessment, so it needs an account.
+  // Signed out this used to render a heading and an empty shell while the
+  // API answered 401 — gated and broken look identical from there.
+  useRequireAuth();
   const [matches, setMatches] = useState<MatchResult[] | null>(null);
   const [matchesSettled, setMatchesSettled] = useState(false);
   // Free material for this path's skill rung. Additive: the plan renders

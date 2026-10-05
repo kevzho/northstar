@@ -20,6 +20,7 @@ import { leadingFields, scoreFieldInterests } from "@/lib/scoring";
 import { useStoredAnswers } from "@/lib/use-assessment";
 import type { ProjectRec } from "@/lib/types";
 import { LoadingSection } from "@/components/decor/orbit-loader";
+import { useRequireAuth } from "@/lib/use-require-auth";
 
 const fieldLabels: Record<string, string> = {
   cs: "Computer science",
@@ -36,6 +37,10 @@ const fieldLabels: Record<string, string> = {
 
 export default function ProjectsPage() {
   const answers = useStoredAnswers();
+  // Built from this student's own assessment, so it needs an account.
+  // Signed out this used to render a heading and an empty shell while the
+  // API answered 401 — gated and broken look identical from there.
+  useRequireAuth();
   const [projects, setProjects] = useState<ProjectRec[] | null>(null);
   const [failed, setFailed] = useState(false);
 

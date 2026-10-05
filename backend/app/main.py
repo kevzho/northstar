@@ -1622,6 +1622,67 @@ def create_app() -> FastAPI:
 
         return results
 
+    @app.get("/catalog/public")
+    def public_catalog() -> list[dict]:
+        """The high-school shelf, to anyone, signed in or not.
+
+        NOT under /public/. That prefix already has `/public/{handle}`, which
+        takes any string, is registered earlier, and therefore swallowed
+        `/public/catalog` as a profile lookup for the handle "catalog" —
+        answering with its uniform 404. Ordering could fix it; a path that
+        cannot collide fixes it permanently.
+
+        WHY THIS EXISTS. Every catalog route was auth-gated, so a visitor who
+        clicked "Opportunities" before making an account got a heading and an
+        empty page -- not a locked door, just nothing. Measured on 2026-10-05:
+        /opportunities, /discover and /plan each rendered zero rows signed out,
+        while the API answered 401 to /match, /discover and /roadmap. Some
+        people read that as broken rather than as gated, and the catalog is the
+        strongest thing this project has to show.
+
+        WHY IT IS A SEPARATE ROUTE RATHER THAN /catalog WITH OPTIONAL AUTH.
+        /catalog returns dict(row) -- the whole record, including added_by,
+        verified_at, retired_reason and the recurrence columns. None of that is
+        secret, and all of it is curation bookkeeping that the open internet has
+        no reason to receive. The fields below are an allowlist, so a column
+        added to the table later is private until someone decides otherwise.
+
+        Unranked by construction: ranking needs a student, and there isn't one.
+        """
+        from datetime import date
+
+        from .db import get_supabase
+
+        # What a visitor needs to decide whether an opportunity is worth their
+        # time, and nothing about how it got here.
+        PUBLIC_FIELDS = (
+            "id", "title", "host", "url", "deadline", "cost", "tags",
+            "audience", "grade_min", "grade_max", "type", "entry_gate",
+            "entry_note", "blurb", "location_scope",
+        )
+
+        sb = get_supabase()
+        rows = (
+            sb.table("opportunities")
+            .select(", ".join((*PUBLIC_FIELDS, "opportunity_field")))
+            .is_("retired_at", "null")
+            .eq("audience", "high_school")
+            .order("deadline", desc=False, nullsfirst=False)
+            .execute()
+        ).data or []
+
+        today = date.today().isoformat()
+        out: list[dict] = []
+        for row in rows:
+            item = {k: row.get(k) for k in PUBLIC_FIELDS}
+            item["field"] = row.get("opportunity_field")
+            # Said once here rather than recomputed in every client.
+            item["is_open"] = bool(row.get("deadline")) and str(row["deadline"]) >= today
+            out.append(item)
+        # Open ones first, soonest deadline leading; rolling and closed after.
+        out.sort(key=lambda r: (not r["is_open"], r["deadline"] or "9999-12-31"))
+        return out
+
     @app.get("/catalog")
     def catalog(user: CurrentUser = RequireUser) -> list[dict]:
         """The full opportunity bank — every catalog entry, unranked.

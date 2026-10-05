@@ -29,6 +29,7 @@ import { FieldPlanet } from "@/components/decor/field-planets";
 import { ProfileDetailsCard } from "@/components/ProfileDetailsCard";
 import { SharingCard } from "@/components/SharingCard";
 import type { OpportunityField, TimelineEvent } from "@/lib/types";
+import { useRequireAuth } from "@/lib/use-require-auth";
 
 const fieldLabels: Record<OpportunityField, string> = {
   cs: "Computer science",
@@ -84,6 +85,10 @@ export default function ProfilePage() {
   // "Since last visit" — the evolving profile made visible. The previous
   // field distribution is snapshotted in localStorage; when it differs we
   // name the biggest movers, then store the current one.
+  // Built from this student's own assessment, so it needs an account.
+  // Signed out this used to render a heading and an empty shell while the
+  // API answered 401 — gated and broken look identical from there.
+  useRequireAuth();
   const [shifts, setShifts] = useState<string[]>([]);
   const [timeline, setTimeline] = useState<TimelineEvent[] | null>(null);
   useEffect(() => {

@@ -30,10 +30,15 @@ import type { OpportunityField, StudentProfile } from "@/lib/types";
 import { useStoredAnswers } from "@/lib/use-assessment";
 import { useChosenPath, writeChosenPath } from "@/lib/use-chosen-path";
 import { LoadingSection } from "@/components/decor/orbit-loader";
+import { useRequireAuth } from "@/lib/use-require-auth";
 
 const emptySubscribe = () => () => {};
 
 export default function FuturesPage() {
+  // Built from this student's own assessment, so it needs an account.
+  // Signed out this used to render a heading and an empty shell while the
+  // API answered 401 — gated and broken look identical from there.
+  useRequireAuth();
   const router = useRouter();
   const answers = useStoredAnswers();
   const chosen = useChosenPath();

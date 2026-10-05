@@ -17,8 +17,13 @@ import type { MentorMatch } from "@/lib/api";
 import { buildIntroEmail, mailtoHref } from "@/lib/outreach";
 import type { StudentProfile } from "@/lib/types";
 import { LoadingSection } from "@/components/decor/orbit-loader";
+import { useRequireAuth } from "@/lib/use-require-auth";
 
 export default function MentorsPage() {
+  // Built from this student's own assessment, so it needs an account.
+  // Signed out this used to render a heading and an empty shell while the
+  // API answered 401 — gated and broken look identical from there.
+  useRequireAuth();
   const [mentors, setMentors] = useState<MentorMatch[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);

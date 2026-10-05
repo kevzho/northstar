@@ -12,6 +12,7 @@ import { TRAIT_KEYS, scoreTraits } from "@/lib/scoring";
 import { useStoredAnswers } from "@/lib/use-assessment";
 import type { MatchResult, Outcome } from "@/lib/types";
 import { LoadingScreen } from "@/components/decor/orbit-loader";
+import { useRequireAuth } from "@/lib/use-require-auth";
 
 const outcomeLabels: Record<Outcome["status"], string> = {
   accepted: "Accepted",
@@ -23,6 +24,10 @@ const outcomeLabels: Record<Outcome["status"], string> = {
 
 export default function DashboardPage() {
   const { user, loading } = useAuth();
+  // Built from this student's own assessment, so it needs an account.
+  // Signed out this used to render a heading and an empty shell while the
+  // API answered 401 — gated and broken look identical from there.
+  useRequireAuth();
   const router = useRouter();
   const [checking, setChecking] = useState(false);
   const [studentName, setStudentName] = useState<string | null>(null);

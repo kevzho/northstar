@@ -21,6 +21,7 @@ import { findArchetype } from "@/lib/plan";
 import type { OpportunityField } from "@/lib/types";
 import { fetchDiscover, sendFriendRequest, type Peer } from "@/lib/api";
 import { LoadingSection } from "@/components/decor/orbit-loader";
+import { useRequireAuth } from "@/lib/use-require-auth";
 
 const fieldLabels: Record<string, string> = {
   cs: "CS",
@@ -36,6 +37,10 @@ const fieldLabels: Record<string, string> = {
 };
 
 export default function DiscoverPage() {
+  // Built from this student's own assessment, so it needs an account.
+  // Signed out this used to render a heading and an empty shell while the
+  // API answered 401 — gated and broken look identical from there.
+  useRequireAuth();
   const [peers, setPeers] = useState<Peer[] | null>(null);
   const [failed, setFailed] = useState(false);
   const [requested, setRequested] = useState<Set<string>>(new Set());

@@ -27,6 +27,7 @@ import {
   updateTeamupSettings,
   type TeamupCandidate,
 } from "@/lib/api";
+import { useRequireAuth } from "@/lib/use-require-auth";
 
 const fieldLabels: Record<string, string> = {
   cs: "CS",
@@ -44,6 +45,10 @@ const fieldLabels: Record<string, string> = {
 const PITCH_MAX = 240;
 
 export default function TeamupPage() {
+  // Built from this student's own assessment, so it needs an account.
+  // Signed out this used to render a heading and an empty shell while the
+  // API answered 401 — gated and broken look identical from there.
+  useRequireAuth();
   const [enabled, setEnabled] = useState<boolean | null>(null);
   const [pitch, setPitch] = useState("");
   const [signedOut, setSignedOut] = useState(false);

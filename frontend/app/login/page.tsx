@@ -5,10 +5,18 @@ import { Button } from "@/components/ui/button";
 import { AppNav } from "@/components/AppNav";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
-export default function LoginPage() {
+function LoginInner() {
+  // Set by lib/use-require-auth.ts when a personal page turned someone away.
+  // Saying which page, and that it was gated rather than broken, is the whole
+  // reason that redirect exists — the pages used to render an empty shell and
+  // leave people to guess.
+  const params = useSearchParams();
+  const gated = params.get("reason") === "account";
+  const from = params.get("from") || "";
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -73,6 +81,24 @@ export default function LoginPage() {
         <section className="grid flex-1 items-center gap-10 py-12 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
             <p className="eyebrow">Student sign in</p>
+            {gated ? (
+              <p className="mt-4 max-w-xl border-l-2 border-star pl-4 text-sm leading-6 text-foreground">
+                {from ? (
+                  <>
+                    <span className="font-mono text-xs text-muted-foreground">
+                      {from}
+                    </span>{" "}
+                    is built from your own assessment, so it needs an account.
+                  </>
+                ) : (
+                  "That page is built from your own assessment, so it needs an account."
+                )}{" "}
+                <Link href="/opportunities" className="underline">
+                  The opportunity shelf
+                </Link>{" "}
+                is open to everyone without one.
+              </p>
+            ) : null}
             <h1 className="h-display mt-4 text-4xl text-foreground sm:text-5xl">
               Start with Northstar.
             </h1>
@@ -157,5 +183,17 @@ export default function LoginPage() {
         </section>
       </div>
     </main>
+  );
+}
+
+/**
+ * useSearchParams needs a Suspense boundary, or the whole route opts out of
+ * static rendering at build time.
+ */
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginInner />
+    </Suspense>
   );
 }

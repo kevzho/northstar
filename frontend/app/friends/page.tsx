@@ -28,6 +28,7 @@ import {
   type ComparedRecord,
   type FriendEntry,
 } from "@/lib/api";
+import { useRequireAuth } from "@/lib/use-require-auth";
 
 function RecordColumn({ record }: { record: ComparedRecord }) {
   const archetype = record.chosen_archetype
@@ -90,6 +91,10 @@ function RecordColumn({ record }: { record: ComparedRecord }) {
 }
 
 export default function FriendsPage() {
+  // Built from this student's own assessment, so it needs an account.
+  // Signed out this used to render a heading and an empty shell while the
+  // API answered 401 — gated and broken look identical from there.
+  useRequireAuth();
   const [accepted, setAccepted] = useState<FriendEntry[]>([]);
   const [pending, setPending] = useState<FriendEntry[]>([]);
   const [handle, setHandle] = useState("");

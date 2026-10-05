@@ -120,6 +120,22 @@ def test_every_route_except_public_ones_declares_auth() -> None:
         # Deliberately public: serves opt-in highlight data only, uniform
         # 404 for private/unknown handles (see app/main.py public_profile).
         "/public/{handle}",
+        # Deliberately public: the high-school shelf, so a visitor who has not
+        # made an account sees opportunities rather than an empty page. Every
+        # catalog route was gated until 2026-10-05, and /opportunities,
+        # /discover and /plan each rendered zero rows signed out while the API
+        # answered 401 — which reads as broken rather than as gated.
+        #
+        # It is a separate route from /catalog precisely so this entry is not a
+        # loophole: /catalog returns the whole row including added_by,
+        # verified_at and retired_reason, while this one serves an allowlist of
+        # fields. A column added to the table later stays private until someone
+        # adds it there on purpose.
+        #
+        # Under /catalog/ and not /public/ because `/public/{handle}` matches
+        # any string and is registered first, so `/public/catalog` was being
+        # served as a profile lookup and 404ing.
+        "/catalog/public",
     }
 
     for route in app.routes:
@@ -131,3 +147,51 @@ def test_every_route_except_public_ones_declares_auth() -> None:
             continue
         names = {d.call.__name__ for d in dependant.dependencies if d.call is not None}
         assert "get_current_user" in names, f"{path} is not auth-gated"
+
+
+def test_public_catalog_serves_an_allowlist_not_the_row() -> None:
+    """The open internet gets what a student needs to judge an opportunity, and
+    nothing about how it got here.
+
+    /catalog returns dict(row), which carries added_by, verified_at,
+    retired_reason and the recurrence columns. None of that is secret and all of
+    it is curation bookkeeping. This route exists so that distinction is
+    enforced by construction rather than by remembering.
+    """
+    import ast
+    import inspect
+    import textwrap
+
+    from app import main as main_mod
+
+    src = inspect.getsource(main_mod.create_app)
+    start = src.index('@app.get("/catalog/public")')
+    body = src[start : src.index('@app.get("/catalog")', start)]
+
+    # Parse the allowlist rather than grep the text: this function's own
+    # docstring NAMES the columns it withholds, and a substring check would
+    # punish the explanation instead of the behaviour.
+    tree = ast.parse(textwrap.dedent(body.split("\n", 1)[1]))
+    fields: tuple[str, ...] = ()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign) and any(
+            getattr(t, "id", "") == "PUBLIC_FIELDS" for t in node.targets
+        ):
+            fields = tuple(
+                el.value for el in node.value.elts if isinstance(el, ast.Constant)
+            )
+    assert fields, "PUBLIC_FIELDS not found; the shape must stay an allowlist"
+
+    for withheld in ("added_by", "verified_at", "retired_at", "retired_reason",
+                     "recurrence_month", "recurrence_verified_at", "description"):
+        assert withheld not in fields, (
+            f"the public catalog would expose {withheld}, which is curation "
+            "bookkeeping, not something a visitor needs"
+        )
+    # And it must still carry the things that make a row actionable.
+    for needed in ("title", "host", "url", "deadline", "cost"):
+        assert needed in fields, f"the public catalog omits {needed}"
+
+    # Retired rows are never browsable, and this is the high-school shelf.
+    assert 'is_("retired_at", "null")' in body
+    assert '"high_school"' in body

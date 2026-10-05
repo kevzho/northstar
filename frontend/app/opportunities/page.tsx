@@ -16,7 +16,14 @@ import { AppNav } from "@/components/AppNav";
 import { NativeSelect } from "@/components/ui/native-select";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { OpportunityCard } from "@/components/OpportunityCard";
-import { dismissOpportunity, fetchCatalog, fetchMatches, undoDismissal } from "@/lib/api";
+import {
+  dismissOpportunity,
+  fetchCatalog,
+  fetchMatches,
+  fetchPublicCatalog,
+  undoDismissal,
+} from "@/lib/api";
+import { useAuth } from "@/lib/use-auth";
 import type { MatchResult, Opportunity, OpportunityField, OpportunityType } from "@/lib/types";
 import { LoadingScreen, LoadingSection } from "@/components/decor/orbit-loader";
 
@@ -72,7 +79,16 @@ function OpportunitiesList() {
   // Ids dismissed this session, newest last — drives the undo strip.
   const [dismissedHere, setDismissedHere] = useState<string[]>([]);
   const [catalog, setCatalog] = useState<Opportunity[] | null>(null);
-  const view = searchParams.get("view") === "all" ? "all" : "matched";
+  const { user, loading: authLoading } = useAuth();
+  const signedOut = !authLoading && !user;
+  // "Matched" needs a profile to match against. Signed out there is none, so
+  // the only honest view is the whole shelf, and the toggle that would offer
+  // the other one is replaced by the thing that makes it possible.
+  const view = signedOut
+    ? "all"
+    : searchParams.get("view") === "all"
+      ? "all"
+      : "matched";
   const cost = searchParams.get("cost") === "free" ? "free"
     : searchParams.get("cost") === "paid" ? "paid" : "all";
   const status = searchParams.get("status") === "open" ? "open"
@@ -146,7 +162,10 @@ function OpportunitiesList() {
   useEffect(() => {
     if (view !== "all" || catalog !== null) return;
     let mounted = true;
-    fetchCatalog()
+    // Signed out there is no profile to rank against, so the public shelf is
+    // the whole offer — and it is a far better first impression than the empty
+    // page this rendered until 2026-10-05.
+    (signedOut ? fetchPublicCatalog() : fetchCatalog())
       .then((rows) => {
         if (mounted) setCatalog(rows);
       })
@@ -156,7 +175,7 @@ function OpportunitiesList() {
     return () => {
       mounted = false;
     };
-  }, [view, catalog]);
+  }, [view, catalog, signedOut]);
 
   function setView(next: "matched" | "all") {
     const params = new URLSearchParams(searchParams.toString());
@@ -216,13 +235,29 @@ function OpportunitiesList() {
         <header className="mt-10">
           <p className="eyebrow">Opportunities</p>
           <h1 className="h-display mt-3 text-4xl text-foreground">
-            {view === "all" ? "The full bank" : "Opportunities for you"}
+            {signedOut
+              ? "The high-school shelf"
+              : view === "all"
+                ? "The full bank"
+                : "Opportunities for you"}
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
-            {view === "all"
-              ? "Every opportunity in the catalog, sorted by deadline. Switch back to Matched to see them ranked for your profile."
-              : "Ranked by the Northstar match engine against your profile. Or browse the entire bank."}
+            {signedOut
+              ? "Every opportunity on the high-school shelf, open ones first. Each one has been checked against the programme's own page, and anything that stopped holding up was removed rather than left to pad the total."
+              : view === "all"
+                ? "Every opportunity in the catalog, sorted by deadline. Switch back to Matched to see them ranked for your profile."
+                : "Ranked by the Northstar match engine against your profile. Or browse the entire bank."}
           </p>
+          {signedOut ? (
+            <div className="mt-5 flex flex-wrap items-center gap-3">
+              <Button render={<Link href="/login" />} className="h-10 px-4">
+                Sign in to rank these for you
+              </Button>
+              <span className="text-sm text-muted-foreground">
+                Free, and it takes twenty questions.
+              </span>
+            </div>
+          ) : (
           <div className="mt-5 inline-flex border border-border">
             <button
               type="button"
@@ -247,6 +282,7 @@ function OpportunitiesList() {
               Browse all
             </button>
           </div>
+          )}
         </header>
 
         <section className="mt-6 flex flex-wrap gap-3">
