@@ -53,6 +53,17 @@ from datetime import datetime, timezone
 import requests
 
 POOL = pathlib.Path(__file__).parent / "scraped" / "reddit_candidates.json"
+# slug -> the programme's own url, learned once and kept.
+#
+# Without it this scraper fetched all ~80 detail pages on every daily run to
+# rediscover addresses it already had. The listing changes a few times a year;
+# the mapping from a slug to the organiser's site does not change at all. That
+# is 80 requests a day at a small nonprofit directory to learn nothing, which is
+# not a cost anyone should pay for our convenience.
+#
+# Tracked in git like the pool, because it is the record of what has already
+# been asked, and a fresh clone that lost it would start the 80 requests again.
+URL_CACHE = pathlib.Path(__file__).parent / "scraped" / "pathways_urls.json"
 BASE = "https://www.pathwaystoscience.org"
 # The one filter that matters. Values come from the advanced-search form; this
 # is the literal option value, spaces and all.
@@ -150,6 +161,13 @@ def parse_listing(page: str) -> list[dict]:
     return out
 
 
+def load_cache() -> dict[str, str]:
+    try:
+        return json.loads(URL_CACHE.read_text())
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+
+
 def official_url(session: requests.Session, slug: str) -> str:
     """The programme's own site, from its detail page.
 
@@ -216,14 +234,19 @@ def main(argv: list[str] | None = None) -> int:
     print(f"pathways: {len(programmes)} high-school programmes on the listing")
 
     now = datetime.now(timezone.utc).isoformat()
-    added = reused = 0
-    for index, prog in enumerate(programmes, 1):
-        url = (
-            f"{BASE}/programhub.aspx?sort={prog['slug']}"
-            if args.no_detail
-            else official_url(session, prog["slug"])
-        )
-        if not args.no_detail and index < len(programmes):
+    cache = load_cache()
+    added = reused = fetched = 0
+    for prog in programmes:
+        slug = prog["slug"]
+        if args.no_detail:
+            url = f"{BASE}/programhub.aspx?sort={slug}"
+        elif slug in cache:
+            # Learned on an earlier run. A slug's organiser does not change.
+            url = cache[slug]
+        else:
+            url = official_url(session, slug)
+            cache[slug] = url
+            fetched += 1
             time.sleep(DETAIL_DELAY_SECONDS)
         if url in pool:
             reused += 1
@@ -258,9 +281,13 @@ def main(argv: list[str] | None = None) -> int:
 
     ordered = sorted(pool.values(), key=lambda c: c.get("score", 0), reverse=True)
     POOL.write_text(json.dumps(ordered, indent=2))
+    if not args.no_detail:
+        URL_CACHE.parent.mkdir(parents=True, exist_ok=True)
+        URL_CACHE.write_text(json.dumps(cache, indent=2, sort_keys=True) + "\n")
     dated = sum(1 for p in programmes if p["listing_deadline"])
     print(
         f"pathways: {added} new candidates, {reused} already known, "
+        f"{fetched} detail pages fetched ({len(cache) - fetched} served from cache), "
         f"{dated} carried a deadline on the listing (pool {known} -> {len(pool)})"
     )
     return 0

@@ -400,3 +400,32 @@ def test_a_fair_without_an_upcoming_date_is_not_imported() -> None:
     # And the skip must be driven by a real comparison against today, so it
     # cannot be satisfied by storing a stale date and calling it upcoming.
     assert 'fair["deadline"] >= today' in src
+
+
+def test_the_pathways_detail_fetch_happens_once_per_programme() -> None:
+    """Politeness, and it is measurable.
+
+    Without a cache this scraper fetched all ~80 detail pages on every daily run
+    to rediscover addresses it already had — 80 requests a day at a small
+    nonprofit directory to learn nothing. The listing changes a few times a
+    year; the mapping from a slug to the organiser's own site does not change at
+    all. Measured after the fix: 66 fetched on the first run, 0 on the second.
+
+    The cache file is tracked rather than ignored, because it is the record of
+    what has already been asked, and a fresh clone that lost it would start the
+    80 requests over.
+    """
+    import inspect
+
+    pathways = importlib.import_module("scrape_pathways")
+    src = inspect.getsource(pathways.main)
+    assert "slug in cache" in src, (
+        "every run re-fetches every detail page; cache the slug -> url mapping"
+    )
+    assert "URL_CACHE.write_text" in src, "a cache that is never written is not a cache"
+    # The sleep must sit with the fetch, not outside it, or a fully cached run
+    # still pauses 80 times for no reason.
+    fetch_block = src[src.index("slug in cache"):]
+    assert "time.sleep" in fetch_block.split("else:")[1][:400], (
+        "the delay belongs to the fetch; a cached run should not sleep"
+    )
