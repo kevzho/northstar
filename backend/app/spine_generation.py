@@ -88,8 +88,21 @@ Reply with JSON only:
 {"project": "...", "publish": "...", "skill_key": "..."}"""
 
 
-def build_prompt(student: dict, matches: list[dict], skill_keys: list[dict]) -> str:
-    """The user half of the request. Only data the catalog already holds."""
+def build_prompt(
+    student: dict,
+    matches: list[dict],
+    skill_keys: list[dict],
+    rejected: dict | None = None,
+    reason: str = "",
+) -> str:
+    """The user half of the request. Only data the catalog already holds.
+
+    ``rejected`` and ``reason`` carry a student's "this does not fit me". That
+    is the most useful signal this system can get — better than any trait score,
+    because the student is telling you directly — so the plan they turned down
+    goes in verbatim with instruction not to repeat it. Without that, a
+    regenerate button is a dice roll that can hand back the same idea reworded.
+    """
     traits = student.get("trait_scores") or {}
     trait_line = ", ".join(
         f"{name} {round(float(score) * 100)}%" for name, score in sorted(
@@ -117,6 +130,21 @@ def build_prompt(student: dict, matches: list[dict], skill_keys: list[dict]) -> 
         )
     if not matches:
         lines.append("  (none yet — write a project that needs no programme)")
+
+    if rejected:
+        lines += [
+            "",
+            "This student was already offered the plan below and turned it down.",
+            f"  project: {str(rejected.get('project') or '')[:300]}",
+            f"  publish: {str(rejected.get('publish') or '')[:200]}",
+            f"  skill rung: {rejected.get('skillKey') or rejected.get('skill_key') or ''}",
+        ]
+        if reason.strip():
+            lines.append(f"  what they said was wrong with it: {reason.strip()[:300]}")
+        lines += [
+            "Write something genuinely different. A different kind of project, not",
+            "the same idea reworded. If they named a problem, fix that problem.",
+        ]
 
     lines += ["", "Allowed skill_key values, with what each teaches:"]
     for row in skill_keys:

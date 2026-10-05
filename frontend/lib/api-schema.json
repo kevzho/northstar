@@ -1730,6 +1730,55 @@
         "summary": "Roadmap"
       }
     },
+    "/roadmap/spine": {
+      "post": {
+        "description": "Write this student a different path, because they said so.\n\nA student turning a plan down is the most useful signal this system\ngets \u2014 better than any trait score, because they are telling you\ndirectly \u2014 so the rejected plan and their reason go into the prompt and\nthe model is told not to repeat it. Without that, a regenerate button is\na dice roll that can hand back the same idea reworded.\n\nRefusal is still a success path. If the model picks a skill rung with no\nresources, writes a url, or returns prose that will not parse, the\nstudent keeps what they had and is told so plainly. See\napp/spine_generation.py.\n\nCharged against the advisor budget, because it is the same provider and\nthe same wallet, and a regenerate button with no ceiling is the one\ncontrol a bored student will hold down.",
+        "operationId": "regenerate_spine_roadmap_spine_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Regenerate Spine Roadmap Spine Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Regenerate Spine"
+      }
+    },
     "/sharing": {
       "post": {
         "description": "Set the handle and/or the public toggle on the student's record.",

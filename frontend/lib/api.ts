@@ -591,7 +591,57 @@ export type Roadmap = {
   archetype_id: string;
   has_spine: boolean;
   resource_count: number;
+  /** Who wrote the build/publish steps: one of 24 authored spines, or this student's own. */
+  spine_source: "authored" | "generated";
+  /**
+   * The authored path names a skill rung with no verified resource behind it,
+   * so the learn step renders as nothing. True for 12 of the 24 archetypes,
+   * which is when offering a written-for-you path is a fix rather than a nag.
+   */
+  spine_hollow: boolean;
 };
+
+/** The build/publish steps rewritten for one student. */
+export type GeneratedSpine = {
+  project: string;
+  publish: string;
+  skill: string;
+  skillKey: string;
+  source: "generated";
+  regenerated: boolean;
+};
+
+/**
+ * Ask for a different path, saying why.
+ *
+ * The reason is the point, not a formality: it goes into the prompt with the
+ * plan being turned down, and the model is told to write something genuinely
+ * different rather than the same idea reworded.
+ *
+ * Throws with the server's own message, because every refusal here is one a
+ * student should read — out of budget, model unreachable, or a path that came
+ * back pointing at a skill with nothing behind it. In all three their current
+ * path is unchanged, and saying so is more useful than a generic failure.
+ */
+export async function regenerateSpine(reason: string): Promise<GeneratedSpine> {
+  const response = await authedFetch("/roadmap/spine", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ reason }),
+  });
+  if (!response.ok) {
+    const detail = await response
+      .json()
+      .then((body) => body?.detail)
+      .catch(() => null);
+    throw new Error(
+      typeof detail === "string"
+        ? detail
+        : "Could not write a new path just now. Your current one is unchanged.",
+    );
+  }
+  return response.json();
+}
 
 /**
  * The student's sequenced roadmap — what to do, in order.

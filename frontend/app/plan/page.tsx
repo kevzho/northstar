@@ -17,6 +17,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { JourneyMap } from "@/components/JourneyMap";
 import { Planet, Ship } from "@/components/decor/voyage";
 import { fetchMatches, fetchResources, fetchRoadmap } from "@/lib/api";
+import { SpineControl } from "@/components/SpineControl";
 import type { LearningResource, Roadmap } from "@/lib/api";
 import { MissionBoard } from "@/components/MissionBoard";
 import { findArchetype, generatePlan, skillKeyFor } from "@/lib/plan";
@@ -423,6 +424,25 @@ export default function PlanPage() {
                     </ul>
                   </article>
                 </div>
+              ) : null}
+
+              {/* Only with a roadmap in hand: the control replaces the build and
+                  publish steps rendered above it, so offering it before they
+                  exist would be offering to replace nothing. */}
+              {roadmap && roadmap.phases.length > 0 ? (
+                <SpineControl
+                  source={roadmap.spine_source ?? "authored"}
+                  hollow={Boolean(roadmap.spine_hollow)}
+                  onReplaced={() => {
+                    // Re-fetch rather than patch the steps in place: the new
+                    // spine changes the learn rung too, because its skill key
+                    // selects different resources, and sequencing is the
+                    // backend's job.
+                    fetchRoadmap().then((fresh) => {
+                      if (fresh) setRoadmap(fresh);
+                    });
+                  }}
+                />
               ) : null}
             </section>
           </>

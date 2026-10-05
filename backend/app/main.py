@@ -1192,7 +1192,172 @@ def create_app() -> FastAPI:
         plan["archetype_id"] = archetype
         plan["has_spine"] = spine is not None
         plan["resource_count"] = len(resources)
+        # Who wrote the path the student is reading, and whether the authored
+        # one can actually deliver its learn rung.
+        #
+        # `spine_hollow` is the honest trigger for offering a written-for-you
+        # path. Twelve of the twenty-four authored spines name a skillKey with
+        # no verified resource behind it, so those students' learn rung renders
+        # as nothing at all. The UI can offer a replacement where the shelf is
+        # genuinely empty rather than nagging everyone.
+        plan["spine_source"] = (spine or {}).get("source", "authored")
+        plan["spine_hollow"] = bool(spine) and not resources
         return plan
+
+    @app.post("/roadmap/spine")
+    def regenerate_spine(
+        body: dict | None = None, user: CurrentUser = RequireUser
+    ) -> dict:
+        """Write this student a different path, because they said so.
+
+        A student turning a plan down is the most useful signal this system
+        gets — better than any trait score, because they are telling you
+        directly — so the rejected plan and their reason go into the prompt and
+        the model is told not to repeat it. Without that, a regenerate button is
+        a dice roll that can hand back the same idea reworded.
+
+        Refusal is still a success path. If the model picks a skill rung with no
+        resources, writes a url, or returns prose that will not parse, the
+        student keeps what they had and is told so plainly. See
+        app/spine_generation.py.
+
+        Charged against the advisor budget, because it is the same provider and
+        the same wallet, and a regenerate button with no ceiling is the one
+        control a bored student will hold down.
+        """
+        from .advisor import budget_block, record_call
+        from .spine_generation import SYSTEM_PROMPT, build_prompt, parse_spine
+
+        sb = get_supabase()
+        blocked = budget_block(sb, user.id)
+        if blocked:
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=blocked
+            )
+
+        prof = (
+            sb.table("students")
+            .select("id, grade, audience, interests, goals, field_scores, "
+                    "trait_scores, chosen_archetype, location_pref")
+            .eq("id", user.id)
+            .maybe_single()
+            .execute()
+        )
+        student = prof.data if prof else None
+        if not student:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Student profile not found. POST /students to create.",
+            )
+
+        rows = (
+            sb.table("learning_resources")
+            .select("skill_key, skill_label")
+            .not_.is_("verified_at", "null")
+            .execute()
+        ).data or []
+        labels: dict[str, str] = {}
+        keys: list[dict] = []
+        for row in rows:
+            key = row.get("skill_key")
+            if key and key not in labels:
+                labels[key] = row.get("skill_label") or ""
+                keys.append({"skill_key": key, "skill_label": labels[key]})
+        if not keys:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="No verified learning resources to build a path from yet.",
+            )
+
+        # What they are turning down: their generated one if they have it, else
+        # the authored spine for their archetype.
+        from .spines import spine_for
+
+        try:
+            current = (
+                sb.table("generated_spines")
+                .select("project, publish, skill_key")
+                .eq("user_id", user.id)
+                .maybe_single()
+                .execute()
+            )
+            rejected = current.data if current else None
+        except Exception:
+            rejected = None
+        if not rejected:
+            rejected = spine_for(student.get("chosen_archetype") or "")
+
+        shelf = fetch_shelf(sb, shelf_for(student))
+        ranked = score_opportunities(student, shelf, [])[:8]
+        matches = [r["opportunity"] for r in ranked]
+        reason = str((body or {}).get("reason") or "")[:300]
+
+        prompt = build_prompt(student, matches, keys, rejected=rejected, reason=reason)
+        # Through app.llm.chat for the same reasons the advisor and the verifier
+        # use it: one dialect table for providers that disagree about request
+        # shape, and a usage block so the call can be charged rather than
+        # guessed at.
+        from .llm import LLMUnavailable, chat as llm_chat
+
+        try:
+            result = llm_chat(
+                base=settings.llm_api_base,
+                key=settings.llm_api_key,
+                model=settings.llm_model,
+                messages=[
+                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "user", "content": prompt},
+                ],
+                max_tokens=700,
+                # Low but not zero: a plan should read as written for one
+                # person, which greedy decoding tends not to manage, and a
+                # student pressing this twice should not get the same sentence.
+                temperature=0.4,
+            )
+        except LLMUnavailable:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail=(
+                    "Could not reach the model just now. Your current path is "
+                    "unchanged."
+                ),
+            )
+
+        record_call(
+            sb,
+            user.id,
+            f"spine:{user.id}",
+            reason or "(no reason given)",
+            result.text[:2000],
+            [],
+            (result.prompt_tokens, result.completion_tokens, result.total_tokens),
+        )
+
+        spine = parse_spine(result.text, labels)
+        if not spine:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=(
+                    "The path that came back did not meet the bar — it pointed at "
+                    "a skill with nothing behind it, or included a link we have "
+                    "not checked. Your current path is unchanged. Try again, and "
+                    "it helps to say what did not fit."
+                ),
+            )
+
+        sb.table("generated_spines").upsert(
+            {
+                "user_id": user.id,
+                "project": spine["project"],
+                "publish": spine["publish"],
+                "skill": spine["skill"],
+                "skill_key": spine["skillKey"],
+                "model": settings.llm_model,
+                "source_archetype": student.get("chosen_archetype") or None,
+            },
+            on_conflict="user_id",
+        ).execute()
+        return {**spine, "regenerated": True}
 
     @app.get("/resources")
     def list_resources(
