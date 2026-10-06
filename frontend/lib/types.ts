@@ -59,6 +59,17 @@ export type Opportunity = {
   /** Optional geographic location for map placement. */
   location: string | null;
   location_scope?: LocationScope;
+  /**
+   * How a student gets in. Carried by GET /catalog/public and the match
+   * routes; absent on older shapes, so always treated as optional.
+   *
+   * It is the single most decision-changing field on a card and was not shown
+   * on one until 2026-10-05: "apply" and "qualify" are completely different
+   * answers to "can I enter this", and a shelf that hides the difference sends
+   * a 9th grader at something they cannot enter for two more years.
+   */
+  entry_gate?: "apply" | "qualify" | "advance" | "nominate" | "teacher";
+  entry_note?: string | null;
 };
 
 export type MatchScore = {

@@ -19,15 +19,26 @@
 :root {
   color-scheme: dark;
 
-  /* Atlas primitives, monochrome */
-  --star: #f5f5f5;
+  /*
+   * CHART AT NIGHT, not neutral grey.
+   *
+   * Northstar is named for celestial NAVIGATION -- fixing your position with an
+   * instrument and a printed table -- not for space being dark. The ground is
+   * therefore an ink navy rather than #0a0a0a: paper and ink under a dim lamp,
+   * which is also what stops the app reading as the generic near-black-plus-one
+   * -accent page that every other project currently is.
+   *
+   * `--star` and `--aurora` keep their names (67 and 54 uses) and stay greys,
+   * retuned cool so they sit on the new ground instead of floating above it.
+   */
+  --star: #eef2f6;
   --star-bright: #ffffff;
-  --on-star: #0a0a0a;
-  --aurora: #c9c9c9;
-  --aurora-dim: #8a8a8a;
-  --panel: #121212;
-  --panel-raised: #1b1b1b;
-  --border-bright: #3f3f3f;
+  --on-star: #0b0f14;
+  --aurora: #c0cdd8;
+  --aurora-dim: #8294a2;
+  --panel: #121820;
+  --panel-raised: #1a222c;
+  --border-bright: #3a4754;
 
   --success-bg: #131b13;
   --success-border: #3c4f3c;
@@ -37,8 +48,8 @@
   --error-text: #eec7c7;
 
   /* shadcn semantic tokens, resolved to the monochrome palette */
-  --background: #0a0a0a;
-  --foreground: #f2f2f2;
+  --background: #0b0f14;
+  --foreground: #e8edf2;
   --card: var(--panel);
   --card-foreground: var(--foreground);
   --popover: var(--panel-raised);
@@ -48,11 +59,11 @@
   --secondary: var(--panel-raised);
   --secondary-foreground: var(--foreground);
   --muted: var(--panel-raised);
-  --muted-foreground: #a3a3a3;
-  --accent: #232323;
+  --muted-foreground: #93a3b0;
+  --accent: #1d2630;
   --accent-foreground: var(--foreground);
   --destructive: #eec7c7;
-  --border: #262626;
+  --border: #222c37;
   --input: var(--border-bright);
   --ring: var(--star);
   --chart-1: #6c9ef8;
@@ -71,6 +82,32 @@
      single meaning: "you are here" (the current waypoint). */
   --polaris: #ffc88a;
   --polaris-glow: rgba(255, 200, 138, 0.45);
+
+  /*
+   * THE OVERPRINT. The one colour in this app that carries a meaning rather
+   * than a mood.
+   *
+   * Nautical charts solved this product's exact problem two centuries ago:
+   * everything SURVEYED prints in black ink, and everything ADVISORY -- lights,
+   * recommended tracks, cautions -- overprints in magenta, so a navigator can
+   * tell measured from counselled without reading a word.
+   *
+   * Northstar already draws that line in its data and nowhere in its design.
+   * app/roadmap.py splits edges into computed calendar facts (eligibility,
+   * window) and authored generalisations (artifact, ladder, evidence) and words
+   * the second kind "a common route, not a requirement".
+   * 20260923120000 defines recurrence_verified_at as the licence for a
+   * forward-looking claim, with NULL meaning "no confirmed window".
+   * public.outcomes has no rows, so nothing here is backed by what happened to
+   * anyone.
+   *
+   * So: anything the catalog has checked reads as ink. Anything it is advising
+   * rather than reporting -- a suggested project, a common route, a rolling
+   * deadline, a path written by a model -- takes the overprint. Used anywhere
+   * else it stops meaning anything, which is the only way to lose it.
+   */
+  --advisory: #ff6fb3;
+  --advisory-rule: rgba(255, 111, 179, 0.35);
 }
 
 /*
@@ -89,14 +126,16 @@
 .panel-paper {
   color-scheme: light;
 
-  --star: #141414;
+  /* Chart stock: a cool green-grey, deliberately not the warm cream that every
+     AI-generated site reaches for. */
+  --star: #121a20;
   --star-bright: #000000;
-  --on-star: #fafafa;
-  --aurora: #4a4a4a;
-  --aurora-dim: #9a9a9a;
+  --on-star: #f1f3f0;
+  --aurora: #3f4e59;
+  --aurora-dim: #7b8a94;
   --panel: #ffffff;
-  --panel-raised: #f1f1f1;
-  --border-bright: #c6c6c6;
+  --panel-raised: #e7eae6;
+  --border-bright: #b6bdb8;
 
   --success-bg: #eef5ee;
   --success-border: #b5ceb5;
@@ -105,22 +144,27 @@
   --error-border: #d8b5b5;
   --error-text: #6d3030;
 
-  --background: #fafafa;
-  --foreground: #141414;
-  --muted-foreground: #5c5c5c;
-  --accent: #ececec;
+  --background: #f1f3f0;
+  --foreground: #121a20;
+  --muted-foreground: #4a5a66;
+  --accent: #e4e8e3;
   --destructive: #6d3030;
-  --border: #e4e4e4;
+  --border: #d3d9d3;
 
   --glow-a: rgba(0, 0, 0, 0.04);
   --glow-b: rgba(0, 0, 0, 0.025);
 
   --polaris: #b26a1f;
   --polaris-glow: rgba(178, 106, 31, 0.3);
+
+  /* See the overprint note in the night palette. */
+  --advisory: #b4126e;
+  --advisory-rule: rgba(180, 18, 110, 0.3);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-advisory: var(--advisory);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-body), ui-sans-serif, sans-serif;
   --font-mono: var(--font-coords), ui-monospace, monospace;
@@ -206,6 +250,27 @@ button:disabled {
 }
 
 @layer components {
+  /*
+   * An advisory claim, marked the way a chart marks one.
+   *
+   * A colour alone would fail anyone who cannot see it, so the rule under the
+   * text carries the same signal -- this is the house style for "we are
+   * advising, not reporting", and it is the only place the overprint appears.
+   */
+  .advisory {
+    color: var(--advisory);
+    text-decoration: underline;
+    text-decoration-color: var(--advisory-rule);
+    text-underline-offset: 0.28em;
+    text-decoration-thickness: 1px;
+  }
+
+  /* Figures in a table should line up like figures in a table. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+
   /*
    * An inverted full-bleed band. The palette comes from the shared `.light`
    * block above; this only paints it and escapes the column.

@@ -68,7 +68,7 @@ export function SpineControl({
         {source === "generated" ? (
           <>
             The build and publish steps above were{" "}
-            <span className="text-foreground">written for you</span> from your
+            <span className="advisory">written for you</span> from your
             assessment and your matches — a suggestion, not a route anyone has
             walked.
           </>

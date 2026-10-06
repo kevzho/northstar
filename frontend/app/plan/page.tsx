@@ -352,10 +352,23 @@ export default function PlanPage() {
                                 );
                               })()}
                               {step.edge_note ? (
-                                <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                                /* The overprint. A step whose edge is an
+                                   authored generalisation rather than a
+                                   computed calendar fact is marked the way a
+                                   chart marks advice: magenta with a rule
+                                   under it, so the signal survives for anyone
+                                   who cannot see the colour. See the note on
+                                   --advisory in app/globals.css. */
+                                <p
+                                  className={
+                                    AUTHORED_EDGES.includes(step.edge_reason)
+                                      ? "advisory mt-2 text-xs leading-5"
+                                      : "mt-2 text-xs leading-5 text-muted-foreground"
+                                  }
+                                >
                                   {step.edge_note}
                                   {AUTHORED_EDGES.includes(step.edge_reason) ? (
-                                    <span className="text-aurora-dim">
+                                    <span className="opacity-80">
                                       {" "}
                                       (a common route, not a requirement)
                                     </span>
