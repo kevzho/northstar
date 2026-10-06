@@ -29,7 +29,7 @@ export default function ContactPage() {
 
         <header className="mt-10">
           <p className="eyebrow">{t("contact.eyebrow")}</p>
-          <h1 className="h-display mt-3 text-4xl text-foreground">
+          <h1 className="h-display mt-3 text-title text-foreground">
             {t("contact.title")}
           </h1>
           <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
@@ -53,7 +53,7 @@ export default function ContactPage() {
         </section>
 
         <section className="rounded-lg border bg-card mt-6 p-6">
-          <h2 className="text-lg font-semibold text-foreground">
+          <h2 className="h-display text-section text-foreground">
             {t("contact.suggest")}
           </h2>
           <p className="mt-2 text-sm leading-7 text-muted-foreground">

@@ -44,7 +44,7 @@ export default function NotFound() {
             <circle cx="64" cy="9" r="2" fill="currentColor" opacity="0.6" />
           </svg>
           <p className="eyebrow mt-4">404 — off the chart</p>
-          <h1 className="h-display mt-3 text-4xl text-foreground">
+          <h1 className="h-display mt-3 text-title text-foreground">
             Page not found
           </h1>
           <p className="mt-4 max-w-2xl mx-auto text-base leading-7 text-muted-foreground">

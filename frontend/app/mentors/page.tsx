@@ -81,10 +81,10 @@ export default function MentorsPage() {
 
         <header className="mt-10">
           <p className="eyebrow">Mentors</p>
-          <h1 className="h-display mt-3 text-4xl text-foreground">
+          <h1 className="h-display mt-3 text-title text-foreground">
             Mentor recommendations
           </h1>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
+          <p className="mt-4 max-w-2xl text-lede text-muted-foreground">
             Mentors who have opted in, ranked by how well their expertise
             aligns with your profile.
           </p>
@@ -94,7 +94,7 @@ export default function MentorsPage() {
           <LoadingSection label="Finding mentors that match your profile..." />
         ) : error ? (
           <section className="rounded-lg border bg-card mt-10 p-8 text-center">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               Could not load mentors
             </h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
@@ -105,7 +105,7 @@ export default function MentorsPage() {
           </section>
         ) : mentors.length === 0 ? (
           <section className="rounded-lg border bg-card mt-10 p-8 text-center">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               No mentors yet
             </h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
@@ -134,7 +134,7 @@ export default function MentorsPage() {
                     {Math.round(score.score * 100)}% fit
                   </span>
                   <div>
-                    <h2 className="text-lg font-semibold text-foreground">
+                    <h2 className="h-display text-section text-foreground">
                       {mentor.name}
                     </h2>
                     <p className="font-mono text-xs text-muted-foreground">

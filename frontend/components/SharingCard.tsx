@@ -64,7 +64,7 @@ export function SharingCard() {
 
   return (
     <section className="rounded-lg border bg-card mt-8 p-5">
-      <h2 className="text-sm font-semibold text-foreground">
+      <h2 className="text-note font-semibold text-foreground">
         Share your record
       </h2>
       <p className="mt-1 text-xs leading-5 text-muted-foreground">

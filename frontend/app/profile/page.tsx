@@ -149,7 +149,7 @@ export default function ProfilePage() {
             >
               Back to assessment
             </Link>
-            <h1 className="h-display mt-3 text-4xl text-foreground">
+            <h1 className="h-display mt-3 text-title text-foreground">
               Trait profile
             </h1>
             <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
@@ -214,7 +214,7 @@ export default function ProfilePage() {
         </section>
 
         <section className="rounded-lg border bg-card mt-8 p-5">
-          <h2 className="text-sm font-semibold text-foreground">
+          <h2 className="text-note font-semibold text-foreground">
             Field interest
           </h2>
           <p className="mt-1 text-xs leading-5 text-muted-foreground">
@@ -257,7 +257,7 @@ export default function ProfilePage() {
 
         {timeline && timeline.length > 0 ? (
           <section className="rounded-lg border bg-card mt-8 p-5">
-            <h2 className="text-sm font-semibold text-foreground">
+            <h2 className="text-note font-semibold text-foreground">
               Evidence timeline
             </h2>
             <p className="mt-1 text-xs leading-5 text-muted-foreground">

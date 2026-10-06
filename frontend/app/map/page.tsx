@@ -310,10 +310,10 @@ export default function MapPage() {
 
         <header className="mt-10">
           <p className="eyebrow">Pathway map</p>
-          <h1 className="h-display mt-3 text-4xl text-foreground">
+          <h1 className="h-display mt-3 text-title text-foreground">
             Your solar systems
           </h1>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
+          <p className="mt-4 max-w-2xl text-lede text-muted-foreground">
             Each field is a star; the opportunities matched to you orbit it.
             Inner orbits are the soonest deadlines — the closest planets are
             the most urgent. Open any of them to see the opportunity.
@@ -369,7 +369,7 @@ export default function MapPage() {
           <LoadingSection label="Building your pathway map..." />
         ) : !data || data.nodes.length === 0 ? (
           <section className="rounded-lg border bg-card mt-10 p-8 text-center">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               No map yet
             </h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">

@@ -144,7 +144,7 @@ export default function PlanPage() {
             <Link href="/futures" className="text-sm font-semibold text-aurora">
               Back to futures
             </Link>
-            <h1 className="h-display mt-3 text-4xl text-foreground">
+            <h1 className="h-display mt-3 text-title text-foreground">
               30-day plan
             </h1>
             <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
@@ -171,7 +171,7 @@ export default function PlanPage() {
 
         {!traits ? (
           <section className="mt-8 rounded-lg border bg-card p-8 text-center">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               No trait profile yet
             </h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
@@ -187,7 +187,7 @@ export default function PlanPage() {
           </section>
         ) : !archetype ? (
           <section className="mt-8 rounded-lg border bg-card p-8 text-center">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               No path charted yet
             </h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">

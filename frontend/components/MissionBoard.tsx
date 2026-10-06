@@ -214,7 +214,7 @@ export function MissionBoard({
                   className="rounded-md border border-border p-4"
                 >
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
-                    <h3 className="text-base font-semibold text-foreground">
+                    <h3 className="text-lede font-semibold text-foreground">
                       {done ? "✓ " : ""}
                       {mission.title}
                     </h3>

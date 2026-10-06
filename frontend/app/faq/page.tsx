@@ -28,7 +28,7 @@ export default function FaqPage() {
 
         <header className="mt-10">
           <p className="eyebrow">{t("faq.eyebrow")}</p>
-          <h1 className="h-display mt-3 text-4xl text-foreground">
+          <h1 className="h-display mt-3 text-title text-foreground">
             {t("faq.title")}
           </h1>
           <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
@@ -39,7 +39,7 @@ export default function FaqPage() {
         <section className="mt-8 grid gap-4">
           {KEYS.map((key) => (
             <article key={key} className="rounded-lg border bg-card p-5">
-              <h2 className="text-lg font-semibold text-foreground">
+              <h2 className="h-display text-section text-foreground">
                 {t(`faq.q${key}`)}
               </h2>
               <p className="mt-2 text-sm leading-7 text-muted-foreground">

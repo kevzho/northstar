@@ -58,7 +58,7 @@ export function OutcomeForm({ opportunityId }: { opportunityId: string }) {
 
   return (
     <div className="mt-6 rounded-lg border bg-card p-4">
-      <h3 className="text-sm font-semibold text-foreground">
+      <h3 className="text-note font-semibold text-foreground">
         Log your outcome
       </h3>
       <p className="mt-1 text-xs text-muted-foreground">

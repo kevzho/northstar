@@ -212,7 +212,7 @@ export default function DashboardPage() {
 
         <header className="py-10">
           <p className="eyebrow">Mission control</p>
-          <h1 className="h-display mt-3 text-4xl text-foreground">
+          <h1 className="h-display mt-3 text-title text-foreground">
             Welcome{studentName ? `, ${studentName.split(" ")[0]}` : ""}.
           </h1>
           {!studentName ? (
@@ -224,7 +224,7 @@ export default function DashboardPage() {
               .
             </p>
           ) : null}
-          <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
+          <p className="mt-4 max-w-2xl text-lede text-muted-foreground">
             Your matches refresh each time you visit — the latest TF-IDF
             scores are always ready below.
           </p>
@@ -291,7 +291,7 @@ export default function DashboardPage() {
         {/* Recommendations preview — top 4 matches */}
         {profileFailed ? (
           <section className="rounded-lg border border-destructive/40 bg-card mb-10 p-6 text-center">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               Could not load your profile
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -301,7 +301,7 @@ export default function DashboardPage() {
           </section>
         ) : matchesFailed ? (
           <section className="rounded-lg border border-destructive/40 bg-card mb-10 p-6 text-center">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               Could not reach the match engine
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -317,7 +317,7 @@ export default function DashboardPage() {
           </section>
         ) : matches.length === 0 ? (
           <section className="rounded-lg border bg-card mb-10 p-6 text-center">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               No recommendations yet
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -334,7 +334,7 @@ export default function DashboardPage() {
           </section>
         ) : (
           <section className="mb-10">
-            <h2 className="h-display text-2xl text-foreground">
+            <h2 className="h-display text-section text-foreground">
               Top matches
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -350,7 +350,7 @@ export default function DashboardPage() {
                   <span className="badge-fit mb-2">
                     {Math.round(score.score * 100)}% fit
                   </span>
-                  <h3 className="text-base font-semibold text-foreground truncate">
+                  <h3 className="truncate text-lede font-semibold text-foreground">
                     {opportunity.title}
                   </h3>
                   <p className="mt-1 text-xs leading-5 text-muted-foreground line-clamp-2">
@@ -374,7 +374,7 @@ export default function DashboardPage() {
             says that, rather than describing the table. */}
         {outcomes.length > 0 ? (
           <section className="mb-10">
-            <h2 className="h-display text-2xl text-foreground">
+            <h2 className="h-display text-section text-foreground">
               Your logged outcomes
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -423,7 +423,7 @@ export default function DashboardPage() {
             the judge-facing centerpiece, so it cannot be URL-only. */}
         <section className="grid gap-4 md:grid-cols-2">
           <Link href="/map" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               Your pathway map
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -432,7 +432,7 @@ export default function DashboardPage() {
             </p>
           </Link>
           <Link href="/opportunities" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               All recommendations
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -441,7 +441,7 @@ export default function DashboardPage() {
             </p>
           </Link>
           <Link href="/mentors" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               Mentor matches
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -449,7 +449,7 @@ export default function DashboardPage() {
             </p>
           </Link>
           <Link href="/projects" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               Projects to join
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -458,7 +458,7 @@ export default function DashboardPage() {
             </p>
           </Link>
           <Link href="/discover" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               Find your people
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -467,7 +467,7 @@ export default function DashboardPage() {
             </p>
           </Link>
           <Link href="/teamup" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               Team up
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -476,7 +476,7 @@ export default function DashboardPage() {
             </p>
           </Link>
           <Link href="/advisor" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               Explore unusual routes
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -485,7 +485,7 @@ export default function DashboardPage() {
             </p>
           </Link>
           <Link href="/profile" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               Edit profile
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">

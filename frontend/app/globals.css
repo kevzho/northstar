@@ -182,6 +182,48 @@
 
 @theme inline {
   --color-background: var(--background);
+  /*
+   * THE SCALE. Measured before this existed: 466 font-size declarations across
+   * 15 values, 305 of them (65%) at text-sm or text-xs. text-sm was not a size,
+   * it was the default — carrying 86 body paragraphs, 65 semibold labels, nine
+   * section headings and every button at once. Section headings alone were
+   * spelled five ways across two typefaces.
+   *
+   * Each step binds its own line-height and letter-spacing, so one utility
+   * carries all three and the 49 paragraphs currently shipping with no leading
+   * and the nine ad-hoc tracking values stop being per-site decisions.
+   *
+   * Steps are named for the JOB, not the size, because the bug being fixed is
+   * two jobs sharing a size.
+   */
+  --text-shout: clamp(2.75rem, 8vw, 5rem);
+  --text-shout--line-height: 0.95;
+  --text-shout--letter-spacing: -0.035em;
+
+  --text-title: 2.75rem;
+  --text-title--line-height: 1.04;
+  --text-title--letter-spacing: -0.025em;
+
+  --text-section: 1.5rem;
+  --text-section--line-height: 1.2;
+  --text-section--letter-spacing: -0.015em;
+
+  --text-lede: 1.0625rem;
+  --text-lede--line-height: 1.65;
+  --text-lede--letter-spacing: 0;
+
+  --text-body: 0.9375rem;
+  --text-body--line-height: 1.6;
+  --text-body--letter-spacing: 0;
+
+  --text-note: 0.8125rem;
+  --text-note--line-height: 1.5;
+  --text-note--letter-spacing: 0.005em;
+
+  --text-kicker: 0.6875rem;
+  --text-kicker--line-height: 1.3;
+  --text-kicker--letter-spacing: 0.18em;
+
   --color-advisory: var(--advisory);
   --color-polaris-ink: var(--polaris-ink);
   --color-foreground: var(--foreground);
@@ -409,19 +451,36 @@ button:disabled {
   }
 
   /* Display face for page titles — the atlas voice. */
+  /*
+   * The display voice. One weight at 600 previously did a 36px page title, a
+   * 24px section head and a 20px wordmark with identical tracking, so the face
+   * had no job description — hierarchy came only from size.
+   *
+   * Weight now carries the hierarchy and CASL stays at 0, because CASL is
+   * reserved for .advisory. A heading that reads casual would make every
+   * heading look like a hedge.
+   */
   .h-display {
-    font-family: var(--font-atlas), sans-serif;
-    font-weight: 600;
-    letter-spacing: -0.02em;
+    font-family: var(--font-atlas), ui-sans-serif, sans-serif;
+    font-variation-settings: "CASL" 0, "MONO" 0, "slnt" 0;
+    font-weight: 700;
+    letter-spacing: -0.022em;
     text-wrap: balance;
   }
 
   /* Mono eyebrow label, used where section kickers used to be. */
+  /*
+   * The kicker. Eight implementations existed with eight letter-spacing values
+   * that did not correlate with size — 10px at 0.025em, 12px at 0.14, 0.16,
+   * 0.2 and 0.22em. One definition now, reading the scale.
+   */
   .eyebrow {
-    font-family: var(--font-coords), ui-monospace, monospace;
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.22em;
+    font-family: var(--font-atlas), ui-monospace, monospace;
+    font-variation-settings: "MONO" 1, "CASL" 0;
+    font-size: var(--text-kicker);
+    line-height: var(--text-kicker--line-height);
+    font-weight: 600;
+    letter-spacing: var(--text-kicker--letter-spacing);
     text-transform: uppercase;
     color: var(--aurora);
   }

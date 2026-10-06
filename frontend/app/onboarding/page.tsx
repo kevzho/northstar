@@ -130,10 +130,10 @@ export default function OnboardingPage() {
 
         <div className="mt-10">
           <p className="eyebrow">Onboarding</p>
-          <h1 className="h-display mt-3 text-4xl text-foreground">
+          <h1 className="h-display mt-3 text-title text-foreground">
             Tell Northstar where you are.
           </h1>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
+          <p className="mt-4 max-w-2xl text-lede text-muted-foreground">
             A short intake that powers your opportunity recommendations. You can
             edit any of this later.
           </p>

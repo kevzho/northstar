@@ -75,7 +75,7 @@ export default function AdvisorPage() {
 
         <header className="mt-10">
           <p className="eyebrow">Exploration, not prediction</p>
-          <h1 className="h-display mt-3 text-4xl text-foreground">
+          <h1 className="h-display mt-3 text-title text-foreground">
             Route advisor
           </h1>
           <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">

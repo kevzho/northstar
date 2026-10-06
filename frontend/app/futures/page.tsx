@@ -94,7 +94,7 @@ export default function FuturesPage() {
             >
               Back to profile
             </Link>
-            <h1 className="h-display mt-3 text-4xl text-foreground">
+            <h1 className="h-display mt-3 text-title text-foreground">
               Future paths
             </h1>
             <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
@@ -115,7 +115,7 @@ export default function FuturesPage() {
           <LoadingSection label="Reading your trait chart..." className="mt-8 flex flex-col items-center gap-4 py-10 text-center" />
         ) : paths === null ? (
           <section className="rounded-lg border bg-card mt-8 p-8 text-center">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               No trait profile yet
             </h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
@@ -166,7 +166,7 @@ export default function FuturesPage() {
         )}
 
         <section className="rounded-lg border bg-card mt-8 p-5">
-          <h2 className="h-display text-2xl text-foreground">
+          <h2 className="h-display text-section text-foreground">
             Archetype library
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">

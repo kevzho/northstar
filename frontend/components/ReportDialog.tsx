@@ -78,7 +78,7 @@ export function ReportDialog({
       >
         {state === "done" ? (
           <>
-            <h2 className="text-lg font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               Report sent
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -92,7 +92,7 @@ export function ReportDialog({
           </>
         ) : (
           <>
-            <h2 className="text-lg font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               Report {target.name}
               {target.handle ? (
                 <span className="ml-2 font-mono text-xs font-normal text-aurora">

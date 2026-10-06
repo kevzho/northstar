@@ -95,7 +95,7 @@ export default function PublicProfilePage({
           <>
             <header className="mt-10">
               <p className="eyebrow">Evidence record · @{profile.handle}</p>
-              <h1 className="h-display mt-3 text-4xl text-foreground">
+              <h1 className="h-display mt-3 text-title text-foreground">
                 {profile.name}
               </h1>
               <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
@@ -122,7 +122,7 @@ export default function PublicProfilePage({
 
             {orderedFields.length > 0 ? (
               <section className="rounded-lg border bg-card mt-8 p-5">
-                <h2 className="text-sm font-semibold text-foreground">
+                <h2 className="text-note font-semibold text-foreground">
                   Field mix
                 </h2>
                 <div className="mt-4 grid gap-3">
@@ -150,7 +150,7 @@ export default function PublicProfilePage({
 
             {profile.outcomes.length > 0 ? (
               <section className="rounded-lg border bg-card mt-6 p-5">
-                <h2 className="text-sm font-semibold text-foreground">
+                <h2 className="text-note font-semibold text-foreground">
                   Outcomes
                 </h2>
                 <ul className="mt-3 grid gap-2">
@@ -174,7 +174,7 @@ export default function PublicProfilePage({
 
             {profile.missions.length > 0 ? (
               <section className="rounded-lg border bg-card mt-6 p-5">
-                <h2 className="text-sm font-semibold text-foreground">
+                <h2 className="text-note font-semibold text-foreground">
                   Proof missions completed
                 </h2>
                 <ul className="mt-3 grid gap-3">

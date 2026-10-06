@@ -75,7 +75,7 @@ export default function AssessmentPage() {
             >
               Northstar
             </Link>
-            <h1 className="h-display mt-3 text-4xl text-foreground">
+            <h1 className="h-display mt-3 text-title text-foreground">
               Assessment
             </h1>
             <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
@@ -122,7 +122,7 @@ export default function AssessmentPage() {
               <p className="font-mono text-xs tracking-[0.2em] text-star">
                 {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
               </p>
-              <h2 className="mt-2 text-xl font-semibold text-foreground">
+              <h2 className="h-display mt-2 text-section text-foreground">
                 {question.prompt}
               </h2>
               {question.kind === "likert" ? (

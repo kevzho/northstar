@@ -79,7 +79,7 @@ export function OpportunityDetail({ id }: { id: string }) {
         ) : (
           <article className="mt-10">
             <p className="eyebrow">{opportunity.host}</p>
-            <h1 className="h-display mt-3 text-4xl text-foreground">
+            <h1 className="h-display mt-3 text-title text-foreground">
               {opportunity.title}
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-8 text-foreground">

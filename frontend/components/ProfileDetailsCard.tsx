@@ -100,7 +100,7 @@ export function ProfileDetailsCard() {
   return (
     <section className="rounded-lg border bg-card mt-8 p-5">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h2 className="text-lg font-semibold text-foreground">Your details</h2>
+        <h2 className="h-display text-section text-foreground">Your details</h2>
         <Button
           variant="outline"
           render={<Link href="/dashboard" />}

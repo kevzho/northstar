@@ -85,7 +85,7 @@ export default function ProjectsPage() {
 
         <header className="mt-10">
           <p className="eyebrow">Build something real</p>
-          <h1 className="h-display mt-3 text-4xl text-foreground">
+          <h1 className="h-display mt-3 text-title text-foreground">
             Projects for you
           </h1>
           <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
@@ -101,7 +101,7 @@ export default function ProjectsPage() {
           <LoadingSection label="Searching GitHub..." />
         ) : projects.length === 0 ? (
           <section className="rounded-lg border bg-card mt-10 p-8 text-center">
-            <h2 className="h-display text-2xl text-foreground">
+            <h2 className="h-display text-section text-foreground">
               {failed ? "Sign in to see projects" : "Nothing found right now"}
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-base leading-7 text-muted-foreground">

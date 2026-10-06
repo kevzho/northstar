@@ -99,7 +99,7 @@ function LoginInner() {
                 is open to everyone without one.
               </p>
             ) : null}
-            <h1 className="h-display mt-4 text-4xl text-foreground sm:text-5xl">
+            <h1 className="h-display mt-4 text-title text-foreground">
               Start with Northstar.
             </h1>
             <p className="mt-5 max-w-xl text-base leading-8 text-muted-foreground">

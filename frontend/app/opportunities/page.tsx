@@ -234,14 +234,14 @@ function OpportunitiesList() {
 
         <header className="mt-10">
           <p className="eyebrow">Opportunities</p>
-          <h1 className="h-display mt-3 text-4xl text-foreground">
+          <h1 className="h-display mt-3 text-title text-foreground">
             {signedOut
               ? "The high-school shelf"
               : view === "all"
                 ? "The full bank"
                 : "Opportunities for you"}
           </h1>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
+          <p className="mt-4 max-w-2xl text-lede text-muted-foreground">
             {signedOut
               ? "Every opportunity on the high-school shelf, open ones first. Each one has been checked against the programme's own page, and anything that stopped holding up was removed rather than left to pad the total."
               : view === "all"
@@ -363,7 +363,7 @@ function OpportunitiesList() {
             </>
           ) : (
             <section className="rounded-lg border bg-card mt-10 p-8 text-center">
-              <h2 className="text-xl font-semibold text-foreground">
+              <h2 className="h-display text-section text-foreground">
                 Nothing in the catalog matches these filters
               </h2>
               <p className="mt-3 text-sm leading-6 text-muted-foreground">
@@ -373,7 +373,7 @@ function OpportunitiesList() {
           )
         ) : loadFailed ? (
           <section className="rounded-lg border border-destructive/40 bg-card mt-10 p-8 text-center">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               Could not load your recommendations
             </h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
@@ -408,7 +408,7 @@ function OpportunitiesList() {
           // Results exist but the current filters exclude all of them. Saying
           // "finish onboarding" here would send the student down the wrong path.
           <section className="rounded-lg border bg-card mt-10 p-8 text-center">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               Nothing matches these filters
             </h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
@@ -425,7 +425,7 @@ function OpportunitiesList() {
           </section>
         ) : (
           <section className="rounded-lg border bg-card mt-10 p-8 text-center">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               No recommendations yet
             </h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">

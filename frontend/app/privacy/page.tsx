@@ -31,7 +31,7 @@ function Section({
 }) {
   return (
     <section className="mt-10">
-      <h2 className="h-display text-2xl text-foreground">{title}</h2>
+      <h2 className="h-display text-section text-foreground">{title}</h2>
       <div className="mt-3 grid gap-3 text-sm leading-7 text-muted-foreground">
         {children}
       </div>
@@ -45,7 +45,7 @@ export default function PrivacyPage() {
       <div className="mx-auto max-w-2xl">
         <AppNav />
 
-        <h1 className="h-display mt-10 text-4xl text-foreground">
+        <h1 className="h-display mt-10 text-title text-foreground">
           Privacy policy
         </h1>
         <p className="mt-3 font-mono text-sm uppercase tracking-[0.16em] text-muted-foreground">

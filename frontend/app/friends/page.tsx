@@ -154,7 +154,7 @@ export default function FriendsPage() {
 
         <header className="mt-10">
           <p className="eyebrow">Your constellation</p>
-          <h1 className="h-display mt-3 text-4xl text-foreground">
+          <h1 className="h-display mt-3 text-title text-foreground">
             Compare trajectories
           </h1>
           <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
@@ -166,7 +166,7 @@ export default function FriendsPage() {
 
         {signedOut ? (
           <section className="rounded-lg border bg-card mt-10 p-8 text-center">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               Sign in to add friends
             </h2>
             <Button render={<Link href="/login" />} className="mt-6 h-11 px-5">
@@ -199,7 +199,7 @@ export default function FriendsPage() {
 
             {pending.length > 0 ? (
               <section className="mt-8">
-                <h2 className="text-sm font-semibold text-foreground">Pending</h2>
+                <h2 className="text-note font-semibold text-foreground">Pending</h2>
                 <ul className="mt-3 grid gap-2">
                   {pending.map((entry) => (
                     <li
@@ -249,7 +249,7 @@ export default function FriendsPage() {
             ) : null}
 
             <section className="mt-8">
-              <h2 className="text-sm font-semibold text-foreground">Friends</h2>
+              <h2 className="text-note font-semibold text-foreground">Friends</h2>
               {!loaded ? (
                 <LoadingSection label="Gathering your constellation..." className="mt-3 flex flex-col items-center gap-4 py-6 text-center" />
               ) : accepted.length === 0 ? (
@@ -303,7 +303,7 @@ export default function FriendsPage() {
 
             {comparison ? (
               <section className="mt-8">
-                <h2 className="text-sm font-semibold text-foreground">
+                <h2 className="text-note font-semibold text-foreground">
                   Side by side
                 </h2>
                 <div className="mt-3 grid gap-4 md:grid-cols-2">

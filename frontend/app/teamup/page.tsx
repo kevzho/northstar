@@ -142,7 +142,7 @@ export default function TeamupPage() {
 
         <header className="mt-10">
           <p className="eyebrow">Team up</p>
-          <h1 className="h-display mt-3 text-4xl text-foreground">
+          <h1 className="h-display mt-3 text-title text-foreground">
             Find a collaborator
           </h1>
           <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
@@ -154,7 +154,7 @@ export default function TeamupPage() {
 
         {signedOut ? (
           <section className="rounded-lg border bg-card mt-10 p-8 text-center">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               Sign in to team up
             </h2>
             <Button render={<Link href="/login" />} className="mt-6 h-11 px-5">
@@ -165,7 +165,7 @@ export default function TeamupPage() {
           <LoadingSection label="Opening the matching pool..." />
         ) : !enabled ? (
           <section className="rounded-lg border bg-card mt-10 p-8">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               Join the matching pool
             </h2>
             <ul className="mt-3 grid gap-1.5 text-sm leading-6 text-muted-foreground">
@@ -198,7 +198,7 @@ export default function TeamupPage() {
           <>
             {matched ? (
               <section className="mt-8 rounded-lg border border-star bg-card p-6 text-center">
-                <h2 className="text-xl font-semibold text-star">
+                <h2 className="h-display text-section text-star">
                   It&apos;s mutual — you and {matched.name} both want to team up
                 </h2>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -223,7 +223,7 @@ export default function TeamupPage() {
             {!candidate ? (
               deckLoaded ? (
                 <section className="rounded-lg border bg-card mt-8 p-8 text-center">
-                  <h2 className="text-xl font-semibold text-foreground">
+                  <h2 className="h-display text-section text-foreground">
                     No new candidates right now
                   </h2>
                   <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-muted-foreground">
@@ -245,7 +245,7 @@ export default function TeamupPage() {
               <section className="mt-8 rounded-lg border bg-card p-6">
                 <div className="flex items-baseline justify-between gap-3">
                   <div>
-                    <h2 className="text-2xl font-semibold text-foreground">
+                    <h2 className="h-display text-section text-foreground">
                       {candidate.name}
                     </h2>
                     {candidate.handle ? (
@@ -389,7 +389,7 @@ export default function TeamupPage() {
               onClick={(event) => event.stopPropagation()}
             >
               <div className="flex items-baseline justify-between gap-3">
-                <h2 className="text-xl font-semibold text-foreground">
+                <h2 className="h-display text-section text-foreground">
                   {detail.name}
                 </h2>
                 <span className="font-mono text-xs text-muted-foreground">

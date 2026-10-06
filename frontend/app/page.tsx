@@ -288,7 +288,7 @@ export default function Home() {
         </div>
 
         <section aria-label="How Northstar works" className="pb-16">
-          <h2 className="h-display text-2xl text-foreground sm:text-3xl">
+          <h2 className="h-display text-section text-foreground">
             How you find it
           </h2>
           {/* The pathway: three worlds along a dashed course, revealed on
@@ -383,7 +383,7 @@ export default function Home() {
             className="mx-auto w-full max-w-6xl px-6 py-20 sm:px-8 lg:px-10"
           >
           <p className="eyebrow">Why this exists</p>
-          <h2 className="h-display mt-3 text-2xl text-foreground sm:text-3xl">
+          <h2 className="h-display mt-3 text-section text-foreground">
             The opportunities were always there. The map wasn&apos;t.
           </h2>
           <div className="mt-6 grid gap-5 sm:grid-cols-2">
@@ -416,7 +416,7 @@ export default function Home() {
         </div>
 
         <section aria-label="Frequently asked questions" className="pb-16 pt-16">
-          <h2 className="h-display text-2xl text-foreground sm:text-3xl">
+          <h2 className="h-display text-section text-foreground">
             {t("faq.title")}
           </h2>
           <div className="mt-8 grid gap-4">

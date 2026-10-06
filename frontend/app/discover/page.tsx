@@ -90,7 +90,7 @@ export default function DiscoverPage() {
 
         <header className="mt-10">
           <p className="eyebrow">Find your people</p>
-          <h1 className="h-display mt-3 text-4xl text-foreground">
+          <h1 className="h-display mt-3 text-title text-foreground">
             Students like you
           </h1>
           <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
@@ -102,7 +102,7 @@ export default function DiscoverPage() {
 
         {failed ? (
           <section className="rounded-lg border bg-card mt-10 p-8 text-center">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               Sign in to discover peers
             </h2>
             <Button render={<Link href="/login" />} className="mt-6 h-11 px-5">
@@ -113,7 +113,7 @@ export default function DiscoverPage() {
           <LoadingSection label="Scanning for students in your orbit..." />
         ) : peers.length === 0 ? (
           <section className="rounded-lg border bg-card mt-10 p-8 text-center">
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="h-display text-section text-foreground">
               No matches yet
             </h2>
             <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-muted-foreground">
@@ -138,7 +138,7 @@ export default function DiscoverPage() {
                 >
                   <div className="flex items-baseline justify-between gap-3">
                     <div>
-                      <h2 className="text-lg font-semibold text-foreground">
+                      <h2 className="h-display text-section text-foreground">
                         {peer.name}
                       </h2>
                       <Link
