@@ -150684,5 +150684,33 @@
     "location_guess": "Ferry County, WA",
     "needs_review": true,
     "review": "auto-kept"
+  },
+  {
+    "source": "r/ApplyingToCollege search:public health program high school",
+    "reddit_permalink": "https://www.reddit.com/r/ApplyingToCollege/comments/1wy8ygv/application_deadline_question/",
+    "posted_utc": "2026-10-05T13:45:22+00:00",
+    "score": 1,
+    "title": "Application deadline question",
+    "url": "https://www.reddit.com/r/ApplyingToCollege/comments/1wy8ygv/application_deadline_question/",
+    "blurb": "another college quite suddenly got on my radar and I'm thinking of applying to transfer for spring 2027 but the deadlines for that semester are very soon. This school's deadline is the 15th this month and I'm told it's g",
+    "field_guess": "health",
+    "type_guess": "program",
+    "audience_guess": "high_school",
+    "location_guess": "us",
+    "needs_review": true
+  },
+  {
+    "source": "r/premed",
+    "reddit_permalink": "https://www.reddit.com/r/premed/comments/1wxr26n/career_options_for_gap_years/",
+    "posted_utc": "2026-10-04T21:25:34+00:00",
+    "score": 0,
+    "title": "Career Options for gap year(s)",
+    "url": "https://www.reddit.com/r/premed/comments/1wxr26n/career_options_for_gap_years/",
+    "blurb": "What are some jobs I should apply to with bachelors in biology and masters in biomedical science. I have worked primarily in clinical settings. I have looked into clinical research coordinator jobs given my academic back",
+    "field_guess": "biology",
+    "type_guess": "program",
+    "audience_guess": "college",
+    "location_guess": "us",
+    "needs_review": true
   }
 ]
