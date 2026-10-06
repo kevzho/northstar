@@ -64,6 +64,30 @@ ACADEMIC_YEAR_START_MONTH = 7
 
 # entry_gate -> (step wording, fallback note). The note is only used when the
 # row has no entry_note of its own, so a curated explanation always wins.
+# What a student actually DOES first, when a gate stands in front of a
+# programme.
+#
+# The gate was already surfaced as a footnote on the application step: "You
+# cannot apply directly -- entry is by qualifying score or exam." True, and
+# useless on its own. A roadmap whose answer to "I want Math Prize for Girls"
+# is a caveat has told the student they are blocked and stopped there.
+#
+# So a gated programme now gets a step of its own, placed BEFORE the
+# application. The wording comes from opportunities.entry_note where there is
+# one -- a sentence a human wrote after reading the programme's page, saying
+# what the qualifier actually is ("Qualification is by AMC score", "Entry is
+# through your ACS local section exam") -- and falls back to the generic line
+# only when there is none. Measured 2026-10-05: all 18 gated high-school rows
+# carry a note, so the generic fallback is the rare case, not the common one.
+#
+# Nothing here is invented. The step says what the catalog was already told.
+GATE_PREP: dict[str, str] = {
+    "qualify": "Work toward the qualifier for {title}",
+    "advance": "Enter the affiliated fair that leads to {title}",
+    "nominate": "Line up a nomination for {title}",
+    "teacher": "Find the teacher or coach who can enter {title} with you",
+}
+
 GATE_STEP: dict[str, tuple[str, str]] = {
     "apply": ("Apply to {title}.", ""),
     "qualify": (
@@ -361,6 +385,34 @@ def build_roadmap(
             title = opp.get("title", "this program")
             gate = (opp.get("entry_gate") or "apply").strip() or "apply"
             verb, gate_note = GATE_STEP.get(gate, GATE_STEP["apply"])
+
+            # The preparation step, before the application it unlocks.
+            #
+            # Placed a hair earlier on the time axis so it always sorts above
+            # the thing it is a prerequisite for -- a plan that lists "apply"
+            # above "qualify first" is a plan in the wrong order.
+            prep = GATE_PREP.get(gate)
+            if prep:
+                note = (opp.get("entry_note") or "").strip() or gate_note
+                add(
+                    "skill",
+                    prep.format(title=title) + ".",
+                    step_key=f"prep:{opp_id}",
+                    # Not "ladder": this is a stated requirement of the
+                    # programme, not a generalisation about what students
+                    # usually do. It belongs with the computed facts.
+                    edge_reason="gate",
+                    edge_note=(
+                        note
+                        + (" " if note else "")
+                        + f"Do this before the {opp.get('deadline')} deadline, "
+                        "not after it."
+                    ).strip(),
+                    opportunity_id=opp_id,
+                    timeframe="month",
+                    due_in_months=max(0.0, float(days) / 30.0 - 0.01),
+                )
+
             # The gate is the binding constraint when there is one; the closing
             # date only matters once you are allowed through it.
             add(
@@ -368,9 +420,13 @@ def build_roadmap(
                 verb.format(title=title),
                 step_key=f"{gate}:{opp_id}",
                 edge_reason="window" if gate == "apply" else "gate",
+                # Once a preparation step exists it has already said HOW you
+                # get in, in the programme's own words. Repeating that sentence
+                # here made a student read the same instruction twice in a row,
+                # directly under itself. The application step keeps only what is
+                # its own: when the window shuts.
                 edge_note=(
-                    (opp.get("entry_note") or gate_note or "").strip()
-                    + (" " if (opp.get("entry_note") or gate_note) else "")
+                    ("" if prep else (opp.get("entry_note") or gate_note or "").strip() + " ")
                     + f"Closes {opp.get('deadline')} — {days} days away. "
                     + ("Start today." if soon else "Open now.")
                 ).strip(),

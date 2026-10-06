@@ -322,25 +322,103 @@ def test_every_gate_produces_an_actionable_verb() -> None:
 
 
 def test_a_curated_entry_note_wins_over_the_generic_one() -> None:
-    """The audit wrote a specific sentence per row; it must not be discarded."""
+    """The audit wrote a specific sentence per row; it must not be discarded.
+
+    It now lands on the PREPARATION step rather than the application, because
+    that is the step it is an instruction for — "Qualify by score on the AMC 10
+    or AMC 12" tells you what to do, and the thing you do it before is the
+    application. Printing it on both made a student read the same sentence
+    twice, directly under itself.
+    """
     curated = "You cannot apply. Qualify by score on the AMC 10 or AMC 12."
     plan = build_roadmap(
         {"grade": "11"}, SPINE, RESOURCES, [gated("o1", "USAMO", "qualify", note=curated)], MISSIONS, TODAY,
     )
-    note = _application_steps(plan)[0]["edge_note"]
-    assert curated in note
-    assert "entry is by qualifying score or exam" not in note.lower()
+    steps = {s["step_key"]: s for p in plan["phases"] for s in p["steps"]}
+
+    prep = steps["prep:o1"]
+    assert curated in prep["edge_note"], "the audit's sentence was dropped"
+    assert "entry is by qualifying score or exam" not in prep["edge_note"].lower()
+
     # The deadline is still stated -- a gate does not excuse dropping the date.
-    assert "2026-11-01" in note
+    assert "2026-11-01" in steps["qualify:o1"]["edge_note"]
+
+
+def test_the_instruction_is_not_printed_twice() -> None:
+    """It was, briefly: the prep step and the application beneath it carried the
+    same sentence, so the plan repeated itself line to line."""
+    curated = "Qualification is by AMC score."
+    plan = build_roadmap(
+        {"grade": "11"}, SPINE, RESOURCES, [gated("o1", "USAMO", "qualify", note=curated)], MISSIONS, TODAY,
+    )
+    notes = [
+        s["edge_note"] for p in plan["phases"] for s in p["steps"]
+        if s["step_key"] in ("prep:o1", "qualify:o1")
+    ]
+    assert sum(curated in n for n in notes) == 1
 
 
 def test_a_gated_step_still_counts_as_dated() -> None:
     """notes.dated_steps drives the 'is this roadmap real?' display. A gated
-    step has a real deadline, so excluding it would understate the plan."""
+    step has a real deadline, so excluding it would understate the plan.
+
+    Two now, not one: a gated programme produces the preparation step AND the
+    application it unlocks. Both are grounded in the same calendar fact and in a
+    requirement the programme itself states, so counting both is the honest
+    reading — this metric separates computed facts from authored guesses, and
+    neither of these is a guess.
+    """
     plan = build_roadmap(
         {"grade": "11"}, SPINE, RESOURCES, [gated("o1", "USAMO", "qualify")], MISSIONS, TODAY,
     )
-    assert plan["notes"]["dated_steps"] == 1
+    assert plan["notes"]["dated_steps"] == 2
+
+
+def test_the_preparation_step_comes_before_the_thing_it_unlocks() -> None:
+    """The whole point of the step.
+
+    Telling a student to qualify for USAMO is useless underneath "Apply to
+    USAMO" — a plan in the wrong order is not a plan. The prep step is placed a
+    hair earlier on the time axis so it can never sort below its application.
+    """
+    plan = build_roadmap(
+        {"grade": "11"}, SPINE, RESOURCES, [gated("o1", "USAMO", "qualify")], MISSIONS, TODAY,
+    )
+    keys = [
+        step["step_key"]
+        for phase in plan["phases"]
+        for step in phase["steps"]
+    ]
+    assert "prep:o1" in keys, "a gated programme must say what to do first"
+    assert keys.index("prep:o1") < keys.index("qualify:o1")
+
+
+def test_an_ungated_application_gets_no_preparation_step() -> None:
+    """A programme you can simply apply to has nothing standing in front of it,
+    and inventing a hurdle would be as wrong as hiding a real one."""
+    plan = build_roadmap(
+        {"grade": "11"}, SPINE, RESOURCES, [gated("o1", "Open Thing", "apply")], MISSIONS, TODAY,
+    )
+    keys = [s["step_key"] for p in plan["phases"] for s in p["steps"]]
+    assert "prep:o1" not in keys
+
+
+def test_the_preparation_step_uses_the_programmes_own_words() -> None:
+    """Measured 2026-10-05: all 18 gated high-school rows carry an entry_note a
+    human wrote after reading the programme's page — "Qualification is by AMC
+    score", "Entry is through your ACS local section exam". That sentence is
+    the specific instruction a student needs, and the generic gate line is only
+    the fallback when there is none."""
+    row = gated("o1", "Math Prize for Girls", "qualify")
+    row["opportunity"]["entry_note"] = "Qualification is by AMC score."
+    plan = build_roadmap({"grade": "11"}, SPINE, RESOURCES, [row], MISSIONS, TODAY)
+    prep = next(
+        s for p in plan["phases"] for s in p["steps"] if s["step_key"] == "prep:o1"
+    )
+    assert "AMC score" in prep["edge_note"]
+    assert "cannot apply directly" not in prep["edge_note"], (
+        "the generic line should give way to the programme's own"
+    )
 
 
 def test_a_missing_or_unknown_gate_falls_back_to_apply() -> None:
