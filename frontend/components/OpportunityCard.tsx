@@ -72,7 +72,15 @@ export function OpportunityCard({
   const left = daysLeft(opportunity.deadline);
 
   return (
-    <article className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
+    /*
+     * min-w-0 is load-bearing, not tidying. A grid item defaults to
+     * `min-width: auto`, so one unbreakable child sets the floor for the whole
+     * track — and these blurbs are scraped organiser copy that sometimes
+     * contains a bare URL ("https://fortid.com/"). Measured on a 390px phone:
+     * the grid track was a correct 342px and every card inside it was 368,
+     * giving the page a horizontal scroll on the screen testers land on.
+     */
+    <article className="min-w-0 rounded-lg border bg-card transition-colors hover:border-primary p-5">
       <div className="flex items-center justify-between gap-3">
         <span className="font-mono text-xs uppercase tracking-[0.16em] text-aurora">
           {typeLabels[opportunity.type]}
@@ -95,7 +103,7 @@ export function OpportunityCard({
           )}
         </span>
       </div>
-      <h2 className="mt-3 text-xl font-semibold leading-tight text-foreground">
+      <h2 className="mt-3 break-words text-xl font-semibold leading-tight text-foreground">
         {opportunity.title}
       </h2>
       <p className="mt-1 text-sm font-medium text-muted-foreground">
@@ -106,7 +114,7 @@ export function OpportunityCard({
           on "eIDAS 2.0 compliant digit". On a shelf of 166 the job is scanning,
           and a wall of someone else's copy is what stops you. The detail page
           is one click away and carries the whole thing. */}
-      <p className="mt-3 line-clamp-2 text-sm leading-6 text-muted-foreground">
+      <p className="mt-3 line-clamp-2 break-words text-sm leading-6 text-muted-foreground">
         {opportunity.blurb}
       </p>
       {/* The two facts that decide whether this is worth a click, given the

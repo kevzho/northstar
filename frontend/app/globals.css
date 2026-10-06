@@ -31,14 +31,23 @@
    * `--star` and `--aurora` keep their names (67 and 54 uses) and stay greys,
    * retuned cool so they sit on the new ground instead of floating above it.
    */
-  --star: #eef2f6;
+  /*
+   * The instrument voice is now an AXIS, not a second file. Recursive at
+   * MONO 1 gives tabular, fixed-advance figures from the same family the rest
+   * of the page is set in, so a deadline and the sentence around it are
+   * visibly related rather than visibly imported. Replaces IBM Plex Mono;
+   * `font-mono` (87 uses) keeps working and keeps its meaning.
+   */
+  --font-coords: var(--font-atlas);
+
+  --star: #f6efe3;
   --star-bright: #ffffff;
-  --on-star: #0b0f14;
-  --aurora: #c0cdd8;
-  --aurora-dim: #8294a2;
-  --panel: #121820;
-  --panel-raised: #1a222c;
-  --border-bright: #3a4754;
+  --on-star: #171310;
+  --aurora: #cdbfab;
+  --aurora-dim: #b8ab99;
+  --panel: #201a14;
+  --panel-raised: #2a2219;
+  --border-bright: #746656;
 
   --success-bg: #131b13;
   --success-border: #3c4f3c;
@@ -48,8 +57,8 @@
   --error-text: #eec7c7;
 
   /* shadcn semantic tokens, resolved to the monochrome palette */
-  --background: #0b0f14;
-  --foreground: #e8edf2;
+  --background: #171310;
+  --foreground: #f6efe3;
   --card: var(--panel);
   --card-foreground: var(--foreground);
   --popover: var(--panel-raised);
@@ -59,11 +68,11 @@
   --secondary: var(--panel-raised);
   --secondary-foreground: var(--foreground);
   --muted: var(--panel-raised);
-  --muted-foreground: #93a3b0;
-  --accent: #1d2630;
+  --muted-foreground: #b8ab99;
+  --accent: #2a2219;
   --accent-foreground: var(--foreground);
   --destructive: #eec7c7;
-  --border: #222c37;
+  --border: #3b3228;
   --input: var(--border-bright);
   --ring: var(--star);
   --chart-1: #6c9ef8;
@@ -80,8 +89,10 @@
 
   /* Polaris — the one warm light in the monochrome sky. Reserved for a
      single meaning: "you are here" (the current waypoint). */
-  --polaris: #ffc88a;
-  --polaris-glow: rgba(255, 200, 138, 0.45);
+  --polaris: #ffc94a;
+  --polaris-glow: rgba(255, 201, 74, 0.45);
+  /* Night needs no darker variant: amber on bistre reads 12.05:1. */
+  --polaris-ink: #ffc94a;
 
   /*
    * THE OVERPRINT. The one colour in this app that carries a meaning rather
@@ -106,8 +117,8 @@
    * deadline, a path written by a model -- takes the overprint. Used anywhere
    * else it stops meaning anything, which is the only way to lose it.
    */
-  --advisory: #ff6fb3;
-  --advisory-rule: rgba(255, 111, 179, 0.35);
+  --advisory: #ff7aa8;
+  --advisory-rule: rgba(255, 122, 168, 0.4);
 }
 
 /*
@@ -128,14 +139,14 @@
 
   /* Chart stock: a cool green-grey, deliberately not the warm cream that every
      AI-generated site reaches for. */
-  --star: #121a20;
+  --star: #1b1512;
   --star-bright: #000000;
-  --on-star: #f1f3f0;
-  --aurora: #3f4e59;
-  --aurora-dim: #7b8a94;
+  --on-star: #f3ecdd;
+  --aurora: #4a4036;
+  --aurora-dim: #5a4f42;
   --panel: #ffffff;
-  --panel-raised: #e7eae6;
-  --border-bright: #b6bdb8;
+  --panel-raised: #e9e0cd;
+  --border-bright: #8a7a63;
 
   --success-bg: #eef5ee;
   --success-border: #b5ceb5;
@@ -144,27 +155,35 @@
   --error-border: #d8b5b5;
   --error-text: #6d3030;
 
-  --background: #f1f3f0;
-  --foreground: #121a20;
-  --muted-foreground: #4a5a66;
-  --accent: #e4e8e3;
+  --background: #f3ecdd;
+  --foreground: #1b1512;
+  --muted-foreground: #5a4f42;
+  --accent: #e9e0cd;
   --destructive: #6d3030;
-  --border: #d3d9d3;
+  --border: #c9bda6;
 
   --glow-a: rgba(0, 0, 0, 0.04);
   --glow-b: rgba(0, 0, 0, 0.025);
 
-  --polaris: #b26a1f;
-  --polaris-glow: rgba(178, 106, 31, 0.3);
+  --polaris: #ffc400;
+  --polaris-glow: rgba(255, 196, 0, 0.3);
+  /*
+   * Amber is a FILL on paper, never a text colour: #ffc400 on manila is
+   * 1.36:1, i.e. invisible. Dark ink on it is 11.31:1, which is what the
+   * button uses. --polaris-ink is the same meaning for the four places
+   * that set it as text.
+   */
+  --polaris-ink: #7a4e00;
 
   /* See the overprint note in the night palette. */
-  --advisory: #b4126e;
-  --advisory-rule: rgba(180, 18, 110, 0.3);
+  --advisory: #b81d5b;
+  --advisory-rule: rgba(184, 29, 91, 0.32);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-advisory: var(--advisory);
+  --color-polaris-ink: var(--polaris-ink);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-body), ui-sans-serif, sans-serif;
   --font-mono: var(--font-coords), ui-monospace, monospace;
@@ -257,7 +276,29 @@ button:disabled {
    * text carries the same signal -- this is the house style for "we are
    * advising, not reporting", and it is the only place the overprint appears.
    */
+  /*
+   * THE SIGNATURE. The type gets more human exactly where the data gets less
+   * certain.
+   *
+   * Recursive carries a CASL axis from a plain grotesque at 0 to a
+   * handwritten-adjacent warmth at 1. This catalog already separates what it
+   * checked from what it is advising; until now that distinction was a colour
+   * and a parenthesis. Here it is also the letterforms: an advised sentence is
+   * set in a visibly warmer, slightly slanted cut of the same family the
+   * verified sentence beside it uses.
+   *
+   * CASL IS RATIONED. It appears here and nowhere else — not on headings, not
+   * on the hero. Set the whole product casual and the axis stops meaning
+   * "advisory" and starts meaning "Northstar", which is the one way to lose
+   * the idea. Headings get weight, not CASL.
+   *
+   * Three signals, because one would fail someone: the family changes, the
+   * colour changes, and a rule sits under the text. Any one surviving is
+   * enough to read it as set apart.
+   */
   .advisory {
+    font-family: var(--font-atlas), ui-sans-serif, sans-serif;
+    font-variation-settings: "CASL" 1, "slnt" -4, "MONO" 0;
     color: var(--advisory);
     text-decoration: underline;
     text-decoration-color: var(--advisory-rule);
@@ -552,4 +593,16 @@ button:disabled {
     animation: none;
     opacity: 0;
   }
+}
+
+/*
+ * `font-mono` is a family utility, and Recursive's monospace is an axis
+ * position rather than a separate family — so the utility alone would render
+ * proportional text in the right font and silently lose every column
+ * alignment. Unlayered on purpose: Tailwind v4 puts utilities in a layer, and
+ * unlayered rules beat layered ones whatever the source order.
+ */
+.font-mono {
+  font-variation-settings: "MONO" 1, "CASL" 0, "slnt" 0;
+  font-variant-numeric: tabular-nums;
 }
