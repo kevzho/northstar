@@ -134,6 +134,16 @@ export function OpportunityCard({
             grades {opportunity.grade_min}–{opportunity.grade_max}
           </span>
         ) : null}
+        {/* Where, when there is a where. Shown in the marker colour because it
+            is the one fact on this card a student cannot get from a chatbot,
+            and because "is this near me" is the question that decides whether
+            a regional fair is relevant at all. */}
+        {opportunity.state ? (
+          <span className="text-polaris-ink">
+            {opportunity.location ? `${opportunity.location}, ` : ""}
+            {opportunity.state}
+          </span>
+        ) : null}
       </p>
       <div className="mt-4 flex items-center justify-between gap-3">
         <span className="flex items-center gap-2">

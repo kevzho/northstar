@@ -1659,6 +1659,11 @@ def create_app() -> FastAPI:
             "id", "title", "host", "url", "deadline", "cost", "tags",
             "audience", "grade_min", "grade_max", "type", "entry_gate",
             "entry_note", "blurb", "location_scope",
+            # The locality. Added 2026-10-07 because it is the only field here
+            # a model cannot produce from recall: asked to name 24 curated rows
+            # it knew all 24 existed, but no model can say which of Alabama's
+            # four ISEF-affiliated fairs serves Bullock County.
+            "state", "location",
         )
 
         sb = get_supabase()

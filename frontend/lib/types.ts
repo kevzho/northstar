@@ -70,6 +70,17 @@ export type Opportunity = {
    */
   entry_gate?: "apply" | "qualify" | "advance" | "nominate" | "teacher";
   entry_note?: string | null;
+  /**
+   * Two-letter US state when an opportunity is tied to one place, and the
+   * organiser's own words for where.
+   *
+   * The only fields here a chat model cannot produce. Measured 2026-10-05: a
+   * frontier model asked to recall 24 curated catalog rows knew all 24
+   * existed — but no model can say which of Alabama's four ISEF-affiliated
+   * fairs serves Bullock County. NULL for anything national or online, which
+   * is most of the catalog and the honest answer for it.
+   */
+  state?: string | null;
 };
 
 export type MatchScore = {

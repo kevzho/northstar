@@ -195,3 +195,48 @@ def test_public_catalog_serves_an_allowlist_not_the_row() -> None:
     # Retired rows are never browsable, and this is the high-school shelf.
     assert 'is_("retired_at", "null")' in body
     assert '"high_school"' in body
+
+
+def test_locality_is_the_one_thing_recall_cannot_give_and_must_survive() -> None:
+    """Measured 2026-10-05: a frontier model with no web access, asked to recall
+    24 curated catalog rows, knew all 24 existed. The catalog's existence claim
+    is therefore not a differentiator. Locality is: no model can say which of
+    Alabama's four ISEF-affiliated fairs serves Bullock County.
+
+    That fact was already being scraped and then dropped. scrape_sciencefairs.py
+    extracts each fair's territory and passes "Bullock County, AL";
+    app/verifier.py collapsed it into location_scope — an enum of three values —
+    and every regional fair in the catalog read location=NULL.
+    """
+    import ast
+    import inspect
+    import textwrap
+
+    from app import main as main_mod
+    from app.verifier import parse_locality
+
+    src = inspect.getsource(main_mod.create_app)
+    start = src.index('@app.get("/catalog/public")')
+    body = src[start : src.index('@app.get("/catalog")', start)]
+    tree = ast.parse(textwrap.dedent(body.split("\n", 1)[1]))
+    fields = ()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign) and any(
+            getattr(t, "id", "") == "PUBLIC_FIELDS" for t in node.targets
+        ):
+            fields = tuple(e.value for e in node.value.elts if isinstance(e, ast.Constant))
+    for needed in ("state", "location"):
+        assert needed in fields, (
+            f"the public catalog drops {needed}, which is the only field in it a "
+            "chat model cannot produce from memory"
+        )
+
+    # Conservative by design: a wrong state is worse than none, because it drops
+    # the row out of the filter for the student it belongs to.
+    assert parse_locality("Bullock County, AL") == ("Bullock County", "AL")
+    assert parse_locality("Woods Hole, MA") == ("Woods Hole", "MA")
+    assert parse_locality("Some Place, ZZ") == ("Some Place, ZZ", None)
+    # A scope word is not a place. Three rows were written location='us' on the
+    # first backfill before this was tightened.
+    for scope_word in ("us", "USA", "global", "online", "Various", "international"):
+        assert parse_locality(scope_word) == (None, None), f"{scope_word} became a place"

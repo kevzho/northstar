@@ -91,6 +91,7 @@ function OpportunitiesList() {
       : "matched";
   const cost = searchParams.get("cost") === "free" ? "free"
     : searchParams.get("cost") === "paid" ? "paid" : "all";
+  const place = searchParams.get("state") || "all";
   const status = searchParams.get("status") === "open" ? "open"
     : searchParams.get("status") === "closing" ? "closing" : "all";
 
@@ -112,7 +113,10 @@ function OpportunitiesList() {
   // math is day-granular, so one timestamp per mount is plenty.
   const [now] = useState(() => Date.now());
 
-  function setFilter(key: "field" | "type" | "cost" | "status", value: string) {
+  function setFilter(
+    key: "field" | "type" | "cost" | "status" | "state",
+    value: string,
+  ) {
     const next = new URLSearchParams(searchParams.toString());
     if (value === "all") {
       next.delete(key);
@@ -202,10 +206,19 @@ function OpportunitiesList() {
     return true;
   }
 
+  // A row with no state is not "somewhere else" — it is national or online, so
+  // it is available to a student in any state and must survive the filter.
+  // Dropping those would turn "Alabama" into "only the four Alabama fairs" and
+  // hide Regeneron from them.
+  function passesPlace(o: { state?: string | null }): boolean {
+    return place === "all" || !o.state || o.state === place;
+  }
+
   const filtered = matches.filter(({ opportunity }) => {
     if (dismissedHere.includes(opportunity.id)) return false;
     if (field !== "all" && opportunity.field !== field) return false;
     if (type !== "all" && opportunity.type !== type) return false;
+    if (!passesPlace(opportunity)) return false;
     if (!passesCostStatus(opportunity)) return false;
     return true;
   });
@@ -213,9 +226,19 @@ function OpportunitiesList() {
   const filteredCatalog = (catalog ?? []).filter((opportunity) => {
     if (field !== "all" && opportunity.field !== field) return false;
     if (type !== "all" && opportunity.type !== type) return false;
+    if (!passesPlace(opportunity)) return false;
     if (!passesCostStatus(opportunity)) return false;
     return true;
   });
+
+  // Only the states the catalog can actually answer for.
+  const statesPresent = [
+    ...new Set(
+      [...(catalog ?? []), ...matches.map((m) => m.opportunity)]
+        .map((o) => o.state)
+        .filter((x): x is string => Boolean(x)),
+    ),
+  ].sort();
 
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
@@ -320,6 +343,26 @@ function OpportunitiesList() {
             <option value="free">Free only</option>
             <option value="paid">Paid</option>
           </NativeSelect>
+          {/* Built from the states the catalog actually has rows for, not a
+              list of 50 — offering Wyoming when nothing is in Wyoming is a
+              dead end dressed as a choice. Hidden entirely until locality
+              exists, because an empty filter teaches a student the feature
+              does not work. */}
+          {statesPresent.length > 1 ? (
+            <NativeSelect
+              value={place}
+              aria-label="Filter by state"
+              onChange={(event) => setFilter("state", event.target.value)}
+              className="h-11 px-4 font-semibold"
+            >
+              <option value="all">Anywhere</option>
+              {statesPresent.map((code) => (
+                <option key={code} value={code}>
+                  {code}
+                </option>
+              ))}
+            </NativeSelect>
+          ) : null}
           <NativeSelect
             value={status}
             aria-label="Filter by status"

@@ -187,6 +187,14 @@ def decide(candidate: dict, verdict: dict) -> dict | None:
         "url": url,
         "audience": candidate.get("audience_guess", "high_school"),
         "location_scope": normalise_scope(candidate.get("location_guess")),
+        # The locality, kept rather than collapsed into the three-value enum
+        # above. See parse_locality: this is the only field in the row a model
+        # cannot produce from recall.
+        **(
+            lambda place, code: (
+                {k: v for k, v in (("location", place), ("state", code)) if v}
+            )
+        )(*parse_locality(candidate.get("location_guess"))),
         "tags": [],
         "added_by": "ai",
     }
@@ -231,6 +239,59 @@ def clean_date(value: object) -> str | None:
     """
     text = str(value or "").strip()
     return text or None
+
+
+# US states and territories, for recovering the one fact a chat cannot produce.
+US_STATES = frozenset("""
+AL AK AZ AR CA CO CT DE DC FL GA GU HI ID IL IN IA KS KY LA ME MD MA MI MN MS
+MO MT NE NV NH NJ NM NY NC ND OH OK OR PA PR RI SC SD TN TX UT VT VA VI WA WV
+WI WY AS MP
+""".split())
+
+
+NOT_A_PLACE = frozenset({
+    "us", "usa", "u.s.", "united states", "united states of america",
+    "global", "worldwide", "anywhere", "online", "virtual", "remote",
+    "onsite", "in person", "international", "n/a", "tbd", "various",
+})
+
+
+def parse_locality(hint: object) -> tuple[str | None, str | None]:
+    """A free-text location hint -> (place, two-letter state) or (None, None).
+
+    WHY THIS EXISTS. Everything else in this catalog is something a model
+    already knows. Measured 2026-10-05: asked to recall 24 curated rows, a
+    frontier model with no web access knew all 24 existed. What it cannot do is
+    tell a student in Bullock County which Alabama regional fair feeds theirs.
+
+    That fact was already being scraped and then dropped on this exact line.
+    scrape_sciencefairs.py extracts each fair's territory from the Society for
+    Science directory and passes "Bullock County, AL"; this module normalised it
+    into location_scope — an enum of three values — and the county was gone.
+    Every regional fair in the catalog reads location=NULL.
+
+    Conservative on purpose: only a trailing two-letter code that is a real
+    state is accepted. "Woods Hole, MA" yields ("Woods Hole", "MA"); "online"
+    and "united states" yield nothing, because a wrong state is worse than no
+    state — it drops the row out of the filter for the student it belongs to.
+    """
+    text = str(hint or "").strip()
+    if not text or "," not in text:
+        # A scope word is not a place. Writing location='us' is worse than
+        # writing nothing: it looks like locality in the column that is
+        # supposed to hold the one fact a model cannot recall, and three rows
+        # got exactly that on the first backfill.
+        return (
+            (text, None)
+            if text.lower() not in NOT_A_PLACE
+            else (None, None)
+        )
+    place, _, tail = text.rpartition(",")
+    code = tail.strip().upper()
+    if code not in US_STATES:
+        return (text, None)
+    place = place.strip()
+    return (place or None, code)
 
 
 def verify_candidate(candidate: dict, retries: int = 2) -> dict:
