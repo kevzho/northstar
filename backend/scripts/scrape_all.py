@@ -32,6 +32,7 @@ import scrape_ctftime
 import scrape_devpost
 import scrape_pathways
 import scrape_reddit
+import refresh_deadlines
 import scrape_sciencefairs
 import verify_and_import
 
@@ -60,6 +61,20 @@ STAGES = (
     # national url. Capped per run; see the module docstring.
     ("sciencefairs", scrape_sciencefairs, False),
     ("verify+import", verify_and_import, True),
+    # Re-read programme pages and write the dates they currently state.
+    #
+    # Daily because the information arrives daily. Measured 2026-10-05, only 2
+    # of 48 curated rows had a deadline in the future -- the rest had passed,
+    # median 218 days stale -- while a free chat model, asked the same
+    # questions, correctly said UNKNOWN rather than guessing. A catalog whose
+    # dates are worse than "check the official page" has no reason to exist,
+    # and dates are the one thing a model genuinely cannot recall.
+    #
+    # Most autumn runs will find nothing: programmes post 2027 dates through
+    # the season ("The 2027 application will open in the Fall of 2026" --
+    # davidsongifted.org). That is the argument FOR daily, not against it. The
+    # day a date appears, the shelf has it.
+    ("refresh-deadlines", refresh_deadlines, False),
     # Embed whatever the import just added, so a new opportunity is matchable
     # by meaning the next morning. Optional: a missing embedding simply means
     # the row is absent from semantic_scores() and scoring falls back to
