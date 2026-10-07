@@ -108,6 +108,33 @@ describe("copy counts match the assessment bank", () => {
 describe("the demo script", () => {
   const SCRIPT = join(ROOT, "..", "docs", "DEMO_SCRIPT.md");
 
+  it("never spells a catalog size as a word", () => {
+    // A third stale number was found by hand on 2026-10-07: "Thirty-five
+    // curated STEM programs" against a shelf of 156. The guard below only
+    // matches number-words before questions/prompts, so it sailed past.
+    //
+    // A catalog count cannot be checked against anything here — this file has
+    // no database — and it changes every single day the scraper runs. So the
+    // rule is simply that the script must not spell one as a word: write the
+    // digits, next to the date they were counted, and re-count before
+    // recording. backend/scripts/check_impact_claims.py is what verifies a
+    // number against production.
+    if (!existsSync(SCRIPT)) return;
+    const text = readFileSync(SCRIPT, "utf8");
+    const CATALOG_NOUNS =
+      /\b(two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred)(?:[- ][\w-]+){0,3}[- ](opportunit\w+|programs?|programmes?|listings?|rows?|hosts?|fields?)\b/gi;
+    const wrong: string[] = [];
+    text.split("\n").forEach((line, i) => {
+      for (const hit of line.matchAll(CATALOG_NOUNS)) {
+        wrong.push(`DEMO_SCRIPT.md:${i + 1} spells a catalog size: "${hit[0]}"`);
+      }
+    });
+    expect(
+      wrong,
+      "catalog sizes change daily — write digits and the date you counted them",
+    ).toEqual([]);
+  });
+
   it("states the real size of the assessment bank", () => {
     // docs/ is gitignored, so the script exists on the author's machine and not
     // in CI. Skipping where it is absent keeps the guard useful exactly where it
