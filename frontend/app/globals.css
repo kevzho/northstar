@@ -665,3 +665,57 @@ button:disabled {
   font-variation-settings: "MONO" 1, "CASL" 0, "slnt" 0;
   font-variant-numeric: tabular-nums;
 }
+
+/*
+ * Interactive surfaces settle rather than snap.
+ *
+ * Only cards carried a transition before, so every link, button and select
+ * changed colour instantly on hover and focus while the thing beside it eased.
+ * That inconsistency is what reads as unfinished — not the absence of motion,
+ * but motion in some places and not others.
+ *
+ * Colour and border only. Nothing here moves, resizes or shadows: on a page
+ * listing 166 deadlines, a control that grows under the cursor is a control
+ * that shifts the row you were reading.
+ *
+ * 120ms is below the ~150ms where a delay starts being perceived as lag, so
+ * this reads as responsiveness rather than as animation.
+ */
+a,
+button,
+select,
+summary,
+[role="button"] {
+  transition:
+    color 120ms ease,
+    background-color 120ms ease,
+    border-color 120ms ease,
+    text-decoration-color 120ms ease;
+}
+
+/*
+ * One visible focus treatment for the whole app, because a keyboard user
+ * should never have to guess where they are. Uses the marker colour, which is
+ * the token that already means "you are here".
+ */
+:where(a, button, select, summary, [role="button"], input, textarea):focus-visible {
+  outline: 2px solid var(--polaris);
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /*
+   * Someone who asked their machine to stop animating gets an instant change,
+   * not a faster one. The focus outline is untouched: it is an affordance, not
+   * a flourish, and removing it would make the accommodation cost them the one
+   * thing it exists to protect.
+   */
+  a,
+  button,
+  select,
+  summary,
+  [role="button"] {
+    transition: none;
+  }
+}
