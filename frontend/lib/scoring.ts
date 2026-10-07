@@ -326,7 +326,17 @@ export function rankArchetypes(
     .sort((a, b) => b.fit - a.fit);
 }
 
-export type PathKind = "safe" | "ambitious" | "unconventional";
+/**
+ * The three slots the futures page fills, plus the answer a student is allowed
+ * to give instead.
+ *
+ * "broad" is not a fourth archetype — it is the absence of one. A student who
+ * does not recognise themselves in three suggested professions used to have no
+ * move: no charted path meant no spine, and a roadmap with no build or publish
+ * step. Declining now produces a plan written from their traits, grade, fields
+ * and real matches, with no career label stored.
+ */
+export type PathKind = "safe" | "ambitious" | "unconventional" | "broad";
 
 export type FuturePath = ScoredArchetype & {
   kind: PathKind;
@@ -338,6 +348,9 @@ const PATH_LABELS: Record<PathKind, string> = {
   safe: "Safe fit",
   ambitious: "Ambitious fit",
   unconventional: "Unconventional fit",
+  // Never rendered on a path card — there is no card for it. Present so the
+  // map stays exhaustive and a future caller cannot read undefined.
+  broad: "Broader interests",
 };
 
 export function pathLabel(kind: PathKind): string {

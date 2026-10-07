@@ -305,6 +305,23 @@ export function Guide() {
           ) : null}
         </section>
       ) : null}
+      {/*
+        The button is a star glyph and nothing else, which means its job is
+        guessable at best. A label on hover and on keyboard focus says what it
+        does before someone has to click to find out.
+
+        group-hover AND group-focus-within, not hover alone: a keyboard user
+        tabbing to this button gets the same answer a mouse user gets, and the
+        aria-label already carries it for a screen reader. Hidden from
+        assistive tech so it is not announced twice.
+      */}
+      <span className="group relative flex">
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute right-full top-1/2 mr-3 -translate-y-1/2 whitespace-nowrap border border-border bg-card px-3 py-1.5 text-note text-foreground opacity-0 shadow-lg transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100"
+        >
+          {open ? "Close" : "Press me for info"}
+        </span>
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
@@ -329,6 +346,7 @@ export function Guide() {
           <circle cx="19" cy="7" r="1.1" fill="currentColor" opacity="0.7" />
         </svg>
       </button>
+      </span>
     </div>
   );
 }

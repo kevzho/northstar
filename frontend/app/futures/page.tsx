@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { archetypes } from "@/lib/archetypes";
-import { authedFetch, syncChosenPath } from "@/lib/api";
+import { authedFetch, regenerateSpine, syncChosenPath } from "@/lib/api";
 import {
   interestFields,
   leadingFields,
@@ -83,6 +83,33 @@ export default function FuturesPage() {
     router.push("/plan");
   }
 
+  const [broadening, setBroadening] = useState(false);
+
+  /**
+   * "None of these are me."
+   *
+   * Picking a profession at fifteen is a bigger commitment than this page was
+   * admitting, and a student who does not see themselves in three archetypes
+   * was previously stuck: no path charted means no spine, which means a
+   * roadmap with no build or publish step at all.
+   *
+   * So declining produces a plan instead of a dead end. The model writes a
+   * spine from what the student actually has — their traits, grade, fields and
+   * real matched opportunities — and uses the archetype only as context it can
+   * do without. No career label is stored.
+   */
+  async function goBroad() {
+    setBroadening(true);
+    writeChosenPath({ archetypeId: "", kind: "broad" });
+    syncChosenPath("", "broad").catch(() => {});
+    await regenerateSpine(
+      "I do not see myself in any of the suggested career paths. My interests " +
+      "are broader than one profession — give me a plan for the areas I am " +
+      "actually interested in, not a job title.",
+    ).catch(() => {});
+    router.push("/plan");
+  }
+
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
@@ -147,6 +174,27 @@ export default function FuturesPage() {
                   <p className="mt-3 text-sm leading-6 text-muted-foreground">
                     {path.archetype.summary}
                   </p>
+                  {/* What a path actually looks like, because "Quantitative
+                      Economist" is a job title and a 15-year-old cannot accept
+                      or reject one. Collapsed so the card stays scannable. */}
+                  {path.archetype.examples?.length ? (
+                    <details className="mt-4 group">
+                      <summary className="cursor-pointer text-note font-medium text-foreground marker:text-aurora">
+                        What that actually looks like
+                      </summary>
+                      <ul className="mt-2 space-y-1.5">
+                        {path.archetype.examples.map((example) => (
+                          <li
+                            key={example}
+                            className="flex gap-2 text-xs leading-5 text-muted-foreground"
+                          >
+                            <span aria-hidden="true" className="text-aurora">—</span>
+                            <span>{example}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
+                  ) : null}
                   <p className="mt-4 text-xs leading-5 text-aurora italic">
                     {path.rationale}
                   </p>
@@ -162,6 +210,45 @@ export default function FuturesPage() {
                 </article>
               );
             })}
+
+            {/*
+              The exit. Three archetypes is a suggestion, not a census, and a
+              student who does not recognise themselves in any of them used to
+              have nowhere to go: no charted path means no spine, which means a
+              roadmap with no build or publish step at all.
+
+              Deliberately the same visual weight as a path card rather than a
+              small link underneath. "None of these" is a legitimate answer to
+              this question, and burying it tells a student their reaction was
+              the wrong one.
+            */}
+            <article className="flex flex-col rounded-lg border border-dashed border-border bg-transparent p-5">
+              <p className="eyebrow">Or</p>
+              <h2 className="h-display mt-3 text-section text-foreground">
+                None of these are me
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                Picking a profession at your age is a big commitment, and you do
+                not have to make one here. A path is a starting direction, not a
+                decision — and if none of these three fit, the honest answer is
+                that your interests are broader than one job title.
+              </p>
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                Choose this and the plan is built from what you actually have:
+                your six signals, your grade, the fields you lean toward, and
+                the opportunities open to you now. No career label is stored.
+              </p>
+              <div className="mt-auto pt-5">
+                <Button
+                  variant="outline"
+                  onClick={goBroad}
+                  disabled={broadening}
+                  className="h-10 w-full font-semibold"
+                >
+                  {broadening ? "Writing your plan…" : "My interests are broader"}
+                </Button>
+              </div>
+            </article>
           </section>
         )}
 

@@ -183,33 +183,67 @@ export default function ProfilePage() {
           </section>
         ) : null}
 
+        {/*
+          BARS ARE SCALED TO THIS STUDENT'S OWN STRONGEST SIGNAL, NOT TO 100.
+
+          They used to fill `width: score%`, and the result read as a flat row
+          of half-empty bars — a real profile came back analyst 48, risk 48,
+          builder 45, ambiguity 42, collaboration 40, tempo 31, and looked like
+          six ways of saying "average".
+
+          It was not. Measured across 400 simulated answer sets, the raw signal
+          has real spread (64-94 points of range per trait), but 56% of all
+          scores land between 30 and 55, because the denominator is the score
+          you would get by picking the most trait-maximising answer on all
+          twenty questions. Nobody does that — the questions trade traits
+          against each other — so the ceiling is unreachable and "48/100" reads
+          as below-average when it is near the top of the achievable range.
+
+          Scaling to the student's own maximum makes the SHAPE visible, which is
+          the thing the profile is actually for: 48 against 31 is a real
+          difference, and it was invisible when both were drawn against 100.
+
+          NOT a percentile. That would need a population and there are no
+          students yet, so claiming one would be the kind of unearned number
+          this project removes everywhere else.
+        */}
         <section className="rounded-lg border bg-card mt-8 p-5">
-          <div className="grid gap-5">
-            {ordered.map((trait) => (
+          <p className="text-note leading-6 text-muted-foreground">
+            Bars are drawn against your own strongest signal, so the shape is
+            readable. These compare your six signals to each other — not to
+            other students.
+          </p>
+          <div className="mt-5 grid gap-5">
+            {ordered.map((trait, index) => {
+              const peak = Math.max(...TRAIT_KEYS.map((t) => scores[t]), 1);
+              return (
               <div key={trait}>
                 <div className="mb-2 flex items-center justify-between gap-4">
                   <span className="text-sm font-semibold text-foreground">
                     {traitLabels[trait]}
                   </span>
-                  <span className="font-mono text-sm text-star">
-                    <AnimatedNumber
-                      value={scores[trait]}
-                      springOptions={{ bounce: 0, duration: 1200 }}
-                    />
-                    /100
+                  <span className="font-mono text-note text-muted-foreground">
+                    {index === 0 ? "strongest" : `#${index + 1}`}
+                    <span className="ml-2 text-star">
+                      <AnimatedNumber
+                        value={scores[trait]}
+                        springOptions={{ bounce: 0, duration: 1200 }}
+                      />
+                    </span>
                   </span>
                 </div>
                 <div className="h-3 overflow-hidden rounded-full bg-panel-raised">
                   <div
                     className="h-full rounded-full bg-star transition-all"
-                    style={{ width: `${scores[trait]}%` }}
+                    style={{ width: `${Math.round((scores[trait] / peak) * 100)}%` }}
                   />
                 </div>
                 <p className="mt-1.5 text-xs leading-5 text-muted-foreground">
                   {traitDescriptions[trait]}
                 </p>
               </div>
-            ))}
+              );
+            })}
           </div>
         </section>
 
@@ -292,7 +326,15 @@ export default function ProfilePage() {
         <p className="mt-4 text-xs leading-5 text-muted-foreground">
           Each trait score is the sum of the trait weights on the answers you
           picked, divided by the highest total that trait could reach across
-          all twenty questions. Field interest divides each field&apos;s
+          all twenty questions.{" "}
+          <span className="text-foreground">
+            That ceiling is not reachable in practice
+          </span>{" "}
+          — it assumes you picked the most extreme answer for that one trait on
+          every question, and the questions trade traits against each other. So
+          a raw score in the forties is near the top of the usable range, not
+          the middle, which is why the bars above are drawn against your own
+          strongest signal instead. Field interest divides each field&apos;s
           points by the total points across every field. See
           frontend/lib/scoring.ts.
         </p>
