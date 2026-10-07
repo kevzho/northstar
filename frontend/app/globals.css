@@ -36,9 +36,10 @@
    * MONO 1 gives tabular, fixed-advance figures from the same family the rest
    * of the page is set in, so a deadline and the sentence around it are
    * visibly related rather than visibly imported. Replaces IBM Plex Mono;
-   * `font-mono` (87 uses) keeps working and keeps its meaning.
+   * `font-mono` (87 uses) keeps working and keeps its meaning. Recursive now
+   * declares --font-coords directly in layout.tsx, because --font-atlas became
+   * the pixel display face and has no MONO axis to ask for.
    */
-  --font-coords: var(--font-atlas);
 
   --star: #f6efe3;
   --star-bright: #ffffff;
@@ -339,7 +340,9 @@ button:disabled {
    * enough to read it as set apart.
    */
   .advisory {
-    font-family: var(--font-atlas), ui-sans-serif, sans-serif;
+    /* Recursive, not the display face: the whole device is the CASL axis, and
+       the pixel face has no axes at all. */
+    font-family: var(--font-coords), ui-sans-serif, sans-serif;
     font-variation-settings: "CASL" 1, "slnt" -4, "MONO" 0;
     color: var(--advisory);
     text-decoration: underline;
@@ -462,9 +465,9 @@ button:disabled {
    */
   .h-display {
     font-family: var(--font-atlas), ui-sans-serif, sans-serif;
-    font-variation-settings: "CASL" 0, "MONO" 0, "slnt" 0;
     font-weight: 700;
-    letter-spacing: -0.022em;
+    /* Pixel glyphs sit on a grid; negative tracking collides them. */
+    letter-spacing: 0;
     text-wrap: balance;
   }
 
@@ -475,7 +478,10 @@ button:disabled {
    * 0.2 and 0.22em. One definition now, reading the scale.
    */
   .eyebrow {
-    font-family: var(--font-atlas), ui-monospace, monospace;
+    /* Recursive's MONO axis, not the display face: Pixelify has no axes, and a
+       kicker set in a pixel font at 11px with 0.18em tracking is decoration
+       rather than a label. */
+    font-family: var(--font-coords), ui-monospace, monospace;
     font-variation-settings: "MONO" 1, "CASL" 0;
     font-size: var(--text-kicker);
     line-height: var(--text-kicker--line-height);

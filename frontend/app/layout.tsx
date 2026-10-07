@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Figtree, Recursive } from "next/font/google";
+import { Figtree, Pixelify_Sans, Recursive } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import { Guide } from "@/components/Guide";
@@ -35,6 +35,25 @@ import { cn } from "@/lib/utils";
 const recursive = Recursive({
   subsets: ["latin"],
   axes: ["CASL", "MONO", "slnt"],
+  variable: "--font-coords",
+});
+
+/*
+ * DISPLAY — a pixel face, used for headings and nothing else.
+ *
+ * Pixelify Sans is variable 400-700, so headings still get weight hierarchy
+ * rather than one flat cut, which the bitmap classics (Silkscreen, Press
+ * Start 2P) cannot give.
+ *
+ * DELIBERATELY NOT THE BODY FACE. This product's job is reading deadlines and
+ * long scraped programme descriptions, often on a phone — the shelf carries
+ * 150+ blurbs written by organisers, not by us. A pixel face at 15px costs
+ * real comprehension on exactly the text a student has to get right, and the
+ * cost lands hardest on the people this exists for. Headings carry the
+ * character; the paragraph stays readable.
+ */
+const display = Pixelify_Sans({
+  subsets: ["latin"],
   variable: "--font-atlas",
 });
 
@@ -66,6 +85,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn(
         "h-full antialiased font-sans",
+        display.variable,
         recursive.variable,
         body.variable,
       )}

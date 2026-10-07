@@ -30,6 +30,7 @@ import { ProfileDetailsCard } from "@/components/ProfileDetailsCard";
 import { SharingCard } from "@/components/SharingCard";
 import type { OpportunityField, TimelineEvent } from "@/lib/types";
 import { useRequireAuth } from "@/lib/use-require-auth";
+import { AppNav } from "@/components/AppNav";
 
 const fieldLabels: Record<OpportunityField, string> = {
   cs: "Computer science",
@@ -141,6 +142,8 @@ export default function ProfilePage() {
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
+        <AppNav homeHref="/dashboard" />
+
         <header className="flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <Link

@@ -23,6 +23,7 @@ import {
 import { isComplete, scoreFieldInterests, scoreTraits } from "@/lib/scoring";
 import { syncAssessmentProfile } from "@/lib/api";
 import { useStoredAnswers, writeAnswers } from "@/lib/use-assessment";
+import { AppNav } from "@/components/AppNav";
 
 /** Both question kinds use the same selected/unselected treatment. */
 function optionClass(selected: boolean, extra: string): string {
@@ -67,6 +68,8 @@ export default function AssessmentPage() {
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <ScrollProgress className="fixed inset-x-0 top-0 z-50 h-0.5 bg-star" />
       <div className="mx-auto max-w-5xl">
+        <AppNav homeHref="/dashboard" />
+
         <header className="flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <Link

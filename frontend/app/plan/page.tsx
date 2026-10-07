@@ -26,6 +26,7 @@ import type { MatchResult } from "@/lib/types";
 import { useStoredAnswers } from "@/lib/use-assessment";
 import { useChosenPath } from "@/lib/use-chosen-path";
 import { useRequireAuth } from "@/lib/use-require-auth";
+import { AppNav } from "@/components/AppNav";
 
 const LEG_PLANETS = ["moon", "ringed", "giant"] as const;
 
@@ -139,6 +140,8 @@ export default function PlanPage() {
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
+        <AppNav homeHref="/dashboard" />
+
         <header className="flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <Link href="/futures" className="text-sm font-semibold text-aurora">
