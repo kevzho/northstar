@@ -27,10 +27,14 @@ from __future__ import annotations
 
 import json
 import pathlib
+import sys
 import re
 from datetime import datetime, timezone
 
 import requests
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
+from app.urls import canonical_url  # noqa: E402
 
 POOL = pathlib.Path(__file__).parent / "scraped" / "reddit_candidates.json"
 API = "https://codeforces.com/api/contest.list"
@@ -63,7 +67,7 @@ def beginner_note(name: str) -> str:
 
 def main() -> None:
     pool_entries = json.loads(POOL.read_text()) if POOL.exists() else []
-    pool = {e["url"]: e for e in pool_entries}
+    pool = {canonical_url(e["url"]): e for e in pool_entries}
     known = len(pool)
 
     try:
@@ -94,13 +98,13 @@ def main() -> None:
         if not cid or not name or not start_s:
             continue
         url = f"https://codeforces.com/contest/{cid}"
-        if url in pool:
+        if canonical_url(url) in pool:
             continue
 
         start = datetime.fromtimestamp(start_s, tz=timezone.utc)
         hours = round((contest.get("durationSeconds") or 0) / 3600, 1)
 
-        pool[url] = {
+        pool[canonical_url(url)] = {
             "source": "codeforces",
             "reddit_permalink": "",
             "posted_utc": datetime.now(timezone.utc).isoformat(),

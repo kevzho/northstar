@@ -44,11 +44,15 @@ import argparse
 import html
 import json
 import pathlib
+import sys
 import re
 import time
 from datetime import date, datetime, timezone
 
 import requests
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
+from app.urls import canonical_url  # noqa: E402
 
 POOL = pathlib.Path(__file__).parent / "scraped" / "reddit_candidates.json"
 BASE = "https://findafair.societyforscience.org/"
@@ -122,7 +126,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv if argv is not None else [])
 
     pool_entries = json.loads(POOL.read_text()) if POOL.exists() else []
-    pool = {e["url"]: e for e in pool_entries}
+    pool = {canonical_url(e["url"]): e for e in pool_entries}
     known = len(pool)
 
     session = requests.Session()
@@ -186,7 +190,7 @@ def main(argv: list[str] | None = None) -> int:
             seen += 1
             if added >= args.limit:
                 break
-            if fair["url"] in pool:
+            if canonical_url(fair["url"]) in pool:
                 continue
             # Last cycle's date is not this cycle's date. See the module
             # docstring: it is dropped, not carried forward.
@@ -209,7 +213,7 @@ def main(argv: list[str] | None = None) -> int:
                 stale += 1
                 continue
             where = fair["territory"] or state
-            pool[fair["url"]] = {
+            pool[canonical_url(fair["url"])] = {
                 "source": "sciencefairs",
                 "reddit_permalink": "",
                 "posted_utc": now,

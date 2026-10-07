@@ -19,11 +19,15 @@ from __future__ import annotations
 
 import json
 import pathlib
+import sys
 import re
 import time
 from datetime import datetime, timezone
 
 import requests
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
+from app.urls import canonical_url  # noqa: E402
 
 API = "https://devpost.com/api/hackathons"
 USER_AGENT = "northstar-opportunity-scraper/0.2 (student project; contact: dev.thorfinn@gmail.com)"
@@ -81,7 +85,7 @@ def field_for(themes: list[str]) -> str:
 
 def main() -> None:
     pool_entries = json.loads(POOL.read_text()) if POOL.exists() else []
-    pool = {e["url"]: e for e in pool_entries}
+    pool = {canonical_url(e["url"]): e for e in pool_entries}
     known = len(pool)
     new_count = 0
 
@@ -103,12 +107,12 @@ def main() -> None:
 
         for h in hackathons:
             url = h.get("url", "")
-            if not url or url in pool:
+            if not url or canonical_url(url) in pool:
                 continue
             title = (h.get("title") or "").strip()
             themes = [t.get("name", "") for t in h.get("themes", [])]
             deadline = parse_deadline(h.get("submission_period_dates", ""))
-            pool[url] = {
+            pool[canonical_url(url)] = {
                 "source": "devpost",
                 "reddit_permalink": "",
                 "posted_utc": datetime.now(timezone.utc).isoformat(),

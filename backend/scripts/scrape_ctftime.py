@@ -35,10 +35,14 @@ from __future__ import annotations
 
 import json
 import pathlib
+import sys
 import re
 from datetime import datetime, timedelta, timezone
 
 import requests
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
+from app.urls import canonical_url  # noqa: E402
 
 POOL = pathlib.Path(__file__).parent / "scraped" / "reddit_candidates.json"
 API = "https://ctftime.org/api/v1/events/"
@@ -59,7 +63,7 @@ OPEN_RESTRICTIONS = {"Open", "Casual"}
 
 def main() -> None:
     pool_entries = json.loads(POOL.read_text()) if POOL.exists() else []
-    pool = {e["url"]: e for e in pool_entries}
+    pool = {canonical_url(e["url"]): e for e in pool_entries}
     known = len(pool)
 
     now = datetime.now(timezone.utc)
@@ -92,7 +96,7 @@ def main() -> None:
         # Prefer the event's own site; fall back to its CTFtime page, which
         # always exists and always resolves.
         url = (event.get("url") or "").strip() or (event.get("ctftime_url") or "").strip()
-        if not url or url in pool:
+        if not url or canonical_url(url) in pool:
             continue
 
         title = (event.get("title") or "").strip()
@@ -120,7 +124,7 @@ def main() -> None:
         # differentiates one event from another.
         blurb_src = " ".join((event.get("description") or "").split())[:240]
 
-        pool[url] = {
+        pool[canonical_url(url)] = {
             "source": "ctftime",
             "reddit_permalink": "",
             "posted_utc": now.isoformat(),

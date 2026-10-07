@@ -46,11 +46,15 @@ import argparse
 import html
 import json
 import pathlib
+import sys
 import re
 import time
 from datetime import datetime, timezone
 
 import requests
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
+from app.urls import canonical_url  # noqa: E402
 
 POOL = pathlib.Path(__file__).parent / "scraped" / "reddit_candidates.json"
 # slug -> the programme's own url, learned once and kept.
@@ -216,7 +220,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv if argv is not None else [])
 
     pool_entries = json.loads(POOL.read_text()) if POOL.exists() else []
-    pool = {e["url"]: e for e in pool_entries}
+    pool = {canonical_url(e["url"]): e for e in pool_entries}
     known = len(pool)
 
     session = requests.Session()
@@ -248,13 +252,13 @@ def main(argv: list[str] | None = None) -> int:
             cache[slug] = url
             fetched += 1
             time.sleep(DETAIL_DELAY_SECONDS)
-        if url in pool:
+        if canonical_url(url) in pool:
             reused += 1
             continue
 
         host = prog["institution"] or "Pathways to Science"
         where = prog["location"]
-        pool[url] = {
+        pool[canonical_url(url)] = {
             "source": "pathwaystoscience",
             "reddit_permalink": "",
             "posted_utc": now,

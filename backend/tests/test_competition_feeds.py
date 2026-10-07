@@ -429,3 +429,49 @@ def test_the_pathways_detail_fetch_happens_once_per_programme() -> None:
     assert "time.sleep" in fetch_block.split("else:")[1][:400], (
         "the delay belongs to the fetch; a cached run should not sleep"
     )
+
+
+def test_a_trailing_slash_does_not_make_a_second_candidate() -> None:
+    """Measured 2026-10-07: seven duplicate pairs on the high-school shelf,
+    including three regional science fairs a student would have seen listed
+    twice inside the same state filter.
+
+    Two mechanisms both missed them. The scrapers deduped their pool on the
+    exact url string, so "https://www.mathcamp.org" and the same address with a
+    trailing slash were two candidates; and public.opportunities carries
+    UNIQUE(title, host), but the host strings derived from those two urls
+    differed, so both rows inserted.
+    """
+    import sys as _s
+
+    _s.path.insert(0, str(SCRIPTS.parent))
+    from app.urls import canonical_url
+
+    same = [
+        ("https://www.mathcamp.org", "https://www.mathcamp.org/"),
+        ("https://x.org/a?utm_source=news", "https://x.org/a"),
+        ("https://x.org/a#section", "https://x.org/a"),
+        ("https://x.org:443/a", "https://x.org/a"),
+        ("HTTPS://WWW.X.ORG/a", "https://x.org/a"),
+    ]
+    for a, b in same:
+        assert canonical_url(a) == canonical_url(b), f"{a} and {b} should dedupe"
+
+    # Conservative on purpose: path case is preserved, because plenty of servers
+    # serve /Fellows and /fellows as different documents and collapsing them
+    # would merge two real programmes into one row.
+    assert canonical_url("https://x.org/Fellows") != canonical_url("https://x.org/fellows")
+    assert canonical_url("") == ""
+    assert canonical_url(None) == ""
+
+
+def test_every_scraper_dedupes_on_the_canonical_form() -> None:
+    """A scraper that keys its pool on the raw string reintroduces the bug the
+    moment a directory adds or drops a trailing slash."""
+    for script in sorted(SCRIPTS.glob("scrape_*.py")):
+        if script.name in {"scrape_all.py", "scrape_reddit.py"}:
+            continue
+        src = script.read_text()
+        assert 'pool = {canonical_url(' in src, (
+            f"{script.name} keys its candidate pool on the raw url string"
+        )
