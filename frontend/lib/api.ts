@@ -680,3 +680,26 @@ export async function fetchRoadmap(): Promise<Roadmap | null> {
     return null;
   }
 }
+
+/** Someone offering to mentor. Unauthenticated: a teacher is not a student. */
+export async function applyToMentor(body: {
+  name: string;
+  email: string;
+  bio: string;
+  link?: string;
+  expertise: string[];
+  consent: boolean;
+}): Promise<{ received: boolean; next: string }> {
+  const response = await fetch(`${API_URL}/mentors/apply`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!response.ok) {
+    const detail = await response.json().then((b) => b?.detail).catch(() => null);
+    throw new Error(
+      typeof detail === "string" ? detail : "Could not send that just now.",
+    );
+  }
+  return response.json();
+}

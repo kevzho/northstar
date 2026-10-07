@@ -1311,6 +1311,55 @@
         "summary": "List Mentors"
       }
     },
+    "/mentors/apply": {
+      "post": {
+        "description": "Someone offering to mentor. Unauthenticated, because mentors are not\nstudents and should not have to make a student account to volunteer.\n\nWRITES TO mentor_applications, NEVER TO mentors. public.mentors is\nrendered to minors with a mailto: link; nothing reachable from the open\ninternet may insert there. An application waits for a person to read it.\nSee 20261007140000.\n\nConsent is recorded as a fact with a time and the exact sentence agreed\nto, not as a boolean. 20260922090000 had to delete 25 invented mentors\npartly because nobody could tell afterwards which of them had agreed to\nanything.",
+        "operationId": "apply_to_mentor_mentors_apply_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Apply To Mentor Mentors Apply Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Apply To Mentor"
+      }
+    },
     "/missions": {
       "get": {
         "description": "Proof missions, optionally filtered to one archetype (path).",

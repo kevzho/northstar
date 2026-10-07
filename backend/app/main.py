@@ -35,6 +35,20 @@ from .settings import settings
 # datetime is stdlib and lru-caching it would add no value.
 from datetime import datetime, timezone
 
+# The exact sentence a mentor agrees to, stored alongside their consent.
+#
+# Stored rather than referenced, because this wording will change and an old
+# consent must keep meaning what it said at the time. 20260922090000 deleted 25
+# invented mentor profiles partly because nobody could reconstruct afterwards
+# what, if anything, any of them had agreed to.
+CONSENT_TEXT = (
+    "I am happy to be listed in Northstar's mentor directory, where high-school "
+    "students can see my name, what I work on, and an email address they may "
+    "write to. I understand students may contact me directly, that Northstar "
+    "does not supervise those conversations, and that I can ask to be removed "
+    "at any time."
+)
+
 from .match import score_opportunities
 
 # How many scored rows GET /match persists into public.matches. The route used
@@ -1997,6 +2011,79 @@ def create_app() -> FastAPI:
         requested = [f.strip() for f in fields.split(",") if f.strip()]
         valid = [f for f in requested if f in FIELD_TOPICS]
         return recommend_projects(valid or ["interdisciplinary"])
+
+    @app.post("/mentors/apply", status_code=status.HTTP_201_CREATED)
+    def apply_to_mentor(body: dict | None = None) -> dict:
+        """Someone offering to mentor. Unauthenticated, because mentors are not
+        students and should not have to make a student account to volunteer.
+
+        WRITES TO mentor_applications, NEVER TO mentors. public.mentors is
+        rendered to minors with a mailto: link; nothing reachable from the open
+        internet may insert there. An application waits for a person to read it.
+        See 20261007140000.
+
+        Consent is recorded as a fact with a time and the exact sentence agreed
+        to, not as a boolean. 20260922090000 had to delete 25 invented mentors
+        partly because nobody could tell afterwards which of them had agreed to
+        anything.
+        """
+        data = body or {}
+        name = str(data.get("name") or "").strip()[:120]
+        email = str(data.get("email") or "").strip()[:200]
+        bio = str(data.get("bio") or "").strip()[:2000]
+        link = str(data.get("link") or "").strip()[:300] or None
+        expertise = [
+            str(x).strip()[:40] for x in (data.get("expertise") or []) if str(x).strip()
+        ][:8]
+        consented = bool(data.get("consent"))
+
+        if not name or "@" not in email or "." not in email.split("@")[-1]:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="A name and a working email address are required.",
+            )
+        if not bio:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="Please say what you work on — it is what a student matches against.",
+            )
+        if not consented:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=(
+                    "We cannot list you without your agreement to be contacted "
+                    "by students."
+                ),
+            )
+
+        from .db import get_supabase
+
+        sb = get_supabase()
+        try:
+            sb.table("mentor_applications").insert({
+                "name": name,
+                "email": email,
+                "bio": bio,
+                "expertise": expertise,
+                "link": link,
+                "consented_at": datetime.now(timezone.utc).isoformat(),
+                "consent_text": CONSENT_TEXT,
+                "source": "web",
+            }).execute()
+        except Exception:
+            # Never echo a database error to an unauthenticated caller.
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Could not record that just now. Please try again shortly.",
+            )
+        return {
+            "received": True,
+            "next": (
+                "A person reads every application. Nothing is published "
+                "automatically, and you will hear back before your name appears "
+                "anywhere students can see."
+            ),
+        }
 
     @app.get("/mentors")
     def list_mentors(user: CurrentUser = RequireUser) -> list[dict]:

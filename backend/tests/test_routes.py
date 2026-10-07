@@ -136,6 +136,12 @@ def test_every_route_except_public_ones_declares_auth() -> None:
         # any string and is registered first, so `/public/catalog` was being
         # served as a profile lookup and 404ing.
         "/catalog/public",
+        # Deliberately public: someone offering to mentor is not a student and
+        # must not have to create a student account to volunteer. It writes to
+        # mentor_applications, which no public role can read or write, and
+        # never to public.mentors — see test_a_mentor_application_cannot_reach
+        # _the_live_directory below.
+        "/mentors/apply",
     }
 
     for route in app.routes:
@@ -240,3 +246,65 @@ def test_locality_is_the_one_thing_recall_cannot_give_and_must_survive() -> None
     # first backfill before this was tightened.
     for scope_word in ("us", "USA", "global", "online", "Various", "international"):
         assert parse_locality(scope_word) == (None, None), f"{scope_word} became a place"
+
+
+def test_a_mentor_application_cannot_reach_the_live_directory() -> None:
+    """public.mentors is rendered to minors with a mailto: link.
+
+    Until 2026-10-07 there was no write path to it at all, which is why the
+    directory could never fill. Adding one had to not also add a way for a
+    stranger to put their address in front of children: applications land in
+    mentor_applications, which carries no RLS policy for anon or authenticated,
+    and a person moves them across. The separation is the safeguard — a status
+    column on the live table would not be, because nothing enforces reading it.
+    """
+    import inspect
+
+    from app import main as main_mod
+
+    src = inspect.getsource(main_mod.create_app)
+    start = src.index('@app.post("/mentors/apply"')
+    body = src[start : src.index('@app.get("/mentors")', start)]
+
+    assert 'table("mentor_applications")' in body
+    assert 'table("mentors")' not in body, (
+        "the public application endpoint writes to the live mentor directory"
+    )
+    # Consent is recorded as a fact with a time and the sentence agreed to.
+    # 20260922090000 deleted 25 invented mentors partly because nobody could
+    # reconstruct what, if anything, any of them had agreed to.
+    assert "consented_at" in body and "CONSENT_TEXT" in body
+    assert 'data.get("consent")' in body, "consent must be required, not assumed"
+    # A database error must not be echoed to an unauthenticated caller.
+    assert "Could not record that just now" in body
+
+
+def test_the_consent_sentence_is_stored_not_referenced() -> None:
+    """Wording changes. An old consent has to keep meaning what it said when it
+    was given, so the sentence travels with the row."""
+    from app.main import CONSENT_TEXT
+
+    assert "students may contact me directly" in CONSENT_TEXT
+    assert "does not supervise" in CONSENT_TEXT
+    assert "removed at any time" in CONSENT_TEXT
+
+
+def test_mentor_matching_works_when_the_directory_is_not_empty() -> None:
+    """The directory being empty is a data state, not a broken feature — but
+    nothing was proving the ranking still worked, because every test ran
+    against zero rows."""
+    from app.mentors import score_mentors
+
+    student = {"interests": ["biology", "genomics"], "goals": "work in a wet lab"}
+    mentors = [
+        {"id": "m1", "name": "Dr Vega", "bio": "Computational genomics.",
+         "expertise": ["biology", "cs"], "consented_at": "2026-01-01"},
+        {"id": "m2", "name": "Sam Okafor", "bio": "Structural engineer, bridges.",
+         "expertise": ["engineering"], "consented_at": "2026-01-01"},
+    ]
+    ranked = score_mentors(student, mentors)
+    assert len(ranked) == 2
+    top = ranked[0]
+    name = (top.get("mentor") or top).get("name")
+    assert name == "Dr Vega", "a biology mentor must outrank an engineer here"
+    assert score_mentors(student, []) == []

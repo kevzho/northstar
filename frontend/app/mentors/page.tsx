@@ -118,12 +118,28 @@ export default function MentorsPage() {
               from students. Until then, every other surface in Northstar
               points at programs you can actually apply to today.
             </p>
-            <Button
-              render={<Link href="/opportunities" />}
-              className="mt-5 h-10 px-4"
-            >
-              Browse opportunities
-            </Button>
+            {/* The directory cannot fill itself, and the likeliest source of
+                a mentor is a student who already knows one. Until 2026-10-07
+                there was no way for anyone to volunteer at all. */}
+            <p className="mt-5 text-sm leading-6 text-muted-foreground">
+              Know a teacher, a researcher, or someone whose job you want? They
+              can{" "}
+              <Link href="/mentors/join" className="text-foreground underline">
+                offer an hour here
+              </Link>
+              . A person reads every application before anything is published.
+            </p>
+            <div className="mt-5 flex flex-wrap justify-center gap-3">
+              <Button render={<Link href="/opportunities" />} className="h-10 px-4">
+                Browse opportunities
+              </Button>
+              <Button
+                render={<Link href="/mentors/join" />}
+                className="h-10 border border-border bg-transparent px-4 text-foreground"
+              >
+                Offer to mentor
+              </Button>
+            </div>
           </section>
         ) : (
           <section className="mt-8 grid gap-4">
