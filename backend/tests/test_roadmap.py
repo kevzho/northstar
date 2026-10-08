@@ -523,3 +523,42 @@ def test_a_result_without_a_score_is_still_shown() -> None:
     apps = [s for p in plan["phases"] for s in p["steps"]
             if s["category"] == "application"]
     assert len(apps) == 1
+
+
+def test_a_student_with_no_archetype_still_gets_build_and_publish_steps() -> None:
+    """The "none of these are me" path.
+
+    A student who declines all three suggested careers has no archetype, so
+    spine_for("") returns None and the roadmap used to come back with no build
+    or publish rung at all — the plan for someone who rejected the framing was
+    thinner than the plan for someone who accepted it, which is backwards.
+
+    Their spine comes from the model instead, written against their traits,
+    grade, fields and real matched opportunities. Verified live on 2026-10-08: a
+    10th grader with no archetype got a sampling-discipline rung, a home
+    microbiology project, and a 12-step roadmap carrying real verified learning
+    resources and a real USABO deadline.
+    """
+    generated = {
+        "project": "Run a small microbiology experiment you can do at home.",
+        "publish": "Write it up as a short illustrated report.",
+        "skill": "sampling discipline — why the boring schedule is the whole experiment",
+        "skillKey": "sampling-discipline",
+        "source": "generated",
+    }
+    plan = build_roadmap(
+        {"grade": "10"},                      # no chosen_archetype at all
+        generated, RESOURCES, [], MISSIONS, TODAY,
+    )
+    keys = [s["step_key"] for p in plan["phases"] for s in p["steps"]]
+    assert "spine:project" in keys, "a declined archetype must not cost the build step"
+    assert "spine:publish" in keys
+
+    notes = [
+        s["edge_note"] for p in plan["phases"] for s in p["steps"]
+        if s["step_key"].startswith("spine:")
+    ]
+    # And it must still be labelled as a model's suggestion rather than
+    # inheriting the wording reserved for the hand-authored spines.
+    assert any("Written for you" in n for n in notes)
+    assert not any("A common route" in n for n in notes)

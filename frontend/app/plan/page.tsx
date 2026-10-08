@@ -99,6 +99,17 @@ export default function PlanPage() {
 
   const traits = answers ? scoreTraits(answers) : null;
   const archetype = chosen ? findArchetype(chosen.archetypeId) : null;
+  /**
+   * A student who answered "none of these are me" on /futures.
+   *
+   * They have charted something — a direction without a career label — and
+   * findArchetype("") returns null, so the !archetype guard below used to send
+   * them straight to "No path charted yet" and tell them to go and pick one of
+   * the three they had just declined. Their plan comes from the generated
+   * spine instead: written from their traits, grade, fields and real matched
+   * opportunities, with no archetype needed.
+   */
+  const broad = chosen?.kind === "broad";
   const skillKey = chosen ? skillKeyFor(chosen.archetypeId) : "";
 
   useEffect(() => {
@@ -142,13 +153,13 @@ export default function PlanPage() {
         <AppNav homeHref="/dashboard"
           right={
             <>
-              {archetype ? (
+              {archetype || broad ? (
                 <Button
                   variant="outline"
                   render={<Link href="/futures" />}
                   className="h-11 px-5 font-semibold"
                 >
-                  Change path
+                  {broad ? "Pick a path instead" : "Change path"}
                 </Button>
               ) : null}
             </>
@@ -167,7 +178,9 @@ export default function PlanPage() {
                 ? `Built from your ${pathLabel(chosen.kind).toLowerCase()} — ${
                     archetype.label
                   }${fit !== null ? ` (${fit}% fit)` : ""} — your trait profile, and your ranked matches.`
-                : "A concrete action list that turns a future path into visible progress within one month."}
+                : broad
+                  ? "Built from your trait profile, the fields you lean toward, and the opportunities open to you now — no career label attached."
+                  : "A concrete action list that turns a future path into visible progress within one month."}
             </p>
         </header>
 
@@ -187,7 +200,7 @@ export default function PlanPage() {
               Take the assessment
             </Button>
           </section>
-        ) : !archetype ? (
+        ) : !archetype && !broad ? (
           <section className="mt-8 rounded-lg border bg-card p-8 text-center">
             <h2 className="h-display text-section text-foreground">
               No path charted yet
@@ -205,7 +218,14 @@ export default function PlanPage() {
           </section>
         ) : (
           <>
-            <MissionBoard archetype={archetype} traits={traits} matches={matches} />
+            {/* Missions are written per archetype (public.missions is keyed by
+                archetype_id), so a student who declined a career label has none
+                — and inventing a set for them would be the label arriving
+                through the back door. Their build and publish steps come from
+                the generated spine in the roadmap below instead. */}
+            {archetype ? (
+              <MissionBoard archetype={archetype} traits={traits} matches={matches} />
+            ) : null}
             {matchesSettled && matches === null ? (
               <p className="mt-6 rounded-md border border-border bg-panel-raised p-3 text-sm leading-6 text-muted-foreground">
                 You are signed out, so this plan has no application targets.

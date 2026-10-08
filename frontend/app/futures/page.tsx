@@ -84,6 +84,7 @@ export default function FuturesPage() {
   }
 
   const [broadening, setBroadening] = useState(false);
+  const [broadError, setBroadError] = useState("");
 
   /**
    * "None of these are me."
@@ -100,13 +101,30 @@ export default function FuturesPage() {
    */
   async function goBroad() {
     setBroadening(true);
+    setBroadError("");
     writeChosenPath({ archetypeId: "", kind: "broad" });
     syncChosenPath("", "broad").catch(() => {});
-    await regenerateSpine(
-      "I do not see myself in any of the suggested career paths. My interests " +
-      "are broader than one profession — give me a plan for the areas I am " +
-      "actually interested in, not a job title.",
-    ).catch(() => {});
+    try {
+      await regenerateSpine(
+        "I do not see myself in any of the suggested career paths. My interests " +
+        "are broader than one profession — give me a plan for the areas I am " +
+        "actually interested in, not a job title.",
+      );
+    } catch (caught) {
+      // Swallowing this sent a student to a plan with no build or publish step
+      // and nothing saying why. Every refusal from that endpoint is one they
+      // should read — out of budget, model unreachable, or a path that came
+      // back pointing at a skill with nothing behind it — and in all three
+      // their matched opportunities and deadlines are still waiting on /plan,
+      // so the offer is to continue rather than a dead end.
+      setBroadening(false);
+      setBroadError(
+        caught instanceof Error
+          ? caught.message
+          : "Could not write your plan just now.",
+      );
+      return;
+    }
     router.push("/plan");
   }
 
@@ -249,6 +267,16 @@ export default function FuturesPage() {
                 >
                   {broadening ? "Writing your plan…" : "My interests are broader"}
                 </Button>
+                {broadError ? (
+                  <p aria-live="polite" className="mt-3 text-note leading-6 text-foreground">
+                    {broadError}{" "}
+                    <Link href="/plan" className="underline">
+                      Go to your plan anyway
+                    </Link>{" "}
+                    — your matched opportunities and their deadlines are there,
+                    and you can ask for the written part again from that page.
+                  </p>
+                ) : null}
               </div>
             </article>
           </section>
