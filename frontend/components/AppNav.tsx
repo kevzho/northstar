@@ -45,7 +45,10 @@ const SECTIONS = [
   { href: "/opportunities", label: "Programs", match: "/opportunities", open: true },
   { href: "/learn", label: "Learn", match: "/learn", open: true },
   { href: "/plan", label: "Plan", match: "/plan", open: false },
-  { href: "/profile", label: "You", match: "/profile", open: false },
+  // "Profile", not "You". A student looking for their profile scans a nav for
+  // the word and does not find it, and /profile is where the trait scores, the
+  // field sky, the evidence timeline and the public-handle control all live.
+  { href: "/profile", label: "Profile", match: "/profile", open: false },
   { href: "/discover", label: "People", match: "/discover", open: false },
 ] as const;
 
