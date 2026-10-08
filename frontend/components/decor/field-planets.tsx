@@ -101,14 +101,22 @@ const PLANET_PATHS: Record<OpportunityField, React.ReactNode> = {
 export function FieldPlanet({
   field,
   className = "h-4 w-4",
+  style,
 }: {
   field: OpportunityField;
   className?: string;
+  /**
+   * For callers that size and colour a world rather than inheriting the text
+   * line — the profile's field sky draws each one at a size proportional to
+   * its share, which a utility class cannot express.
+   */
+  style?: React.CSSProperties;
 }) {
   return (
     <svg
       viewBox="0 0 24 24"
       aria-hidden="true"
+      style={style}
       className={`shrink-0 ${className}`}
       fill="none"
       stroke="currentColor"

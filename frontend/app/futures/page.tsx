@@ -13,7 +13,6 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { archetypes } from "@/lib/archetypes";
 import { authedFetch, regenerateSpine, syncChosenPath } from "@/lib/api";
 import {
@@ -114,10 +113,17 @@ export default function FuturesPage() {
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
-        <AppNav homeHref="/dashboard" />
+        <AppNav homeHref="/dashboard"
+          right={
+            <>
+              <Button render={<Link href="/plan" />} className="h-11 px-5 font-semibold">
+                Choose a path
+              </Button>
+            </>
+          }
+         />
 
-        <header className="flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-start sm:justify-between">
-          <div>
+        <header className="pb-6">
             <Link
               href="/profile"
               className="text-sm font-semibold text-aurora"
@@ -132,13 +138,6 @@ export default function FuturesPage() {
               three paths: one steady, one stretch, and one surprising but
               plausible direction.
             </p>
-          </div>
-          <div className="flex shrink-0 items-center gap-3">
-            <Button render={<Link href="/plan" />} className="h-11 px-5 font-semibold">
-              Choose a path
-            </Button>
-            <ThemeToggle />
-          </div>
         </header>
 
         {!hydrated ? (

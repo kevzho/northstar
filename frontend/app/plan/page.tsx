@@ -13,7 +13,6 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "motion/react";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { JourneyMap } from "@/components/JourneyMap";
 import { Planet, Ship } from "@/components/decor/voyage";
 import { fetchMatches, fetchResources, fetchRoadmap } from "@/lib/api";
@@ -140,10 +139,23 @@ export default function PlanPage() {
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
-        <AppNav homeHref="/dashboard" />
+        <AppNav homeHref="/dashboard"
+          right={
+            <>
+              {archetype ? (
+                <Button
+                  variant="outline"
+                  render={<Link href="/futures" />}
+                  className="h-11 px-5 font-semibold"
+                >
+                  Change path
+                </Button>
+              ) : null}
+            </>
+          }
+         />
 
-        <header className="flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-center sm:justify-between">
-          <div>
+        <header className="pb-6">
             <Link href="/futures" className="text-sm font-semibold text-aurora">
               Back to futures
             </Link>
@@ -157,19 +169,6 @@ export default function PlanPage() {
                   }${fit !== null ? ` (${fit}% fit)` : ""} — your trait profile, and your ranked matches.`
                 : "A concrete action list that turns a future path into visible progress within one month."}
             </p>
-          </div>
-          <div className="flex shrink-0 items-center gap-3">
-            {archetype ? (
-              <Button
-                variant="outline"
-                render={<Link href="/futures" />}
-                className="h-11 px-5 font-semibold"
-              >
-                Change path
-              </Button>
-            ) : null}
-            <ThemeToggle />
-          </div>
         </header>
 
         {!traits ? (

@@ -11,7 +11,6 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { AnimatedNumber } from "@/components/motion/animated-number";
 import { traitDescriptions, traitLabels } from "@/lib/assessment";
 import {
@@ -31,6 +30,7 @@ import { SharingCard } from "@/components/SharingCard";
 import type { OpportunityField, TimelineEvent } from "@/lib/types";
 import { useRequireAuth } from "@/lib/use-require-auth";
 import { AppNav } from "@/components/AppNav";
+import { FieldSky } from "@/components/decor/field-sky";
 
 const fieldLabels: Record<OpportunityField, string> = {
   cs: "Computer science",
@@ -142,10 +142,17 @@ export default function ProfilePage() {
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
-        <AppNav homeHref="/dashboard" />
+        <AppNav homeHref="/dashboard"
+          right={
+            <>
+              <Button render={<Link href="/futures" />} className="h-11 px-5 font-semibold">
+                Generate futures
+              </Button>
+            </>
+          }
+         />
 
-        <header className="flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-start sm:justify-between">
-          <div>
+        <header className="pb-6">
             <Link
               href="/assessment"
               className="text-sm font-semibold text-aurora"
@@ -160,13 +167,6 @@ export default function ProfilePage() {
                 ? `Six trait signals and a field-interest map scored from your twenty answers. Your strongest signal is ${traitLabels[top].toLowerCase()}.`
                 : "This preview shows the six interpretable signals Northstar computes from assessment choices."}
             </p>
-          </div>
-          <div className="flex shrink-0 items-center gap-3">
-            <Button render={<Link href="/futures" />} className="h-11 px-5 font-semibold">
-              Generate futures
-            </Button>
-            <ThemeToggle />
-          </div>
         </header>
 
         <ProfileDetailsCard />
@@ -265,6 +265,12 @@ export default function ProfilePage() {
                 : `Since your last visit: ${shifts.join(", ")}`}
             </p>
           ) : null}
+          {/* The sky first: it answers "what is the shape of my interests" at a
+              glance, which a ranked list of ten bars makes you work for. The
+              list stays underneath, because small shares are unreadable as
+              circles and a picture is unreadable by a screen reader. */}
+          <FieldSky scores={fieldScores} labels={fieldLabels} />
+
           <div className="mt-5 grid gap-4">
             {orderedFields.map((field) => (
               <div key={field}>

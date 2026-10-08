@@ -27,6 +27,7 @@ import { Button } from "@/components/ui/button";
 import { AppNav } from "@/components/AppNav";
 import { useRouter } from "next/navigation";
 import * as d3 from "d3";
+import { FIELD_COLORS } from "@/lib/field-colors";
 import { LoadingSection } from "@/components/decor/orbit-loader";
 import { PathwayList } from "@/components/PathwayList";
 import { useRequireAuth } from "@/lib/use-require-auth";
@@ -53,19 +54,9 @@ type GraphEdge = {
 
 type GraphData = { nodes: GraphNode[]; edges: GraphEdge[] } | null;
 
-/* Luminous star colors — tuned to read against the night-sky background. */
-const fieldColors: Record<string, string> = {
-  cs: "#6c9ef8",
-  biology: "#56d394",
-  math: "#c08bf5",
-  physics: "#f09a62",
-  engineering: "#55c7de",
-  interdisciplinary: "#e7c868",
-  design: "#f08bc9",
-  business: "#a8d96c",
-  humanities: "#dab07f",
-  health: "#f07d7d",
-};
+/* One source of truth for field colour — shared with the profile's field sky
+   so biology is the same green in both places. See lib/field-colors.ts. */
+const fieldColors = FIELD_COLORS as Record<string, string>;
 
 export default function MapPage() {
   // Built from this student's own assessment, so it needs an account.

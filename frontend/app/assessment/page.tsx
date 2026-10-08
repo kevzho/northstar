@@ -11,7 +11,6 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { ScrollProgress } from "@/components/motion/scroll-progress";
 import { WaypointPath } from "@/components/decor/waypoints";
 import { useRouter } from "next/navigation";
@@ -68,10 +67,21 @@ export default function AssessmentPage() {
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <ScrollProgress className="fixed inset-x-0 top-0 z-50 h-0.5 bg-star" />
       <div className="mx-auto max-w-5xl">
-        <AppNav homeHref="/dashboard" />
+        <AppNav homeHref="/dashboard"
+          right={
+            <>
+              <Button
+                disabled={!complete}
+                onClick={finishAssessment}
+                className="h-11 px-5 font-semibold"
+              >
+                {complete ? "See your profile" : `${answered} of ${total} answered`}
+              </Button>
+            </>
+          }
+         />
 
-        <header className="flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-start sm:justify-between">
-          <div>
+        <header className="pb-6">
             <Link
               href="/"
               className="text-sm font-semibold text-aurora"
@@ -87,17 +97,6 @@ export default function AssessmentPage() {
               pull you in. Rate the statements, pick the scenario that fits —
               there are no wrong answers.
             </p>
-          </div>
-          <div className="flex shrink-0 items-center gap-3">
-            <Button
-              disabled={!complete}
-              onClick={finishAssessment}
-              className="h-11 px-5 font-semibold"
-            >
-              {complete ? "See your profile" : `${answered} of ${total} answered`}
-            </Button>
-            <ThemeToggle />
-          </div>
         </header>
 
         {/* Each prompt is a waypoint on the course; the warm node is
