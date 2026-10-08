@@ -13,7 +13,8 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "motion/react";
 import { Button } from "@/components/ui/button";
-import { JourneyMap } from "@/components/JourneyMap";
+import { RoadmapTree } from "@/components/RoadmapTree";
+import { buildRoadmapTree, firstActionable } from "@/lib/roadmap-graph";
 import { Planet, Ship } from "@/components/decor/voyage";
 import { fetchMatches, fetchResources, fetchRoadmap } from "@/lib/api";
 import { SpineControl } from "@/components/SpineControl";
@@ -147,6 +148,28 @@ export default function PlanPage() {
       ? generatePlan(archetype, chosen.kind, traits, matches, new Date())
       : null;
 
+  /**
+   * The route, as a tree.
+   *
+   * Flattened out of the phases on purpose: a phase is a time bucket, and the
+   * tree is about dependency, which crosses buckets. A prep step placed a hair
+   * before its application (roadmap.py) can land in the phase above it, and
+   * the gate must still be drawn attached to the thing it unlocks.
+   *
+   * Colour comes from the matched opportunity's own field, so an application
+   * node is the same colour here as it is on the map and in the field sky —
+   * and a step we cannot colour honestly is left on the default.
+   */
+  const fieldById = new Map(
+    (matches ?? []).map((match) => [match.opportunity.id, match.opportunity.field]),
+  );
+  const tree = roadmap
+    ? buildRoadmapTree(
+        roadmap.phases.flatMap((phase) => phase.steps),
+        { fieldOf: (id) => fieldById.get(id), horizon: roadmap.horizon },
+      )
+    : null;
+
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
@@ -249,19 +272,25 @@ export default function PlanPage() {
                 sits on step one. That is honest rather than decorative — a map
                 that claimed progress it cannot observe would be worse than one
                 that shows the start. */}
-            {roadmap && roadmap.phases.length > 0 ? (
-              <JourneyMap
-                className="mt-10 border-y border-border py-8"
-                phases={roadmap.phases.map((phase) => ({
-                  label: phase.label,
-                  steps: phase.steps.map((step) => ({
-                    step_key: step.step_key,
-                    title: step.title,
-                    category: step.category,
-                    timeframe: step.timeframe,
-                  })),
-                }))}
-              />
+            {tree && tree.nodes.length > 1 ? (
+              <section className="mt-10 border-y border-border py-8">
+                <p className="eyebrow">Your route</p>
+                <h2 className="h-display mt-2 text-xl text-foreground">
+                  What unlocks what.
+                </h2>
+                <p className="mt-2 max-w-2xl text-sm leading-7 text-muted-foreground">
+                  The trunk is the work that compounds — learn it, build with it,
+                  put it somewhere people can see. The branches are work nothing
+                  is stopping you starting today. The columns at the bottom are
+                  the programmes this is all for, each with the thing that gets
+                  you in stacked above it. Tap any node to jump to its step.
+                </p>
+                <RoadmapTree
+                  className="mt-6"
+                  tree={tree}
+                  hereKey={firstActionable(tree)}
+                />
+              </section>
             ) : null}
 
             {/* Travelling together. The matcher behind /teamup already pairs on
@@ -336,7 +365,10 @@ export default function PlanPage() {
                           {phase.steps.map((step) => (
                             <li
                               key={step.step_key}
-                              className="rounded-md border border-border bg-panel-raised p-4"
+                              /* The tree above links here. scroll-mt keeps the
+                                 card clear of the sticky nav after the jump. */
+                              id={`step-${step.step_key}`}
+                              className="scroll-mt-24 rounded-md border border-border bg-panel-raised p-4 target:border-star"
                             >
                               <div className="flex flex-wrap items-center gap-2">
                                 <span className={STEP_CHIP[step.category]}>

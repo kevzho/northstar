@@ -582,7 +582,20 @@ export type RoadmapStep = {
   category: "skill" | "project" | "outreach" | "application";
   title: string;
   step_key: string;
-  edge_reason: "eligibility" | "window" | "artifact" | "ladder" | "evidence";
+  /**
+   * Why this step sits where it does. "gate" was missing here while
+   * roadmap.py had been emitting it since entry_gate shipped — a prep step
+   * ("Enter the affiliated fair that leads to ISEF") and every non-apply
+   * application carry it. It belongs with "window" and "eligibility": a rule
+   * the programme published, not a generalisation of ours.
+   */
+  edge_reason:
+    | "eligibility"
+    | "window"
+    | "gate"
+    | "artifact"
+    | "ladder"
+    | "evidence";
   edge_note: string;
   opportunity_id: string | null;
   resource_id: string | null;

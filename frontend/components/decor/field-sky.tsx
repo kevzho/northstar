@@ -85,6 +85,12 @@ export function FieldSky({
         return (
           <div
             key={field}
+            /* The name on hover. An in-picture label collides (see above), but
+               a student pointing at the biggest world and asking "which one is
+               that?" should not have to count down the list to find out. The
+               sky stays aria-hidden either way — the list below it is the
+               accessible copy. */
+            title={`${labels[field] ?? field} — ${share}%`}
             className="absolute -translate-x-1/2 -translate-y-1/2"
             style={{ left: `${left}%`, top: `${topPct}%` }}
           >
