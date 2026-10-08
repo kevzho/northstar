@@ -4,9 +4,7 @@ import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/use-auth";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { MotionConfig, motion, useScroll, useTransform } from "motion/react";
-import { useTheme } from "next-themes";
 import { useLanguage } from "@/lib/i18n";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
@@ -19,11 +17,9 @@ import { DeadlineTicker, RecentlyAdded } from "@/components/CatalogSignals";
 import { PILLAR_FIGURES } from "@/components/decor/pillar-diagrams";
 import { StarGlyph } from "@/components/decor/star-glyph";
 import { SiteFooter } from "@/components/SiteFooter";
+import { SpriteSky } from "@/components/decor/sprite-sky";
 
 /* three.js stays out of the initial bundle; the sky fades in after mount. */
-const Starfield = dynamic(() => import("@/components/decor/starfield"), {
-  ssr: false,
-});
 
 const waypoints = [
   {
@@ -188,7 +184,6 @@ function Constellation() {
 }
 
 export default function Home() {
-  const { resolvedTheme } = useTheme();
   const { t } = useLanguage();
   const router = useRouter();
   // A signed-in student who hits the marketing page (usually by clicking the
@@ -198,7 +193,6 @@ export default function Home() {
   useEffect(() => {
     if (!loading && user) router.replace("/dashboard");
   }, [loading, user, router]);
-  const ink = resolvedTheme === "light";
   const { scrollY } = useScroll();
   const pathwayRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: pathwayProgress } = useScroll({
@@ -212,7 +206,14 @@ export default function Home() {
   return (
     <MotionConfig reducedMotion="user">
     <main className="bleed-root min-h-screen">
-      <Starfield ink={ink} className="pointer-events-none fixed inset-0 -z-10" />
+      {/*
+        A 2D sprite collage that leans with the pointer, replacing the WebGL
+        sky. three.js was being pulled into the page for decoration, and the
+        decoration read as a generic space scene. These are the ten planet
+        sprites the product already ships, laid out deterministically so the
+        sky is the same place on every visit.
+      */}
+      <SpriteSky className="fixed inset-0 -z-10" />
       <section className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-6 py-8 sm:px-8 lg:px-10">
         <nav className="bleed-bg sticky top-0 z-40 flex items-center justify-between py-4">
           <Link

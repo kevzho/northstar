@@ -725,3 +725,22 @@ summary,
     transition: none;
   }
 }
+
+/*
+ * The collage's easing, kept in CSS so the parallax runs on the compositor.
+ * The pointer handler writes --px/--py once a frame and does nothing else;
+ * this transition is what makes the lean feel like weight rather than a jump.
+ */
+.sprite-sky-body {
+  transition: transform 420ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The listener already returns early; this covers a preference changed
+     after mount, when the custom properties may hold a stale offset. */
+  .sprite-sky-body {
+    transition: none;
+    transform: none !important;
+  }
+}

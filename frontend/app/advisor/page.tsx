@@ -19,6 +19,7 @@ import { AppNav } from "@/components/AppNav";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { askAdvisor, isApiError } from "@/lib/api";
+import { useRequireAuth } from "@/lib/use-require-auth";
 
 type Exchange = Awaited<ReturnType<typeof askAdvisor>>;
 
@@ -29,6 +30,10 @@ const SUGGESTED = [
 ];
 
 export default function AdvisorPage() {
+  // Every question here goes to POST /advisor, which is auth-gated and
+  // metered per student. Signed out a student could type a whole question and
+  // get a 401 for it.
+  useRequireAuth();
   const [question, setQuestion] = useState("");
   const [exchange, setExchange] = useState<Exchange | null>(null);
   const [state, setState] = useState<

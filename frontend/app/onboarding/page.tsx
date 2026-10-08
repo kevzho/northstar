@@ -20,6 +20,7 @@ import { saveStudentProfile, syncAssessmentProfile } from "@/lib/api";
 import { isComplete, scoreFieldInterests, scoreTraits } from "@/lib/scoring";
 import { useStoredAnswers } from "@/lib/use-assessment";
 import type { Audience, LocationPref } from "@/lib/types";
+import { useRequireAuth } from "@/lib/use-require-auth";
 
 const subjectOptions = [
   "Computer Science",
@@ -35,6 +36,9 @@ const subjectOptions = [
 ];
 
 export default function OnboardingPage() {
+  // Submitting calls authedFetch("/students"), so signed out the form
+  // accepts everything and saves nothing.
+  useRequireAuth();
   const router = useRouter();
   const [step, setStep] = useState<1 | 2 | 3>(1);
   // The quiz is part of onboarding: brand-new students continue into it,
