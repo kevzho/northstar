@@ -72,10 +72,22 @@ type Group = {
  * when a trend is noise": a name and a gloss in one string, because on /plan it
  * is read inside a sentence. As a heading the whole thing wraps to three lines,
  * so it is split — the name leads, the gloss explains underneath.
+ *
+ * Em dash, en dash or a spaced hyphen, because the seeded rows use an em dash
+ * and the first AI-imported row came back with an en dash. Splitting on one
+ * character left "Full-stack web development – building front-end and back-end
+ * web applications" as an eighty-character heading.
  */
 function splitLabel(label: string): { name: string; gloss: string } {
-  const [name, ...rest] = label.split(/\s+—\s+/);
-  return { name: name || label, gloss: rest.join(" — ") };
+  const [raw, ...rest] = label.split(/\s+[—–-]\s+/);
+  const name = (raw || label).trim();
+  return {
+    // Headings are sentence case whatever the row stored, so twelve seeded
+    // lowercase labels and two model-written capitalised ones do not read as
+    // two different catalogs.
+    name: name.charAt(0).toUpperCase() + name.slice(1),
+    gloss: rest.join(" — ").trim(),
+  };
 }
 
 export default function LearnPage() {
@@ -116,7 +128,13 @@ export default function LearnPage() {
           rows: [row],
         });
     }
-    return [...out.values()];
+    // Case-insensitive, because the seeded labels are lowercase ("sampling
+    // discipline") and the model-written ones are not ("Python programming
+    // basics") — a raw sort put the two newest rows above all twelve others
+    // for no reason a reader could see.
+    return [...out.values()].sort((a, b) =>
+      a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
+    );
   }, [filtered]);
 
   const fieldsPresent = useMemo(() => {
@@ -232,6 +250,26 @@ export default function LearnPage() {
               />
             </div>
 
+            {groups.length > 3 ? (
+              <nav
+                aria-label="Jump to a subject"
+                className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1"
+              >
+                <span className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-muted-foreground">
+                  Jump to
+                </span>
+                {groups.map((group) => (
+                  <a
+                    key={group.skillKey}
+                    href={`#shelf-${group.skillKey}`}
+                    className="text-xs text-muted-foreground underline decoration-border underline-offset-4 hover:text-foreground"
+                  >
+                    {group.name}
+                  </a>
+                ))}
+              </nav>
+            ) : null}
+
             {groups.length === 0 ? (
               <p className="mt-8 text-sm leading-6 text-muted-foreground">
                 Nothing on the shelf matches that yet. The shelf grows by
@@ -241,7 +279,11 @@ export default function LearnPage() {
             ) : (
               <div className="mt-8 grid gap-8">
                 {groups.map((group) => (
-                  <section key={group.skillKey}>
+                  <section
+                    key={group.skillKey}
+                    id={`shelf-${group.skillKey}`}
+                    className="scroll-mt-6"
+                  >
                     <h2 className="h-display flex items-center gap-2 text-section text-foreground">
                       <FieldPlanet
                         field={

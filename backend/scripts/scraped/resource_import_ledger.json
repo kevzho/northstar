@@ -1,0 +1,26 @@
+{
+  "https://programming-26.mooc.fi": {
+    "at": "2026-10-08T02:46:36.899355+00:00",
+    "why": "not free"
+  },
+  "https://automatetheboringstuff.com": {
+    "at": "2026-10-08T02:46:45.424352+00:00",
+    "why": "imported"
+  },
+  "https://onlineteaching.umich.edu/articles/the-myth-of-learning-styles": {
+    "at": "2026-10-08T02:46:46.623411+00:00",
+    "why": "unreachable"
+  },
+  "https://roadmap.sh": {
+    "at": "2026-10-08T02:46:55.516942+00:00",
+    "why": "retired: partial-free quote"
+  },
+  "https://programming-25.mooc.fi": {
+    "at": "2026-10-08T02:47:03.726818+00:00",
+    "why": "not free"
+  },
+  "https://theodinproject.com": {
+    "at": "2026-10-08T02:47:10.179364+00:00",
+    "why": "imported"
+  }
+}

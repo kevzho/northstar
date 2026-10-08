@@ -467,11 +467,58 @@ def test_a_trailing_slash_does_not_make_a_second_candidate() -> None:
 
 def test_every_scraper_dedupes_on_the_canonical_form() -> None:
     """A scraper that keys its pool on the raw string reintroduces the bug the
-    moment a directory adds or drops a trailing slash."""
+    moment a directory adds or drops a trailing slash.
+
+    The listing-shaped scrapers all build their pool the same way, so the shape
+    is asserted directly. scrape_reddit_resources.py cannot: its keys are links
+    pulled out of comment bodies, which have to be canonicalised at extraction
+    -- before the host filter and before the within-one-comment dedupe -- so it
+    is held to the same rule behaviourally below instead of textually here.
+    """
+    exempt = {
+        "scrape_all.py",
+        "scrape_reddit.py",
+        "scrape_reddit_resources.py",  # see test_the_comment_scraper_... below
+    }
     for script in sorted(SCRIPTS.glob("scrape_*.py")):
-        if script.name in {"scrape_all.py", "scrape_reddit.py"}:
+        if script.name in exempt:
             continue
         src = script.read_text()
         assert 'pool = {canonical_url(' in src, (
             f"{script.name} keys its candidate pool on the raw url string"
         )
+
+
+def test_the_comment_scraper_canonicalises_before_it_counts() -> None:
+    """Same rule as above, checked on behaviour rather than on source text.
+
+    It matters more here than anywhere else: the counts ARE the output. Two
+    spellings of one link counted separately halve the agreement that decides
+    whether import_resources ever looks at it, so a trailing slash would hide
+    the most-recommended resource in the pool.
+    """
+    import sys
+
+    sys.path.insert(0, str(SCRIPTS))
+    from scrape_reddit_resources import extract_links, tally
+
+    assert extract_links("see https://openintro.org/book/os/") == [
+        "https://openintro.org/book/os"
+    ]
+
+    def thread(body: str) -> dict:
+        return {
+            "subreddit": "r/learnmath",
+            "field": "math",
+            "permalink": "https://www.reddit.com/r/learnmath/comments/a/",
+            "title": "free textbook?",
+            "comments": [{"body": body, "score": 1}],
+        }
+
+    counted = tally([
+        thread("https://openintro.org/book/os/"),
+        thread("https://openintro.org/book/os"),
+        thread("https://OpenIntro.org/book/os"),
+    ])
+    assert list(counted) == ["https://openintro.org/book/os"]
+    assert counted["https://openintro.org/book/os"]["mentions"] == 3

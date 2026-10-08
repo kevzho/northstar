@@ -152,6 +152,23 @@ describe("buildRoadmapTree", () => {
     expect(locked?.nodeKind).toBe("horizon");
   });
 
+  it("tells a locked node why nothing reaches it", () => {
+    // Drawn with no edge, which without the grade on its chip reads as a node
+    // the picture forgot to connect rather than one a birthday unlocks.
+    const { nodes } = buildRoadmapTree(fullPlan(), {
+      horizon: [
+        {
+          title: "MIT PRIMES",
+          opens_at_grade: 11,
+          opportunity_id: "opp-c",
+          edge_reason: "eligibility",
+          edge_note: "",
+        },
+      ],
+    });
+    expect(byKey(nodes).get("horizon:opp-c")?.badge).toBe("Grade 11");
+  });
+
   it("colours a node only when the field is actually known", () => {
     const { nodes } = buildRoadmapTree(fullPlan(), {
       fieldOf: (id) => (id === "opp-a" ? "math" : undefined),

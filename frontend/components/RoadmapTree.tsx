@@ -27,6 +27,7 @@
  * right-angle elbow — an axis-aligned line cannot be skewed by that scale.
  */
 
+import { useEffect, useRef } from "react";
 import { FieldPlanet } from "@/components/decor/field-planets";
 import { Ship } from "@/components/decor/voyage";
 import { fieldColor } from "@/lib/field-colors";
@@ -105,8 +106,12 @@ function Node({ node, here }: { node: TreeNode; here: boolean }) {
           className={trunk ? "h-4 w-4" : "h-3.5 w-3.5"}
           style={colour ? { color: colour } : undefined}
         />
-        <span className="font-mono text-[0.6rem] uppercase tracking-[0.16em] text-aurora">
-          {KIND_LABEL[node.nodeKind]}
+        <span
+          className={`font-mono text-[0.6rem] uppercase tracking-[0.16em] ${
+            node.nodeKind === "horizon" ? "text-polaris" : "text-aurora"
+          }`}
+        >
+          {node.badge ?? KIND_LABEL[node.nodeKind]}
         </span>
       </span>
       <span
@@ -167,6 +172,21 @@ export function RoadmapTree({
   hereKey?: string | null;
   className?: string;
 }) {
+  /**
+   * Centre the canvas on the trunk once it exists.
+   *
+   * At 390px the canvas is twice the viewport, and a scroller starts at
+   * scrollLeft 0 — so a student on a phone opened this to the left-hand
+   * branches with the trunk entirely off-screen, which is the one part they
+   * need. Does nothing on a wide screen, where there is no overflow to centre.
+   */
+  const scroller = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const node = scroller.current;
+    if (!node) return;
+    node.scrollLeft = Math.max(0, (node.scrollWidth - node.clientWidth) / 2);
+  }, [tree]);
+
   if (tree.nodes.length <= 1) return null;
   const byKey = new Map(tree.nodes.map((node) => [node.key, node]));
   const height = tree.rows * ROW_H;
@@ -185,7 +205,7 @@ export function RoadmapTree({
           column is one programme, its gate stacked above it — and letting them
           wrap on a narrow screen would put a gate above a different programme's
           application, which is worse than a scrollbar. */}
-      <div className="overflow-x-auto pb-2">
+      <div ref={scroller} className="overflow-x-auto pb-2">
         <div className="relative" style={{ minWidth: MIN_W, height }}>
           <svg
             aria-hidden="true"
@@ -237,6 +257,20 @@ export function RoadmapTree({
           <span>
             <span className="text-foreground">Any time.</span> Nothing is
             stopping you starting this today.
+          </span>
+        </span>
+        {/* Said once, here, rather than left as an unexplained orphan row: a
+            node with no edge into it looks like a drawing error until you know
+            that nothing on this tree reaches it. */}
+        <span className="flex items-start gap-2 sm:col-span-3">
+          <span
+            aria-hidden="true"
+            className="mt-1 h-3 w-7 shrink-0 rounded-sm border border-dashed border-border"
+          />
+          <span>
+            <span className="text-foreground">No line into it.</span> A locked
+            programme, drawn with no edge because no step on this tree reaches
+            it — only a birthday does. The grade it opens at is on the node.
           </span>
         </span>
       </figcaption>

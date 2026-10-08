@@ -33,6 +33,8 @@ import scrape_devpost
 import scrape_pathways
 import scrape_reddit
 import refresh_deadlines
+import import_resources
+import scrape_reddit_resources
 import scrape_sciencefairs
 import verify_and_import
 
@@ -60,7 +62,20 @@ STAGES = (
     # it does not repeat the spreadsheet's 250 state rows that all pointed at one
     # national url. Capped per run; see the module docstring.
     ("sciencefairs", scrape_sciencefairs, False),
+    # THE SHELF, as opposed to the catalog. Everything above finds programmes
+    # with deadlines, which is the smaller half of what a student needs: four
+    # deadlines are open at a time and a Tuesday in February has none. These two
+    # find free material, from reddit COMMENTS rather than titles -- the post is
+    # the question ("best free resource for linear algebra?") and the answer is
+    # in a reply, which is why the opportunity pool was never going to feed this
+    # (891 of 11,293 pooled candidates carry a non-reddit URL at all).
+    ("reddit-resources", scrape_reddit_resources, False),
     ("verify+import", verify_and_import, True),
+    # Fetches each candidate page and refuses any free claim it cannot quote
+    # from it. Not required: a provider outage here costs a day of shelf growth,
+    # while the same outage in verify+import means the catalog went stale, and
+    # conflating the two is how a green run hid four weeks of nothing.
+    ("import-resources", import_resources, False),
     # Re-read programme pages and write the dates they currently state.
     #
     # Daily because the information arrives daily. Measured 2026-10-05, only 2

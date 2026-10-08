@@ -74,6 +74,15 @@ export type TreeNode = {
   /** Field colour, when the step points at an opportunity we know the field of. */
   field: string | null;
   note: string;
+  /**
+   * Overrides the generic kind label on the node's chip.
+   *
+   * Exists for the locked row: "LOCKED" under a column of applications, with no
+   * edge reaching it, reads as a node the drawing forgot to connect. "GRADE 11"
+   * says why there is no edge — nothing on this tree reaches it, only a
+   * birthday does.
+   */
+  badge?: string;
 };
 
 export type RoadmapTree = {
@@ -323,6 +332,7 @@ export function buildRoadmapTree(
         opportunityId: item.opportunity_id,
         field: fieldOf(item.opportunity_id) ?? null,
         note: item.edge_note,
+        badge: `Grade ${item.opens_at_grade}`,
       });
     });
     row = horizonRow + 1;

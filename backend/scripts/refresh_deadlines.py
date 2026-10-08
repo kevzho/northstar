@@ -160,7 +160,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--all", action="store_true",
                         help="ignore the recheck interval and re-read everything")
-    args = parser.parse_args(argv if argv is not None else [])
+    args = parser.parse_args(argv or [])
 
     if not (os.getenv("LLM_API_BASE") and os.getenv("LLM_API_KEY") and os.getenv("LLM_MODEL")):
         print("refresh_deadlines: skipped (LLM not configured)")

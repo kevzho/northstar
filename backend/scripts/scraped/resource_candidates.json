@@ -1,0 +1,3575 @@
+[
+  {
+    "url": "https://programming-26.mooc.fi",
+    "mentions": 3,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1rqoj2z/zero_programming_knowledge_but_i_want_to_learn/",
+      "https://www.reddit.com/r/learnpython/comments/1vs2nr2/best_python_books_from_beginner_to_advanced/",
+      "https://www.reddit.com/r/learnpython/comments/1wf7xie/looking_for_python_resources/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 27,
+    "quotes": [
+      "MOOC [Python Programming 2026](https://programming-26.mooc.fi) from the University of Helsinki - free, top quality, extremely practice heavy - sign up, log in, go to part 1 and start learning",
+      "Continue with CS50p. It will give you a solid foundation.  Also, the MOOC [Python Programming 2026](https://programming-26.mooc.fi) is a great free resource.  Also, take a look at https://inventwithpython.com and https://automatetheboringst",
+      "I don't think there's a single resource that covers all that, especially for a book, but my personal recommendation would be  1. Start with the Python MOOC: https://programming-26.mooc.fi/ 2. Skim through the Pytest documentation: https://d"
+    ],
+    "first_seen": "2026-10-08T02:39:40.977701+00:00",
+    "thread_count": 3
+  },
+  {
+    "url": "https://automatetheboringstuff.com",
+    "mentions": 3,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1oz1x3q/best_online_coding_course/",
+      "https://www.reddit.com/r/learnpython/comments/1wf7xie/looking_for_python_resources/"
+    ],
+    "subreddits": [
+      "r/learnprogramming",
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 40,
+    "quotes": [
+      "\\- [Automate the Boring Stuff with Python](https://automatetheboringstuff.com/) | a great **free** first option  NOTE: You shouldn't have to pay a dime to get the foundations, cos there's so much great **free** material out there. The ones ",
+      "Continue with CS50p. It will give you a solid foundation.  Also, the MOOC [Python Programming 2026](https://programming-26.mooc.fi) is a great free resource.  Also, take a look at https://inventwithpython.com and https://automatetheboringst",
+      "If you are still this early in learning, I would caution against learning with Youtube Tutorials and AI.  Not because they are \"wrong\" ways to learn, but many beginners fall into the same traps using these: Both condition you to follow orde"
+    ],
+    "first_seen": "2026-10-08T02:39:40.984087+00:00",
+    "thread_count": 2
+  },
+  {
+    "url": "https://onlineteaching.umich.edu/articles/the-myth-of-learning-styles",
+    "mentions": 2,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1rqoj2z/zero_programming_knowledge_but_i_want_to_learn/",
+      "https://www.reddit.com/r/learnpython/comments/1vs2nr2/best_python_books_from_beginner_to_advanced/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 41,
+    "quotes": [
+      "Start with the basics (check the wiki) and then you will be better placed to determine what to focus on. Learning pace varies a lot, you will find what works for you best.  --- Check this subreddit's [wiki](https://reddit.com/r/learnpython/",
+      "There's a book list in the wiki for this subreddit   EDIT: added below including link to wiki. ---  Check this subreddit's [wiki](https://reddit.com/r/learnpython/w/index/) for lots of guidance on learning programming and learning Python, l"
+    ],
+    "first_seen": "2026-10-08T02:39:40.977061+00:00",
+    "thread_count": 2
+  },
+  {
+    "url": "https://programming-25.mooc.fi",
+    "mentions": 2,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1oz1x3q/best_online_coding_course/",
+      "https://www.reddit.com/r/learnpython/comments/1ob3s7s/what_are_the_best_freelowcost_resources_for_a/"
+    ],
+    "subreddits": [
+      "r/learnprogramming",
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 12,
+    "quotes": [
+      "MOOC [Python Programming 2025](https://programming-25.mooc.fi) from the University of Helsinki. IMO, one of the best introduction to Python *and* programming.",
+      "[https://programming-25.mooc.fi/](https://programming-25.mooc.fi/)"
+    ],
+    "first_seen": "2026-10-08T02:39:40.982760+00:00",
+    "thread_count": 2
+  },
+  {
+    "url": "https://roadmap.sh",
+    "mentions": 2,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1rqoj2z/zero_programming_knowledge_but_i_want_to_learn/",
+      "https://www.reddit.com/r/learnpython/comments/1vs2nr2/best_python_books_from_beginner_to_advanced/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 41,
+    "quotes": [
+      "Start with the basics (check the wiki) and then you will be better placed to determine what to focus on. Learning pace varies a lot, you will find what works for you best.  --- Check this subreddit's [wiki](https://reddit.com/r/learnpython/",
+      "There's a book list in the wiki for this subreddit   EDIT: added below including link to wiki. ---  Check this subreddit's [wiki](https://reddit.com/r/learnpython/w/index/) for lots of guidance on learning programming and learning Python, l"
+    ],
+    "first_seen": "2026-10-08T02:39:40.977050+00:00",
+    "thread_count": 2
+  },
+  {
+    "url": "https://theodinproject.com",
+    "mentions": 2,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1oz1x3q/best_online_coding_course/",
+      "https://www.reddit.com/r/learnprogramming/comments/1v6ipkx/are_books_online_sources_in_your_opinion/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 8,
+    "quotes": [
+      "\\- [Automate the Boring Stuff with Python](https://automatetheboringstuff.com/) | a great **free** first option  NOTE: You shouldn't have to pay a dime to get the foundations, cos there's so much great **free** material out there. The ones ",
+      "The entire argument of one over the other is a fallacy.  You don't have to look further than these to realize that online material can provide the equivalent of an entire univerity degree for free:  https://github.com/ossu/computer-science "
+    ],
+    "first_seen": "2026-10-08T02:39:40.984099+00:00",
+    "thread_count": 2
+  },
+  {
+    "url": "http://apscholr.com",
+    "mentions": 3,
+    "threads": [
+      "https://www.reddit.com/r/APStudents/comments/1stzf9h/got_tired_of_trying_to_find_free_ap_resources_so/"
+    ],
+    "subreddits": [
+      "r/APStudents"
+    ],
+    "field_guess": "interdisciplinary",
+    "upvotes": 4,
+    "quotes": [
+      "its [apscholr.com](http://apscholr.com) yeah check it out and also help answer u/JadedArmadillo2105 comment",
+      "[apscholr.com](http://apscholr.com) is the name.",
+      "[apscholr.com](http://apscholr.com)"
+    ],
+    "first_seen": "2026-10-08T02:39:40.979183+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://ada.gov/resources/2024-03-08-web-rule",
+    "mentions": 2,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1ryh7md/new_ada_law_forces_professors_to_take_down_their/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 278,
+    "quotes": [
+      "This reminds me of when Berkeley took down all its freely available online lecture videos because they'd have to get someone to caption all of them ([link](https://www.insidehighered.com/news/2017/03/06/u-california-berkeley-delete-publicly",
+      "Documents that meet both of the following points usually do not need to meet WCAG 2.1, Level AA, except in some situations:  \"The documents are word processing, presentation, PDF, or spreadsheet files; AND They were available on the state o"
+    ],
+    "first_seen": "2026-10-08T02:39:40.970934+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "http://edube.org",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1rqoj2z/zero_programming_knowledge_but_i_want_to_learn/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 3,
+    "quotes": [
+      "I started with [edube.org](http://edube.org), best place to start. I am now a pretty successful developer"
+    ],
+    "first_seen": "2026-10-08T02:44:52.464562+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "http://ijsmi.com/book.php",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1wf7xie/looking_for_python_resources/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 1,
+    "quotes": [
+      "you can check the following books on python   1.Python programming for Data Scientists: From Introductory concepts to Machine Learning Models  ISBN-13 \u200f : \u200e 978-1708620288  2.Deep Learning Models explored with help of Python Programming  IS"
+    ],
+    "first_seen": "2026-10-08T02:44:52.469509+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "http://mooc.fi",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1rqoj2z/zero_programming_knowledge_but_i_want_to_learn/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 6,
+    "quotes": [
+      "First, just get Python installed and learn how to run a simple script. If you can print something to the screen and run a file from your computer, that\u2019s a win.  For the first couple of weeks, focus only on basics you\u2019ll actually use: varia"
+    ],
+    "first_seen": "2026-10-08T02:44:52.464536+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "http://moocs.fi",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1ob3s7s/what_are_the_best_freelowcost_resources_for_a/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 13,
+    "quotes": [
+      "Khan Academy, FreeCodeCamp  On YT:  Bro Code  Caleb Curry  Clear Code aka Christian Koch  Mike Dane  Dave Gray  Alex Freberg (Python for data analysis). He also has a great platform called 'The Analyst Builder'  Olaf Paulson @ Scrimba has a"
+    ],
+    "first_seen": "2026-10-08T02:44:52.466992+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "http://nbg-web01.opitec.com/img/118/381/118381be.pdf",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskElectronics/comments/1tnnol6/looking_for_resources_for_learning_about/"
+    ],
+    "subreddits": [
+      "r/AskElectronics"
+    ],
+    "field_guess": "engineering",
+    "upvotes": 3,
+    "quotes": [
+      "Here are 17 basic breadboard experiments. http://nbg-web01.opitec.com/img/118/381/118381be.pdf"
+    ],
+    "first_seen": "2026-10-08T02:44:52.465426+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "http://py4e.com",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1ob3s7s/what_are_the_best_freelowcost_resources_for_a/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 1,
+    "quotes": [
+      "[py4e.com](http://py4e.com) seems to be a good place to start. A few years ago, the author of the course would go on social media and offer the Automate the Boring Stuff with Python course for free at the beginning of the month. It is a goo"
+    ],
+    "first_seen": "2026-10-08T02:44:52.467090+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "http://supabase.co",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/APStudents/comments/1stzf9h/got_tired_of_trying_to_find_free_ap_resources_so/"
+    ],
+    "subreddits": [
+      "r/APStudents"
+    ],
+    "field_guess": "interdisciplinary",
+    "upvotes": 3,
+    "quotes": [
+      "Yeah I saw that issue. I'm tryna fix it. the reason is that this thing gets its ability to sign into google with a platform called supabase. And with supabase its linked weirdly so it asks you to sign inot [supabase.co](http://supabase.co) "
+    ],
+    "first_seen": "2026-10-08T02:44:52.465672+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "http://theodinproject.com",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1oz1x3q/best_online_coding_course/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 3,
+    "quotes": [
+      "[theodinproject](http://theodinproject.com)"
+    ],
+    "first_seen": "2026-10-08T02:44:52.467408+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "http://timclarepoet.co.uk/couchto80kwritingbootcamp",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/writing/comments/1ohmn22/what_are_the_best_free_resources_for_learning/"
+    ],
+    "subreddits": [
+      "r/writing"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 3,
+    "quotes": [
+      "Couch to 80k, a podcast where you follow along and write 10 minutes every day.   [http://www.timclarepoet.co.uk/couchto80kwritingbootcamp/](http://www.timclarepoet.co.uk/couchto80kwritingbootcamp/)"
+    ],
+    "first_seen": "2026-10-08T02:44:52.471536+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "http://worrydream.com/refs/Lockhart-MathematiciansLament.pdf",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnmath/comments/1tbw24n/can_someone_rediscover_mathematical_concepts/"
+    ],
+    "subreddits": [
+      "r/learnmath"
+    ],
+    "field_guess": "math",
+    "upvotes": 2,
+    "quotes": [
+      "Necessary [Mathematician's lament](http://worrydream.com/refs/Lockhart-MathematiciansLament.pdf) reference"
+    ],
+    "first_seen": "2026-10-08T02:44:52.468556+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "http://youtube.com/@shreekrishnaacademyofmathe1304",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnmath/comments/1wtjj5t/best_mathematics_textbooks_or_sites_for_self_study/"
+    ],
+    "subreddits": [
+      "r/learnmath"
+    ],
+    "field_guess": "math",
+    "upvotes": 1,
+    "quotes": [
+      "You can try   ||[www.youtube.com/@shreekrishnaacademyofmathe1304](http://www.youtube.com/@shreekrishnaacademyofmathe1304)[www.youtube.com/@shreekrishnaacademyofmathe1304](http://www.youtube.com/@shreekrishnaacademyofmathe1304)| |:-|:-|"
+    ],
+    "first_seen": "2026-10-08T02:44:52.469140+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "http://youtube.com/@shreekrishnaacademyofmathe1304)|",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnmath/comments/1wtjj5t/best_mathematics_textbooks_or_sites_for_self_study/"
+    ],
+    "subreddits": [
+      "r/learnmath"
+    ],
+    "field_guess": "math",
+    "upvotes": 1,
+    "quotes": [
+      "You can try   ||[www.youtube.com/@shreekrishnaacademyofmathe1304](http://www.youtube.com/@shreekrishnaacademyofmathe1304)[www.youtube.com/@shreekrishnaacademyofmathe1304](http://www.youtube.com/@shreekrishnaacademyofmathe1304)| |:-|:-|"
+    ],
+    "first_seen": "2026-10-08T02:44:52.469142+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://11011110.github.io/blog/2026/03/01/making-accessible-latex.html",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1ryh7md/new_ada_law_forces_professors_to_take_down_their/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 5,
+    "quotes": [
+      "see eg https://11011110.github.io/blog/2026/03/01/making-accessible-latex.html"
+    ],
+    "first_seen": "2026-10-08T02:44:52.463447+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://ada.gov/law-and-regs/regulations/title-ii-2010-regulations",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1ryh7md/new_ada_law_forces_professors_to_take_down_their/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 5,
+    "quotes": [
+      "PLEASE READ.  I'm heading document remediation for a bureau in my municipality.      There are exceptions to the web and mobile accessibility, a major one being content that serves as reference material for archival purposes. We found out t"
+    ],
+    "first_seen": "2026-10-08T02:44:52.463433+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://ada.gov/resources/web-rule-first-steps",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1ryh7md/new_ada_law_forces_professors_to_take_down_their/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 3,
+    "quotes": [
+      "[https://www.ada.gov/resources/web-rule-first-steps/](https://www.ada.gov/resources/web-rule-first-steps/)  [https://onlinelearningconsortium.org/olc-insights/2025/09/federal-digital-a11y-requirements/](https://onlinelearningconsortium.org/"
+    ],
+    "first_seen": "2026-10-08T02:44:52.463645+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://alexwellerstein.com/writing/books/restricted-data",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1pewzau/ama_i_am_alex_wellerstein_historian_of_science/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 7,
+    "quotes": [
+      "This is a big question! It's one I've talked about in some previous answers on Soviet espionage, like [this one](https://www.reddit.com/r/AskHistorians/comments/1iiwudu/how_successful_was_the_ussr_espionage_campaign_in/) from a year or so a"
+    ],
+    "first_seen": "2026-10-08T02:44:52.462246+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://alexwellerstein.com/writing/books/the-most-awful-responsibility/documents",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1pewzau/ama_i_am_alex_wellerstein_historian_of_science/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 68,
+    "quotes": [
+      "Great question! (And first question!)  I have two answers to this. One is that a lot of this book came out of my contemplation of a [very odd journal entry](https://alexwellerstein.com/writing/books/the-most-awful-responsibility/documents/#"
+    ],
+    "first_seen": "2026-10-08T02:44:52.459928+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://alexwellerstein.com/writing/books/the-most-awful-responsibility/photos",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1pewzau/ama_i_am_alex_wellerstein_historian_of_science/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 26,
+    "quotes": [
+      "They basically had no \"real\" plans at that point. What they had were studies, with evocative names like BROILER and BUSHWACKER and HALFMOON, which were not yet \"operational plans\" in any real sense. The bombs were not really in the possessi"
+    ],
+    "first_seen": "2026-10-08T02:44:52.460937+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://alexwellerstein.com/writing/books/the-most-awful-responsibility/signed",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1pewzau/ama_i_am_alex_wellerstein_historian_of_science/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 10,
+    "quotes": [
+      "1. I don't see _any_ evidence his journals were written with a false historical record in mind. If they were... he did a poor job of it, because they look very confused and naive at times, and he never used them for that purpose (they were "
+    ],
+    "first_seen": "2026-10-08T02:44:52.461905+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://ams.org/journals/notices/202301/rnoti-p68.pdf",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1ryh7md/new_ada_law_forces_professors_to_take_down_their/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 275,
+    "quotes": [
+      "This reminds me of when Berkeley took down all its freely available online lecture videos because they'd have to get someone to caption all of them ([link](https://www.insidehighered.com/news/2017/03/06/u-california-berkeley-delete-publicly"
+    ],
+    "first_seen": "2026-10-08T02:44:52.463144+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://amzn.in/d/03dOVtuh",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/MathOlympiad/comments/1wg8ao5/olympiad_algebra_book_is_out/"
+    ],
+    "subreddits": [
+      "r/MathOlympiad"
+    ],
+    "field_guess": "math",
+    "upvotes": 1,
+    "quotes": [
+      "The paperback is not available in India, Amazon does not provide printing there but here is the link for ebook:   https://amzn.in/d/03dOVtuh  Make sure you are on Amazon.in the price there is 599 inr"
+    ],
+    "first_seen": "2026-10-08T02:44:52.470179+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://app.gptzero.me/documents/7025727a-0639-40c8-a95a-2e56d1aaa0a9",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/APStudents/comments/1stzf9h/got_tired_of_trying_to_find_free_ap_resources_so/"
+    ],
+    "subreddits": [
+      "r/APStudents"
+    ],
+    "field_guess": "interdisciplinary",
+    "upvotes": -1,
+    "quotes": [
+      "[https://app.gptzero.me/documents/7025727a-0639-40c8-a95a-2e56d1aaa0a9](https://app.gptzero.me/documents/7025727a-0639-40c8-a95a-2e56d1aaa0a9) ai generated website n post count ur days my clawdbots are currently finding vurnabilities in ur "
+    ],
+    "first_seen": "2026-10-08T02:44:52.465738+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://archive.org/details/boyelectrician00morg_0/page/n17/mode/2up",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskElectronics/comments/1tnnol6/looking_for_resources_for_learning_about/"
+    ],
+    "subreddits": [
+      "r/AskElectronics"
+    ],
+    "field_guess": "engineering",
+    "upvotes": 1,
+    "quotes": [
+      "If you want to start at the basics, [start at the basics](https://archive.org/details/boyelectrician00morg_0/page/n17/mode/2up)"
+    ],
+    "first_seen": "2026-10-08T02:44:52.465526+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://ari.games",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/gamedev/comments/1s5qify/are_coding_tutorials_in_general_including_game/"
+    ],
+    "subreddits": [
+      "r/gamedev"
+    ],
+    "field_guess": "design",
+    "upvotes": 40,
+    "quotes": [
+      "If you want 'advanced' things. It almost will never be in a video tutorial.    What I do is look for blog/posts, sample projects, templates, sometimes patreon, or other places.   Also like I do a few advanced things and I post my stuff on g"
+    ],
+    "first_seen": "2026-10-08T02:44:52.456564+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://arxiv.org/abs/1901.10420",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/Physics/comments/1uaa4h5/i_just_finished_david_tongs_qft_lectures_if_gauge/"
+    ],
+    "subreddits": [
+      "r/Physics"
+    ],
+    "field_guess": "physics",
+    "upvotes": 8,
+    "quotes": [
+      "&gt;If gauge symmetry is just a redundancy in our description, why does it seem to have such a powerful influence on the real world? Why do actual, measurable particles appear when we enforce it? If it\u2019s only a feature of our mathematical l"
+    ],
+    "first_seen": "2026-10-08T02:44:52.470454+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://arxiv.org/abs/2409.09211",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/Physics/comments/1uaa4h5/i_just_finished_david_tongs_qft_lectures_if_gauge/"
+    ],
+    "subreddits": [
+      "r/Physics"
+    ],
+    "field_guess": "physics",
+    "upvotes": 8,
+    "quotes": [
+      "&gt;If gauge symmetry is just a redundancy in our description, why does it seem to have such a powerful influence on the real world? Why do actual, measurable particles appear when we enforce it? If it\u2019s only a feature of our mathematical l"
+    ],
+    "first_seen": "2026-10-08T02:44:52.470456+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://automatetheboringstuff.com/3e",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1q4ymof/2000_free_sign_ups_for_the_automate_the_boring/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 9,
+    "quotes": [
+      "Thanks everyone for the kind words. In its heyday, this course would get 10,000, 15,000 or even up to 40,000 sign ups per month when I'd post it to this sub. Udemy now limits me to 2,000 per month, and even then I only get about half of tha"
+    ],
+    "first_seen": "2026-10-08T02:44:52.468954+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://betterworldbooks.com/product/detail/a-cultural-history-of-physics-9781032690988",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskPhysics/comments/1oy8plh/is_there_a_textbook_that_teaches_not_the_results/"
+    ],
+    "subreddits": [
+      "r/AskPhysics"
+    ],
+    "field_guess": "physics",
+    "upvotes": 5,
+    "quotes": [
+      "A marvelous beautiful and far too underrated book that comes very close to what you are asking (but it includes results too):  https://www.betterworldbooks.com/product/detail/a-cultural-history-of-physics-9781032690988  This is one of those"
+    ],
+    "first_seen": "2026-10-08T02:44:52.464242+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://blog.nuclearsecrecy.com/2016/09/30/fdr-and-the-bomb",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1pewzau/ama_i_am_alex_wellerstein_historian_of_science/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 8,
+    "quotes": [
+      "Oof, the question about FDR is hard to answer succinctly! Let me just say that there is an interesting tension between \"what anyone knew about what FDR wanted\" (very limited) and \"what people claimed was FDR's intention\" (coincidentally wha"
+    ],
+    "first_seen": "2026-10-08T02:44:52.461842+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://bsky.app/profile/askhistorians.bsky.social",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1qa87p1/what_are_the_best_resources_to_teach_teens_about/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 2,
+    "quotes": [
+      "Welcome to /r/AskHistorians. **Please [Read Our Rules](https://www.reddit.com/r/AskHistorians/wiki/rules) before you comment in this community**. Understand that [rule breaking comments get removed](https://www.reddit.com/r/AskHistorians/co"
+    ],
+    "first_seen": "2026-10-08T02:44:52.455174+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://cambridge.org/cetto-delapena",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/Physics/comments/1r1mzup/free_quantum_mechanics_book_quantum_mechanics_a/"
+    ],
+    "subreddits": [
+      "r/Physics"
+    ],
+    "field_guess": "physics",
+    "upvotes": 4,
+    "quotes": [
+      "The link is in the last page of the preface: [https://www.cambridge.org/cetto-delapena](https://www.cambridge.org/cetto-delapena)  I found the solutions pdf under the resources tab on that page."
+    ],
+    "first_seen": "2026-10-08T02:44:52.471627+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://cambridge.org/core/books/abs/interaction-and-grammar/when-i-come-down-im-in-the-domain-state-grammar-and-graphic-representation-in-the-interpretive-activity-of-physicists/46D13A6117E9D8623C3C490A1BF723DF",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnmath/comments/1tbw24n/can_someone_rediscover_mathematical_concepts/"
+    ],
+    "subreddits": [
+      "r/learnmath"
+    ],
+    "field_guess": "math",
+    "upvotes": 2,
+    "quotes": [
+      "Grothendieck derived the Lebesgue integral as an undergrad at Montepellier. For the first time in his life he was totally ensconced in a mathematical atmosphere, surrounded by professors with whom he reportedly spoke as an equal. Thus what "
+    ],
+    "first_seen": "2026-10-08T02:44:52.468658+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://cambridge.org/core/books/many-variations-of-mahler-measures/29DB6CD1A87B356AD304DED9ECC9F4EE",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1psbkjg/best_math_book_you_read_in_2025/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 7,
+    "quotes": [
+      "Many Variations of Mahler Measures, A Lasting Symphony  [https://www.cambridge.org/core/books/many-variations-of-mahler-measures/29DB6CD1A87B356AD304DED9ECC9F4EE](https://www.cambridge.org/core/books/many-variations-of-mahler-measures/29DB6"
+    ],
+    "first_seen": "2026-10-08T02:44:52.467754+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://codeinplace.stanford.edu",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1rqoj2z/zero_programming_knowledge_but_i_want_to_learn/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 2,
+    "quotes": [
+      "Hey, I'm also a new learner, starting from basically zero (took a C++ class in high school, over 25 years ago, so I don't really count that).  I found this course from Stanford that is online, includes a live session with a teacher once a w"
+    ],
+    "first_seen": "2026-10-08T02:44:52.464610+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://codewars.com/collections/basic-python",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1pkwmt8/struggling_to_remember_python_syntax_after_udemy/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 12,
+    "quotes": [
+      "Codewars is pretty good \u2014 https://www.codewars.com/collections/basic-python"
+    ],
+    "first_seen": "2026-10-08T02:44:52.471319+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://codingbat.com/python",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1wf7xie/looking_for_python_resources/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 23,
+    "quotes": [
+      "Continue with CS50p. It will give you a solid foundation.  Also, the MOOC [Python Programming 2026](https://programming-26.mooc.fi) is a great free resource.  Also, take a look at https://inventwithpython.com and https://automatetheboringst"
+    ],
+    "first_seen": "2026-10-08T02:44:52.469406+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://coursera.org/professional-certificates/google-it-automation",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1wqvvz6/whats_the_best_it_course_or_book_youve_ever_taken/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 18,
+    "quotes": [
+      "https://www.coursera.org/professional-certificates/google-it-automation"
+    ],
+    "first_seen": "2026-10-08T02:44:52.470279+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://coursera.org/professional-certificates/google-it-support",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1wqvvz6/whats_the_best_it_course_or_book_youve_ever_taken/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 35,
+    "quotes": [
+      "I got you fam:  * [UC San Diego | Duke: OOP in Java](https://www.coursera.org/specializations/object-oriented-programming) \\-&gt; I took it after my intro to programming class in college, so my level was probably still in the \"beginner\" ran"
+    ],
+    "first_seen": "2026-10-08T02:44:52.470262+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://coursera.org/specializations/boulder-data-structures-algorithms",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1wqvvz6/whats_the_best_it_course_or_book_youve_ever_taken/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 35,
+    "quotes": [
+      "I got you fam:  * [UC San Diego | Duke: OOP in Java](https://www.coursera.org/specializations/object-oriented-programming) \\-&gt; I took it after my intro to programming class in college, so my level was probably still in the \"beginner\" ran"
+    ],
+    "first_seen": "2026-10-08T02:44:52.470266+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://coursera.org/specializations/dartmouth-practical-machine-learning",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1wqvvz6/whats_the_best_it_course_or_book_youve_ever_taken/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 35,
+    "quotes": [
+      "I got you fam:  * [UC San Diego | Duke: OOP in Java](https://www.coursera.org/specializations/object-oriented-programming) \\-&gt; I took it after my intro to programming class in college, so my level was probably still in the \"beginner\" ran"
+    ],
+    "first_seen": "2026-10-08T02:44:52.470267+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://coursera.org/specializations/object-oriented-analysis-design",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1wqvvz6/whats_the_best_it_course_or_book_youve_ever_taken/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 35,
+    "quotes": [
+      "I got you fam:  * [UC San Diego | Duke: OOP in Java](https://www.coursera.org/specializations/object-oriented-programming) \\-&gt; I took it after my intro to programming class in college, so my level was probably still in the \"beginner\" ran"
+    ],
+    "first_seen": "2026-10-08T02:44:52.470264+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://coursera.org/specializations/object-oriented-programming",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1wqvvz6/whats_the_best_it_course_or_book_youve_ever_taken/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 35,
+    "quotes": [
+      "I got you fam:  * [UC San Diego | Duke: OOP in Java](https://www.coursera.org/specializations/object-oriented-programming) \\-&gt; I took it after my intro to programming class in college, so my level was probably still in the \"beginner\" ran"
+    ],
+    "first_seen": "2026-10-08T02:44:52.470261+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://cs.ossu.dev/coursepages/intro-cs",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1vjrhri/some_learning_resources_for_those_starting_out_my/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 2,
+    "quotes": [
+      "https://cs.ossu.dev/coursepages/intro-cs/"
+    ],
+    "first_seen": "2026-10-08T02:44:52.471106+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://cs50.harvard.edu/python",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1rqoj2z/zero_programming_knowledge_but_i_want_to_learn/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 1,
+    "quotes": [
+      "This is a nice introduction to python and programming: [https://cs50.harvard.edu/python/](https://cs50.harvard.edu/python/) ."
+    ],
+    "first_seen": "2026-10-08T02:44:52.464733+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://dev.epicgames.com/community/unreal-engine/learning",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/gamedev/comments/1s5qify/are_coding_tutorials_in_general_including_game/"
+    ],
+    "subreddits": [
+      "r/gamedev"
+    ],
+    "field_guess": "design",
+    "upvotes": 40,
+    "quotes": [
+      "If you want 'advanced' things. It almost will never be in a video tutorial.    What I do is look for blog/posts, sample projects, templates, sometimes patreon, or other places.   Also like I do a few advanced things and I post my stuff on g"
+    ],
+    "first_seen": "2026-10-08T02:44:52.456567+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://developer.mozilla.org/en-US/docs/Web/MathML",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1ryh7md/new_ada_law_forces_professors_to_take_down_their/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 3,
+    "quotes": [
+      "[https://developer.mozilla.org/en-US/docs/Web/MathML](https://developer.mozilla.org/en-US/docs/Web/MathML)"
+    ],
+    "first_seen": "2026-10-08T02:44:52.463606+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://digitallibrary.un.org/record/209570?v=pdf",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1pewzau/ama_i_am_alex_wellerstein_historian_of_science/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 9,
+    "quotes": [
+      "The UN was definitely not founded to prevent atomic war. But it was founded to prevent war, and some of those involved in its earliest planning were aware of the atomic bomb project, and were thinking about it in the back of their minds. Ju"
+    ],
+    "first_seen": "2026-10-08T02:44:52.462150+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://dn790008.ca.archive.org/0/items/chem-7-zumdahl/Zumdahl_Text.pdf",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/chemistry/comments/1ppucoj/chemistry_resources_that_explain_everything_every/"
+    ],
+    "subreddits": [
+      "r/chemistry"
+    ],
+    "field_guess": "biology",
+    "upvotes": 4,
+    "quotes": [
+      "[Zumdahl pdf](https://dn790008.ca.archive.org/0/items/chem-7-zumdahl/Zumdahl_Text.pdf)"
+    ],
+    "first_seen": "2026-10-08T02:44:52.470858+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://docs.google.com/document/d/1Ey5JglB6vmHF3VmNP98e65EtzBS6ZWYjxxFJHAPeJuw/edit?usp=sharing",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/writing/comments/1s3douq/draft_finished_now_i_need_to_revise_it_any_advice/"
+    ],
+    "subreddits": [
+      "r/writing"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 8,
+    "quotes": [
+      "*The Elements of Style* deserves the status of classic. I think it's best read along with one of E. B. White's novels, like *Charlotte's Web,* to see the lessons applied in practice.  *The First Five Pages,* is a book on editing from the pe"
+    ],
+    "first_seen": "2026-10-08T02:44:52.468790+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://docs.pytest.org/en/stable/getting-started.html",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1vs2nr2/best_python_books_from_beginner_to_advanced/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 2,
+    "quotes": [
+      "I don't think there's a single resource that covers all that, especially for a book, but my personal recommendation would be  1. Start with the Python MOOC: https://programming-26.mooc.fi/ 2. Skim through the Pytest documentation: https://d"
+    ],
+    "first_seen": "2026-10-08T02:44:52.469670+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://doomsdaymachines.net",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1pewzau/ama_i_am_alex_wellerstein_historian_of_science/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 27,
+    "quotes": [
+      "First, thanks! Also you should maybe also check out [DOOMSDAY MACHINES](https://doomsdaymachines.net/) if you like my other blog, as I update it much more often (usually weekly!).  Second, I don't really know what the data shows on this, so"
+    ],
+    "first_seen": "2026-10-08T02:44:52.461116+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://doomsdaymachines.net/p/pantex-employee-photos-1980s",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1pewzau/ama_i_am_alex_wellerstein_historian_of_science/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 34,
+    "quotes": [
+      "As far as I know, Truman never saw an atomic bomb in person. He many times expressed the desire to see one detonated during testing -- from Crossroads (1946) through the end of his administration. But he never did it. Which itself is an int"
+    ],
+    "first_seen": "2026-10-08T02:44:52.460126+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://drive.google.com/drive/folders/19uhcuWNOF2kb7Etvj6WNpTyVspU9AgQr?usp=sharing",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/statistics/comments/1ssasq3/e_good_textbook_on_linear_algebra_for_statistics/"
+    ],
+    "subreddits": [
+      "r/statistics"
+    ],
+    "field_guess": "math",
+    "upvotes": 1,
+    "quotes": [
+      "i just got a copy of Linear Algebra, Data Science and Machine Learning by jeff calder and peter j oliver.  it does linear algebra, optimization and applications. everything is approached with linear algebra (it seems, so far).  heres the pd"
+    ],
+    "first_seen": "2026-10-08T02:44:52.471809+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://eftaylor.com/spacetimephysics",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/PhysicsStudents/comments/1pclanm/looking_for_textbooks_recommendations_on_sr/"
+    ],
+    "subreddits": [
+      "r/PhysicsStudents"
+    ],
+    "field_guess": "physics",
+    "upvotes": 6,
+    "quotes": [
+      "It\u2019s hard to beat Taylor and Wheeler\u2019s classic *Spacetime Physics*, available for free download:  https://www.eftaylor.com/spacetimephysics/"
+    ],
+    "first_seen": "2026-10-08T02:44:52.471821+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://ehmatthes.github.io/pcc_3e",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1rqoj2z/zero_programming_knowledge_but_i_want_to_learn/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 2,
+    "quotes": [
+      "[Python Crash Course, Third Edition](https://ehmatthes.github.io/pcc_3e/) This book is written for people with no coding knowledge at all. I can attest to that."
+    ],
+    "first_seen": "2026-10-08T02:44:52.464648+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://eleccircuit.com",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskElectronics/comments/1tnnol6/looking_for_resources_for_learning_about/"
+    ],
+    "subreddits": [
+      "r/AskElectronics"
+    ],
+    "field_guess": "engineering",
+    "upvotes": 2,
+    "quotes": [
+      "https://www.eleccircuit.com/  This guy has a bunch of good projects. Make sure to check the comments if something isn't working quite right. Lots of things get addressed by both the author and others, including alternative parts that may no"
+    ],
+    "first_seen": "2026-10-08T02:44:52.465450+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/A_Small_Circus",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1qa87p1/what_are_the_best_resources_to_teach_teens_about/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 57,
+    "quotes": [
+      "With this I think it is worth making the point that it is very easy to interpret Animal Farm as a critique just of Socialism/Communism and draw the wrong conclusions for the book (which is how we end up with many on the right using it as an"
+    ],
+    "first_seen": "2026-10-08T02:44:52.455045+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Automorphic_Forms_on_GL(2)",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1payrgv/why_are_springers_lecture_notes_in_mathematics_so/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 13,
+    "quotes": [
+      "Serre\u2019s book on Galois cohomology, both the original French version in 1964 and the English translation in 1997, is in the LNM series. Anyone learning Galois cohomology will come across this volume (although there are more recent books on t"
+    ],
+    "first_seen": "2026-10-08T02:44:52.466480+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Every_Man_Dies_Alone",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1qa87p1/what_are_the_best_resources_to_teach_teens_about/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 57,
+    "quotes": [
+      "With this I think it is worth making the point that it is very easy to interpret Animal Farm as a critique just of Socialism/Communism and draw the wrong conclusions for the book (which is how we end up with many on the right using it as an"
+    ],
+    "first_seen": "2026-10-08T02:44:52.455047+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Forrest_Mims",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskElectronics/comments/1tnnol6/looking_for_resources_for_learning_about/"
+    ],
+    "subreddits": [
+      "r/AskElectronics"
+    ],
+    "field_guess": "engineering",
+    "upvotes": 6,
+    "quotes": [
+      "God fucking dammit.  I've used Mims' books since I was a kid. I was 50 years old when I learned Mims is a crackpot christianist.  https://en.wikipedia.org/wiki/Forrest_Mims#Controversy"
+    ],
+    "first_seen": "2026-10-08T02:44:52.465166+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Operation_Emery",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1pewzau/ama_i_am_alex_wellerstein_historian_of_science/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 34,
+    "quotes": [
+      "As far as I know, Truman never saw an atomic bomb in person. He many times expressed the desire to see one detonated during testing -- from Crossroads (1946) through the end of his administration. But he never did it. Which itself is an int"
+    ],
+    "first_seen": "2026-10-08T02:44:52.460120+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/The_Wave_(2008_film)",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1qa87p1/what_are_the_best_resources_to_teach_teens_about/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 73,
+    "quotes": [
+      "Hi, another teacher of high school social sciences here, for 19 years and counting. I love and co-recommend the suggestions above, and just want to add some video suggestions, for it might be a bit easier for a teen that young to accept.   "
+    ],
+    "first_seen": "2026-10-08T02:44:52.454777+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://epubs.siam.org/pb-assets/author\\_guidelines\\_accessible\\_mathematics.pdf",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1ryh7md/new_ada_law_forces_professors_to_take_down_their/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 275,
+    "quotes": [
+      "This reminds me of when Berkeley took down all its freely available online lecture videos because they'd have to get someone to caption all of them ([link](https://www.insidehighered.com/news/2017/03/06/u-california-berkeley-delete-publicly"
+    ],
+    "first_seen": "2026-10-08T02:44:52.463150+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://epubs.siam.org/pb-assets/author_guidelines_accessible_mathematics.pdf",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1ryh7md/new_ada_law_forces_professors_to_take_down_their/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 275,
+    "quotes": [
+      "This reminds me of when Berkeley took down all its freely available online lecture videos because they'd have to get someone to caption all of them ([link](https://www.insidehighered.com/news/2017/03/06/u-california-berkeley-delete-publicly"
+    ],
+    "first_seen": "2026-10-08T02:44:52.463152+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://exercism.org",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1wf7xie/looking_for_python_resources/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 23,
+    "quotes": [
+      "Continue with CS50p. It will give you a solid foundation.  Also, the MOOC [Python Programming 2026](https://programming-26.mooc.fi) is a great free resource.  Also, take a look at https://inventwithpython.com and https://automatetheboringst"
+    ],
+    "first_seen": "2026-10-08T02:44:52.469407+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://extremism.gwu.edu/how-talk-your-son-about-fascism",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1qa87p1/what_are_the_best_resources_to_teach_teens_about/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 522,
+    "quotes": [
+      "Hope the moderates let this be a bit more of an open thread, but I work professionally in politics and have been engaged in the rise of the right over the past 15 years, and studying the rise of global extremism. But this will likely be a p"
+    ],
+    "first_seen": "2026-10-08T02:44:52.454461+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://flassari.notion.site/Ari-s-Unreal-Engine-Notes-1a75e43f4014464984d4fae0617e5cef",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/gamedev/comments/1s5qify/are_coding_tutorials_in_general_including_game/"
+    ],
+    "subreddits": [
+      "r/gamedev"
+    ],
+    "field_guess": "design",
+    "upvotes": 40,
+    "quotes": [
+      "If you want 'advanced' things. It almost will never be in a video tutorial.    What I do is look for blog/posts, sample projects, templates, sometimes patreon, or other places.   Also like I do a few advanced things and I post my stuff on g"
+    ],
+    "first_seen": "2026-10-08T02:44:52.456566+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://freecodecamp.org",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1oz1x3q/best_online_coding_course/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 5,
+    "quotes": [
+      "\\- [Automate the Boring Stuff with Python](https://automatetheboringstuff.com/) | a great **free** first option  NOTE: You shouldn't have to pay a dime to get the foundations, cos there's so much great **free** material out there. The ones "
+    ],
+    "first_seen": "2026-10-08T02:44:52.467388+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://fullstackopen.com/en",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1oz1x3q/best_online_coding_course/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 5,
+    "quotes": [
+      "\\- [Automate the Boring Stuff with Python](https://automatetheboringstuff.com/) | a great **free** first option  NOTE: You shouldn't have to pay a dime to get the foundations, cos there's so much great **free** material out there. The ones "
+    ],
+    "first_seen": "2026-10-08T02:44:52.467390+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://git-scm.com/book/en/v2",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1wlmea9/best_resources_to_learn_git_as_a_complete_beginner/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 11,
+    "quotes": [
+      "https://git-scm.com/book/en/v2"
+    ],
+    "first_seen": "2026-10-08T02:44:52.464821+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://gitbybit.com",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1wlmea9/best_resources_to_learn_git_as_a_complete_beginner/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 2,
+    "quotes": [
+      "Found this resource a bit ago:   [https://gitbybit.com/](https://gitbybit.com/)  Hope it helps!"
+    ],
+    "first_seen": "2026-10-08T02:44:52.464900+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://github.com/Asabeneh/30-Days-Of-Python",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1ob3s7s/what_are_the_best_freelowcost_resources_for_a/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 1,
+    "quotes": [
+      "I\u2019m going through this one. It challenges you. Very good resource and also free. https://github.com/Asabeneh/30-Days-Of-Python"
+    ],
+    "first_seen": "2026-10-08T02:44:52.467076+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://github.com/Diapolo10/python-ms",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1vs2nr2/best_python_books_from_beginner_to_advanced/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 2,
+    "quotes": [
+      "I don't think there's a single resource that covers all that, especially for a book, but my personal recommendation would be  1. Start with the Python MOOC: https://programming-26.mooc.fi/ 2. Skim through the Pytest documentation: https://d"
+    ],
+    "first_seen": "2026-10-08T02:44:52.469677+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://github.com/Diapolo10/python-uv-template",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1vs2nr2/best_python_books_from_beginner_to_advanced/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 2,
+    "quotes": [
+      "I don't think there's a single resource that covers all that, especially for a book, but my personal recommendation would be  1. Start with the Python MOOC: https://programming-26.mooc.fi/ 2. Skim through the Pytest documentation: https://d"
+    ],
+    "first_seen": "2026-10-08T02:44:52.469676+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://github.com/PreTeXtBook/pretext-tools",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1ryh7md/new_ada_law_forces_professors_to_take_down_their/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 3,
+    "quotes": [
+      "PreTeXt (https://pretextbook.org/) is a great alternative that can automatically display math content in a variety of forms (PDF, HTML, Jupyter notebook, etc.) and is accessible. There are methods to try to automatically convert LaTeX to Pr"
+    ],
+    "first_seen": "2026-10-08T02:44:52.463399+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://github.com/Shaw9thDegree/DEED/blob/main/DEED\\_Ontology\\_Av1.pdf",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnmath/comments/1tbw24n/can_someone_rediscover_mathematical_concepts/"
+    ],
+    "subreddits": [
+      "r/learnmath"
+    ],
+    "field_guess": "math",
+    "upvotes": 2,
+    "quotes": [
+      "yes i did 9th grade drop out wrote this and im actually correct. [https://github.com/Shaw9thDegree/DEED/blob/main/DEED\\_Ontology\\_Av1.pdf](https://github.com/Shaw9thDegree/DEED/blob/main/DEED_Ontology_Av1.pdf)"
+    ],
+    "first_seen": "2026-10-08T02:44:52.468687+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://github.com/Shaw9thDegree/DEED/blob/main/DEED_Ontology_Av1.pdf",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnmath/comments/1tbw24n/can_someone_rediscover_mathematical_concepts/"
+    ],
+    "subreddits": [
+      "r/learnmath"
+    ],
+    "field_guess": "math",
+    "upvotes": 2,
+    "quotes": [
+      "yes i did 9th grade drop out wrote this and im actually correct. [https://github.com/Shaw9thDegree/DEED/blob/main/DEED\\_Ontology\\_Av1.pdf](https://github.com/Shaw9thDegree/DEED/blob/main/DEED_Ontology_Av1.pdf)"
+    ],
+    "first_seen": "2026-10-08T02:44:52.468689+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://github.com/alaricmoore/MiniEngineeringNotebooks",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskElectronics/comments/1tnnol6/looking_for_resources_for_learning_about/"
+    ],
+    "subreddits": [
+      "r/AskElectronics"
+    ],
+    "field_guess": "engineering",
+    "upvotes": 14,
+    "quotes": [
+      "[https://github.com/alaricmoore/MiniEngineeringNotebooks](https://github.com/alaricmoore/MiniEngineeringNotebooks)  you are all welcome"
+    ],
+    "first_seen": "2026-10-08T02:44:52.465184+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://github.com/ossu/computer-science",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1v6ipkx/are_books_online_sources_in_your_opinion/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 3,
+    "quotes": [
+      "The entire argument of one over the other is a fallacy.  You don't have to look further than these to realize that online material can provide the equivalent of an entire univerity degree for free:  https://github.com/ossu/computer-science "
+    ],
+    "first_seen": "2026-10-08T02:44:52.467588+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://gitimmersion.com/index.html",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1wlmea9/best_resources_to_learn_git_as_a_complete_beginner/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 6,
+    "quotes": [
+      "Highly recommend [Git Immersion](https://gitimmersion.com/index.html). It's step by step and interactive. Does not go in deep in theory, but shows the practical commands from the basics to fairly advanced ones.  I also liked [The Git Parabl"
+    ],
+    "first_seen": "2026-10-08T02:44:52.464864+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://hal.science/hal-01286494v1/document",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnmath/comments/1tbw24n/can_someone_rediscover_mathematical_concepts/"
+    ],
+    "subreddits": [
+      "r/learnmath"
+    ],
+    "field_guess": "math",
+    "upvotes": 2,
+    "quotes": [
+      "Grothendieck derived the Lebesgue integral as an undergrad at Montepellier. For the first time in his life he was totally ensconced in a mathematical atmosphere, surrounded by professors with whom he reportedly spoke as an equal. Thus what "
+    ],
+    "first_seen": "2026-10-08T02:44:52.468660+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://hup.harvard.edu/books/9780674976085",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1pewzau/ama_i_am_alex_wellerstein_historian_of_science/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 13,
+    "quotes": [
+      "I agree 100%. And that is exactly how the ideas of MAD/deterrence are deployed rhetorically and politically. (Similarly the idea of a \"nuclear triad\" was invented specifically for cutting off discussions about decommissioning land-based mis"
+    ],
+    "first_seen": "2026-10-08T02:44:52.461062+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://hup.harvard.edu/books/9780674976085Z",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1pewzau/ama_i_am_alex_wellerstein_historian_of_science/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 9,
+    "quotes": [
+      "That's a great question, and not one that I have thought about much! My sense is pretty hands-off for the parts of it that I care about? But it also wasn't quite as large and developed as it became in the 1950s, when the industrial side of "
+    ],
+    "first_seen": "2026-10-08T02:44:52.461292+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://i0.wp.com/alexwellerstein.com/wp-content/uploads/2025/07/Atomic-custody-graph-1945-1960.png?ssl=1",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1pewzau/ama_i_am_alex_wellerstein_historian_of_science/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 15,
+    "quotes": [
+      "Eisenhower's own position evolved over his presidency. Before his presidency, he was much more cavalier about the use of nukes in future war than Truman ever was, while at the same time critical of how they were used in World War II. There "
+    ],
+    "first_seen": "2026-10-08T02:44:52.461408+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://i0.wp.com/alexwellerstein.com/wp-content/uploads/2025/11/1950-04-SAC-OFFTACKLE-E6-attack-from-UK.jpg?ssl=1",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1pewzau/ama_i_am_alex_wellerstein_historian_of_science/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 26,
+    "quotes": [
+      "They basically had no \"real\" plans at that point. What they had were studies, with evocative names like BROILER and BUSHWACKER and HALFMOON, which were not yet \"operational plans\" in any real sense. The bombs were not really in the possessi"
+    ],
+    "first_seen": "2026-10-08T02:44:52.460939+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://i0.wp.com/alexwellerstein.com/wp-content/uploads/2025/11/1950-04-SAC-OFFTACKLE-targets-USSR.jpg?ssl=1",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1pewzau/ama_i_am_alex_wellerstein_historian_of_science/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 26,
+    "quotes": [
+      "They basically had no \"real\" plans at that point. What they had were studies, with evocative names like BROILER and BUSHWACKER and HALFMOON, which were not yet \"operational plans\" in any real sense. The bombs were not really in the possessi"
+    ],
+    "first_seen": "2026-10-08T02:44:52.460934+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://imdb.com/title/tt1063669",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1qa87p1/what_are_the_best_resources_to_teach_teens_about/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 73,
+    "quotes": [
+      "Hi, another teacher of high school social sciences here, for 19 years and counting. I love and co-recommend the suggestions above, and just want to add some video suggestions, for it might be a bit easier for a teen that young to accept.   "
+    ],
+    "first_seen": "2026-10-08T02:44:52.454780+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://indigo.ca/en-ca/the-joy-of-x-a-guided-tour-of-math-from-one-to-infinity/9780544105850.html",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnmath/comments/1qa1jo1/i_am_weak_in_math_and_want_to_fix_my_foundation/"
+    ],
+    "subreddits": [
+      "r/learnmath"
+    ],
+    "field_guess": "math",
+    "upvotes": 3,
+    "quotes": [
+      "The Joy of X, by Steven Strogatz. You can read a preview here:  https://www.indigo.ca/en-ca/the-joy-of-x-a-guided-tour-of-math-from-one-to-infinity/9780544105850.html"
+    ],
+    "first_seen": "2026-10-08T02:44:52.470063+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://insidehighered.com/news/2017/03/06/u-california-berkeley-delete-publicly-available-educational-content",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1ryh7md/new_ada_law_forces_professors_to_take_down_their/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 275,
+    "quotes": [
+      "This reminds me of when Berkeley took down all its freely available online lecture videos because they'd have to get someone to caption all of them ([link](https://www.insidehighered.com/news/2017/03/06/u-california-berkeley-delete-publicly"
+    ],
+    "first_seen": "2026-10-08T02:44:52.463137+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://inventwithpython.com",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1wf7xie/looking_for_python_resources/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 23,
+    "quotes": [
+      "Continue with CS50p. It will give you a solid foundation.  Also, the MOOC [Python Programming 2026](https://programming-26.mooc.fi) is a great free resource.  Also, take a look at https://inventwithpython.com and https://automatetheboringst"
+    ],
+    "first_seen": "2026-10-08T02:44:52.469402+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://itch.io/jam/liminal3",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/gamedev/comments/1s5qify/are_coding_tutorials_in_general_including_game/"
+    ],
+    "subreddits": [
+      "r/gamedev"
+    ],
+    "field_guess": "design",
+    "upvotes": 4,
+    "quotes": [
+      "I started game dev in earnest, end of summer 2025.  When I was a teen (2000s) I fiddled around with RPGmaker which taught me the very basic fundamentals like variabels etc, combined with high school IT lessons.   Into the 2010s, I tried sev"
+    ],
+    "first_seen": "2026-10-08T02:44:52.458596+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://itch.io/jam/liminal3/rate/3745854",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/gamedev/comments/1s5qify/are_coding_tutorials_in_general_including_game/"
+    ],
+    "subreddits": [
+      "r/gamedev"
+    ],
+    "field_guess": "design",
+    "upvotes": 4,
+    "quotes": [
+      "I started game dev in earnest, end of summer 2025.  When I was a teen (2000s) I fiddled around with RPGmaker which taught me the very basic fundamentals like variabels etc, combined with high school IT lessons.   Into the 2010s, I tried sev"
+    ],
+    "first_seen": "2026-10-08T02:44:52.458604+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://jstor.org/stable/2589114",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnmath/comments/1tbw24n/can_someone_rediscover_mathematical_concepts/"
+    ],
+    "subreddits": [
+      "r/learnmath"
+    ],
+    "field_guess": "math",
+    "upvotes": 17,
+    "quotes": [
+      "Ramanujan didn\u2019t only read one single textbook.  https://www.jstor.org/stable/2589114"
+    ],
+    "first_seen": "2026-10-08T02:44:52.468423+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://jwiegley.github.io/git-from-the-bottom-up",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1wlmea9/best_resources_to_learn_git_as_a_complete_beginner/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 1,
+    "quotes": [
+      "Surprised no one has put this up yet   https://jwiegley.github.io/git-from-the-bottom-up/   Great resource to understand the internals"
+    ],
+    "first_seen": "2026-10-08T02:44:52.465094+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://khanacademy.org/math/k-8-grades",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnmath/comments/1wtjj5t/best_mathematics_textbooks_or_sites_for_self_study/"
+    ],
+    "subreddits": [
+      "r/learnmath"
+    ],
+    "field_guess": "math",
+    "upvotes": 42,
+    "quotes": [
+      "All these resources are free.  Start here: [Prealgebra Professor Leonard](https://www.youtube.com/watch?v=cC7n_ZyVUns&amp;list=PL4C9296DF81B9EF13)  And follow this book: https://openstax.org/details/books/prealgebra-2e  Also you can use [Kh"
+    ],
+    "first_seen": "2026-10-08T02:44:52.469060+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://landelare.github.io",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/gamedev/comments/1s5qify/are_coding_tutorials_in_general_including_game/"
+    ],
+    "subreddits": [
+      "r/gamedev"
+    ],
+    "field_guess": "design",
+    "upvotes": 40,
+    "quotes": [
+      "If you want 'advanced' things. It almost will never be in a video tutorial.    What I do is look for blog/posts, sample projects, templates, sometimes patreon, or other places.   Also like I do a few advanced things and I post my stuff on g"
+    ],
+    "first_seen": "2026-10-08T02:44:52.456560+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://learngitbranching.js.org?locale=en_US",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1wlmea9/best_resources_to_learn_git_as_a_complete_beginner/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 54,
+    "quotes": [
+      "I GOT YOU, DOG  https://learngitbranching.js.org/?locale=en_US  This resource alone took me from being afraid to do anything but commit, push, and pull to feeling nearly like an expert. It's fun, too."
+    ],
+    "first_seen": "2026-10-08T02:44:52.464803+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://learnpythonthehardway.org",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1vs2nr2/best_python_books_from_beginner_to_advanced/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 1,
+    "quotes": [
+      "Learn Python The Hard Way  [https://learnpythonthehardway.org](https://learnpythonthehardway.org)"
+    ],
+    "first_seen": "2026-10-08T02:44:52.469707+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://leetware.ca",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskElectronics/comments/1tnnol6/looking_for_resources_for_learning_about/"
+    ],
+    "subreddits": [
+      "r/AskElectronics"
+    ],
+    "field_guess": "engineering",
+    "upvotes": 1,
+    "quotes": [
+      "If you\u2019re wanting to learn the core fundamentals any electrical engineer or hobbyist designer must know check out https://www.leetware.ca. They currently offer some free circuits fundamentals lessons, and are constantly adding more"
+    ],
+    "first_seen": "2026-10-08T02:44:52.465570+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://link.springer.com/book/10.1007/BFb0091027",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1payrgv/why_are_springers_lecture_notes_in_mathematics_so/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 13,
+    "quotes": [
+      "Serre\u2019s book on Galois cohomology, both the original French version in 1964 and the English translation in 1997, is in the LNM series. Anyone learning Galois cohomology will come across this volume (although there are more recent books on t"
+    ],
+    "first_seen": "2026-10-08T02:44:52.466483+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://m.youtube.com/@MoritzKlein0",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskElectronics/comments/1tnnol6/looking_for_resources_for_learning_about/"
+    ],
+    "subreddits": [
+      "r/AskElectronics"
+    ],
+    "field_guess": "engineering",
+    "upvotes": 3,
+    "quotes": [
+      "If you like synth music, [Moritz Klein](https://m.youtube.com/@MoritzKlein0) has some wonderful tutorials. The kits are nice to have but you don\u2019t need to buy them. You can just buy the parts and be on your way."
+    ],
+    "first_seen": "2026-10-08T02:44:52.465259+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://makershed.com/products/make-electronics-3rd-edition-print?srsltid=AfmBOoobCv3SIk8banlOLMKhmB4XHAyQFwURaCQetpYp\\_\\_s20xjYvZyy",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskElectronics/comments/1tnnol6/looking_for_resources_for_learning_about/"
+    ],
+    "subreddits": [
+      "r/AskElectronics"
+    ],
+    "field_guess": "engineering",
+    "upvotes": 5,
+    "quotes": [
+      "I'm new to electronics and I highly recommend the book, \"Make: Electronics Third Edition\" by Charles Platt.   It teaches from the ground up about electricity, about each electronic component and what it does by having you build circuits. He"
+    ],
+    "first_seen": "2026-10-08T02:44:52.465243+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://makershed.com/products/make-electronics-3rd-edition-print?srsltid=AfmBOoobCv3SIk8banlOLMKhmB4XHAyQFwURaCQetpYp__s20xjYvZyy",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskElectronics/comments/1tnnol6/looking_for_resources_for_learning_about/"
+    ],
+    "subreddits": [
+      "r/AskElectronics"
+    ],
+    "field_guess": "engineering",
+    "upvotes": 5,
+    "quotes": [
+      "I'm new to electronics and I highly recommend the book, \"Make: Electronics Third Edition\" by Charles Platt.   It teaches from the ground up about electricity, about each electronic component and what it does by having you build circuits. He"
+    ],
+    "first_seen": "2026-10-08T02:44:52.465245+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://marginstudy.app/resources",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnmath/comments/1wtjj5t/best_mathematics_textbooks_or_sites_for_self_study/"
+    ],
+    "subreddits": [
+      "r/learnmath"
+    ],
+    "field_guess": "math",
+    "upvotes": 0,
+    "quotes": [
+      "https://marginstudy.app/resources has a bunch of texts to get started"
+    ],
+    "first_seen": "2026-10-08T02:44:52.469158+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://mathopolis.com/questions/days.html",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnmath/comments/1qa1jo1/i_am_weak_in_math_and_want_to_fix_my_foundation/"
+    ],
+    "subreddits": [
+      "r/learnmath"
+    ],
+    "field_guess": "math",
+    "upvotes": 2,
+    "quotes": [
+      "A Mind for Numbers - How to excel at math and science even if you flunked algebra by Barbara Oakley  Also, https://www.mathopolis.com/questions/days.html Start at grade 1 and answer every question thru high school. If you get one wrong, rea"
+    ],
+    "first_seen": "2026-10-08T02:44:52.470107+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://mathoverflow.net/questions/282684/english-translation-of-m-f-vigneras-arithm%C3%A9tique-des-alg%C3%A8bres-de-quaternions",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1payrgv/why_are_springers_lecture_notes_in_mathematics_so/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 13,
+    "quotes": [
+      "Serre\u2019s book on Galois cohomology, both the original French version in 1964 and the English translation in 1997, is in the LNM series. Anyone learning Galois cohomology will come across this volume (although there are more recent books on t"
+    ],
+    "first_seen": "2026-10-08T02:44:52.466484+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://mathoverflow.net/questions/495726/why-is-galois-cohomology-usually-defined-only-for-discrete-modules",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1payrgv/why_are_springers_lecture_notes_in_mathematics_so/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 13,
+    "quotes": [
+      "Serre\u2019s book on Galois cohomology, both the original French version in 1964 and the English translation in 1997, is in the LNM series. Anyone learning Galois cohomology will come across this volume (although there are more recent books on t"
+    ],
+    "first_seen": "2026-10-08T02:44:52.466475+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://mathsisfun.com",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnmath/comments/1wtjj5t/best_mathematics_textbooks_or_sites_for_self_study/"
+    ],
+    "subreddits": [
+      "r/learnmath"
+    ],
+    "field_guess": "math",
+    "upvotes": 8,
+    "quotes": [
+      "https://mathsisfun.com/"
+    ],
+    "first_seen": "2026-10-08T02:44:52.469097+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://michel.talagrand.net/ULBSPRINGER.pdf",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1psbkjg/best_math_book_you_read_in_2025/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 5,
+    "quotes": [
+      "[Upper and Lower Bounds for Stochastic Processes](https://michel.talagrand.net/ULBSPRINGER.pdf) by Michel Talagrand"
+    ],
+    "first_seen": "2026-10-08T02:44:52.467736+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://mintstreet.io",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/gamedev/comments/1uhwd60/players_skip_tutorials_then_blame_the_game_so_i/"
+    ],
+    "subreddits": [
+      "r/gamedev"
+    ],
+    "field_guess": "design",
+    "upvotes": 1,
+    "quotes": [
+      "can you please give me insights about my tutorial in game. i worked very long time to make it as much as possible simple and clear but still fail to keep players during the tutorial or right after it. What I am missing?   [https://www.mints"
+    ],
+    "first_seen": "2026-10-08T02:44:52.455894+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://mxphi.com/wp-content/uploads/2026/03/AV.pdf",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnmath/comments/1tbw24n/can_someone_rediscover_mathematical_concepts/"
+    ],
+    "subreddits": [
+      "r/learnmath"
+    ],
+    "field_guess": "math",
+    "upvotes": 2,
+    "quotes": [
+      "Grothendieck derived the Lebesgue integral as an undergrad at Montepellier. For the first time in his life he was totally ensconced in a mathematical atmosphere, surrounded by professors with whom he reportedly spoke as an equal. Thus what "
+    ],
+    "first_seen": "2026-10-08T02:44:52.468656+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://nand2tetris.org",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1v6ipkx/are_books_online_sources_in_your_opinion/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 3,
+    "quotes": [
+      "The entire argument of one over the other is a fallacy.  You don't have to look further than these to realize that online material can provide the equivalent of an entire univerity degree for free:  https://github.com/ossu/computer-science "
+    ],
+    "first_seen": "2026-10-08T02:44:52.467593+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://nautilus.org/napsnet/napsnet-special-reports/nc3-decision-making-individual-versus-group-process",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1pewzau/ama_i_am_alex_wellerstein_historian_of_science/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 8,
+    "quotes": [
+      "[This paper of mine from a few years ago](https://nautilus.org/napsnet/napsnet-special-reports/nc3-decision-making-individual-versus-group-process/) tries to get at _some_ of this, and the sources it cites (particularly the Shaheen book) tr"
+    ],
+    "first_seen": "2026-10-08T02:44:52.461811+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://news.stanford.edu/stories/2024/11/marcus-feldman-on-evolving-evolution",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/biology/comments/1qbyqh3/books_on_evolution/"
+    ],
+    "subreddits": [
+      "r/biology"
+    ],
+    "field_guess": "biology",
+    "upvotes": 10,
+    "quotes": [
+      "From the list you share it seems you have a view on par with the general public.  IMO. However the ideas of Dawkins and Maynard Smith are getting rather old. They don't really represent current understanding of evolutionary processes.  I wo"
+    ],
+    "first_seen": "2026-10-08T02:44:52.471276+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://newyorker.com/tech/annals-of-technology/america-at-the-atomic-crossroads",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1pewzau/ama_i_am_alex_wellerstein_historian_of_science/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 31,
+    "quotes": [
+      "I think the emergence of \"atomic kitsch,\" especially in the wake of the first postwar atomic test series in 1946, is pretty fascinating. This is where we get the bikini swimsuit's name from, for example -- it was named after Pacific atoll ("
+    ],
+    "first_seen": "2026-10-08T02:44:52.460973+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1wf7xie/looking_for_python_resources/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 12,
+    "quotes": [
+      "If you are still this early in learning, I would caution against learning with Youtube Tutorials and AI.  Not because they are \"wrong\" ways to learn, but many beginners fall into the same traps using these: Both condition you to follow orde"
+    ],
+    "first_seen": "2026-10-08T02:44:52.469455+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://oeis.org",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnmath/comments/1tbw24n/can_someone_rediscover_mathematical_concepts/"
+    ],
+    "subreddits": [
+      "r/learnmath"
+    ],
+    "field_guess": "math",
+    "upvotes": 2,
+    "quotes": [
+      "In highschool, I thought about properties of mazes drawn on a square gird within a rectangle. I wrote something about this down and showed it to my math teacher. He returned it because I was using the letter 'A' for two things, something th"
+    ],
+    "first_seen": "2026-10-08T02:44:52.468591+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://ohio.maa.org/events",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1ryh7md/new_ada_law_forces_professors_to_take_down_their/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 7,
+    "quotes": [
+      "Folks here may be interested in an online workshop being hosted by the Ohio section of the MAA:  https://www.ohio.maa.org/events  The goal is to address exactly this. I'm sure there are other similar resources available, but hopefully shari"
+    ],
+    "first_seen": "2026-10-08T02:44:52.463324+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://ohmygit.org",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1wlmea9/best_resources_to_learn_git_as_a_complete_beginner/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 1,
+    "quotes": [
+      "I had fun with this one [https://ohmygit.org/](https://ohmygit.org/)"
+    ],
+    "first_seen": "2026-10-08T02:44:52.464980+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://ohshitgit.com",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1wlmea9/best_resources_to_learn_git_as_a_complete_beginner/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 1,
+    "quotes": [
+      "On top of everything else.  https://ohshitgit.com/"
+    ],
+    "first_seen": "2026-10-08T02:44:52.465034+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://onlinelearningconsortium.org/olc-insights/2025/09/federal-digital-a11y-requirements",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1ryh7md/new_ada_law_forces_professors_to_take_down_their/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 3,
+    "quotes": [
+      "[https://www.ada.gov/resources/web-rule-first-steps/](https://www.ada.gov/resources/web-rule-first-steps/)  [https://onlinelearningconsortium.org/olc-insights/2025/09/federal-digital-a11y-requirements/](https://onlinelearningconsortium.org/"
+    ],
+    "first_seen": "2026-10-08T02:44:52.463647+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://openstax.org/details/books/prealgebra-2e",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnmath/comments/1wtjj5t/best_mathematics_textbooks_or_sites_for_self_study/"
+    ],
+    "subreddits": [
+      "r/learnmath"
+    ],
+    "field_guess": "math",
+    "upvotes": 42,
+    "quotes": [
+      "All these resources are free.  Start here: [Prealgebra Professor Leonard](https://www.youtube.com/watch?v=cC7n_ZyVUns&amp;list=PL4C9296DF81B9EF13)  And follow this book: https://openstax.org/details/books/prealgebra-2e  Also you can use [Kh"
+    ],
+    "first_seen": "2026-10-08T02:44:52.469058+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://original.antiwar.com/leo-maley-uday-mohan/2007/11/26/conservative-revisionists-and-hiroshima",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1pewzau/ama_i_am_alex_wellerstein_historian_of_science/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 3,
+    "quotes": [
+      "What's your take on Uday Mohan's view of [conservative revisionism](https://original.antiwar.com/leo-maley-uday-mohan/2007/11/26/conservative-revisionists-and-hiroshima/) in the wake of Hiroshima?"
+    ],
+    "first_seen": "2026-10-08T02:44:52.462033+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://osti.gov/opennet/manhattan-project-history/Resources/order_drop.htm",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1pewzau/ama_i_am_alex_wellerstein_historian_of_science/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 9,
+    "quotes": [
+      "This is one way to look at it in retrospect, although does not quite capture the number of decisions and so on that evolved over the course of it. I don't think the military would have seen it this way, to put it another way, but I think it"
+    ],
+    "first_seen": "2026-10-08T02:44:52.461490+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://overleaf.com/latex/templates/testing-html-export-with-make4ht/rqcknjvwyyry",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1ryh7md/new_ada_law_forces_professors_to_take_down_their/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 3,
+    "quotes": [
+      "It is pretty straightforward to compile LaTeX to html, which screen readers can read. I use [this Overleaf template](https://www.overleaf.com/latex/templates/testing-html-export-with-make4ht/rqcknjvwyyry). In my experience the only real iss"
+    ],
+    "first_seen": "2026-10-08T02:44:52.463586+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://pbs.org/show/reconstruction-america-after-civil-war",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1qa87p1/what_are_the_best_resources_to_teach_teens_about/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 522,
+    "quotes": [
+      "Hope the moderates let this be a bit more of an open thread, but I work professionally in politics and have been engaged in the rise of the right over the past 15 years, and studying the rise of global extremism. But this will likely be a p"
+    ],
+    "first_seen": "2026-10-08T02:44:52.454623+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://peps.python.org/pep-0008",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1vs2nr2/best_python_books_from_beginner_to_advanced/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 2,
+    "quotes": [
+      "I don't think there's a single resource that covers all that, especially for a book, but my personal recommendation would be  1. Start with the Python MOOC: https://programming-26.mooc.fi/ 2. Skim through the Pytest documentation: https://d"
+    ],
+    "first_seen": "2026-10-08T02:44:52.469672+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://peps.python.org/pep-0257",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1vs2nr2/best_python_books_from_beginner_to_advanced/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 2,
+    "quotes": [
+      "I don't think there's a single resource that covers all that, especially for a book, but my personal recommendation would be  1. Start with the Python MOOC: https://programming-26.mooc.fi/ 2. Skim through the Pytest documentation: https://d"
+    ],
+    "first_seen": "2026-10-08T02:44:52.469673+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://peps.python.org/pep-0484",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1vs2nr2/best_python_books_from_beginner_to_advanced/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 2,
+    "quotes": [
+      "I don't think there's a single resource that covers all that, especially for a book, but my personal recommendation would be  1. Start with the Python MOOC: https://programming-26.mooc.fi/ 2. Skim through the Pytest documentation: https://d"
+    ],
+    "first_seen": "2026-10-08T02:44:52.469675+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://personal.math.ubc.ca/\\~tbjw/ila",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnmath/comments/1wnbdsk/please_guys_i_need_a_detailed_resource_for_linear/"
+    ],
+    "subreddits": [
+      "r/learnmath"
+    ],
+    "field_guess": "math",
+    "upvotes": 2,
+    "quotes": [
+      "I learnt from this: https://personal.math.ubc.ca/\\~tbjw/ila/  You may follow it up with this:  https://ubcmath.github.io/MATH307/  Both of these are great resources from UBC"
+    ],
+    "first_seen": "2026-10-08T02:44:52.470966+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://pll.harvard.edu/course/cs50-introduction-computer-science",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1oz1x3q/best_online_coding_course/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 29,
+    "quotes": [
+      "CS50 by Professor David Mulan is the one everyone will tell you to do.   https://pll.harvard.edu/course/cs50-introduction-computer-science  https://www.youtube.com/live/ywg7cW0Txs4?si=EVkaTQYtkHwSjhD0"
+    ],
+    "first_seen": "2026-10-08T02:44:52.467285+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://pll.harvard.edu/course/cs50s-introduction-programming-python",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1ob3s7s/what_are_the_best_freelowcost_resources_for_a/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 25,
+    "quotes": [
+      "Harvard CS50P https://pll.harvard.edu/course/cs50s-introduction-programming-python"
+    ],
+    "first_seen": "2026-10-08T02:44:52.466953+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://press.princeton.edu/books/hardcover/9780691262413/evolution-evolving",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/biology/comments/1qbyqh3/books_on_evolution/"
+    ],
+    "subreddits": [
+      "r/biology"
+    ],
+    "field_guess": "biology",
+    "upvotes": 10,
+    "quotes": [
+      "From the list you share it seems you have a view on par with the general public.  IMO. However the ideas of Dawkins and Maynard Smith are getting rather old. They don't really represent current understanding of evolutionary processes.  I wo"
+    ],
+    "first_seen": "2026-10-08T02:44:52.471277+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://pretextbook.org",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1ryh7md/new_ada_law_forces_professors_to_take_down_their/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 3,
+    "quotes": [
+      "PreTeXt (https://pretextbook.org/) is a great alternative that can automatically display math content in a variety of forms (PDF, HTML, Jupyter notebook, etc.) and is accessible. There are methods to try to automatically convert LaTeX to Pr"
+    ],
+    "first_seen": "2026-10-08T02:44:52.463398+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://pythoncompiler.io/python/getting-started",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1rqoj2z/zero_programming_knowledge_but_i_want_to_learn/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 1,
+    "quotes": [
+      "[https://pythoncompiler.io/python/getting-started/](https://pythoncompiler.io/python/getting-started/)"
+    ],
+    "first_seen": "2026-10-08T02:44:52.464710+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://richardwong.rice.edu/LaTeX-Accessibility-Primer",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1ryh7md/new_ada_law_forces_professors_to_take_down_their/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 275,
+    "quotes": [
+      "This reminds me of when Berkeley took down all its freely available online lecture videos because they'd have to get someone to caption all of them ([link](https://www.insidehighered.com/news/2017/03/06/u-california-berkeley-delete-publicly"
+    ],
+    "first_seen": "2026-10-08T02:44:52.463149+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://roboco.co",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1ob3s7s/what_are_the_best_freelowcost_resources_for_a/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 1,
+    "quotes": [
+      "There is a game [RoboCo](https://www.roboco.co/) that is inexpensive, it lets you build robots and you can automate them in python.  It is a nice framework to try, as it gives you motivation to do things."
+    ],
+    "first_seen": "2026-10-08T02:44:52.467104+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://scrimba.com?via=u43b0c92",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1rqoj2z/zero_programming_knowledge_but_i_want_to_learn/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 1,
+    "quotes": [
+      "I recommend Scrimba. It is a very interactice learning platform that will walk you through everything you need to know. That's where I learned full stack web dev, and I am honestly grateful for learning with them. Basic video courses were n"
+    ],
+    "first_seen": "2026-10-08T02:44:52.464758+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://social.jvns.ca/@b0rk/117309532428972581",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1wlmea9/best_resources_to_learn_git_as_a_complete_beginner/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 1,
+    "quotes": [
+      "Check out this post by Julia Evans! https://social.jvns.ca/@b0rk/117309532428972581"
+    ],
+    "first_seen": "2026-10-08T02:44:52.465072+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://spacepython.com/en/blog/article/calculate-your-weight-on-different-planets",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1pkwmt8/struggling_to_remember_python_syntax_after_udemy/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 1,
+    "quotes": [
+      "stop copy-pasting and start typing. If you don't remember python's syntax it means you're not on that level of copy code and paste. Write it down from course by hand and modify, solve simple problems, do simple projects. As you mentioned it"
+    ],
+    "first_seen": "2026-10-08T02:44:52.471386+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://spacepython.com/en/blog/article/exploring-planetary-orbits-an-interactive-journey-with-python-turtle",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1pkwmt8/struggling_to_remember_python_syntax_after_udemy/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 1,
+    "quotes": [
+      "stop copy-pasting and start typing. If you don't remember python's syntax it means you're not on that level of copy code and paste. Write it down from course by hand and modify, solve simple problems, do simple projects. As you mentioned it"
+    ],
+    "first_seen": "2026-10-08T02:44:52.471388+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://stat.cmu.edu/~cshalizi/TALR?amp;utm_medium=email&amp;utm_term=books",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1psbkjg/best_math_book_you_read_in_2025/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 1,
+    "quotes": [
+      "If you are also interested (and you should be) in accurately studying linear regression, then I recommend Shalizi's [book](https://www.stat.cmu.edu/~cshalizi/TALR/?utm_source=hackernewsletter&amp;utm_medium=email&amp;utm_term=books)"
+    ],
+    "first_seen": "2026-10-08T02:44:52.467771+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://store.steampowered.com/app/2707490/Tower\\_Factory",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/gamedev/comments/1uhwd60/players_skip_tutorials_then_blame_the_game_so_i/"
+    ],
+    "subreddits": [
+      "r/gamedev"
+    ],
+    "field_guess": "design",
+    "upvotes": 1,
+    "quotes": [
+      "Hey! This is the game, there is a free demo if you want to try it before considering purchase it [https://store.steampowered.com/app/2707490/Tower\\_Factory](https://store.steampowered.com/app/2707490/Tower_Factory)"
+    ],
+    "first_seen": "2026-10-08T02:44:52.455744+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://store.steampowered.com/app/2707490/Tower_Factory",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/gamedev/comments/1uhwd60/players_skip_tutorials_then_blame_the_game_so_i/"
+    ],
+    "subreddits": [
+      "r/gamedev"
+    ],
+    "field_guess": "design",
+    "upvotes": 1,
+    "quotes": [
+      "Hey! This is the game, there is a free demo if you want to try it before considering purchase it [https://store.steampowered.com/app/2707490/Tower\\_Factory](https://store.steampowered.com/app/2707490/Tower_Factory)"
+    ],
+    "first_seen": "2026-10-08T02:44:52.455746+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://store.steampowered.com/app/4336300/Health\\_Audit\\_Simulator",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/gamedev/comments/1s5qify/are_coding_tutorials_in_general_including_game/"
+    ],
+    "subreddits": [
+      "r/gamedev"
+    ],
+    "field_guess": "design",
+    "upvotes": 4,
+    "quotes": [
+      "I started game dev in earnest, end of summer 2025.  When I was a teen (2000s) I fiddled around with RPGmaker which taught me the very basic fundamentals like variabels etc, combined with high school IT lessons.   Into the 2010s, I tried sev"
+    ],
+    "first_seen": "2026-10-08T02:44:52.458607+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://store.steampowered.com/app/4336300/Health_Audit_Simulator",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/gamedev/comments/1s5qify/are_coding_tutorials_in_general_including_game/"
+    ],
+    "subreddits": [
+      "r/gamedev"
+    ],
+    "field_guess": "design",
+    "upvotes": 4,
+    "quotes": [
+      "I started game dev in earnest, end of summer 2025.  When I was a teen (2000s) I fiddled around with RPGmaker which taught me the very basic fundamentals like variabels etc, combined with high school IT lessons.   Into the 2010s, I tried sev"
+    ],
+    "first_seen": "2026-10-08T02:44:52.458608+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://students-residents.aamc.org/how-apply-medical-school-amcas/how-apply-medical-school-amcas",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/premed/comments/1s8s4gc/free_app_cycle_resource_for_upcoming_applicants/"
+    ],
+    "subreddits": [
+      "r/premed"
+    ],
+    "field_guess": "health",
+    "upvotes": 0,
+    "quotes": [
+      "If you have questions about AMCAS, visit the [How to Apply Page](https://students-residents.aamc.org/how-apply-medical-school-amcas/how-apply-medical-school-amcas) and read the [AMCAS Applicant Guide](https://students-residents.aamc.org/med"
+    ],
+    "first_seen": "2026-10-08T02:44:52.471073+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://students-residents.aamc.org/media/11616/download",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/premed/comments/1s8s4gc/free_app_cycle_resource_for_upcoming_applicants/"
+    ],
+    "subreddits": [
+      "r/premed"
+    ],
+    "field_guess": "health",
+    "upvotes": 0,
+    "quotes": [
+      "If you have questions about AMCAS, visit the [How to Apply Page](https://students-residents.aamc.org/how-apply-medical-school-amcas/how-apply-medical-school-amcas) and read the [AMCAS Applicant Guide](https://students-residents.aamc.org/med"
+    ],
+    "first_seen": "2026-10-08T02:44:52.471074+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://students-residents.aamc.org/premed-calendar",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/premed/comments/1s8s4gc/free_app_cycle_resource_for_upcoming_applicants/"
+    ],
+    "subreddits": [
+      "r/premed"
+    ],
+    "field_guess": "health",
+    "upvotes": 0,
+    "quotes": [
+      "If you have questions about AMCAS, visit the [How to Apply Page](https://students-residents.aamc.org/how-apply-medical-school-amcas/how-apply-medical-school-amcas) and read the [AMCAS Applicant Guide](https://students-residents.aamc.org/med"
+    ],
+    "first_seen": "2026-10-08T02:44:52.471075+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://summarizai.ink",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/EngineeringStudents/comments/1wd62lm/does_anyone_find_it_more_useful_to_learn_straight/"
+    ],
+    "subreddits": [
+      "r/EngineeringStudents"
+    ],
+    "field_guess": "engineering",
+    "upvotes": 1,
+    "quotes": [
+      "Cleaned link from \"https://summarizai.ink?utm\\_source=reddit&amp;utm\\_medium=comment&amp;utm\\_campaign=student\\_trial\\_w1\": https://summarizai.ink/  --- *Tracking parameters were removed from the original URL(s).*"
+    ],
+    "first_seen": "2026-10-08T02:44:52.469312+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://summarizai.ink?amp;utm\\_campaign=student\\_trial\\_w1&amp;utm\\_medium=comment&utm\\_source=reddit",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/EngineeringStudents/comments/1wd62lm/does_anyone_find_it_more_useful_to_learn_straight/"
+    ],
+    "subreddits": [
+      "r/EngineeringStudents"
+    ],
+    "field_guess": "engineering",
+    "upvotes": 1,
+    "quotes": [
+      "Cleaned link from \"https://summarizai.ink?utm\\_source=reddit&amp;utm\\_medium=comment&amp;utm\\_campaign=student\\_trial\\_w1\": https://summarizai.ink/  --- *Tracking parameters were removed from the original URL(s).*"
+    ],
+    "first_seen": "2026-10-08T02:44:52.469310+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1ob3s7s/what_are_the_best_freelowcost_resources_for_a/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 1,
+    "quotes": [
+      "if you are an absolute beginner start with CS50 from harvard: [https://youtu.be/nLRL\\_NcnK-4?si=ogIYpNH-GB65iyUV](https://youtu.be/nLRL_NcnK-4?si=ogIYpNH-GB65iyUV), you can do the the course on their site or edx or they even have videos on "
+    ],
+    "first_seen": "2026-10-08T02:44:52.467155+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://teachyourselfcs.com",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1v6ipkx/are_books_online_sources_in_your_opinion/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 3,
+    "quotes": [
+      "The entire argument of one over the other is a fallacy.  You don't have to look further than these to realize that online material can provide the equivalent of an entire univerity degree for free:  https://github.com/ossu/computer-science "
+    ],
+    "first_seen": "2026-10-08T02:44:52.467590+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://textbooks.math.gatech.edu/ila",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnmath/comments/1wnbdsk/please_guys_i_need_a_detailed_resource_for_linear/"
+    ],
+    "subreddits": [
+      "r/learnmath"
+    ],
+    "field_guess": "math",
+    "upvotes": 2,
+    "quotes": [
+      "hey check this out:   [https://textbooks.math.gatech.edu/ila/](https://textbooks.math.gatech.edu/ila/)"
+    ],
+    "first_seen": "2026-10-08T02:44:52.470984+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://thebulletin.org/2021/04/interview-alex-wellerstein-exposes-secrets-of-nuclear-secrecy",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1pewzau/ama_i_am_alex_wellerstein_historian_of_science/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 34,
+    "quotes": [
+      "As far as I know, Truman never saw an atomic bomb in person. He many times expressed the desire to see one detonated during testing -- from Crossroads (1946) through the end of his administration. But he never did it. Which itself is an int"
+    ],
+    "first_seen": "2026-10-08T02:44:52.460124+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://thegames.dev",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/gamedev/comments/1s5qify/are_coding_tutorials_in_general_including_game/"
+    ],
+    "subreddits": [
+      "r/gamedev"
+    ],
+    "field_guess": "design",
+    "upvotes": 40,
+    "quotes": [
+      "If you want 'advanced' things. It almost will never be in a video tutorial.    What I do is look for blog/posts, sample projects, templates, sometimes patreon, or other places.   Also like I do a few advanced things and I post my stuff on g"
+    ],
+    "first_seen": "2026-10-08T02:44:52.456554+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://think-like-a-git.net",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1wlmea9/best_resources_to_learn_git_as_a_complete_beginner/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 6,
+    "quotes": [
+      "Highly recommend [Git Immersion](https://gitimmersion.com/index.html). It's step by step and interactive. Does not go in deep in theory, but shows the practical commands from the basics to fairly advanced ones.  I also liked [The Git Parabl"
+    ],
+    "first_seen": "2026-10-08T02:44:52.464866+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://timbrown.dev/roadmap",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1wf7xie/looking_for_python_resources/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 7,
+    "quotes": [
+      "After 20+ years developing &amp; 10+ years tutoring I'm building a roadmap of hand-picked problems from CodeStepByStep, Codewars, LeetCode, etc to guide you through the fundamentals of software development from zero to mastery.      [timbro"
+    ],
+    "first_seen": "2026-10-08T02:44:52.469484+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://tom.preston-werner.com/2009/05/19/the-git-parable.html",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1wlmea9/best_resources_to_learn_git_as_a_complete_beginner/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 6,
+    "quotes": [
+      "Highly recommend [Git Immersion](https://gitimmersion.com/index.html). It's step by step and interactive. Does not go in deep in theory, but shows the practical commands from the basics to fairly advanced ones.  I also liked [The Git Parabl"
+    ],
+    "first_seen": "2026-10-08T02:44:52.464865+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://tutorial.math.lamar.edu",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnmath/comments/1wtjj5t/best_mathematics_textbooks_or_sites_for_self_study/"
+    ],
+    "subreddits": [
+      "r/learnmath"
+    ],
+    "field_guess": "math",
+    "upvotes": 22,
+    "quotes": [
+      "Paul's Notes are my favorite so far.  He has very good explanations,  many example problems and answers with walk throughs that help you understand how to get to a solution. https://tutorial.math.lamar.edu/ Combine it with the other great r"
+    ],
+    "first_seen": "2026-10-08T02:44:52.469086+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://typst.app",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1ryh7md/new_ada_law_forces_professors_to_take_down_their/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 0,
+    "quotes": [
+      "Use [Typst](https://typst.app/)!"
+    ],
+    "first_seen": "2026-10-08T02:44:52.463728+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://typst.app/blog/2025/accessible-pdf",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1ryh7md/new_ada_law_forces_professors_to_take_down_their/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 3,
+    "quotes": [
+      "Barely helpful for existing material, but Typst (modern alternative to LaTeX, also open source) makes developing accessible PDFs easy:  https://typst.app/blog/2025/accessible-pdf/"
+    ],
+    "first_seen": "2026-10-08T02:44:52.463564+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://ubcmath.github.io/MATH307",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnmath/comments/1wnbdsk/please_guys_i_need_a_detailed_resource_for_linear/"
+    ],
+    "subreddits": [
+      "r/learnmath"
+    ],
+    "field_guess": "math",
+    "upvotes": 2,
+    "quotes": [
+      "I learnt from this: https://personal.math.ubc.ca/\\~tbjw/ila/  You may follow it up with this:  https://ubcmath.github.io/MATH307/  Both of these are great resources from UBC"
+    ],
+    "first_seen": "2026-10-08T02:44:52.470967+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://unr.edu/accessibility/resources/documents/accessible/research-and-publications/strategy-1",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/math/comments/1ryh7md/new_ada_law_forces_professors_to_take_down_their/"
+    ],
+    "subreddits": [
+      "r/math"
+    ],
+    "field_guess": "math",
+    "upvotes": 275,
+    "quotes": [
+      "This reminds me of when Berkeley took down all its freely available online lecture videos because they'd have to get someone to caption all of them ([link](https://www.insidehighered.com/news/2017/03/06/u-california-berkeley-delete-publicly"
+    ],
+    "first_seen": "2026-10-08T02:44:52.463141+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://unreal-garden.com/tutorials",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/gamedev/comments/1s5qify/are_coding_tutorials_in_general_including_game/"
+    ],
+    "subreddits": [
+      "r/gamedev"
+    ],
+    "field_guess": "design",
+    "upvotes": 40,
+    "quotes": [
+      "If you want 'advanced' things. It almost will never be in a video tutorial.    What I do is look for blog/posts, sample projects, templates, sometimes patreon, or other places.   Also like I do a few advanced things and I post my stuff on g"
+    ],
+    "first_seen": "2026-10-08T02:44:52.456563+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://washingtonian.com/2019/05/05/what-happened-after-my-13-year-old-son-joined-the-alt-right",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1qa87p1/what_are_the_best_resources_to_teach_teens_about/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 522,
+    "quotes": [
+      "Hope the moderates let this be a bit more of an open thread, but I work professionally in politics and have been engaged in the rise of the right over the past 15 years, and studying the rise of global extremism. But this will likely be a p"
+    ],
+    "first_seen": "2026-10-08T02:44:52.454611+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://webusers.imj-prg.fr/~leila.schneps/corr.pdf",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnmath/comments/1tbw24n/can_someone_rediscover_mathematical_concepts/"
+    ],
+    "subreddits": [
+      "r/learnmath"
+    ],
+    "field_guess": "math",
+    "upvotes": 2,
+    "quotes": [
+      "Grothendieck derived the Lebesgue integral as an undergrad at Montepellier. For the first time in his life he was totally ensconced in a mathematical atmosphere, surrounded by professors with whom he reportedly spoke as an equal. Thus what "
+    ],
+    "first_seen": "2026-10-08T02:44:52.468661+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtu.be/5iTOphGnCtg?si=hAFO3JueAl8zLTxS",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/chemistry/comments/1ppucoj/chemistry_resources_that_explain_everything_every/"
+    ],
+    "subreddits": [
+      "r/chemistry"
+    ],
+    "field_guess": "biology",
+    "upvotes": 1,
+    "quotes": [
+      "General Chemistry by Linus Pauling seeks to convey...well, general chemistry. I believe you can find a PDF copy freely available in the Internet Archive. Though I can neither vouch for nor criticize it, as I haven't read it yet (it's a very"
+    ],
+    "first_seen": "2026-10-08T02:44:52.470919+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtu.be/MJUJ4wbFm_A?si=ht9u2YmW0po4GRBO",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1wlmea9/best_resources_to_learn_git_as_a_complete_beginner/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 1,
+    "quotes": [
+      "https://youtu.be/MJUJ4wbFm_A?si=ht9u2YmW0po4GRBO  good starting video  you'll learn most from practice tho, it will be confusing at first but the more you use it the more confortable you will get"
+    ],
+    "first_seen": "2026-10-08T02:44:52.465106+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtu.be/VtAzlUu4b3Y?amp;t=2&si=2kaOpts8mSTw5wMN",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1q4ymof/2000_free_sign_ups_for_the_automate_the_boring/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 3,
+    "quotes": [
+      "Everytime I see a post by Al Sweigart, I think about this [https://youtu.be/VtAzlUu4b3Y?si=2kaOpts8mSTw5wMN&amp;t=2](https://youtu.be/VtAzlUu4b3Y?si=2kaOpts8mSTw5wMN&amp;t=2) \ud83d\ude04"
+    ],
+    "first_seen": "2026-10-08T02:44:52.468987+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtu.be/YdOXS_9_P4U",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskPhysics/comments/1oy8plh/is_there_a_textbook_that_teaches_not_the_results/"
+    ],
+    "subreddits": [
+      "r/AskPhysics"
+    ],
+    "field_guess": "physics",
+    "upvotes": -3,
+    "quotes": [
+      "Since I prefer videos, I would recommend 3blue1brown, floatheadphysics, Rational Thinker,  and Kathy loves physics. Angela Collier is cool too.  https://youtube.com/@mahesh_shenoy  https://youtu.be/YdOXS_9_P4U  https://youtube.com/@kathy_lo"
+    ],
+    "first_seen": "2026-10-08T02:44:52.464421+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtu.be/apGV9Kg7ics?si=FMBaju41PHTjcY6R",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1wlmea9/best_resources_to_learn_git_as_a_complete_beginner/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 1,
+    "quotes": [
+      "For git . This video is best . I tried all video. But I likes so much. https://youtu.be/apGV9Kg7ics?si=FMBaju41PHTjcY6R. He is very talented guy. He worked in maang also. I never seen anyone teach like him. You must try.he is one my role mo"
+    ],
+    "first_seen": "2026-10-08T02:44:52.465050+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtu.be/nLRL\\_NcnK-4?si=ogIYpNH-GB65iyUV",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1ob3s7s/what_are_the_best_freelowcost_resources_for_a/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 1,
+    "quotes": [
+      "if you are an absolute beginner start with CS50 from harvard: [https://youtu.be/nLRL\\_NcnK-4?si=ogIYpNH-GB65iyUV](https://youtu.be/nLRL_NcnK-4?si=ogIYpNH-GB65iyUV), you can do the the course on their site or edx or they even have videos on "
+    ],
+    "first_seen": "2026-10-08T02:44:52.467152+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtu.be/nLRL_NcnK-4?si=ogIYpNH-GB65iyUV",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnpython/comments/1ob3s7s/what_are_the_best_freelowcost_resources_for_a/"
+    ],
+    "subreddits": [
+      "r/learnpython"
+    ],
+    "field_guess": "cs",
+    "upvotes": 1,
+    "quotes": [
+      "if you are an absolute beginner start with CS50 from harvard: [https://youtu.be/nLRL\\_NcnK-4?si=ogIYpNH-GB65iyUV](https://youtu.be/nLRL_NcnK-4?si=ogIYpNH-GB65iyUV), you can do the the course on their site or edx or they even have videos on "
+    ],
+    "first_seen": "2026-10-08T02:44:52.467154+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/@DevDrache",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/gamedev/comments/1s5qify/are_coding_tutorials_in_general_including_game/"
+    ],
+    "subreddits": [
+      "r/gamedev"
+    ],
+    "field_guess": "design",
+    "upvotes": 1,
+    "quotes": [
+      "I cannot speak about other communities or game engines, but most of the gamedev YouTubers I follow now specialize in 5\u201310 minute videos such as \"Top 10 Unity assets of the month,\" \"How to make XYZ feature,\" \"What's new in version X.Y.Z of ["
+    ],
+    "first_seen": "2026-10-08T02:44:52.459789+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/@MoritzKlein0",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskElectronics/comments/1tnnol6/looking_for_resources_for_learning_about/"
+    ],
+    "subreddits": [
+      "r/AskElectronics"
+    ],
+    "field_guess": "engineering",
+    "upvotes": 1,
+    "quotes": [
+      "[Vocademy](https://www.youtube.com/@Vocademy-Electronics-Tech) and [Moritz Klein](https://www.youtube.com/@MoritzKlein0) on YouTube are great for explanations that focus on mental models that will help you understand components and circuits"
+    ],
+    "first_seen": "2026-10-08T02:44:52.465549+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/@Vocademy-Electronics-Tech",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskElectronics/comments/1tnnol6/looking_for_resources_for_learning_about/"
+    ],
+    "subreddits": [
+      "r/AskElectronics"
+    ],
+    "field_guess": "engineering",
+    "upvotes": 1,
+    "quotes": [
+      "[Vocademy](https://www.youtube.com/@Vocademy-Electronics-Tech) and [Moritz Klein](https://www.youtube.com/@MoritzKlein0) on YouTube are great for explanations that focus on mental models that will help you understand components and circuits"
+    ],
+    "first_seen": "2026-10-08T02:44:52.465548+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/@WorldWarTwo)channel",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1qa87p1/what_are_the_best_resources_to_teach_teens_about/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 522,
+    "quotes": [
+      "Hope the moderates let this be a bit more of an open thread, but I work professionally in politics and have been engaged in the rise of the right over the past 15 years, and studying the rise of global extremism. But this will likely be a p"
+    ],
+    "first_seen": "2026-10-08T02:44:52.454616+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/@acollierastro",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskPhysics/comments/1oy8plh/is_there_a_textbook_that_teaches_not_the_results/"
+    ],
+    "subreddits": [
+      "r/AskPhysics"
+    ],
+    "field_guess": "physics",
+    "upvotes": -3,
+    "quotes": [
+      "Since I prefer videos, I would recommend 3blue1brown, floatheadphysics, Rational Thinker,  and Kathy loves physics. Angela Collier is cool too.  https://youtube.com/@mahesh_shenoy  https://youtu.be/YdOXS_9_P4U  https://youtube.com/@kathy_lo"
+    ],
+    "first_seen": "2026-10-08T02:44:52.464425+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/@beneater",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskElectronics/comments/1tnnol6/looking_for_resources_for_learning_about/"
+    ],
+    "subreddits": [
+      "r/AskElectronics"
+    ],
+    "field_guess": "engineering",
+    "upvotes": 8,
+    "quotes": [
+      "Check out Ben Eater on you tube. He has a great way of explaining, and he shows you how to use discrete components to build a working CPU!       [https://youtube.com/@beneater](https://youtube.com/@beneater)"
+    ],
+    "first_seen": "2026-10-08T02:44:52.465211+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/@hhp3?si=bIyDbkf4zZt7in3N",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1oz1x3q/best_online_coding_course/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 1,
+    "quotes": [
+      "I think Abdul Bari is a great teacher for introductory programming course. He teaches on the black board; so kind of it feels like a real class. You can search him on YouTube or buy his course on Udemy. Once you learn introductory programmi"
+    ],
+    "first_seen": "2026-10-08T02:44:52.467443+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/@jonastyroller",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/gamedev/comments/1s5qify/are_coding_tutorials_in_general_including_game/"
+    ],
+    "subreddits": [
+      "r/gamedev"
+    ],
+    "field_guess": "design",
+    "upvotes": 7,
+    "quotes": [
+      "There are a few made by successful game devs, like Jonas Tyroller:  https://youtube.com/@jonastyroller  He most certainly has successful games, and his takes seem genuinely helpful for game design and project management. I\u2019m not sure if the"
+    ],
+    "first_seen": "2026-10-08T02:44:52.456877+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/@kathy_loves_physics",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskPhysics/comments/1oy8plh/is_there_a_textbook_that_teaches_not_the_results/"
+    ],
+    "subreddits": [
+      "r/AskPhysics"
+    ],
+    "field_guess": "physics",
+    "upvotes": -3,
+    "quotes": [
+      "Since I prefer videos, I would recommend 3blue1brown, floatheadphysics, Rational Thinker,  and Kathy loves physics. Angela Collier is cool too.  https://youtube.com/@mahesh_shenoy  https://youtu.be/YdOXS_9_P4U  https://youtube.com/@kathy_lo"
+    ],
+    "first_seen": "2026-10-08T02:44:52.464422+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/@mahesh_shenoy",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskPhysics/comments/1oy8plh/is_there_a_textbook_that_teaches_not_the_results/"
+    ],
+    "subreddits": [
+      "r/AskPhysics"
+    ],
+    "field_guess": "physics",
+    "upvotes": -3,
+    "quotes": [
+      "Since I prefer videos, I would recommend 3blue1brown, floatheadphysics, Rational Thinker,  and Kathy loves physics. Angela Collier is cool too.  https://youtube.com/@mahesh_shenoy  https://youtu.be/YdOXS_9_P4U  https://youtube.com/@kathy_lo"
+    ],
+    "first_seen": "2026-10-08T02:44:52.464419+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/@rationalthinker118",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskPhysics/comments/1oy8plh/is_there_a_textbook_that_teaches_not_the_results/"
+    ],
+    "subreddits": [
+      "r/AskPhysics"
+    ],
+    "field_guess": "physics",
+    "upvotes": -3,
+    "quotes": [
+      "Since I prefer videos, I would recommend 3blue1brown, floatheadphysics, Rational Thinker,  and Kathy loves physics. Angela Collier is cool too.  https://youtube.com/@mahesh_shenoy  https://youtu.be/YdOXS_9_P4U  https://youtube.com/@kathy_lo"
+    ],
+    "first_seen": "2026-10-08T02:44:52.464423+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/@rojaslab?si=hisR4Aamq\\_3R5fRI",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/chemistry/comments/1wvzjuh/rusty_chemist_wanting_to_explore_grad_school_tips/"
+    ],
+    "subreddits": [
+      "r/chemistry"
+    ],
+    "field_guess": "biology",
+    "upvotes": 1,
+    "quotes": [
+      "Happy to welcome you back gracefully over on YouTube at the RojasLab channel. I even do a whole mechanism Monday series where we work through fun organic mechanisms. Good luck! https://youtube.com/@rojaslab?si=hisR4Aamq\\_3R5fRI"
+    ],
+    "first_seen": "2026-10-08T02:44:52.471239+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/@veritasium",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskPhysics/comments/1oy8plh/is_there_a_textbook_that_teaches_not_the_results/"
+    ],
+    "subreddits": [
+      "r/AskPhysics"
+    ],
+    "field_guess": "physics",
+    "upvotes": -3,
+    "quotes": [
+      "Since I prefer videos, I would recommend 3blue1brown, floatheadphysics, Rational Thinker,  and Kathy loves physics. Angela Collier is cool too.  https://youtube.com/@mahesh_shenoy  https://youtu.be/YdOXS_9_P4U  https://youtube.com/@kathy_lo"
+    ],
+    "first_seen": "2026-10-08T02:44:52.464424+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/@w2aew/playlists",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskElectronics/comments/1tnnol6/looking_for_resources_for_learning_about/"
+    ],
+    "subreddits": [
+      "r/AskElectronics"
+    ],
+    "field_guess": "engineering",
+    "upvotes": 4,
+    "quotes": [
+      "I know people suggest the Mims books or the Art of Electronics, but I think those are better after you've gotten your feet wet.  So I'm going to recommend a couple of channels. My top one, which made many light bulbs go off, is **w2aew.** S"
+    ],
+    "first_seen": "2026-10-08T02:44:52.465391+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/@yunghsianglu?si=EtUzW9nZ2c-FVMMZ",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1oz1x3q/best_online_coding_course/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 1,
+    "quotes": [
+      "I think Abdul Bari is a great teacher for introductory programming course. He teaches on the black board; so kind of it feels like a real class. You can search him on YouTube or buy his course on Udemy. Once you learn introductory programmi"
+    ],
+    "first_seen": "2026-10-08T02:44:52.467442+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/live/ywg7cW0Txs4?si=EVkaTQYtkHwSjhD0",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1oz1x3q/best_online_coding_course/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 29,
+    "quotes": [
+      "CS50 by Professor David Mulan is the one everyone will tell you to do.   https://pll.harvard.edu/course/cs50-introduction-computer-science  https://www.youtube.com/live/ywg7cW0Txs4?si=EVkaTQYtkHwSjhD0"
+    ],
+    "first_seen": "2026-10-08T02:44:52.467287+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/playlist?amp;si=Vr2RlmAUtW74HyZ0&list=PL803563859BF7ED8C",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskElectronics/comments/1tnnol6/looking_for_resources_for_learning_about/"
+    ],
+    "subreddits": [
+      "r/AskElectronics"
+    ],
+    "field_guess": "engineering",
+    "upvotes": 1,
+    "quotes": [
+      "Found a dated Navy electronics training book and it said they trained people with NPTEL or something along those lines. They have several different courses so not sure which one is exact they referred to.\u00a0 https://youtube.com/playlist?list="
+    ],
+    "first_seen": "2026-10-08T02:44:52.465487+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/playlist?list=PL8mMEmoXNBfaFV2wA4lDD7j\\_f2l7BTYIV",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/PhysicsStudents/comments/1oa2azf/lecture_videos_and_textbooks_recommendations_for/"
+    ],
+    "subreddits": [
+      "r/PhysicsStudents"
+    ],
+    "field_guess": "physics",
+    "upvotes": 2,
+    "quotes": [
+      "I endorse the recommendations for the Kundu, Choudhuri, and Tong books.  Of these, Choudhuri and Tong are physicists, but as a physicist myself I really enjoyed Kundu's treatment of the subject.  When I first learned the material I started "
+    ],
+    "first_seen": "2026-10-08T02:44:52.471484+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/playlist?list=PL8mMEmoXNBfaFV2wA4lDD7j_f2l7BTYIV",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/PhysicsStudents/comments/1oa2azf/lecture_videos_and_textbooks_recommendations_for/"
+    ],
+    "subreddits": [
+      "r/PhysicsStudents"
+    ],
+    "field_guess": "physics",
+    "upvotes": 2,
+    "quotes": [
+      "I endorse the recommendations for the Kundu, Choudhuri, and Tong books.  Of these, Choudhuri and Tong are physicists, but as a physicist myself I really enjoyed Kundu's treatment of the subject.  When I first learned the material I started "
+    ],
+    "first_seen": "2026-10-08T02:44:52.471486+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/shorts/0qn1okfheAs?si=0Nicx1GmcWUwJUwv",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskElectronics/comments/1tnnol6/looking_for_resources_for_learning_about/"
+    ],
+    "subreddits": [
+      "r/AskElectronics"
+    ],
+    "field_guess": "engineering",
+    "upvotes": 1,
+    "quotes": [
+      "Also this as well:   https://youtube.com/shorts/0qn1okfheAs?si=0Nicx1GmcWUwJUwv"
+    ],
+    "first_seen": "2026-10-08T02:44:52.465505+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/watch?amp;list=PL2XuMA5AwNUznkBE46tcZAF3p5Edxgm-z&amp;pp=0gcJCdAEOCosWNin&v=1b3ivEZo7hw",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskElectronics/comments/1tnnol6/looking_for_resources_for_learning_about/"
+    ],
+    "subreddits": [
+      "r/AskElectronics"
+    ],
+    "field_guess": "engineering",
+    "upvotes": 4,
+    "quotes": [
+      "I know people suggest the Mims books or the Art of Electronics, but I think those are better after you've gotten your feet wet.  So I'm going to recommend a couple of channels. My top one, which made many light bulbs go off, is **w2aew.** S"
+    ],
+    "first_seen": "2026-10-08T02:44:52.465392+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/watch?amp;list=PL4C9296DF81B9EF13&v=cC7n_ZyVUns",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnmath/comments/1wtjj5t/best_mathematics_textbooks_or_sites_for_self_study/"
+    ],
+    "subreddits": [
+      "r/learnmath"
+    ],
+    "field_guess": "math",
+    "upvotes": 42,
+    "quotes": [
+      "All these resources are free.  Start here: [Prealgebra Professor Leonard](https://www.youtube.com/watch?v=cC7n_ZyVUns&amp;list=PL4C9296DF81B9EF13)  And follow this book: https://openstax.org/details/books/prealgebra-2e  Also you can use [Kh"
+    ],
+    "first_seen": "2026-10-08T02:44:52.469057+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/watch?amp;list=PL9B82173EBEF98BD0&v=1Amt\\_-uB9QQ",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnmath/comments/1qa1jo1/i_am_weak_in_math_and_want_to_fix_my_foundation/"
+    ],
+    "subreddits": [
+      "r/learnmath"
+    ],
+    "field_guess": "math",
+    "upvotes": 3,
+    "quotes": [
+      "This college algebra from course Prof. Richard Delaware is what you need. When I was in college I wanted to brush up my math skills it helped me tremendously.  [https://www.youtube.com/watch?v=1Amt\\_-uB9QQ&amp;list=PL9B82173EBEF98BD0](https"
+    ],
+    "first_seen": "2026-10-08T02:44:52.470086+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/watch?amp;list=PL9B82173EBEF98BD0&v=1Amt_-uB9QQ",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnmath/comments/1qa1jo1/i_am_weak_in_math_and_want_to_fix_my_foundation/"
+    ],
+    "subreddits": [
+      "r/learnmath"
+    ],
+    "field_guess": "math",
+    "upvotes": 3,
+    "quotes": [
+      "This college algebra from course Prof. Richard Delaware is what you need. When I was in college I wanted to brush up my math skills it helped me tremendously.  [https://www.youtube.com/watch?v=1Amt\\_-uB9QQ&amp;list=PL9B82173EBEF98BD0](https"
+    ],
+    "first_seen": "2026-10-08T02:44:52.470088+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/watch?amp;list=PLRqwX-V7Uu6ZF9C0YMKuns9sLDzK6zoiV&v=BCQHnlnPusY",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1wlmea9/best_resources_to_learn_git_as_a_complete_beginner/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 1,
+    "quotes": [
+      "It is now 10 years old - and still one of the best introductions to git!  I still love it, and recommend it for absolute beginners as well as those coming to the command line from various graphical interfaces.  [https://www.youtube.com/watc"
+    ],
+    "first_seen": "2026-10-08T02:44:52.464924+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/watch?v=1mcCLm_LwpE",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1qa87p1/what_are_the_best_resources_to_teach_teens_about/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 73,
+    "quotes": [
+      "Hi, another teacher of high school social sciences here, for 19 years and counting. I love and co-recommend the suggestions above, and just want to add some video suggestions, for it might be a bit easier for a teen that young to accept.   "
+    ],
+    "first_seen": "2026-10-08T02:44:52.454782+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/watch?v=dLAi78hluFc",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskHistorians/comments/1qa87p1/what_are_the_best_resources_to_teach_teens_about/"
+    ],
+    "subreddits": [
+      "r/AskHistorians"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 73,
+    "quotes": [
+      "Hi, another teacher of high school social sciences here, for 19 years and counting. I love and co-recommend the suggestions above, and just want to add some video suggestions, for it might be a bit easier for a teen that young to accept.   "
+    ],
+    "first_seen": "2026-10-08T02:44:52.454786+00:00",
+    "thread_count": 1
+  }
+]
