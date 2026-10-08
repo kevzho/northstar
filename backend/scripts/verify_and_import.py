@@ -49,6 +49,12 @@ KNOWN_REAL_SOURCES = frozenset(
         # budget. The scrape would succeed daily and import nothing.
         "pathwaystoscience",
         "sciencefairs",
+        # A hand-written list of non-CS leads (scripts/seed_breadth_candidates.py).
+        # Trusted to reach the verifier first, NOT trusted to skip it: every one
+        # still has its page fetched and read, and is refused if it cannot be
+        # confirmed. Without this it would queue behind ten thousand reddit
+        # threads and never be judged at all.
+        "curated-breadth",
     }
 )
 MAX_VERIFY_PER_RUN = 60   # token/rate budget per daily run
