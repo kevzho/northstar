@@ -554,6 +554,32 @@ export type LearningResource = {
   verified_at: string | null;
 };
 
+/** A shelf row. Same shape, minus the per-skill read's verified_at, plus the
+ *  field so the hub can group and colour by subject. */
+export type ShelfResource = Omit<LearningResource, "verified_at"> & {
+  field: string | null;
+};
+
+/**
+ * The whole learning shelf, without an account.
+ *
+ * `fetchResources` serves one rung of one path and needs a session, so the
+ * material existed and nobody could browse it: a student who wanted to learn
+ * something their plan had not told them to learn had no route to it, and a
+ * visitor could not see it was there at all.
+ *
+ * A plain fetch for the same reason fetchPublicCatalog uses one — there is no
+ * session to attach, and sending an Authorization header of `undefined` is how
+ * a public route starts 401ing for the people it exists for.
+ */
+export async function fetchPublicShelf(): Promise<ShelfResource[]> {
+  const res = await fetch(`${API_URL}/resources/public`, {
+    headers: { "content-type": "application/json" },
+  });
+  if (!res.ok) return [];
+  return res.json();
+}
+
 /**
  * Free learning resources for one spine skill rung.
  *

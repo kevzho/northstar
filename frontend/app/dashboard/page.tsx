@@ -440,6 +440,16 @@ export default function DashboardPage() {
               explanations.
             </p>
           </Link>
+          <Link href="/learn" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
+            <h2 className="h-display text-section text-foreground">
+              The shelf
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              Free material you can start tonight, every row quoting the
+              sentence that proves it is free. For the months when nothing is
+              open, which is most of them.
+            </p>
+          </Link>
           <Link href="/mentors" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
             <h2 className="h-display text-section text-foreground">
               Mentor matches

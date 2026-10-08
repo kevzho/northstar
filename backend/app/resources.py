@@ -30,7 +30,17 @@ KIND_ORDER = {
     "textbook": 6,
 }
 
+# What a visitor needs to decide whether a resource is worth their evening,
+# and nothing about how it got here. An allowlist, so a column added to the
+# table later is private until someone decides otherwise -- the same stance
+# /catalog/public takes.
+SHELF_FIELDS = (
+    "id", "title", "host", "url", "kind", "skill_key", "skill_label",
+    "effort", "prerequisite", "why_this_one", "free_evidence",
+)
+
 _cache: dict[str, tuple[float, list[dict]]] = {}
+_shelf: tuple[float, list[dict]] | None = None
 
 
 def _order(row: dict) -> tuple[int, str]:
@@ -69,4 +79,49 @@ def fetch_for_skill(sb, skill_key: str, *, limit: int = 4) -> list[dict]:
 
 
 def clear_cache() -> None:
+    global _shelf
     _cache.clear()
+    _shelf = None
+
+
+def fetch_shelf(sb) -> list[dict]:
+    """Every verified free resource, for the browsable hub.
+
+    WHY THIS EXISTS. ``fetch_for_skill`` serves one rung of one path, reachable
+    only as a side effect of a roadmap step -- so a student who wanted to learn
+    something the plan had not told them to learn could not get at this shelf at
+    all, and a visitor with no account could not see that it existed. Northstar
+    was an opportunity hub with a learning catalog hidden inside it.
+
+    Same honesty gate as the per-skill read, applied to the whole shelf: not
+    retired, marked free, and carrying the quoted evidence from the page that
+    proves the free claim. A row without evidence is a claim nobody checked, and
+    this catalog exists for students with no money.
+
+    Ordered skill group first, then gentlest entry point within it, so the shelf
+    reads as a set of subjects rather than an undifferentiated list.
+    """
+    global _shelf
+    if _shelf and time.time() - _shelf[0] < CACHE_TTL_S:
+        return _shelf[1]
+
+    rows = (
+        sb.table("learning_resources")
+        .select(", ".join((*SHELF_FIELDS, "opportunity_field")))
+        .eq("is_free", True)
+        .is_("retired_at", "null")
+        .limit(1000)
+        .execute()
+    ).data or []
+
+    out: list[dict] = []
+    for row in rows:
+        if not (row.get("free_evidence") or "").strip():
+            continue
+        item = {k: row.get(k) for k in SHELF_FIELDS}
+        item["field"] = row.get("opportunity_field")
+        out.append(item)
+
+    out.sort(key=lambda r: (r.get("skill_label") or "", *_order(r)))
+    _shelf = (time.time(), out)
+    return out

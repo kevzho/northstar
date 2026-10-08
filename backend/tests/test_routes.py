@@ -136,6 +136,13 @@ def test_every_route_except_public_ones_declares_auth() -> None:
         # any string and is registered first, so `/public/catalog` was being
         # served as a profile lookup and 404ing.
         "/catalog/public",
+        # Deliberately public: the learning shelf. Same reasoning as the
+        # catalog above, and the stronger case — free material a student can
+        # start tonight is the half of this product that needs no account, no
+        # transcript, no teacher and no money, so putting it behind a login was
+        # backwards. Allowlisted in app/resources.py SHELF_FIELDS; see
+        # test_public_shelf_serves_an_allowlist_not_the_row below.
+        "/resources/public",
         # Deliberately public: someone offering to mentor is not a student and
         # must not have to create a student account to volunteer. It writes to
         # mentor_applications, which no public role can read or write, and
@@ -308,3 +315,70 @@ def test_mentor_matching_works_when_the_directory_is_not_empty() -> None:
     name = (top.get("mentor") or top).get("name")
     assert name == "Dr Vega", "a biology mentor must outrank an engineer here"
     assert score_mentors(student, []) == []
+
+
+def test_public_shelf_serves_an_allowlist_not_the_row() -> None:
+    """The open internet gets what a student needs to judge a resource, and
+    nothing about how it got here.
+
+    Same contract as the public catalog, enforced the same way. learning_resources
+    carries added_by, verified_at, verified_note and the retirement columns; a
+    visitor has no reason to receive curation bookkeeping, and a column added to
+    the table later must stay private until someone adds it here on purpose.
+    """
+    from app.resources import SHELF_FIELDS
+
+    for withheld in ("added_by", "verified_at", "verified_note", "retired_at",
+                     "retired_reason", "created_at", "is_free"):
+        assert withheld not in SHELF_FIELDS, (
+            f"the public shelf would expose {withheld}, which is curation "
+            "bookkeeping, not something a visitor needs"
+        )
+    # And it must still carry what makes a row usable tonight.
+    for needed in ("title", "host", "url", "kind", "effort", "prerequisite",
+                   "why_this_one", "free_evidence"):
+        assert needed in SHELF_FIELDS, f"the public shelf omits {needed}"
+
+
+def test_the_shelf_never_serves_a_free_claim_without_its_receipt() -> None:
+    """is_free is a claim; free_evidence is the sentence on the page that proves
+    it. This catalog exists for students with no money, so a row whose evidence
+    went missing is dropped rather than shown on trust -- and that has to hold
+    on the browse-all path too, not only on the per-skill one it was written for.
+    """
+    from app import resources
+
+    rows = [
+        {"id": "a", "title": "Has evidence", "kind": "course", "skill_label": "Stats",
+         "free_evidence": "Free to audit.", "opportunity_field": "math"},
+        {"id": "b", "title": "No evidence", "kind": "course", "skill_label": "Stats",
+         "free_evidence": "   ", "opportunity_field": "math"},
+        {"id": "c", "title": "Null evidence", "kind": "course", "skill_label": "Stats",
+         "free_evidence": None, "opportunity_field": "math"},
+    ]
+
+    class _Query:
+        def select(self, *a, **k):
+            return self
+
+        def eq(self, *a, **k):
+            return self
+
+        def is_(self, *a, **k):
+            return self
+
+        def limit(self, *a, **k):
+            return self
+
+        def execute(self):
+            return type("R", (), {"data": rows})()
+
+    class _SB:
+        def table(self, name):
+            assert name == "learning_resources"
+            return _Query()
+
+    resources.clear_cache()
+    served = resources.fetch_shelf(_SB())
+    assert [r["title"] for r in served] == ["Has evidence"]
+    resources.clear_cache()

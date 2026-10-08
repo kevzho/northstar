@@ -11,15 +11,23 @@
  * could not reach the shelf or the map at all. Twenty-two routes, no way
  * across them.
  *
- * FOUR DESTINATIONS, NOT TWENTY-TWO. The routes group into four things a
- * student is actually doing — finding something to apply to, working out what
- * to do next, understanding themselves, and finding people. Everything else is
- * a detail page reached from one of those. A nav listing every route would be
- * the same problem with more words in it.
+ * FIVE DESTINATIONS, NOT TWENTY-TWO. The routes group into five things a
+ * student is actually doing — finding something to apply to, finding something
+ * to learn, working out what to do next, understanding themselves, and finding
+ * people. Everything else is a detail page reached from one of those. A nav
+ * listing every route would be the same problem with more words in it.
  *
- * SIGNED OUT IT COLLAPSES. Three of the four need an account, and offering a
- * visitor four links that bounce them to /login is worse than offering the one
- * thing they can actually use. See lib/use-require-auth.ts.
+ * WHY "LEARN" IS NOT A DETAIL PAGE UNDER "OPPORTUNITIES". A programme has a
+ * deadline you can miss and a gate you might not pass. A free textbook has
+ * neither. Filing the shelf under applications is how it ended up reachable
+ * only from a roadmap step, and how the product had nothing to say to a student
+ * in a month when nothing is open — which is most months.
+ *
+ * SIGNED OUT IT SHOWS WHAT WORKS SIGNED OUT. Three of the five need an account;
+ * two do not. Offering a visitor five links that bounce them to /login is worse
+ * than offering the two they can actually use, and collapsing to nothing at all
+ * (which this did until the shelf went public) is worse than both. See
+ * lib/use-require-auth.ts.
  */
 
 import Link from "next/link";
@@ -28,12 +36,17 @@ import { StarGlyph } from "@/components/decor/star-glyph";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useAuth } from "@/lib/use-auth";
 
-/** `match` is the route prefix that should light this item up. */
+/**
+ * `match` is the route prefix that should light this item up. `open` marks the
+ * destinations that work with no account, which are the only ones a visitor is
+ * shown.
+ */
 const SECTIONS = [
-  { href: "/opportunities", label: "Opportunities", match: "/opportunities" },
-  { href: "/plan", label: "Plan", match: "/plan" },
-  { href: "/profile", label: "You", match: "/profile" },
-  { href: "/discover", label: "People", match: "/discover" },
+  { href: "/opportunities", label: "Programs", match: "/opportunities", open: true },
+  { href: "/learn", label: "Learn", match: "/learn", open: true },
+  { href: "/plan", label: "Plan", match: "/plan", open: false },
+  { href: "/profile", label: "You", match: "/profile", open: false },
+  { href: "/discover", label: "People", match: "/discover", open: false },
 ] as const;
 
 /** Routes that belong to a section without sharing its prefix. */
@@ -76,9 +89,9 @@ export function AppNav({
         {/* Hidden while the session resolves rather than flashing the wrong
             state on every hard refresh — the same reason use-require-auth
             waits before redirecting. */}
-        {!loading && signedIn ? (
+        {!loading ? (
           <nav aria-label="Sections" className="flex items-center gap-1">
-            {SECTIONS.map((section) => {
+            {SECTIONS.filter((section) => signedIn || section.open).map((section) => {
               const current = active === section.href;
               return (
                 <Link

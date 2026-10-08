@@ -1373,6 +1373,32 @@ def create_app() -> FastAPI:
         ).execute()
         return {**spine, "regenerated": True}
 
+    @app.get("/resources/public")
+    def public_resources() -> list[dict]:
+        """The learning shelf, to anyone, signed in or not.
+
+        WHAT THIS CHANGES. public.learning_resources was reachable only as
+        ``/resources?skill=<rung>``, which needs an account and needs the
+        student to already be on the path that names that rung. So the material
+        existed and nobody could browse it: a student who wanted to learn
+        something their plan had not told them to learn had no route to it, and
+        a visitor could not see that it was there at all.
+
+        A catalog of programmes with deadlines answers "what can I apply to".
+        It does not answer "what do I do on a Tuesday in February when nothing
+        is open", which for most students is most of the year. That is what
+        this shelf is for, and it is the half that does not need an account,
+        a transcript, a teacher, or a dollar.
+
+        Every row is free, not retired, and carries the quoted sentence from
+        the page that proves the free claim -- app/resources.py drops the rest
+        rather than showing them on trust.
+        """
+        from .db import get_supabase
+        from .resources import fetch_shelf
+
+        return fetch_shelf(get_supabase())
+
     @app.get("/resources")
     def list_resources(
         skill: str = "",

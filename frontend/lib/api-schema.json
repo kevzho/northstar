@@ -1782,6 +1782,30 @@
         "summary": "List Resources"
       }
     },
+    "/resources/public": {
+      "get": {
+        "description": "The learning shelf, to anyone, signed in or not.\n\nWHAT THIS CHANGES. public.learning_resources was reachable only as\n``/resources?skill=<rung>``, which needs an account and needs the\nstudent to already be on the path that names that rung. So the material\nexisted and nobody could browse it: a student who wanted to learn\nsomething their plan had not told them to learn had no route to it, and\na visitor could not see that it was there at all.\n\nA catalog of programmes with deadlines answers \"what can I apply to\".\nIt does not answer \"what do I do on a Tuesday in February when nothing\nis open\", which for most students is most of the year. That is what\nthis shelf is for, and it is the half that does not need an account,\na transcript, a teacher, or a dollar.\n\nEvery row is free, not retired, and carries the quoted sentence from\nthe page that proves the free claim -- app/resources.py drops the rest\nrather than showing them on trust.",
+        "operationId": "public_resources_resources_public_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "title": "Response Public Resources Resources Public Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Public Resources"
+      }
+    },
     "/roadmap": {
       "get": {
         "description": "The student's sequenced roadmap: what to do, in order.\n\nThis is the route that makes Northstar something other than a ranked\nlist. It assembles four kinds of step -- learn, build, publish, apply --\nand orders them on the student's grade progression rather than on\ncatalog deadlines, because against production a 9th grader has exactly\nONE catalog row with a future deadline and 25 of 61 are locked above\ntheir grade. A deadline-anchored sequencer has nothing to say to them.\n\nNo model runs here. Provenance is a foreign key: a step naming a\nprogram or a course carries its id, so app/roadmap.py cannot emit a\nstep for something absent from the catalog and the insert would refuse\nit anyway.\n\nSteps are persisted to public.actions under a generation, merged on\nstep_key so completing a step survives a regeneration.",

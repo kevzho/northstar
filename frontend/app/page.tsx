@@ -272,6 +272,19 @@ export default function Home() {
                 Try the assessment first
               </Button>
             </div>
+            {/* The one thing on this site that needs nothing from you — no
+                account, no assessment, no waiting for a deadline. Worth saying
+                in the hero rather than three screens down, because a student
+                who leaves without signing up should still leave with
+                something. */}
+            <p className="mt-5 text-sm leading-7 text-muted-foreground">
+              Or skip all of it and{" "}
+              <Link href="/learn" className="font-semibold text-aurora underline decoration-border underline-offset-4">
+                take something off the shelf
+              </Link>{" "}
+              — free material you can start tonight, no account, each row
+              quoting the line on its own page that proves it costs nothing.
+            </p>
           </AnimatedGroup>
 
           <motion.div style={{ y: constellationY, opacity: constellationOpacity }}>

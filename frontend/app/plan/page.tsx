@@ -285,6 +285,13 @@ export default function PlanPage() {
                   the programmes this is all for, each with the thing that gets
                   you in stacked above it. Tap any node to jump to its step.
                 </p>
+                <p className="mt-2 max-w-2xl text-sm leading-7 text-muted-foreground">
+                  The learn steps come off{" "}
+                  <Link href="/learn" className="font-semibold text-aurora">
+                    the shelf
+                  </Link>
+                  , which has more on it than your path happens to name.
+                </p>
                 <RoadmapTree
                   className="mt-6"
                   tree={tree}
