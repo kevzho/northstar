@@ -9,11 +9,24 @@
  * wants to see is the SHAPE of their interests — whether they are concentrated
  * in one place or spread across the sky — and a list makes that work to read.
  *
- * AREA IS THE SHARE, NOT WIDTH. Radius scales with the square root of the
- * percentage, because a circle drawn at 21% radius against one at 4% is five
- * times wider and twenty-five times bigger, which overstates the gap by the
- * square. Area is what the eye actually compares, so area is what is made
- * proportional.
+ * SIZE USES A PERCEPTUAL EXPONENT, AND HERE IS THE TRADE. Three options, run
+ * against a real profile of 17/17/10/9/9/9/9/8/6/6:
+ *
+ *   radius ∝ share          2.83:1 biggest to smallest — but area then scales
+ *                           with the SQUARE, so 2.8x the share draws 8x the
+ *                           ink. That is not a bigger difference, it is a
+ *                           wrong one.
+ *   radius ∝ √share         1.68:1 — area exactly proportional, and honest,
+ *                           but a flat profile reads as ten identical dots.
+ *   radius ∝ share^0.7      2.07:1 — the proportional-symbol convention, which
+ *                           exists because the eye under-reads area and a
+ *                           strictly area-true map looks flatter than the data.
+ *
+ * 0.7 it is. The exaggeration is bounded and named rather than accidental, and
+ * the list below carries the exact numbers for anyone who wants them.
+ *
+ * The old version was worse than any of these: a +24px floor on top of √ gave
+ * 1.38:1, so the base constant was doing more of the work than the data.
  *
  * DETERMINISTIC PLACEMENT. A phyllotaxis spiral — the arrangement a sunflower
  * uses — ordered by share, so the largest sits at the centre and the rest fall
@@ -66,8 +79,9 @@ export function FieldSky({
         const spread = Math.sqrt((index + 0.7) / ranked.length);
         const left = 50 + Math.cos(angle) * spread * 40;
         const topPct = 50 + Math.sin(angle) * spread * 33;
-        // Area proportional to share; the biggest world fills the budget.
-        const size = 24 + Math.sqrt(share / top) * 52;
+        const relative = share / top;
+        // See the note above: 0.7 rather than 0.5, and no base constant.
+        const size = Math.round(Math.pow(relative, 0.7) * 88);
         return (
           <div
             key={field}
@@ -81,7 +95,11 @@ export function FieldSky({
                 width: `${size}px`,
                 height: `${size}px`,
                 color: fieldColor(field),
-                opacity: 0.55 + (share / top) * 0.45,
+                // Two more channels so the ranking survives for someone who
+                // cannot judge area well: the leading fields are brighter and
+                // drawn with a heavier line.
+                opacity: 0.4 + relative * 0.6,
+                strokeWidth: 1.1 + relative * 1.1,
               }}
             />
           </div>
