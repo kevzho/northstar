@@ -1429,6 +1429,38 @@
       }
     },
     "/missions/{mission_id}/complete": {
+      "delete": {
+        "description": "Take a completion back.\n\nMarking a mission done was a one-way door: the only write was an upsert,\nso a student who ticked the wrong card, or ticked one and then did not\nfinish it, was stuck looking at a claim about themselves they could not\ncorrect. An evidence record nobody can amend is not a stronger record,\nit is one people stop trusting -- and a student lying to their own\nprogress bar because the UI made them is the worst version of this.\n\nA real delete, not a tombstone. The catalog stamps retired_at and never\ndeletes because a programme's history is shared and a student's finished\nstep must keep its title; this row is one person's note about themselves\nand a mistaken tick is not history worth preserving. Scoped to the\ncaller's own student_id, so one student cannot un-complete another's.\n\nIdempotent: deleting a completion that is not there is a 204, because\nthe end state the caller asked for is the end state they get.",
+        "operationId": "uncomplete_mission_missions__mission_id__complete_delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "mission_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Mission Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Uncomplete Mission"
+      },
       "post": {
         "description": "Record mission evidence onto the student record.\n\nIdempotent by the unique(student_id, mission_id) constraint \u2014\ncompleting twice updates the evidence instead of duplicating.",
         "operationId": "complete_mission_missions__mission_id__complete_post",

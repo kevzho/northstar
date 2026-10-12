@@ -9,7 +9,9 @@
  *    student's current profile, plus the deadline-bearing matched
  *    opportunities in the path's fields — the "what to do about it".
  *  - Missions: three concrete real-world tasks per path; completing one
- *    writes evidence onto the student record (POST /missions/:id/complete).
+ *    writes evidence onto the student record (POST /missions/:id/complete),
+ *    and takes it back again (DELETE), because a record nobody can amend is
+ *    one people stop trusting rather than a stronger one.
  *    Missions whose trait focus matches an open gap are labelled as
  *    closing it.
  *
@@ -24,6 +26,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   completeMission,
+  uncompleteMission,
   fetchMissionCompletions,
   fetchMissions,
 } from "@/lib/api";
@@ -66,6 +69,38 @@ export function MissionBoard({
       cancelled = true;
     };
   }, [archetype.id]);
+
+  /**
+   * Undo.
+   *
+   * Optimistic, and it puts the mission's own evidence back in the draft box
+   * rather than clearing it — someone un-ticking a mission is usually fixing
+   * the evidence, not abandoning the work, and making them retype it is how
+   * you teach people not to correct the record.
+   */
+  async function undoComplete(mission: Mission) {
+    const previous = completions.get(mission.id);
+    setSavingId(mission.id);
+    setCompletions((current) => {
+      const next = new Map(current);
+      next.delete(mission.id);
+      return next;
+    });
+    if (previous?.evidence) {
+      setDrafts((current) => ({ ...current, [mission.id]: previous.evidence }));
+    }
+    try {
+      await uncompleteMission(mission.id);
+    } catch {
+      // Put it back rather than leaving the board claiming something the
+      // server did not agree to.
+      if (previous) {
+        setCompletions((current) => new Map(current).set(mission.id, previous));
+      }
+    } finally {
+      setSavingId(null);
+    }
+  }
 
   async function markComplete(mission: Mission) {
     setSavingId(mission.id);
@@ -230,10 +265,20 @@ export function MissionBoard({
                     {mission.description}
                   </p>
                   {done ? (
-                    <p className="mt-3 font-mono text-xs text-star">
-                      completed
-                      {done.evidence ? ` — ${done.evidence}` : ""}
-                    </p>
+                    <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
+                      <p className="font-mono text-xs text-star">
+                        completed
+                        {done.evidence ? ` — ${done.evidence}` : ""}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => undoComplete(mission)}
+                        disabled={savingId === mission.id}
+                        className="text-xs text-muted-foreground underline decoration-border underline-offset-4 hover:text-foreground disabled:opacity-60"
+                      >
+                        {savingId === mission.id ? "Undoing…" : "Mark as not done"}
+                      </button>
+                    </div>
                   ) : (
                     <div className="mt-3 flex flex-col gap-2 sm:flex-row">
                       <Input

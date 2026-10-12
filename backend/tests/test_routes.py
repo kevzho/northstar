@@ -382,3 +382,179 @@ def test_the_shelf_never_serves_a_free_claim_without_its_receipt() -> None:
     served = resources.fetch_shelf(_SB())
     assert [r["title"] for r in served] == ["Has evidence"]
     resources.clear_cache()
+
+
+def test_every_handler_can_resolve_the_names_it_calls() -> None:
+    """No handler may reference a name nothing in its scope binds.
+
+    THE BUG THIS EXISTS FOR. Forty-one handlers in app/main.py open with a
+    local ``from .db import get_supabase``; POST /roadmap/spine called
+    ``get_supabase()`` without one. Python does not notice until the line runs,
+    the line only runs on a real request, and no test called it -- so the
+    endpoint raised NameError on every request from the day it shipped, and
+    "None of these are me" never once produced a plan for anybody.
+
+    Nothing caught it because the failure is invisible to every other kind of
+    check: it imports, it type-checks, the route is registered, the OpenAPI
+    contract matches, and the handler's own tests mock the parts around it.
+    This walks each handler's AST instead and asks the only question that
+    mattered -- is every name it loads actually bound somewhere it can see.
+
+    Deliberately scoped to the module's TOP LEVEL rather than ast.walk over the
+    whole file: the first version of this check swept up those forty-one local
+    imports, decided ``get_supabase`` was module-level, and passed cleanly on
+    the broken code. It was fixed by putting the bug back and watching it fail.
+    """
+    import ast
+    import builtins
+    import inspect
+
+    from app import main as main_mod
+
+    def bound_names(node: ast.AST) -> set[str]:
+        """Every name a function body binds, however it binds it."""
+        out: set[str] = set()
+        for child in ast.walk(node):
+            if isinstance(child, ast.Name) and isinstance(child.ctx, (ast.Store, ast.Del)):
+                out.add(child.id)
+            elif isinstance(child, ast.arg):
+                out.add(child.arg)
+            elif isinstance(child, (ast.Import, ast.ImportFrom)):
+                for alias in child.names:
+                    out.add((alias.asname or alias.name).split(".")[0])
+            elif isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                out.add(child.name)
+            elif isinstance(child, ast.ExceptHandler) and child.name:
+                out.add(child.name)
+            elif isinstance(child, (ast.Global, ast.Nonlocal)):
+                out.update(child.names)
+        return out
+
+    def top_level_bindings(body: list) -> set[str]:
+        """Only what the MODULE binds — see the docstring above."""
+        out: set[str] = set()
+        for stmt in body:
+            if isinstance(stmt, (ast.Import, ast.ImportFrom)):
+                for alias in stmt.names:
+                    out.add((alias.asname or alias.name).split(".")[0])
+            elif isinstance(stmt, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                out.add(stmt.name)
+            elif isinstance(stmt, (ast.Assign, ast.AnnAssign, ast.AugAssign)):
+                targets = (
+                    [stmt.target]
+                    if getattr(stmt, "target", None) is not None
+                    else getattr(stmt, "targets", [])
+                )
+                for target in targets:
+                    for node in ast.walk(target):
+                        if isinstance(node, ast.Name):
+                            out.add(node.id)
+            elif isinstance(stmt, (ast.If, ast.Try, ast.With, ast.For, ast.While)):
+                for field in ("body", "orelse", "finalbody", "handlers"):
+                    out |= top_level_bindings(getattr(stmt, field, []) or [])
+            elif isinstance(stmt, ast.ExceptHandler):
+                if stmt.name:
+                    out.add(stmt.name)
+                out |= top_level_bindings(stmt.body)
+        return out
+
+    tree = ast.parse(inspect.getsource(main_mod))
+    module_level = top_level_bindings(tree.body) | set(dir(builtins))
+
+    create_app = next(
+        node for node in tree.body
+        if isinstance(node, ast.FunctionDef) and node.name == "create_app"
+    )
+    handlers = [
+        node for node in create_app.body
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+    ]
+    # What create_app binds for its handlers to close over — its own body, minus
+    # the handlers' private locals.
+    enclosing = {arg.arg for arg in create_app.args.args}
+    enclosing |= {handler.name for handler in handlers}
+    for stmt in create_app.body:
+        if not isinstance(stmt, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            enclosing |= bound_names(stmt)
+
+    unresolved = {
+        handler.name: sorted(
+            {
+                node.id
+                for node in ast.walk(handler)
+                if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load)
+            }
+            - bound_names(handler)
+            - enclosing
+            - module_level
+        )
+        for handler in handlers
+    }
+    broken = {name: names for name, names in unresolved.items() if names}
+    assert not broken, (
+        "these handlers reference names nothing binds, and will raise NameError "
+        f"the first time a real request reaches the line: {broken}"
+    )
+    # Sanity: if the walk stops finding handlers the assertion above is vacuous.
+    assert len(handlers) > 30, f"only found {len(handlers)} handlers to check"
+
+
+def test_a_completion_can_be_taken_back_and_only_your_own() -> None:
+    """Marking a mission done used to be a one-way door.
+
+    The only write was an upsert, so a student who ticked the wrong card — or
+    ticked one and then did not finish it — was stuck looking at a claim about
+    themselves they could not correct. An evidence record nobody can amend is
+    not a stronger record, it is one people stop trusting.
+
+    Two things this pins: the delete is filtered by the CALLER's student_id as
+    well as the mission, so nobody can un-complete someone else's work; and it
+    answers 204 whether or not a row was there, because the end state the caller
+    asked for is the end state they get.
+    """
+    import app.db
+    from app.auth import get_current_user
+
+    calls: list[tuple] = []
+
+    class _Query:
+        def delete(self):
+            calls.append(("delete",))
+            return self
+
+        def eq(self, column, value):
+            calls.append(("eq", column, value))
+            return self
+
+        def execute(self):
+            return type("R", (), {"data": []})()
+
+    class _SB:
+        def table(self, name):
+            calls.append(("table", name))
+            return _Query()
+
+    api = create_app()
+
+    class _User:
+        id = "11111111-1111-1111-1111-111111111111"
+        email = "student@example.com"
+
+    api.dependency_overrides[get_current_user] = lambda: _User()
+    original = app.db.get_supabase
+    app.db.get_supabase = lambda: _SB()
+    try:
+        response = TestClient(api).delete(
+            "/missions/22222222-2222-2222-2222-222222222222/complete"
+        )
+    finally:
+        app.db.get_supabase = original
+
+    assert response.status_code == 204
+    assert ("table", "mission_completions") in calls
+    assert ("delete",) in calls
+    assert ("eq", "student_id", _User.id) in calls, (
+        "the delete is not scoped to the caller — one student could un-complete "
+        "another's mission"
+    )
+    assert ("eq", "mission_id", "22222222-2222-2222-2222-222222222222") in calls

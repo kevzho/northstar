@@ -14,9 +14,11 @@ import {
   assessmentQuestions,
   type LikertValue,
 } from "./assessment";
+import { archetypes } from "./archetypes";
 import {
   FIELD_KEYS,
   TRAIT_KEYS,
+  divergentPaths,
   isComplete,
   leadingFields,
   parseAnswers,
@@ -25,6 +27,7 @@ import {
   scoreTraits,
   selectFuturePaths,
   type AssessmentAnswers,
+  type TraitScores,
 } from "./scoring";
 
 /**
@@ -246,5 +249,74 @@ describe("parseAnswers", () => {
     const partial = answersByIndex(0);
     delete partial[assessmentQuestions[0].id];
     expect(isComplete(partial)).toBe(false);
+  });
+});
+
+describe("divergentPaths", () => {
+  const traits: TraitScores = {
+    builder: 70,
+    analyst: 45,
+    riskTolerance: 45,
+    ambiguityComfort: 40,
+    collaboration: 17,
+    executionTempo: 67,
+  };
+
+  it("never returns a path the student has already been shown", () => {
+    const first = selectFuturePaths(traits);
+    const seen = first.map((p) => p.archetype.id);
+    const next = divergentPaths(traits, [], seen);
+    for (const path of next) expect(seen).not.toContain(path.archetype.id);
+  });
+
+  it("travels further on each press instead of circling", () => {
+    // The whole point. Ranks four, five and six are the near-neighbours of the
+    // three just turned down; this has to move away, not down the list.
+    const seen = selectFuturePaths(traits).map((p) => p.archetype.id);
+    const round1 = divergentPaths(traits, [], seen);
+    const round2 = divergentPaths(traits, [], [...seen, ...round1.map((p) => p.archetype.id)]);
+    const ids1 = round1.map((p) => p.archetype.id);
+    for (const path of round2) expect(ids1).not.toContain(path.archetype.id);
+    expect(round2.length).toBeGreaterThan(0);
+  });
+
+  it("is further from the safe pick than the plain ranking would be", () => {
+    const ranked = rankArchetypes(traits);
+    const seen = [ranked[0].archetype.id];
+    const divergent = divergentPaths(traits, [], seen, 1)[0];
+    const byRank = ranked.filter((r) => r.archetype.id !== ranked[0].archetype.id)[0];
+    // Same trait vector comparison the selector uses, recomputed here so the
+    // test would notice if the sort direction were flipped.
+    const dot = (a: number[], b: number[]) => a.reduce((s, n, i) => s + n * b[i], 0);
+    const norm = (a: number[]) => Math.sqrt(dot(a, a));
+    const cos = (a: number[], b: number[]) => dot(a, b) / (norm(a) * norm(b) || 1);
+    const v = (id: string) => {
+      const a = archetypes.find((x) => x.id === id)!;
+      return TRAIT_KEYS.map((k) => a.traits[k]);
+    };
+    const safe = v(ranked[0].archetype.id);
+    expect(cos(v(divergent.archetype.id), safe)).toBeLessThanOrEqual(
+      cos(v(byRank.archetype.id), safe),
+    );
+  });
+
+  it("is deterministic — a generate button is not a slot machine", () => {
+    const seen = ["x"];
+    const a = divergentPaths(traits, [], seen).map((p) => p.archetype.id);
+    const b = divergentPaths(traits, [], seen).map((p) => p.archetype.id);
+    expect(a).toEqual(b);
+  });
+
+  it("runs out rather than repeating when the library is exhausted", () => {
+    const everything = archetypes.map((a) => a.id);
+    expect(divergentPaths(traits, [], everything)).toEqual([]);
+  });
+
+  it("says it was chosen for difference, not for fit", () => {
+    const [path] = divergentPaths(traits, [], selectFuturePaths(traits).map((p) => p.archetype.id));
+    expect(path.kind).toBe("divergent");
+    expect(path.rationale).toContain("unlike");
+    // The number it did NOT optimise for stays visible on the card.
+    expect(path.rationale).toContain(`${path.fit}%`);
   });
 });

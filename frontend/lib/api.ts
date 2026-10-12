@@ -308,6 +308,17 @@ export async function completeMission(
   })).json();
 }
 
+/**
+ * Take a completion back.
+ *
+ * Marking a mission done was a one-way door, so a student who ticked the wrong
+ * card was stuck looking at a claim about themselves they could not correct.
+ * 204 whether or not a row was there.
+ */
+export async function uncompleteMission(missionId: string): Promise<void> {
+  await authedFetch(`/missions/${missionId}/complete`, { method: "DELETE" });
+}
+
 /** The evidence timeline: every recorded step, newest first. */
 export async function fetchTimeline(): Promise<TimelineEvent[]> {
   return (await authedFetch("/timeline")).json();

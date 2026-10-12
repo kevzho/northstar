@@ -336,7 +336,12 @@ export function rankArchetypes(
  * step. Declining now produces a plan written from their traits, grade, fields
  * and real matches, with no career label stored.
  */
-export type PathKind = "safe" | "ambitious" | "unconventional" | "broad";
+export type PathKind =
+  | "safe"
+  | "ambitious"
+  | "unconventional"
+  | "divergent"
+  | "broad";
 
 export type FuturePath = ScoredArchetype & {
   kind: PathKind;
@@ -348,6 +353,7 @@ const PATH_LABELS: Record<PathKind, string> = {
   safe: "Safe fit",
   ambitious: "Ambitious fit",
   unconventional: "Unconventional fit",
+  divergent: "Further afield",
   // Never rendered on a path card — there is no card for it. Present so the
   // map stays exhaustive and a future caller cannot read undefined.
   broad: "Broader interests",
@@ -425,6 +431,71 @@ export function selectFuturePaths(
   }
 
   return paths;
+}
+
+/**
+ * Another round of paths, chosen to be UNLIKE the ones already seen.
+ *
+ * The three on /futures are the top of one ranking, so a student who does not
+ * recognise themselves in any of them has only two moves: take one anyway, or
+ * decline the whole exercise. Handing them ranks four, five and six would not
+ * help — those are the near-neighbours of the three they just turned down, by
+ * construction.
+ *
+ * So this ranks the remainder by DISTANCE from what they have seen: the
+ * centroid of every trait vector already shown, and the archetypes pointing
+ * furthest away from it. Pressing again moves the centroid to include the new
+ * batch, so each round travels further rather than circling.
+ *
+ * THE FIT WILL BE LOWER, AND THE CARD SAYS SO. These are selected against
+ * similarity, not for fit — calling a 41% match a discovery would be the same
+ * dishonesty as the hollow spines. The number stays on the card and the
+ * rationale names what it was chosen for.
+ *
+ * Deterministic: same answers and same `seen` list give the same batch, because
+ * a "generate" button that reshuffles is a slot machine, not a tool.
+ */
+export function divergentPaths(
+  traits: TraitScores,
+  fields: OpportunityField[] = [],
+  seen: string[] = [],
+  count = 3,
+): FuturePath[] {
+  const ranked = rankArchetypes(traits, fields);
+  const seenSet = new Set(seen);
+  const remaining = ranked.filter((r) => !seenSet.has(r.archetype.id));
+  if (remaining.length === 0) return [];
+
+  const shown = ranked.filter((r) => seenSet.has(r.archetype.id));
+  // Nothing seen yet (a caller asking for divergence first) — fall back to the
+  // top-ranked vector so "away from here" still means something.
+  const reference = (shown.length ? shown : ranked.slice(0, 1)).map((r) =>
+    vector(r.archetype.traits),
+  );
+  const centroid = reference[0].map(
+    (_, index) =>
+      reference.reduce((sum, v) => sum + v[index], 0) / reference.length,
+  );
+
+  return remaining
+    .map((entry) => ({
+      entry,
+      similarity: cosine(vector(entry.archetype.traits), centroid),
+    }))
+    // Furthest first. Ties break on fit, then id, so the order never depends on
+    // the library's array order.
+    .sort(
+      (a, b) =>
+        a.similarity - b.similarity ||
+        b.entry.fit - a.entry.fit ||
+        a.entry.archetype.id.localeCompare(b.entry.archetype.id),
+    )
+    .slice(0, count)
+    .map(({ entry }) => ({
+      ...entry,
+      kind: "divergent" as const,
+      rationale: `Chosen for being unlike the paths you have already seen, not for fit — which is ${entry.fit}%. Worth a look precisely because it would not have come up.`,
+    }));
 }
 
 // ---------------------------------------------------------------------------

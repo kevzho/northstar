@@ -1240,6 +1240,12 @@ def create_app() -> FastAPI:
         control a bored student will hold down.
         """
         from .advisor import budget_block, record_call
+        # Imported here like the other forty handlers in this file. It was not,
+        # and `sb = get_supabase()` below raised NameError on every single call
+        # from the day this endpoint shipped -- so "None of these are me" and
+        # the regenerate button have never once worked. See
+        # test_every_handler_can_resolve_the_names_it_calls.
+        from .db import get_supabase
         from .spine_generation import SYSTEM_PROMPT, build_prompt, parse_spine
 
         sb = get_supabase()
@@ -1322,11 +1328,24 @@ def create_app() -> FastAPI:
                     {"role": "system", "content": SYSTEM_PROMPT},
                     {"role": "user", "content": prompt},
                 ],
-                max_tokens=700,
+                # Generous, for the reason verify_candidate documents: a
+                # reasoning model emits its thinking as message content before
+                # the JSON, and 700 tokens were spent entirely on "We need to
+                # produce JSON with three keys..." -- the object never arrived,
+                # parse_spine found no braces, and every single request refused
+                # with "the path that came back did not meet the bar". The
+                # spine itself is about 120 tokens.
+                max_tokens=1600,
                 # Low but not zero: a plan should read as written for one
                 # person, which greedy decoding tends not to manage, and a
                 # student pressing this twice should not get the same sentence.
                 temperature=0.4,
+                # The two settings that stop the preamble at the source rather
+                # than paying for it. Both are dropped by providers that do not
+                # know them (see app/llm.py), which is why the verifier can use
+                # them against Azure and NIM alike.
+                response_format={"type": "json_object"},
+                reasoning_effort="none",
             )
         except LLMUnavailable:
             raise HTTPException(
@@ -1485,6 +1504,41 @@ def create_app() -> FastAPI:
                 detail="Failed to record mission completion",
             )
         return result.data[0]
+
+    @app.delete("/missions/{mission_id}/complete", status_code=status.HTTP_204_NO_CONTENT)
+    def uncomplete_mission(
+        mission_id: UUID,
+        user: CurrentUser = RequireUser,
+    ) -> None:
+        """Take a completion back.
+
+        Marking a mission done was a one-way door: the only write was an upsert,
+        so a student who ticked the wrong card, or ticked one and then did not
+        finish it, was stuck looking at a claim about themselves they could not
+        correct. An evidence record nobody can amend is not a stronger record,
+        it is one people stop trusting -- and a student lying to their own
+        progress bar because the UI made them is the worst version of this.
+
+        A real delete, not a tombstone. The catalog stamps retired_at and never
+        deletes because a programme's history is shared and a student's finished
+        step must keep its title; this row is one person's note about themselves
+        and a mistaken tick is not history worth preserving. Scoped to the
+        caller's own student_id, so one student cannot un-complete another's.
+
+        Idempotent: deleting a completion that is not there is a 204, because
+        the end state the caller asked for is the end state they get.
+        """
+        from .db import get_supabase
+
+        sb = get_supabase()
+        (
+            sb.table("mission_completions")
+            .delete()
+            .eq("student_id", user.id)
+            .eq("mission_id", str(mission_id))
+            .execute()
+        )
+        return None
 
     @app.get("/dismissals", response_model=list[Dismissal])
     def list_dismissals(user: CurrentUser = RequireUser) -> list[dict]:

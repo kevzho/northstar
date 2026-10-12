@@ -160,3 +160,53 @@ def test_a_generated_step_is_not_called_a_common_route() -> None:
     )
     assert "Written for you" in said
     assert "not a route anyone has walked" in said
+
+
+def test_trait_scores_are_already_out_of_100_and_must_not_be_scaled_again() -> None:
+    """students.trait_scores is stored 0-100, not 0-1.
+
+    build_prompt multiplied by 100 anyway, so the model was handed "builder
+    7000%, executionTempo 6700%, analyst 4500%" — which is not a trait profile,
+    it is noise with a percent sign on it, and it was the input to every
+    personalised plan this endpoint has ever written.
+    """
+    from app.spine_generation import build_prompt
+
+    prompt = build_prompt(
+        {
+            "grade": 12,
+            "trait_scores": {"builder": 70.0, "analyst": 45.0, "collaboration": 17.0},
+            "field_scores": {"math": 21.0},
+        },
+        matches=[],
+        skill_keys=[{"skill_key": "statistics", "skill_label": "statistics — x"}],
+    )
+    assert "builder 70" in prompt
+    assert "7000" not in prompt
+    # And the scale is stated, because the numbers no longer carry a unit.
+    assert "out of 100" in prompt
+
+
+def test_the_spine_call_asks_for_json_and_not_for_thinking() -> None:
+    """The settings that make the reply parseable at all.
+
+    Measured against the configured model: with neither of these, 700 tokens
+    went entirely on "We need to produce JSON with three keys... Let's think:
+    they lean math, business, design. They " — truncated mid-sentence, the JSON
+    object never emitted, parse_spine found no braces, and the endpoint refused
+    with "the path that came back did not meet the bar" on every request. The
+    verifier learned the same lesson in app/verifier.py and says so there.
+    """
+    import inspect
+
+    from app import main as main_mod
+
+    src = inspect.getsource(main_mod.create_app)
+    start = src.index('@app.post("/roadmap/spine")')
+    body = src[start : src.index("return {**spine", start)]
+
+    assert 'response_format={"type": "json_object"}' in body
+    assert 'reasoning_effort="none"' in body
+    # And headroom, because reasoning_effort is dropped by providers that do not
+    # know it and the preamble comes back anyway.
+    assert "max_tokens=700" not in body

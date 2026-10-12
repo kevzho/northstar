@@ -104,8 +104,12 @@ def build_prompt(
     regenerate button is a dice roll that can hand back the same idea reworded.
     """
     traits = student.get("trait_scores") or {}
+    # students.trait_scores is ALREADY 0-100 (lib/scoring.ts rounds to whole
+    # points and POST /students/scores stores them unchanged). Multiplying by
+    # 100 again put "builder 7000%, executionTempo 6700%" in front of the model,
+    # which is not a profile, it is noise with a percent sign on it.
     trait_line = ", ".join(
-        f"{name} {round(float(score) * 100)}%" for name, score in sorted(
+        f"{name} {round(float(score))}" for name, score in sorted(
             traits.items(), key=lambda kv: -float(kv[1] or 0)
         )[:6]
     ) or "not assessed"
@@ -117,7 +121,7 @@ def build_prompt(
     lines = [
         f"Grade: {student.get('grade') or 'unknown'}",
         f"Archetype they landed on: {student.get('chosen_archetype') or 'none'}",
-        f"Traits (highest first): {trait_line}",
+        f"Traits, highest first, each out of 100: {trait_line}",
         f"Fields they lean toward: {field_line}",
         "",
         "Opportunities already matched to them (the only programmes you may name):",

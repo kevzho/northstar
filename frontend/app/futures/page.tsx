@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { archetypes } from "@/lib/archetypes";
 import { authedFetch, regenerateSpine, syncChosenPath } from "@/lib/api";
 import {
+  divergentPaths,
   interestFields,
   leadingFields,
   pathLabel,
@@ -87,6 +88,34 @@ export default function FuturesPage() {
   const [broadError, setBroadError] = useState("");
 
   /**
+   * More directions, chosen for being UNLIKE the ones already on screen.
+   *
+   * Three cards out of twenty-four archetypes is a narrow window, and a student
+   * who recognises themselves in none of them previously had two moves: take
+   * one anyway, or decline the whole exercise. Ranks four to six would not have
+   * helped — they are the near-neighbours of the three just turned down, by
+   * construction — so lib/scoring.ts#divergentPaths ranks the remainder by
+   * distance from everything seen so far, and each press moves further out.
+   *
+   * Only the ROUND COUNT is state. The batches are replayed from the current
+   * trait profile on every render, so there is one source of truth and retaking
+   * the assessment cannot leave stale cards on screen.
+   */
+  const [extraRounds, setExtraRounds] = useState(0);
+  const basePaths = (paths ?? []).map((path) => path.archetype.id);
+  const extra: FuturePath[][] = [];
+  if (traits) {
+    const accumulated = [...basePaths];
+    for (let round = 0; round < extraRounds; round += 1) {
+      const batch = divergentPaths(traits, allFields, accumulated);
+      if (batch.length === 0) break;
+      extra.push(batch);
+      accumulated.push(...batch.map((path) => path.archetype.id));
+    }
+  }
+  const exhausted = basePaths.length + extra.flat().length >= archetypes.length;
+
+  /**
    * "None of these are me."
    *
    * Picking a profession at fifteen is a bigger commitment than this page was
@@ -154,7 +183,8 @@ export default function FuturesPage() {
             <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
               Northstar compares the trait profile to archetypes and returns
               three paths: one steady, one stretch, and one surprising but
-              plausible direction.
+              plausible direction. If none of them is you, there are twenty-one
+              more — and a way to skip the label entirely.
             </p>
         </header>
 
@@ -175,7 +205,7 @@ export default function FuturesPage() {
           </section>
         ) : (
           <section className="mt-8 grid gap-4 lg:grid-cols-3">
-            {paths.map((path) => {
+            {[...paths, ...extra.flat()].map((path) => {
               const isCharted = chosen?.archetypeId === path.archetype.id;
               return (
                 <article
@@ -250,7 +280,7 @@ export default function FuturesPage() {
               <p className="mt-3 text-sm leading-6 text-muted-foreground">
                 Picking a profession at your age is a big commitment, and you do
                 not have to make one here. A path is a starting direction, not a
-                decision — and if none of these three fit, the honest answer is
+                decision — and if none of them fit, the honest answer is
                 that your interests are broader than one job title.
               </p>
               <p className="mt-3 text-sm leading-6 text-muted-foreground">
@@ -267,6 +297,27 @@ export default function FuturesPage() {
                 >
                   {broadening ? "Writing your plan…" : "My interests are broader"}
                 </Button>
+                {/* The other way out of a narrow window: more of the library,
+                    picked for distance rather than rank. Sits under "none of
+                    these" because it is the same impulse answered differently —
+                    one asks for no label, this one asks for a different one. */}
+                <Button
+                  variant="outline"
+                  onClick={() => setExtraRounds((current) => current + 1)}
+                  disabled={exhausted}
+                  className="mt-3 h-10 w-full font-semibold"
+                >
+                  {exhausted
+                    ? "That is every path there is"
+                    : extraRounds === 0
+                      ? "Show me three further afield"
+                      : "Three further still"}
+                </Button>
+                <p className="mt-3 text-xs leading-5 text-muted-foreground">
+                  {exhausted
+                    ? "You have now seen all twenty-four. If none of them is you, the option above is the honest one."
+                    : "Ranked by how unlike the cards above they are, not by fit — so the percentages will be lower, and that is the point."}
+                </p>
                 {broadError ? (
                   <p aria-live="polite" className="mt-3 text-note leading-6 text-foreground">
                     {broadError}{" "}
