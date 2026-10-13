@@ -33,6 +33,7 @@ import scrape_devpost
 import scrape_pathways
 import scrape_reddit
 import refresh_deadlines
+import check_links
 import import_resources
 import scrape_reddit_resources
 import scrape_sciencefairs
@@ -89,6 +90,13 @@ STAGES = (
     # the season ("The 2027 application will open in the Fall of 2026" --
     # davidsongifted.org). That is the argument FOR daily, not against it. The
     # day a date appears, the shelf has it.
+    # Link health. The shelf tells every visitor that anything which stopped
+    # holding up was removed; until 2026-10-12 nothing enforced that and seven
+    # of sixty-six open rows did not load. Only a domain that has stopped
+    # resolving retires a row -- a moved page is reported for a human, because
+    # deleting a live programme to keep a link promise trades the student's
+    # interest for ours.
+    ("check-links", check_links, False),
     ("refresh-deadlines", refresh_deadlines, False),
     # Embed whatever the import just added, so a new opportunity is matchable
     # by meaning the next morning. Optional: a missing embedding simply means

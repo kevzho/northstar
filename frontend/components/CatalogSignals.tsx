@@ -25,6 +25,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { daysUntil } from "@/lib/countdown";
 import { supabase } from "@/lib/supabase";
 
 type Row = {
@@ -49,9 +50,6 @@ function shortDate(iso: string): string {
   });
 }
 
-function daysUntil(iso: string, now: number): number {
-  return Math.ceil((new Date(`${iso}T23:59:59`).getTime() - now) / 86_400_000);
-}
 
 /**
  * One timestamp per mount, not one per render.

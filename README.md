@@ -1,7 +1,12 @@
 # Northstar
 
 Personalized opportunity map for high school students. A project of Minorities
-in STEM, a fiscally sponsored non-profit.
+in STEM, a fiscally sponsored non-profit. Live at
+[northstar.study](https://northstar.study).
+
+> **How AI was used to build this: [AI-USE.md](AI-USE.md).** It names what I
+> designed, what was generated, and three features this project does *not*
+> have despite an earlier draft of that file claiming them.
 
 ## Development
 
