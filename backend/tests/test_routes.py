@@ -558,3 +558,115 @@ def test_a_completion_can_be_taken_back_and_only_your_own() -> None:
         "another's mission"
     )
     assert ("eq", "mission_id", "22222222-2222-2222-2222-222222222222") in calls
+
+
+def test_deleting_an_account_requires_typing_the_email_and_removes_everything() -> None:
+    """The one irreversible action in the product.
+
+    Two things are pinned. It refuses without a matching confirmation, because
+    the API must not be a softer door than the typed confirmation in the UI.
+    And it VERIFIES the cascade afterwards rather than assuming it fired — a
+    student told their data is gone when it is not is worse off than one shown
+    an error.
+    """
+    import app.db
+    from app.auth import get_current_user
+
+    deleted: list[str] = []
+    remaining = {"rows": [{"id": "11111111-1111-1111-1111-111111111111"}]}
+
+    class _Admin:
+        def delete_user(self, uid):
+            deleted.append(uid)
+            remaining["rows"] = []
+
+    class _Auth:
+        admin = _Admin()
+
+    class _Query:
+        def select(self, *a, **k):
+            return self
+
+        def eq(self, *a, **k):
+            return self
+
+        def execute(self):
+            return type("R", (), {"data": remaining["rows"]})()
+
+    class _SB:
+        auth = _Auth()
+
+        def table(self, name):
+            return _Query()
+
+    api = create_app()
+
+    class _User:
+        id = "11111111-1111-1111-1111-111111111111"
+        email = "Student@Example.com"
+
+    api.dependency_overrides[get_current_user] = lambda: _User()
+    original = app.db.get_supabase
+    app.db.get_supabase = lambda: _SB()
+    try:
+        client = TestClient(api)
+
+        # No confirmation, wrong confirmation, empty confirmation: all refused.
+        for body in ({}, {"confirm": ""}, {"confirm": "someone@else.com"}):
+            response = client.request("DELETE", "/me", json=body)
+            assert response.status_code == 400, body
+        assert deleted == [], "an account was deleted without confirmation"
+
+        # The real thing, case-insensitively — a student typing their own
+        # address in lowercase is confirming, not failing a string match.
+        response = client.request("DELETE", "/me", json={"confirm": "student@example.com"})
+        assert response.status_code == 204
+        assert deleted == [_User.id]
+    finally:
+        app.db.get_supabase = original
+
+
+def test_a_cascade_that_did_not_fire_is_reported_not_swallowed() -> None:
+    """If the student row survives the delete, say so. Silence here means a
+    student believes their assessment answers are gone when they are not."""
+    import app.db
+    from app.auth import get_current_user
+
+    class _Admin:
+        def delete_user(self, uid):
+            return None  # claims success, removes nothing
+
+    class _Auth:
+        admin = _Admin()
+
+    class _Query:
+        def select(self, *a, **k):
+            return self
+
+        def eq(self, *a, **k):
+            return self
+
+        def execute(self):
+            return type("R", (), {"data": [{"id": "still-here"}]})()
+
+    class _SB:
+        auth = _Auth()
+
+        def table(self, name):
+            return _Query()
+
+    api = create_app()
+
+    class _User:
+        id = "11111111-1111-1111-1111-111111111111"
+        email = "s@example.com"
+
+    api.dependency_overrides[get_current_user] = lambda: _User()
+    original = app.db.get_supabase
+    app.db.get_supabase = lambda: _SB()
+    try:
+        response = TestClient(api).request("DELETE", "/me", json={"confirm": "s@example.com"})
+    finally:
+        app.db.get_supabase = original
+    assert response.status_code == 500
+    assert "by hand" in response.json()["detail"]

@@ -319,6 +319,20 @@ export async function uncompleteMission(missionId: string): Promise<void> {
   await authedFetch(`/missions/${missionId}/complete`, { method: "DELETE" });
 }
 
+/**
+ * Delete this account and everything attached to it.
+ *
+ * `confirm` must be the account's own email address. The API enforces that
+ * too — the typed confirmation in the UI is not the only gate, because an API
+ * that is a softer door than its button is not actually gated.
+ */
+export async function deleteAccount(confirm: string): Promise<void> {
+  await authedFetch("/me", {
+    method: "DELETE",
+    body: JSON.stringify({ confirm }),
+  });
+}
+
 /** The evidence timeline: every recorded step, newest first. */
 export async function fetchTimeline(): Promise<TimelineEvent[]> {
   return (await authedFetch("/timeline")).json();

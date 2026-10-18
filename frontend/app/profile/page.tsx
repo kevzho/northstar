@@ -23,11 +23,12 @@ import {
 } from "@/lib/scoring";
 import { useStoredAnswers } from "@/lib/use-assessment";
 import { useEffect, useState } from "react";
-import { fetchTimeline } from "@/lib/api";
+import { authedFetch, fetchTimeline } from "@/lib/api";
 import { FieldPlanet } from "@/components/decor/field-planets";
 import { ProfileDetailsCard } from "@/components/ProfileDetailsCard";
+import { DeleteAccountCard } from "@/components/DeleteAccountCard";
 import { SharingCard } from "@/components/SharingCard";
-import type { OpportunityField, TimelineEvent } from "@/lib/types";
+import type { OpportunityField, StudentProfile, TimelineEvent } from "@/lib/types";
 import { useRequireAuth } from "@/lib/use-require-auth";
 import { AppNav } from "@/components/AppNav";
 import { FieldSky } from "@/components/decor/field-sky";
@@ -92,6 +93,9 @@ export default function ProfilePage() {
   useRequireAuth();
   const [shifts, setShifts] = useState<string[]>([]);
   const [timeline, setTimeline] = useState<TimelineEvent[] | null>(null);
+  // The delete confirmation types this back, so it has to be the address on the
+  // account rather than anything the client guessed.
+  const [email, setEmail] = useState<string | null>(null);
   useEffect(() => {
     let cancelled = false;
     fetchTimeline()
@@ -100,6 +104,14 @@ export default function ProfilePage() {
       })
       .catch(() => {
         // Signed out — the localStorage shift note still works.
+      });
+    authedFetch("/me")
+      .then((response) => response.json())
+      .then((me: StudentProfile) => {
+        if (!cancelled) setEmail(me.email ?? null);
+      })
+      .catch(() => {
+        // Signed out; the delete card asks for "your email" instead.
       });
     return () => {
       cancelled = true;
@@ -331,6 +343,8 @@ export default function ProfilePage() {
         ) : null}
 
         <SharingCard />
+
+        <DeleteAccountCard email={email} />
 
         <p className="mt-4 text-xs leading-5 text-muted-foreground">
           Each trait score is the sum of the trait weights on the answers you

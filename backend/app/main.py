@@ -503,6 +503,17 @@ def create_app() -> FastAPI:
             )
 
         sb = get_supabase()
+        # Ceiling on an action that costs a PERSON something rather than
+        # money. See app/limits.py.
+        from .limits import limit_block, record_event
+
+        refused = limit_block(sb, "handle", user.id)
+        if refused:
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=refused
+            )
+        record_event(sb, "handle", user.id)
+
         try:
             result = (
                 sb.table("students")
@@ -594,6 +605,17 @@ def create_app() -> FastAPI:
                 detail="A handle is required.",
             )
         sb = get_supabase()
+        # Ceiling on an action that costs a PERSON something rather than
+        # money. See app/limits.py for why each of these has one.
+        from .limits import limit_block, record_event
+
+        refused = limit_block(sb, "friend_request", user.id)
+        if refused:
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=refused
+            )
+        record_event(sb, "friend_request", user.id)
+
         target_row = (
             sb.table("students").select("id").eq("handle", handle).maybe_single().execute()
         )
@@ -933,6 +955,17 @@ def create_app() -> FastAPI:
             )
 
         sb = get_supabase()
+        # Ceiling on an action that costs a PERSON something rather than
+        # money. See app/limits.py.
+        from .limits import limit_block, record_event
+
+        refused = limit_block(sb, "teamup", user.id)
+        if refused:
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=refused
+            )
+        record_event(sb, "teamup", user.id)
+
         target_row = (
             sb.table("students")
             .select("id, teamup_enabled")
@@ -1025,6 +1058,17 @@ def create_app() -> FastAPI:
             )
 
         sb = get_supabase()
+        # Ceiling on an action that costs a PERSON something rather than
+        # money. See app/limits.py.
+        from .limits import limit_block, record_event
+
+        refused = limit_block(sb, "report", user.id)
+        if refused:
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=refused
+            )
+        record_event(sb, "report", user.id)
+
         if not target_id:
             # valid_handle is an allowlist (^[a-z0-9][a-z0-9-]{2,19}$), so a
             # handle that passes it cannot carry a PostgREST metacharacter
@@ -1540,6 +1584,78 @@ def create_app() -> FastAPI:
         )
         return None
 
+    @app.delete("/me", status_code=status.HTTP_204_NO_CONTENT)
+    def delete_me(body: dict | None = None, user: CurrentUser = RequireUser) -> None:
+        """Delete this account and everything attached to it.
+
+        WHY THIS EXISTS. /privacy told students "email dev.thorfinn@gmail.com
+        and we will delete your account", with a note that a self-serve button
+        was being built. That is an honest answer at twenty users and a bad one
+        at five hundred, and these are minors: asking a sixteen-year-old to
+        email a stranger their name in order to withdraw their own assessment
+        answers is a barrier where there should be a button.
+
+        ONE DELETE DOES ALL OF IT. public.students.id references
+        auth.users(id) on delete cascade, and twenty tables reference
+        students(id) the same way, so removing the auth user removes the
+        profile, the assessment scores, matches, bookmarks, dismissals,
+        outcomes, missions, friendships, team-up interest, blocks, profile
+        history, advisor call records and the generated spine. Nothing is
+        tombstoned and nothing is kept "for analytics".
+
+        WHAT THIS COSTS, SAID PLAINLY. public.reports references both parties
+        with cascade, so a report naming this account goes with it. That is a
+        real trade -- it means an account can erase a complaint about its own
+        conduct -- and it is made deliberately in favour of the privacy promise
+        while the moderation queue has had zero rows in it. If reports ever
+        start arriving, this is the first thing to revisit, and the fix is a
+        tombstone on reports rather than a weaker delete.
+
+        Requires the student to type their own email back. Not theatre: this is
+        the one irreversible action in the product, the UI puts it behind a
+        typed confirmation, and the API should not be a softer door than the
+        button.
+        """
+        from .db import get_supabase
+
+        typed = str((body or {}).get("confirm") or "").strip().lower()
+        if typed != (user.email or "").strip().lower():
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=(
+                    "Type the email address on this account to confirm. Nothing "
+                    "has been deleted."
+                ),
+            )
+
+        sb = get_supabase()
+        try:
+            sb.auth.admin.delete_user(user.id)
+        except Exception as error:  # noqa: BLE001 — the SDK raises broadly
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail=(
+                    "Could not delete the account just now. Nothing was "
+                    "removed — try again, or email dev.thorfinn@gmail.com."
+                ),
+            ) from error
+
+        # Verify rather than assume. A cascade that silently did not fire would
+        # leave a student believing their data is gone when it is not, which is
+        # worse than an error.
+        remaining = (
+            sb.table("students").select("id").eq("id", user.id).execute()
+        ).data or []
+        if remaining:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=(
+                    "The account was partly removed. Email "
+                    "dev.thorfinn@gmail.com and it will be finished by hand."
+                ),
+            )
+        return None
+
     @app.get("/dismissals", response_model=list[Dismissal])
     def list_dismissals(user: CurrentUser = RequireUser) -> list[dict]:
         """The student's "not for me" marks."""
@@ -1780,7 +1896,17 @@ def create_app() -> FastAPI:
             out.append(item)
         # Open ones first, soonest deadline leading; rolling and closed after.
         out.sort(key=lambda r: (not r["is_open"], r["deadline"] or "9999-12-31"))
-        return out
+
+        # Then spread the open ones across fields, because sorting by deadline
+        # alone hands the top of the page to whichever feed publishes most
+        # often -- which was ctftime and codeforces, 8 of the first 10 rows. See
+        # app/catalog.py#interleave_by_field. Closed rows keep plain deadline
+        # order; nobody is browsing those for discovery.
+        from .catalog import interleave_by_field
+
+        open_rows = [r for r in out if r["is_open"]]
+        closed_rows = [r for r in out if not r["is_open"]]
+        return interleave_by_field(open_rows) + closed_rows
 
     @app.get("/catalog")
     def catalog(user: CurrentUser = RequireUser) -> list[dict]:
@@ -2139,6 +2265,20 @@ def create_app() -> FastAPI:
         from .db import get_supabase
 
         sb = get_supabase()
+
+        # The only write on this API that the open internet can reach, so the
+        # only one with no account to count against. Limited globally instead
+        # (app/limits.py): a human reads every row here, and a human reading
+        # ten thousand rows reads none of them.
+        from .limits import limit_block, record_event
+
+        refused = limit_block(sb, "mentor_apply", None)
+        if refused:
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=refused
+            )
+        record_event(sb, "mentor_apply", None)
+
         try:
             sb.table("mentor_applications").insert({
                 "name": name,

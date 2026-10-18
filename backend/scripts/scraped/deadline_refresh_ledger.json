@@ -1,4 +1,10 @@
 {
+  "00705d8b-a121-47b4-850e-d2a6e0b19a7f": {
+    "at": "2026-10-13T13:17:50.179924+00:00",
+    "outcome": "cleared",
+    "title": "Banana Hacks",
+    "was": "2026-10-12"
+  },
   "0244b791-08c6-4ff1-a40b-310fefcc8951": {
     "at": "2026-10-12T13:17:14.861617+00:00",
     "outcome": "cleared",
@@ -11,6 +17,12 @@
     "title": "Amazon Future Engineer Scholarship",
     "was": "2026-03-15"
   },
+  "027f0989-ae02-4165-890b-2948d238eb7c": {
+    "at": "2026-10-18T13:18:06.465479+00:00",
+    "outcome": "cleared",
+    "title": "HuskyHack 2026: Phase 1",
+    "was": "2026-10-17"
+  },
   "03c61814-ab3c-4faa-be3d-2158eefe0156": {
     "at": "2026-10-07T21:13:44.195648+00:00",
     "outcome": "no_date_on_page",
@@ -20,6 +32,12 @@
     "at": "2026-10-07T21:16:37.351098+00:00",
     "outcome": "no_date_on_page",
     "title": "Pioneer Research Program"
+  },
+  "04be73d8-f4c3-4d16-9129-d20aa60bd3db": {
+    "at": "2026-10-18T13:18:06.465479+00:00",
+    "deadline": "2026-10-19",
+    "outcome": "found",
+    "title": "NTU x ST Engineering Hackathon"
   },
   "06297918-0ad4-40c2-b572-2813918cbd9b": {
     "at": "2026-10-08T13:17:43.881201+00:00",
@@ -74,6 +92,12 @@
     "outcome": "no_date_on_page",
     "title": "The Junior Academy and the 1000 Girls, 1000 Futures Program"
   },
+  "12779360-893d-4853-abde-edccbb2435be": {
+    "at": "2026-10-16T13:18:31.736591+00:00",
+    "outcome": "cleared",
+    "title": "Next Founders Hackathon",
+    "was": "2026-10-15"
+  },
   "159576b1-55a5-4573-bbb5-8d05ccc6629b": {
     "at": "2026-10-07T21:17:57.023576+00:00",
     "outcome": "cleared",
@@ -90,10 +114,22 @@
     "outcome": "no_date_on_page",
     "title": "MathILy"
   },
+  "1a5290b2-8208-4e4d-9abd-77dbd3087969": {
+    "at": "2026-10-18T13:18:06.465479+00:00",
+    "outcome": "cleared",
+    "title": "InnovateLA x Dual-Use Hackathon",
+    "was": "2026-10-17"
+  },
   "1c752e48-6149-4244-999a-54f9228ce36a": {
     "at": "2026-10-07T21:13:44.195648+00:00",
     "outcome": "unreadable",
     "title": "Conrad Challenge"
+  },
+  "1e402997-23d6-4141-b729-c56cea7ef88f": {
+    "at": "2026-10-18T13:18:06.465479+00:00",
+    "outcome": "cleared",
+    "title": "Codeforces Round (Div. 1 + Div. 2)",
+    "was": "2026-10-17"
   },
   "206e6f42-997f-468e-ae3a-1c69cb16c351": {
     "at": "2026-10-07T21:17:57.023576+00:00",
@@ -126,6 +162,12 @@
     "outcome": "unreadable",
     "title": "The Adroit Prizes for Poetry and Prose"
   },
+  "28d60de5-4657-40c3-8fd9-67697a63d5ba": {
+    "at": "2026-10-16T13:18:31.736591+00:00",
+    "outcome": "cleared",
+    "title": "HACK47: OFFGRID Hackathon",
+    "was": "2026-10-15"
+  },
   "293e9c8f-71d7-401f-963c-c70dc3208cc6": {
     "at": "2026-10-07T21:19:40.680994+00:00",
     "outcome": "no_date_on_page",
@@ -136,6 +178,12 @@
     "outcome": "cleared",
     "title": "FIK FAIR 2026 Hackathon",
     "was": "2026-10-04"
+  },
+  "2b0fbd54-104f-4057-a81e-f289d1e8f922": {
+    "at": "2026-10-18T13:18:06.465479+00:00",
+    "outcome": "cleared",
+    "title": "Cornell Six Sigma Hackathon",
+    "was": "2026-10-17"
   },
   "2b2349b0-a840-411d-aa15-d3526cf78a93": {
     "at": "2026-10-07T21:16:37.351098+00:00",
@@ -154,6 +202,12 @@
     "title": "Hack Knight Fall 2026",
     "was": "2026-10-11"
   },
+  "2ebd8e19-a873-47b1-974b-5a90c7a40c3e": {
+    "at": "2026-10-16T13:18:31.736591+00:00",
+    "deadline": "2026-10-20",
+    "outcome": "found",
+    "title": "INDUX 5.0 Hackathon 2026"
+  },
   "2f38efe9-dd05-480c-a1ee-3764f17a804f": {
     "at": "2026-10-08T13:17:43.881201+00:00",
     "outcome": "no_date_on_page",
@@ -169,6 +223,12 @@
     "outcome": "cleared",
     "title": "KubSTU CTF 2026 Autumn Edition",
     "was": "2026-10-10"
+  },
+  "34460f13-20d0-40ae-8501-1b6d4dc571b9": {
+    "at": "2026-10-15T13:18:40.536639+00:00",
+    "outcome": "cleared",
+    "title": "WarriorHacks 2.0",
+    "was": "2026-10-14"
   },
   "3636f217-a9cc-40c5-8cec-5c08b8ec9afc": {
     "at": "2026-10-07T21:16:37.351098+00:00",
@@ -198,6 +258,24 @@
     "title": "MHacks 2026 Hackathon",
     "was": "2026-10-04"
   },
+  "3cd89c62-23b9-4274-8dc6-5dc928e0335c": {
+    "at": "2026-10-15T13:18:40.536639+00:00",
+    "outcome": "cleared",
+    "title": "Child Safety in AI Hackathon",
+    "was": "2026-10-14"
+  },
+  "3d2b4816-5e1c-4ce9-8f7c-ac9cc170e8d5": {
+    "at": "2026-10-14T13:17:45.591369+00:00",
+    "outcome": "cleared",
+    "title": "Company Brain Hackathon",
+    "was": "2026-10-13"
+  },
+  "3d4f38f0-683d-4fe7-9b7c-8e92e955a263": {
+    "at": "2026-10-16T13:18:31.736591+00:00",
+    "outcome": "cleared",
+    "title": "Marjot Foundation Independent Research in Environmental Sciences",
+    "was": "2026-10-15"
+  },
   "3edde1ca-7065-4365-b7ea-485a7d1779eb": {
     "at": "2026-10-11T13:17:17.441165+00:00",
     "outcome": "cleared",
@@ -221,6 +299,12 @@
     "outcome": "no_date_on_page",
     "title": "National Science Bowl"
   },
+  "417e3231-ec9f-4501-8f99-4177539d77f8": {
+    "at": "2026-10-18T13:18:06.465479+00:00",
+    "outcome": "cleared",
+    "title": "De Anza Hackathon 5.0",
+    "was": "2026-10-17"
+  },
   "441546d6-f272-4875-a93c-df65a7379462": {
     "at": "2026-10-07T21:16:37.351098+00:00",
     "outcome": "no_date_on_page",
@@ -241,6 +325,12 @@
     "at": "2026-10-07T21:13:44.195648+00:00",
     "outcome": "no_date_on_page",
     "title": "HMMT February"
+  },
+  "4d4a5c83-8a4f-4ab8-9dd9-250c8fd43c35": {
+    "at": "2026-10-18T13:18:06.465479+00:00",
+    "outcome": "cleared",
+    "title": "Agentic Enterprise AI Hackathon",
+    "was": "2026-10-17"
   },
   "508fc8ba-9350-4a96-8330-ab28fe8adad5": {
     "at": "2026-10-07T21:17:57.023576+00:00",
@@ -290,6 +380,12 @@
     "at": "2026-10-08T13:17:43.881201+00:00",
     "outcome": "no_date_on_page",
     "title": "HOSA Competitive Events"
+  },
+  "62abbb8d-3ea9-4dbc-9c46-d36a2dafd773": {
+    "at": "2026-10-18T13:18:06.465479+00:00",
+    "outcome": "cleared",
+    "title": "De Anza Hackathon 5.0",
+    "was": "2026-10-17"
   },
   "64459b3d-d7cd-421c-8142-a2f0afe752ab": {
     "at": "2026-10-07T21:16:37.351098+00:00",
@@ -348,6 +444,12 @@
     "title": "MHacks 2026 Hackathon",
     "was": "2026-10-04"
   },
+  "6f6b4c2e-ca4b-4791-b402-06be502fea1a": {
+    "at": "2026-10-13T13:17:50.179924+00:00",
+    "outcome": "cleared",
+    "title": "United Hackathons V1",
+    "was": "2026-10-12"
+  },
   "707c7b36-4597-4b10-9517-85a8cc36ce99": {
     "at": "2026-10-08T13:17:43.881201+00:00",
     "outcome": "unreadable",
@@ -364,6 +466,12 @@
     "outcome": "cleared",
     "title": "Case Closed Hackathon",
     "was": "2026-10-04"
+  },
+  "761dee3c-c1f0-4e80-afde-33fe243bbb5d": {
+    "at": "2026-10-17T13:19:28.036087+00:00",
+    "outcome": "cleared",
+    "title": "Hack Apertus",
+    "was": "2026-10-16"
   },
   "769b51cf-f00e-4509-9055-43f6c1aee5b2": {
     "at": "2026-10-07T21:17:57.023576+00:00",
@@ -392,6 +500,12 @@
     "outcome": "cleared",
     "title": "StormHacks 2026 Hackathon",
     "was": "2026-10-04"
+  },
+  "7d52ed8b-2640-4a11-b0f7-e36aa20e95c9": {
+    "at": "2026-10-18T13:18:06.465479+00:00",
+    "outcome": "cleared",
+    "title": "DEADFACE CTF 2026",
+    "was": "2026-10-17"
   },
   "813bdfd2-9abd-4ed4-966b-9ba3445c8204": {
     "at": "2026-10-07T21:13:44.195648+00:00",
@@ -457,6 +571,18 @@
     "title": "OCCHacks",
     "was": "2026-10-11"
   },
+  "8f0c108e-4b12-477d-84f5-088d9d755858": {
+    "at": "2026-10-15T13:18:40.536639+00:00",
+    "outcome": "cleared",
+    "title": "Multimodal AI Hackathon 2026",
+    "was": "2026-10-14"
+  },
+  "8f9196d6-9599-4ee6-9e6a-9b3564133548": {
+    "at": "2026-10-15T13:18:40.536639+00:00",
+    "outcome": "cleared",
+    "title": "WarriorHacks 2.0 Hackathon",
+    "was": "2026-10-14"
+  },
   "8fec73b5-c092-4306-a1e5-5d53cfe3e741": {
     "at": "2026-10-08T13:17:43.881201+00:00",
     "outcome": "no_date_on_page",
@@ -472,6 +598,12 @@
     "at": "2026-10-07T21:13:44.195648+00:00",
     "outcome": "no_date_on_page",
     "title": "HMMT November"
+  },
+  "90e7f579-e645-482c-8fed-5bfa922f7e45": {
+    "at": "2026-10-13T13:17:50.179924+00:00",
+    "outcome": "cleared",
+    "title": "United Hackathons V1",
+    "was": "2026-10-12"
   },
   "924cc33d-8549-460d-b5a6-18ca2ad20ace": {
     "at": "2026-10-07T21:13:44.195648+00:00",
@@ -534,6 +666,12 @@
     "outcome": "no_date_on_page",
     "title": "Goddard Space Club Scholar Summer Program"
   },
+  "998100c3-6d2d-467f-bcb0-641f1b9c958e": {
+    "at": "2026-10-17T13:19:28.036087+00:00",
+    "outcome": "cleared",
+    "title": "Hack Apertus",
+    "was": "2026-10-16"
+  },
   "99bf7bdb-427c-4954-8bbf-74bc4647921b": {
     "at": "2026-10-07T21:16:37.351098+00:00",
     "outcome": "no_date_on_page",
@@ -544,6 +682,18 @@
     "deadline": "2026-11-01",
     "outcome": "found",
     "title": "Creator Colosseum: The Startup Showdown"
+  },
+  "9cf4485d-533c-44d3-b6a0-6b302c4af71d": {
+    "at": "2026-10-17T13:19:28.036087+00:00",
+    "outcome": "cleared",
+    "title": "MLAI Hackathon 2026",
+    "was": "2026-10-16"
+  },
+  "9dbd1624-5a02-4b16-b70a-34965a3619e9": {
+    "at": "2026-10-16T13:18:31.736591+00:00",
+    "outcome": "cleared",
+    "title": "RESPAWN",
+    "was": "2026-10-15"
   },
   "9df9ae64-77fb-4d2d-8dee-aa99486cc331": {
     "at": "2026-10-07T21:16:37.351098+00:00",
@@ -560,6 +710,12 @@
     "at": "2026-10-07T21:19:40.680994+00:00",
     "outcome": "no_date_on_page",
     "title": "Summer Research Institute - Women's Alliance in STEM and Humanities"
+  },
+  "9fe3c73a-93cb-48e2-94aa-882bd8af52a0": {
+    "at": "2026-10-15T13:18:40.536639+00:00",
+    "outcome": "cleared",
+    "title": "Human + AI Hackathon",
+    "was": "2026-10-14"
   },
   "a06d4921-39f3-4c31-b979-48c301606db6": {
     "at": "2026-10-07T21:16:37.351098+00:00",
@@ -592,6 +748,12 @@
     "outcome": "cleared",
     "title": "ForgeHacks Online 2026",
     "was": "2026-10-10"
+  },
+  "a82c0d83-c761-425e-b0a9-1c19499bfbb7": {
+    "at": "2026-10-15T13:18:40.536639+00:00",
+    "outcome": "cleared",
+    "title": "Educational Codeforces Round 195 (Rated for Div. 2)",
+    "was": "2026-10-14"
   },
   "a8b9caf3-ae4a-46c0-86dc-5e1e22fd0c3c": {
     "at": "2026-10-07T21:17:57.023576+00:00",
@@ -641,6 +803,12 @@
     "outcome": "cleared",
     "title": "Lumiere Research Scholar Program",
     "was": "2025-12-10"
+  },
+  "b19e4432-1bdb-4094-b875-55c6576ca5d1": {
+    "at": "2026-10-16T13:18:31.736591+00:00",
+    "outcome": "cleared",
+    "title": "RESPAWN Hackathon",
+    "was": "2026-10-15"
   },
   "b3b5cbd1-b02b-4982-a35a-ac3330d27514": {
     "at": "2026-10-07T21:17:57.023576+00:00",
@@ -813,6 +981,12 @@
     "title": "Hack Away Hunger: Food Insecurity Challenge",
     "was": "2026-10-08"
   },
+  "d1b5ba40-d96d-479e-9460-ee02f07d9382": {
+    "at": "2026-10-15T13:18:40.536639+00:00",
+    "outcome": "cleared",
+    "title": "Multimodal AI Hackathon 2026",
+    "was": "2026-10-14"
+  },
   "d5e0772c-19ff-424a-9c65-7c86e2c11128": {
     "at": "2026-10-07T21:16:37.351098+00:00",
     "outcome": "no_date_on_page",
@@ -920,11 +1094,22 @@
     "outcome": "found",
     "title": "Regeneron Science Talent Search"
   },
+  "ea701889-d45f-4f4b-98bc-c41ddbcdaa0b": {
+    "at": "2026-10-15T13:18:40.536639+00:00",
+    "outcome": "no_date_on_page",
+    "title": "Ocean STEAM Powered (O-STEAM) Fellowship"
+  },
   "ec2a57b2-7ef6-427e-aa72-45d8b6796d77": {
     "at": "2026-10-11T13:17:17.441165+00:00",
     "outcome": "cleared",
     "title": "Cryovault 2026 Capture The Flag Competition",
     "was": "2026-10-10"
+  },
+  "edd52f27-6328-48e5-aad2-ecbb8fb3d1ba": {
+    "at": "2026-10-17T13:19:28.036087+00:00",
+    "outcome": "cleared",
+    "title": "ThunderHacks II Hackathon",
+    "was": "2026-10-16"
   },
   "ee1a6624-bad0-498a-a711-98ec3a9a4223": {
     "at": "2026-10-07T21:13:44.195648+00:00",
@@ -976,6 +1161,12 @@
     "title": "HackRU Fall 2026 Hackathon",
     "was": "2026-10-11"
   },
+  "f93994ff-9a2f-4808-8a91-611edb4cd36b": {
+    "at": "2026-10-16T13:18:31.736591+00:00",
+    "deadline": "2026-10-20",
+    "outcome": "found",
+    "title": "INDUX 5.0-2026 Hackathon"
+  },
   "fc6efadc-237e-413d-aefa-f17e482199c5": {
     "at": "2026-10-08T13:17:43.881201+00:00",
     "outcome": "unreadable",
@@ -986,6 +1177,18 @@
     "outcome": "cleared",
     "title": "Affinda AI Innovation Challenge",
     "was": "2026-10-08"
+  },
+  "fd7a0f9a-b138-460c-99c3-83ac417b539b": {
+    "at": "2026-10-18T13:18:06.465479+00:00",
+    "outcome": "cleared",
+    "title": "Agentic Enterprise AI Hackathon",
+    "was": "2026-10-17"
+  },
+  "fe7dcf71-3c1e-4126-9a1a-52e84a29d6b6": {
+    "at": "2026-10-13T13:17:50.179924+00:00",
+    "outcome": "cleared",
+    "title": "Open Hackathon \u2013 Blockchain, Databases, Serverless",
+    "was": "2026-10-12"
   },
   "ff5da7ea-8b6f-4ac2-af24-a7c857f090dd": {
     "at": "2026-10-07T21:13:44.195648+00:00",

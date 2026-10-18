@@ -153,20 +153,30 @@ export default function PrivacyPage() {
           <p>
             Email{" "}
             <a
+              href="/profile#confirm-delete"
+              className="underline underline-offset-2"
+            >
+              Delete your account from your profile page
+            </a>
+            . It is immediate and permanent: the profile, your assessment
+            answers and the six trait scores built from them, matches,
+            bookmarks, dismissals, outcomes, missions, friendships, team-up
+            interest and your public page all go at once. Nothing is kept
+            afterwards and nothing is held back for analytics.
+          </p>
+          <p>
+            You will be asked to type the email address on your account to
+            confirm, because it is the one thing here that cannot be undone.
+          </p>
+          <p>
+            If the button will not work for you, email{" "}
+            <a
               href={`mailto:${EMAIL}?subject=Delete%20my%20Northstar%20data`}
               className="underline underline-offset-2"
             >
               {EMAIL}
             </a>{" "}
-            from the address on your account and we will delete your account and
-            everything attached to it — profile, assessment scores, bookmarks,
-            outcomes, missions, friendships — within 30 days. There is no copy
-            kept afterwards.
-          </p>
-          <p>
-            A self-serve delete button is being built. Until it ships, email is
-            the way, and we would rather say that plainly than imply a button
-            exists.
+            from the address on your account and it will be done by hand.
           </p>
         </Section>
 

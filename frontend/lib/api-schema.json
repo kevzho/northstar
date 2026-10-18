@@ -1267,6 +1267,44 @@
       }
     },
     "/me": {
+      "delete": {
+        "description": "Delete this account and everything attached to it.\n\nWHY THIS EXISTS. /privacy told students \"email dev.thorfinn@gmail.com\nand we will delete your account\", with a note that a self-serve button\nwas being built. That is an honest answer at twenty users and a bad one\nat five hundred, and these are minors: asking a sixteen-year-old to\nemail a stranger their name in order to withdraw their own assessment\nanswers is a barrier where there should be a button.\n\nONE DELETE DOES ALL OF IT. public.students.id references\nauth.users(id) on delete cascade, and twenty tables reference\nstudents(id) the same way, so removing the auth user removes the\nprofile, the assessment scores, matches, bookmarks, dismissals,\noutcomes, missions, friendships, team-up interest, blocks, profile\nhistory, advisor call records and the generated spine. Nothing is\ntombstoned and nothing is kept \"for analytics\".\n\nWHAT THIS COSTS, SAID PLAINLY. public.reports references both parties\nwith cascade, so a report naming this account goes with it. That is a\nreal trade -- it means an account can erase a complaint about its own\nconduct -- and it is made deliberately in favour of the privacy promise\nwhile the moderation queue has had zero rows in it. If reports ever\nstart arriving, this is the first thing to revisit, and the fix is a\ntombstone on reports rather than a weaker delete.\n\nRequires the student to type their own email back. Not theatre: this is\nthe one irreversible action in the product, the UI puts it behind a\ntyped confirmation, and the API should not be a softer door than the\nbutton.",
+        "operationId": "delete_me_me_delete",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Me"
+      },
       "get": {
         "description": "Return the signed-in student's profile, or 404 if none yet.\n\nThe 404 is a contract with the frontend: when the dashboard sees a\n404 on /me it knows to POST /students (task 2) and upsert the row\nkeyed by ``auth.users.id``.",
         "operationId": "me_me_get",

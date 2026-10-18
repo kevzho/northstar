@@ -522,3 +522,46 @@ def test_the_comment_scraper_canonicalises_before_it_counts() -> None:
     ])
     assert list(counted) == ["https://openintro.org/book/os"]
     assert counted["https://openintro.org/book/os"]["mentions"] == 3
+
+
+def test_title_dedupe_collapses_format_words_but_never_sibling_competitions() -> None:
+    """The dedupe that has to be wrong in neither direction.
+
+    canonical_url alone misses `http://broadinstitute.org/bssp` against
+    `https://www.broadinstitute.org/bssp` (scheme and www survive
+    canonicalisation on purpose), and would wrongly merge four real
+    competitions that share one page: AMC 10, AMC 12, AIME and USAJMO all live
+    at maa.org/student-programs/amc, and HMMT February and November share
+    hmmt.org. Merging those deletes three real opportunities to tidy a link
+    report.
+    """
+    import sys
+
+    sys.path.insert(0, str(SCRIPTS))
+    from dedupe_by_title import host_path, title_key
+
+    # Same programme, two feeds, different format words appended.
+    same = [
+        ("BackdoorCTF 2026", "BackdoorCTF 2026 Jeopardy CTF"),
+        ("Cryovault 2026 Capture The Flag Competition", "Cryovault 2026 Jeopardy CTF"),
+        ("FortID CTF 2026 Jeopardy Competition", "FortID CTF 2026 Jeopardy Security Competition"),
+        ("Broad Summer Scholars Program", "Broad Summer Scholars Program (BSSP)"),
+    ]
+    for a, b in same:
+        assert title_key(a) == title_key(b), f"{a!r} and {b!r} should collapse"
+
+    # Different programmes that happen to share a landing page.
+    distinct = [
+        ("AMC 10", "AMC 12"),
+        ("HMMT February", "HMMT November"),
+        ("American Invitational Mathematics Examination (AIME)",
+         "USA Junior Mathematical Olympiad (USAJMO)"),
+        ("USA Biology Olympiad (USABO)", "USA Physics Olympiad (USAPhO)"),
+    ]
+    for a, b in distinct:
+        assert title_key(a) != title_key(b), f"{a!r} and {b!r} must NOT collapse"
+
+    # And the URL half still normalises scheme and www.
+    assert host_path("http://broadinstitute.org/bssp") == host_path(
+        "https://www.broadinstitute.org/bssp/"
+    )

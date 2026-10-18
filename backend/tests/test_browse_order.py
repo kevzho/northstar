@@ -106,3 +106,52 @@ def test_browse_order_matches_the_route() -> None:
     assert "return (2, -ordinal, title)" in body
     assert "return (1, 0.0, title)" in body
     assert "return (0, ordinal, title)" in body
+
+
+def test_the_browse_page_is_spread_across_fields_not_owned_by_one_feed() -> None:
+    """The default order is a product decision, and the old one was wrong.
+
+    Sorting open-first-then-deadline sounds neutral and is not: it gives the top
+    of the page to whichever source publishes most often. Measured 2026-10-12,
+    8 of the first 10 open rows were capture-the-flag events, because ctftime
+    publishes weekly and a research programme publishes once a year. On a page
+    that promises "the programs you never hear about", that is the artefact
+    drowning the product.
+    """
+    from app.catalog import interleave_by_field
+
+    # Deadline order, as the old sort produced it: one prolific feed first.
+    rows = (
+        [{"id": f"ctf{i}", "field": "cs"} for i in range(8)]
+        + [{"id": "bio1", "field": "biology"}]
+        + [{"id": "hum1", "field": "humanities"}]
+        + [{"id": f"ctf{i}", "field": "cs"} for i in range(8, 12)]
+    )
+    spread = interleave_by_field(rows)
+
+    assert len(spread) == len(rows), "rows were dropped"
+    assert {r["id"] for r in spread} == {r["id"] for r in rows}, "rows were changed"
+
+    # The single most urgent row is still first — urgency is not sacrificed.
+    assert spread[0] == rows[0]
+    # And the first three now show three different fields instead of one.
+    assert len({r["field"] for r in spread[:3]}) == 3
+    # Within a field, the original order is untouched.
+    assert [r["id"] for r in spread if r["field"] == "cs"] == [
+        r["id"] for r in rows if r["field"] == "cs"
+    ]
+
+
+def test_interleaving_is_a_no_op_on_a_single_field_or_an_empty_list() -> None:
+    from app.catalog import interleave_by_field
+
+    one = [{"id": "a", "field": "cs"}, {"id": "b", "field": "cs"}]
+    assert interleave_by_field(one) == one
+    assert interleave_by_field([]) == []
+
+
+def test_a_missing_field_does_not_lose_the_row() -> None:
+    from app.catalog import interleave_by_field
+
+    rows = [{"id": "a", "field": None}, {"id": "b", "field": "cs"}]
+    assert len(interleave_by_field(rows)) == 2

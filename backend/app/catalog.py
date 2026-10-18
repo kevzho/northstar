@@ -112,3 +112,52 @@ def public_view(opp: dict) -> dict:
 def clear_cache() -> None:
     """Drop the cache. For tests, and for a post-import cron step."""
     _cache.clear()
+
+
+def interleave_by_field(rows: list[dict], field_key: str = "field") -> list[dict]:
+    """Round-robin the browse list across fields, soonest-first inside each.
+
+    WHY THE DEFAULT ORDER NEEDED CHANGING. /opportunities sorted open-first then
+    by deadline, which sounds neutral and is not: it hands the top of the list
+    to whichever feed is most prolific. Measured 2026-10-12, 8 of the first 10
+    open rows were capture-the-flag events and 40% of all open rows were CTF or
+    competitive programming -- because ctftime and codeforces publish weekly
+    while a research programme publishes once a year. A student arriving at a
+    page that promises "the programs you never hear about" met a wall of
+    hacking competitions.
+
+    That is a ranking artefact, not a fact about opportunity. This page's job is
+    BREADTH -- it is the browse surface, not the matcher -- so it shows the
+    soonest biology thing next to the soonest humanities thing next to the
+    soonest CS thing, and only then the second of each.
+
+    Nothing is hidden, dropped or down-weighted: every row is still here, the
+    filters are unchanged, and within a field the deadline order is exactly what
+    it was. A student who wants only CTFs filters for them and gets all of them.
+
+    Fields enter the rotation ordered by their own soonest deadline, so the
+    single most urgent thing in the catalog is still first on the page.
+    """
+    from collections import OrderedDict
+
+    buckets: "OrderedDict[str, list[dict]]" = OrderedDict()
+    for row in rows:
+        buckets.setdefault(row.get(field_key) or "", []).append(row)
+
+    # A field's place in the rotation is its best row's place in the old order,
+    # so "most urgent first" survives the change.
+    order = sorted(buckets, key=lambda f: rows.index(buckets[f][0]))
+
+    out: list[dict] = []
+    index = 0
+    while len(out) < len(rows):
+        taken = False
+        for field in order:
+            bucket = buckets[field]
+            if index < len(bucket):
+                out.append(bucket[index])
+                taken = True
+        if not taken:
+            break
+        index += 1
+    return out

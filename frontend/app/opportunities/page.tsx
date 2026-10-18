@@ -80,6 +80,7 @@ function OpportunitiesList() {
   const [dismissedHere, setDismissedHere] = useState<string[]>([]);
   const [catalog, setCatalog] = useState<Opportunity[] | null>(null);
   const { user, loading: authLoading } = useAuth();
+  const signedIn = Boolean(user);
   const signedOut = !authLoading && !user;
   // "Matched" needs a profile to match against. Signed out there is none, so
   // the only honest view is the whole shelf, and the toggle that would offer
@@ -243,15 +244,21 @@ function OpportunitiesList() {
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
+        {/* The right slot offered "Back to dashboard" to everyone, including
+            visitors with no account, for whom /dashboard bounces to /login. A
+            link that punishes the person who takes it is worse than no link. */}
         <AppNav
-          homeHref="/dashboard"
+          homeHref={signedIn ? "/dashboard" : "/"}
           right={
-            <Link
-              href="/dashboard"
-              className="text-sm font-semibold text-aurora"
-            >
-              Back to dashboard
-            </Link>
+            signedIn ? (
+              <Link href="/dashboard" className="text-sm font-semibold text-aurora">
+                Back to dashboard
+              </Link>
+            ) : (
+              <Link href="/learn" className="text-sm font-semibold text-aurora">
+                Free material, no account
+              </Link>
+            )
           }
         />
 
@@ -266,7 +273,7 @@ function OpportunitiesList() {
           </h1>
           <p className="mt-4 max-w-2xl text-lede text-muted-foreground">
             {signedOut
-              ? "Every opportunity on the high-school shelf, open ones first. Each one has been checked against the programme's own page, and anything that stopped holding up was removed rather than left to pad the total."
+              ? "Every opportunity on the high-school shelf, open ones first and spread across fields \u2014 sorting by date alone handed the top of this page to whichever feed posts most often. Links are re-checked nightly, and a programme whose site disappears is retired rather than left to pad the total."
               : view === "all"
                 ? "Every opportunity in the catalog, sorted by deadline. Switch back to Matched to see them ranked for your profile."
                 : "Ranked by the Northstar match engine against your profile. Or browse the entire bank."}
