@@ -206,8 +206,21 @@ def test_public_catalog_serves_an_allowlist_not_the_row() -> None:
         assert needed in fields, f"the public catalog omits {needed}"
 
     # Retired rows are never browsable, and this is the high-school shelf.
-    assert 'is_("retired_at", "null")' in body
-    assert '"high_school"' in body
+    # Both filters moved into fetch_shelf when this route started sharing its
+    # cache, so the guarantee is asserted on BEHAVIOUR rather than on the text
+    # of this one function — a source-string check would have gone green on a
+    # route that had quietly stopped filtering.
+    assert "fetch_shelf" in body and '"high_school"' in body
+    import inspect as _inspect
+
+    from app import catalog as _catalog
+
+    shelf_src = _inspect.getsource(_catalog.fetch_shelf)
+    assert 'is_("retired_at", "null")' in shelf_src, (
+        "fetch_shelf stopped excluding retired rows, and the public catalog "
+        "now serves them"
+    )
+    assert '.eq("audience", shelf)' in shelf_src
 
 
 def test_locality_is_the_one_thing_recall_cannot_give_and_must_survive() -> None:

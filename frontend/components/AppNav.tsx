@@ -52,16 +52,31 @@ const SECTIONS = [
   { href: "/discover", label: "People", match: "/discover", open: false },
 ] as const;
 
-/** Routes that belong to a section without sharing its prefix. */
+/**
+ * Routes that belong to a section without sharing its prefix.
+ *
+ * Every in-app route must resolve to one of the five, or the nav shows nothing
+ * highlighted and the student has no idea where they are. Audited 2026-10-18:
+ * /advisor, /mentors/join and /p/[handle] all rendered an unlit nav.
+ */
 const ALIASES: Record<string, string> = {
   "/futures": "/profile",
   "/assessment": "/profile",
   "/map": "/plan",
+  // Asking the advisor what to do next is planning, not a sixth place to go.
+  "/advisor": "/plan",
   "/friends": "/discover",
   "/teamup": "/discover",
   "/mentors": "/discover",
+  "/mentors/join": "/discover",
   "/projects": "/opportunities",
 };
+
+/** Prefixes for the same reason, where the route carries a parameter. */
+const ALIAS_PREFIXES: [string, string][] = [
+  // Another student's public page is part of finding people.
+  ["/p/", "/discover"],
+];
 
 export function AppNav({
   homeHref = "/",
@@ -78,6 +93,7 @@ export function AppNav({
 
   const active =
     ALIASES[pathname] ??
+    ALIAS_PREFIXES.find(([prefix]) => pathname.startsWith(prefix))?.[1] ??
     SECTIONS.find((s) => pathname.startsWith(s.match))?.href ??
     null;
 

@@ -27,6 +27,7 @@ import { useStoredAnswers } from "@/lib/use-assessment";
 import { useChosenPath } from "@/lib/use-chosen-path";
 import { useRequireAuth } from "@/lib/use-require-auth";
 import { AppNav } from "@/components/AppNav";
+import { LoadingSection } from "@/components/decor/orbit-loader";
 
 const LEG_PLANETS = ["moon", "ringed", "giant"] as const;
 
@@ -207,7 +208,19 @@ export default function PlanPage() {
             </p>
         </header>
 
-        {!traits ? (
+        {/* The plan waits on three fetches — matches, the roadmap, and the
+            resources for its skill rung. Until this, the page rendered its
+            header and then a blank stretch for about three seconds, which
+            reads as "there is nothing here" rather than "this is coming", and
+            is the difference between a student waiting and a student leaving.
+
+            Gated on roadmapSettled rather than on roadmap being non-null: a
+            signed-out student has no roadmap and never will, and they should
+            fall through to the client-side plan immediately instead of
+            watching a spinner that can never resolve. */}
+        {traits && !roadmapSettled ? (
+          <LoadingSection label="Building your plan from your matches and your grade..." />
+        ) : !traits ? (
           <section className="mt-8 rounded-lg border bg-card p-8 text-center">
             <h2 className="h-display text-section text-foreground">
               No trait profile yet

@@ -1876,15 +1876,18 @@ def create_app() -> FastAPI:
             "state", "location",
         )
 
+        # CACHED, because this is served to everyone and is identical for
+        # everyone. It was re-querying and re-sorting ~300 rows per request at
+        # 2.8s p50 -- long enough that /opportunities rendered an empty-looking
+        # page and then popped. fetch_shelf already holds exactly these rows
+        # behind a 5-minute TTL for the authenticated paths; this was the only
+        # catalog route not using it. It applies the audience filter and the
+        # is_("retired_at", "null") filter itself, so the guarantees below are
+        # unchanged -- see app/catalog.py and the test that pins both.
+        from .catalog import fetch_shelf
+
         sb = get_supabase()
-        rows = (
-            sb.table("opportunities")
-            .select(", ".join((*PUBLIC_FIELDS, "opportunity_field")))
-            .is_("retired_at", "null")
-            .eq("audience", "high_school")
-            .order("deadline", desc=False, nullsfirst=False)
-            .execute()
-        ).data or []
+        rows = fetch_shelf(sb, "high_school")
 
         today = date.today().isoformat()
         out: list[dict] = []

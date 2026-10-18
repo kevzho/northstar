@@ -27,6 +27,7 @@ import sys
 import traceback
 
 import embed_catalog
+import embed_students
 import scrape_codeforces
 import scrape_ctftime
 import scrape_devpost
@@ -103,6 +104,12 @@ STAGES = (
     # the row is absent from semantic_scores() and scoring falls back to
     # lexical, which is how the product worked before embeddings.
     ("embed", embed_catalog, False),
+    # The student half of the same loop. refresh_student_embedding fires on
+    # profile save, which covers everyone who edits a profile AFTER semantic
+    # matching shipped and nobody who existed before it -- measured 2026-10-18,
+    # 0 of 6 students had an embedding, so semantic_scores() returned nothing
+    # for everybody and every ranking silently fell back to pure TF-IDF.
+    ("embed-students", embed_students, False),
 )
 
 
