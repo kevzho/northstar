@@ -1262,6 +1262,151 @@ def create_app() -> FastAPI:
         plan["spine_hollow"] = bool(spine) and not resources
         return plan
 
+    @app.post("/roadmap/spine/auto")
+    def auto_generate_spine(user: CurrentUser = RequireUser) -> dict:
+        """Write this student a first path, if nobody ever has.
+
+        WHAT IT FIXES. A plan is learn -> build -> publish -> apply. The middle
+        two come from a "spine", and a spine arrives only by charting a path on
+        /futures. Measured 2026-10-18 across the real accounts: most students
+        had no archetype and no generated spine, so spine_for("") returned
+        nothing and their plan was three application steps and a cold email --
+        no project at all. The product's whole claim is that it tells you what
+        to build, and for a student who never pressed a button on another page
+        it was not telling them anything.
+
+        A POST, NOT A SIDE EFFECT ON GET /roadmap. A GET that spends money is
+        a GET that a prefetch, a retry, a crawler or a double-mount can bill
+        you for. This fires only when the plan page has looked at its own
+        has_spine and found it false.
+
+        IDEMPOTENT AND CHEAP TO REFUSE. A student who already has a spine --
+        generated or authored, by having charted a path -- gets it back without
+        a model call. Only a genuinely empty plan reaches the provider.
+
+        THREE GATES, AND THE ORDER MATTERS.
+          1. Does it need one at all. Costs nothing to answer.
+          2. app/limits.py "auto_spine": three per student per thirty days,
+             400 a day across everyone.
+          3. The advisor budget -- the same wallet as the advisor and the
+             manual regenerate, so there is one place the money is counted
+             rather than three ceilings that each look small.
+
+        The attempt is recorded BEFORE the call. A reply that fails to parse
+        still counts, because counting only successes makes a persistently
+        failing profile free and therefore infinite -- it would retry on every
+        page load for a month.
+        """
+        from .advisor import budget_block, record_call
+        from .db import get_supabase
+        from .spine_generation import (
+            generate_spine,
+            skill_choices,
+            store_spine,
+        )
+        from .spines import spine_for
+
+        sb = get_supabase()
+
+        student = (
+            sb.table("students")
+            .select("id, grade, audience, interests, goals, field_scores, "
+                    "trait_scores, chosen_archetype, location_pref")
+            .eq("id", user.id)
+            .maybe_single()
+            .execute()
+        )
+        student = student.data if student else None
+        if not student:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Student profile not found.",
+            )
+
+        # Gate 1: does this student actually have nothing?
+        existing = (
+            sb.table("generated_spines")
+            .select("project, publish, skill, skill_key")
+            .eq("user_id", user.id)
+            .execute()
+        ).data or []
+        if existing:
+            row = existing[0]
+            return {
+                "generated": False,
+                "reason": "already-written",
+                "project": row["project"],
+                "publish": row["publish"],
+                "skill": row["skill"],
+                "skillKey": row["skill_key"],
+                "source": "generated",
+            }
+        archetype = (student.get("chosen_archetype") or "").strip()
+        if archetype and spine_for(archetype):
+            # They charted a path; the authored spine is theirs and writing
+            # over it would be answering a question they did not ask.
+            return {"generated": False, "reason": "has-authored-path"}
+
+        # Gate 2: the per-student and global ceilings on automatic spend.
+        from .limits import limit_block, record_event
+
+        refused = limit_block(sb, "auto_spine", user.id)
+        if refused:
+            return {"generated": False, "reason": "rate-limited", "detail": refused}
+
+        # Gate 3: the shared wallet.
+        blocked = budget_block(sb, user.id)
+        if blocked:
+            return {"generated": False, "reason": "budget", "detail": blocked}
+
+        labels, keys = skill_choices(sb)
+        if not keys:
+            return {"generated": False, "reason": "no-resources"}
+
+        shelf = fetch_shelf(sb, shelf_for(student))
+        ranked = score_opportunities(student, shelf, [])[:8]
+        matches = [r["opportunity"] for r in ranked]
+
+        # Counted here, before the call, for the reason in the docstring.
+        record_event(sb, "auto_spine", user.id)
+
+        from .llm import LLMUnavailable, chat as llm_chat
+
+        try:
+            spine, result = generate_spine(
+                student=student,
+                matches=matches,
+                skill_keys=keys,
+                skill_labels=labels,
+                rejected=None,
+                reason=(
+                    "This student has not chosen a career path and may not want "
+                    "to. Write them a first project from what they already have."
+                ),
+                llm_chat=llm_chat,
+                settings=settings,
+            )
+        except LLMUnavailable:
+            # Quiet: the student did not ask for this, so a provider outage
+            # should not become an error message on their plan.
+            return {"generated": False, "reason": "unavailable"}
+
+        record_call(
+            sb,
+            user.id,
+            f"auto-spine:{user.id}",
+            "(automatic first path)",
+            result.text[:2000],
+            [],
+            (result.prompt_tokens, result.completion_tokens, result.total_tokens),
+        )
+
+        if not spine:
+            return {"generated": False, "reason": "unusable"}
+
+        store_spine(sb, user.id, spine, settings.llm_model, archetype or None)
+        return {**spine, "generated": True}
+
     @app.post("/roadmap/spine")
     def regenerate_spine(
         body: dict | None = None, user: CurrentUser = RequireUser

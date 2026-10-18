@@ -698,6 +698,34 @@ export type GeneratedSpine = {
   regenerated: boolean;
 };
 
+/** What the automatic first-path call reports back. */
+export type AutoSpine = {
+  generated: boolean;
+  reason?: string;
+  detail?: string;
+};
+
+/**
+ * Ask for a first path, if nobody ever wrote one.
+ *
+ * Fired by /plan when the roadmap comes back with has_spine false — a student
+ * who never charted a path on /futures otherwise gets a plan with no project
+ * in it at all, which is the one thing this product promises to tell them.
+ *
+ * Idempotent and gated server-side (three per student per thirty days, a daily
+ * global ceiling, and the shared advisor budget), so calling it on a mount is
+ * safe. Never throws: the student did not ask for this, so a provider outage
+ * must not become an error on their plan. The caller checks `generated` and
+ * refetches the roadmap only when something was actually written.
+ */
+export async function autoGenerateSpine(): Promise<AutoSpine> {
+  try {
+    return await (await authedFetch("/roadmap/spine/auto", { method: "POST" })).json();
+  } catch {
+    return { generated: false, reason: "unreachable" };
+  }
+}
+
 /**
  * Ask for a different path, saying why.
  *

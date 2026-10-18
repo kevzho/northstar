@@ -1946,6 +1946,27 @@
         "summary": "Regenerate Spine"
       }
     },
+    "/roadmap/spine/auto": {
+      "post": {
+        "description": "Write this student a first path, if nobody ever has.\n\nWHAT IT FIXES. A plan is learn -> build -> publish -> apply. The middle\ntwo come from a \"spine\", and a spine arrives only by charting a path on\n/futures. Measured 2026-10-18 across the real accounts: most students\nhad no archetype and no generated spine, so spine_for(\"\") returned\nnothing and their plan was three application steps and a cold email --\nno project at all. The product's whole claim is that it tells you what\nto build, and for a student who never pressed a button on another page\nit was not telling them anything.\n\nA POST, NOT A SIDE EFFECT ON GET /roadmap. A GET that spends money is\na GET that a prefetch, a retry, a crawler or a double-mount can bill\nyou for. This fires only when the plan page has looked at its own\nhas_spine and found it false.\n\nIDEMPOTENT AND CHEAP TO REFUSE. A student who already has a spine --\ngenerated or authored, by having charted a path -- gets it back without\na model call. Only a genuinely empty plan reaches the provider.\n\nTHREE GATES, AND THE ORDER MATTERS.\n  1. Does it need one at all. Costs nothing to answer.\n  2. app/limits.py \"auto_spine\": three per student per thirty days,\n     400 a day across everyone.\n  3. The advisor budget -- the same wallet as the advisor and the\n     manual regenerate, so there is one place the money is counted\n     rather than three ceilings that each look small.\n\nThe attempt is recorded BEFORE the call. A reply that fails to parse\nstill counts, because counting only successes makes a persistently\nfailing profile free and therefore infinite -- it would retry on every\npage load for a month.",
+        "operationId": "auto_generate_spine_roadmap_spine_auto_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Auto Generate Spine Roadmap Spine Auto Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Auto Generate Spine"
+      }
+    },
     "/sharing": {
       "post": {
         "description": "Set the handle and/or the public toggle on the student's record.",

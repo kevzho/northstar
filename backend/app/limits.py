@@ -55,6 +55,25 @@ POLICIES: dict[str, tuple[int | None, int, str]] = {
         "You have registered a lot of team-up interest this hour. Give the "
         "matches you already have a chance to come back.",
     ),
+    # The one limit here that is about MONEY rather than about people.
+    #
+    # /plan asks for a spine automatically when a student has never been
+    # written one, which is the right behaviour and also the first thing in
+    # this product that spends on its own initiative. One student needs exactly
+    # one; the allowance is three in thirty days so that a reply which failed to
+    # parse can be retried on a later visit, and no more, because a profile the
+    # model keeps refusing would otherwise retry on every single page load for
+    # the rest of the month.
+    #
+    # The attempt is counted BEFORE the call, not after it succeeds. Counting
+    # successes would make a persistently failing generation free and therefore
+    # infinite, which is exactly the runaway this exists to prevent.
+    "auto_spine": (
+        3, 60 * 24 * 30,
+        "Northstar has already tried to write you a plan a few times and it did "
+        "not come back usable. Your matches and deadlines are still here — pick "
+        "a path on Future paths and you will get a project with it.",
+    ),
     "mentor_apply": (
         None, 60,
         "This form has had a lot of submissions in the last hour. Try again "
@@ -65,6 +84,13 @@ POLICIES: dict[str, tuple[int | None, int, str]] = {
 # The global ceiling for every action, whoever sent it. Catches a distributed
 # burst that no single per-student count would see.
 GLOBAL_PER_WINDOW: dict[str, int] = {
+    # A ceiling on the whole product's spend, not one student's. At three per
+    # student this is ~130 students a day arriving with no path charted, which
+    # is far above anything this has seen and far below anything that would
+    # matter on the bill. It is the number to raise deliberately when real
+    # signups start, and the one that stops a bug costing a month of credit
+    # overnight.
+    "auto_spine": 400,
     "friend_request": 2000,
     "report": 300,
     "handle": 500,

@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { RoadmapTree } from "@/components/RoadmapTree";
 import { buildRoadmapTree, firstActionable } from "@/lib/roadmap-graph";
 import { Planet, Ship } from "@/components/decor/voyage";
-import { fetchMatches, fetchResources, fetchRoadmap } from "@/lib/api";
+import { autoGenerateSpine, fetchMatches, fetchResources, fetchRoadmap } from "@/lib/api";
 import { SpineControl } from "@/components/SpineControl";
 import type { LearningResource, Roadmap } from "@/lib/api";
 import { MissionBoard } from "@/components/MissionBoard";
@@ -125,15 +125,37 @@ export default function PlanPage() {
     };
   }, [skillKey]);
 
+  /**
+   * Ask for a first path when nobody ever wrote one.
+   *
+   * A plan is learn -> build -> publish -> apply, and the middle two come from
+   * a spine that only arrived by charting a path on /futures. A student who
+   * never went there got three application steps and a cold email — no project
+   * at all, which is the one thing this product exists to tell them.
+   *
+   * Fires at most once per mount, and the server refuses anything beyond three
+   * per student per thirty days, so a profile the model keeps declining cannot
+   * retry on every page load. Silent on failure: they did not ask for this.
+   */
+  const askedForSpine = useRef(false);
   useEffect(() => {
     let live = true;
-    fetchRoadmap()
-      .then((data) => {
-        if (live) setRoadmap(data);
-      })
-      .finally(() => {
-        if (live) setRoadmapSettled(true);
-      });
+    (async () => {
+      let data = await fetchRoadmap().catch(() => null);
+
+      if (live && data && !data.has_spine && !askedForSpine.current) {
+        askedForSpine.current = true;
+        const written = await autoGenerateSpine();
+        // Only pay for a second roadmap fetch when something actually changed.
+        if (live && written.generated) {
+          data = (await fetchRoadmap().catch(() => data)) ?? data;
+        }
+      }
+
+      if (!live) return;
+      setRoadmap(data);
+      setRoadmapSettled(true);
+    })();
     return () => {
       live = false;
     };
@@ -219,7 +241,13 @@ export default function PlanPage() {
             fall through to the client-side plan immediately instead of
             watching a spinner that can never resolve. */}
         {traits && !roadmapSettled ? (
-          <LoadingSection label="Building your plan from your matches and your grade..." />
+          <LoadingSection
+            label={
+              askedForSpine.current
+                ? "Writing your first project from your matches and your grade..."
+                : "Building your plan from your matches and your grade..."
+            }
+          />
         ) : !traits ? (
           <section className="mt-8 rounded-lg border bg-card p-8 text-center">
             <h2 className="h-display text-section text-foreground">

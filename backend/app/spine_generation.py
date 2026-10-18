@@ -214,3 +214,96 @@ def parse_spine(raw: str, skill_labels: dict[str, str]) -> dict | None:
         # which would be a lie about a sentence no human wrote.
         "source": "generated",
     }
+
+
+# ---------------------------------------------------------------------------
+# The call itself, shared by the two endpoints that make it.
+#
+# POST /roadmap/spine is the student pressing "write me a different one".
+# POST /roadmap/spine/auto is the plan noticing nobody ever wrote them a first
+# one. Same prompt, same parse, same persistence, same provider settings --
+# and those settings are load-bearing: without response_format and
+# reasoning_effort the model spends its whole budget narrating and the object
+# never arrives. Keeping one implementation means that fix cannot be present in
+# one path and missing from the other.
+# ---------------------------------------------------------------------------
+
+#: Headroom for a reasoning model's preamble. See the note in main.py.
+MAX_TOKENS = 1600
+
+
+def generate_spine(
+    *,
+    student: dict,
+    matches: list[dict],
+    skill_keys: list[dict],
+    skill_labels: dict[str, str],
+    rejected: dict | None,
+    reason: str,
+    llm_chat,
+    settings,
+) -> tuple[dict | None, str]:
+    """Write one spine. Returns (spine or None, the raw reply).
+
+    Returns rather than raises on a refusal, because the two callers want
+    different things from the same outcome: the explicit regenerate tells the
+    student their request did not meet the bar, and the automatic one stays
+    quiet and leaves the plan as it was. The raw reply comes back either way so
+    the caller can bill the tokens it actually used.
+    """
+    prompt = build_prompt(student, matches, skill_keys, rejected=rejected, reason=reason)
+    result = llm_chat(
+        base=settings.llm_api_base,
+        key=settings.llm_api_key,
+        model=settings.llm_model,
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": prompt},
+        ],
+        max_tokens=MAX_TOKENS,
+        # Low but not zero: a plan should read as written for one person, and a
+        # student pressing regenerate twice should not get the same sentence.
+        temperature=0.4,
+        response_format={"type": "json_object"},
+        reasoning_effort="none",
+    )
+    return parse_spine(result.text, skill_labels), result
+
+
+def skill_choices(sb) -> tuple[dict[str, str], list[dict]]:
+    """The skill rungs the model may choose from: those with verified resources.
+
+    Read at call time rather than hardcoded, so adding resources widens the
+    model's choices without touching this file -- and so a rung can never be
+    offered that would render an empty learn step.
+    """
+    rows = (
+        sb.table("learning_resources")
+        .select("skill_key, skill_label")
+        .not_.is_("verified_at", "null")
+        .execute()
+    ).data or []
+    labels: dict[str, str] = {}
+    keys: list[dict] = []
+    for row in rows:
+        key = row.get("skill_key")
+        if key and key not in labels:
+            labels[key] = row.get("skill_label") or ""
+            keys.append({"skill_key": key, "skill_label": labels[key]})
+    return labels, keys
+
+
+def store_spine(sb, user_id: str, spine: dict, model: str, archetype: str | None) -> None:
+    """Persist a generated spine. One row per student, replaced in place."""
+    sb.table("generated_spines").upsert(
+        {
+            "user_id": user_id,
+            "project": spine["project"],
+            "publish": spine["publish"],
+            "skill": spine["skill"],
+            "skill_key": spine["skillKey"],
+            "model": model,
+            "source_archetype": archetype or None,
+        },
+        on_conflict="user_id",
+    ).execute()
