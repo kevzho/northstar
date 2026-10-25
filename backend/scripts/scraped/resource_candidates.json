@@ -369,11 +369,28 @@
       "r/math"
     ],
     "field_guess": "math",
-    "upvotes": 6,
+    "upvotes": 7,
     "quotes": [
       "see eg https://11011110.github.io/blog/2026/03/01/making-accessible-latex.html"
     ],
     "first_seen": "2026-10-08T02:44:52.463447+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://actu.epfl.ch/news/all-landau-lifshitz-just-a-click-away",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/PhysicsStudents/comments/1p6fwy5/textbook_recommendations_for_learning_physics/"
+    ],
+    "subreddits": [
+      "r/PhysicsStudents"
+    ],
+    "field_guess": "physics",
+    "upvotes": 0,
+    "quotes": [
+      "Start with [Feynman Lectures on Physics](https://www.feynmanlectures.caltech.edu/)  Once you are done, [Course of Theoretical Physics](https://actu.epfl.ch/news/all-landau-lifshitz-just-a-click-away/) by Landau &amp; Lifshitz"
+    ],
+    "first_seen": "2026-10-22T13:16:34.525607+00:00",
     "thread_count": 1
   },
   {
@@ -522,7 +539,7 @@
       "r/APStudents"
     ],
     "field_guess": "interdisciplinary",
-    "upvotes": 0,
+    "upvotes": 1,
     "quotes": [
       "[https://app.gptzero.me/documents/7025727a-0639-40c8-a95a-2e56d1aaa0a9](https://app.gptzero.me/documents/7025727a-0639-40c8-a95a-2e56d1aaa0a9) ai generated website n post count ur days my clawdbots are currently finding vurnabilities in ur "
     ],
@@ -556,7 +573,7 @@
       "r/gamedev"
     ],
     "field_guess": "design",
-    "upvotes": 43,
+    "upvotes": 44,
     "quotes": [
       "If you want 'advanced' things. It almost will never be in a video tutorial.    What I do is look for blog/posts, sample projects, templates, sometimes patreon, or other places.   Also like I do a few advanced things and I post my stuff on g"
     ],
@@ -646,6 +663,23 @@
       "Oof, the question about FDR is hard to answer succinctly! Let me just say that there is an interesting tension between \"what anyone knew about what FDR wanted\" (very limited) and \"what people claimed was FDR's intention\" (coincidentally wha"
     ],
     "first_seen": "2026-10-08T02:44:52.461842+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://books.google.com.tr/books?amp;hl=tr&amp;newbks=0&amp;redir_esc=y&amp;source=newbks_fb&id=alTGEQAAQBAJ",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/PhysicsStudents/comments/1p7mn81/college_physics_textbook_recommendations/"
+    ],
+    "subreddits": [
+      "r/PhysicsStudents"
+    ],
+    "field_guess": "physics",
+    "upvotes": 1,
+    "quotes": [
+      "You can find the book regarding Newton motion laws (dynamics):   https://books.google.com.tr/books?id=alTGEQAAQBAJ&amp;newbks=0&amp;hl=tr&amp;source=newbks_fb&amp;redir_esc=y"
+    ],
+    "first_seen": "2026-10-20T13:16:23.870659+00:00",
     "thread_count": 1
   },
   {
@@ -870,6 +904,23 @@
     "thread_count": 1
   },
   {
+    "url": "https://cs.cornell.edu/courses/cs485/2006sp/LinAlg_Complete.pdf",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/PhysicsStudents/comments/1pgqu1m/undergraduate_linear_algebra_andor_mathematical/"
+    ],
+    "subreddits": [
+      "r/PhysicsStudents"
+    ],
+    "field_guess": "physics",
+    "upvotes": 3,
+    "quotes": [
+      "The university I went to tried to replace Calc III, Differential Equations, and Linear Algebra with a two semester Math Methods course.  Both Arfken and Boas' Math Method books are decent overviews of different topics (and I've used both bo"
+    ],
+    "first_seen": "2026-10-21T13:16:27.706051+00:00",
+    "thread_count": 1
+  },
+  {
     "url": "https://cs.ossu.dev/coursepages/intro-cs",
     "mentions": 1,
     "threads": [
@@ -913,7 +964,7 @@
       "r/gamedev"
     ],
     "field_guess": "design",
-    "upvotes": 43,
+    "upvotes": 44,
     "quotes": [
       "If you want 'advanced' things. It almost will never be in a video tutorial.    What I do is look for blog/posts, sample projects, templates, sometimes patreon, or other places.   Also like I do a few advanced things and I post my stuff on g"
     ],
@@ -1278,6 +1329,23 @@
     "thread_count": 1
   },
   {
+    "url": "https://feynmanlectures.caltech.edu",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/PhysicsStudents/comments/1p6fwy5/textbook_recommendations_for_learning_physics/"
+    ],
+    "subreddits": [
+      "r/PhysicsStudents"
+    ],
+    "field_guess": "physics",
+    "upvotes": 0,
+    "quotes": [
+      "Start with [Feynman Lectures on Physics](https://www.feynmanlectures.caltech.edu/)  Once you are done, [Course of Theoretical Physics](https://actu.epfl.ch/news/all-landau-lifshitz-just-a-click-away/) by Landau &amp; Lifshitz"
+    ],
+    "first_seen": "2026-10-22T13:16:34.525606+00:00",
+    "thread_count": 1
+  },
+  {
     "url": "https://flassari.notion.site/Ari-s-Unreal-Engine-Notes-1a75e43f4014464984d4fae0617e5cef",
     "mentions": 1,
     "threads": [
@@ -1287,7 +1355,7 @@
       "r/gamedev"
     ],
     "field_guess": "design",
-    "upvotes": 43,
+    "upvotes": 44,
     "quotes": [
       "If you want 'advanced' things. It almost will never be in a video tutorial.    What I do is look for blog/posts, sample projects, templates, sometimes patreon, or other places.   Also like I do a few advanced things and I post my stuff on g"
     ],
@@ -1754,6 +1822,23 @@
     "thread_count": 1
   },
   {
+    "url": "https://khanacademy.org/humanities/grammar",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/writing/comments/1ua9rab/books_on_copy_editing_english_grammar_for_writers/"
+    ],
+    "subreddits": [
+      "r/writing"
+    ],
+    "field_guess": "humanities",
+    "upvotes": 3,
+    "quotes": [
+      "I've used Khan Academy for a lot of this sort of thing and have always been a fan. They run on donations: https://www.khanacademy.org/humanities/grammar  I've not been through this one myself, but now that I'm thinking about it I just might"
+    ],
+    "first_seen": "2026-10-22T13:16:34.525763+00:00",
+    "thread_count": 1
+  },
+  {
     "url": "https://khanacademy.org/math/k-8-grades",
     "mentions": 1,
     "threads": [
@@ -1771,6 +1856,23 @@
     "thread_count": 1
   },
   {
+    "url": "https://koraynar.github.io/research-samples/cs-map-2026.png",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/learnprogramming/comments/1vwgpiu/a_goalbased_map_of_free_cs_selfstudy_courses_2026/"
+    ],
+    "subreddits": [
+      "r/learnprogramming"
+    ],
+    "field_guess": "cs",
+    "upvotes": 5,
+    "quotes": [
+      "It's the image link near the top of the post: https://koraynar.github.io/research-samples/cs-map-2026.png \u2014 that's the whole map on one page. All the individual course links are in the post text below it, slot by slot."
+    ],
+    "first_seen": "2026-10-20T13:16:23.870952+00:00",
+    "thread_count": 1
+  },
+  {
     "url": "https://landelare.github.io",
     "mentions": 1,
     "threads": [
@@ -1780,7 +1882,7 @@
       "r/gamedev"
     ],
     "field_guess": "design",
-    "upvotes": 43,
+    "upvotes": 44,
     "quotes": [
       "If you want 'advanced' things. It almost will never be in a video tutorial.    What I do is look for blog/posts, sample projects, templates, sometimes patreon, or other places.   Also like I do a few advanced things and I post my stuff on g"
     ],
@@ -1836,6 +1938,23 @@
       "If you\u2019re wanting to learn the core fundamentals any electrical engineer or hobbyist designer must know check out https://www.leetware.ca. They currently offer some free circuits fundamentals lessons, and are constantly adding more"
     ],
     "first_seen": "2026-10-08T02:44:52.465570+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://lesman.com/honeywell-udc2800-1-4-din-single-loop-or-limit-controller",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/AskEngineers/comments/1vfh4qk/are_there_any_beginnerfriendly_resources_for/"
+    ],
+    "subreddits": [
+      "r/AskEngineers"
+    ],
+    "field_guess": "engineering",
+    "upvotes": 2,
+    "quotes": [
+      "https://www.lesman.com/honeywell-udc2800-1-4-din-single-loop-or-limit-controller  What is your temp range?  That is going to affect whether you use a type J or type K thermocouple.   You're going to spec your SSR based on the load you're sw"
+    ],
+    "first_seen": "2026-10-22T13:16:34.525635+00:00",
     "thread_count": 1
   },
   {
@@ -2001,7 +2120,7 @@
       "r/math"
     ],
     "field_guess": "math",
-    "upvotes": 6,
+    "upvotes": 7,
     "quotes": [
       "[Upper and Lower Bounds for Stochastic Processes](https://michel.talagrand.net/ULBSPRINGER.pdf) by Michel Talagrand"
     ],
@@ -2154,7 +2273,7 @@
       "r/math"
     ],
     "field_guess": "math",
-    "upvotes": 9,
+    "upvotes": 10,
     "quotes": [
       "Folks here may be interested in an online workshop being hosted by the Ohio section of the MAA:  https://www.ohio.maa.org/events  The goal is to address exactly this. I'm sure there are other similar resources available, but hopefully shari"
     ],
@@ -2295,6 +2414,23 @@
       "Hope the moderates let this be a bit more of an open thread, but I work professionally in politics and have been engaged in the rise of the right over the past 15 years, and studying the rise of global extremism. But this will likely be a p"
     ],
     "first_seen": "2026-10-08T02:44:52.454623+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://pearson.com/en-us/pearsonplus/p/9780136874331",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/PhysicsStudents/comments/1p6fwy5/textbook_recommendations_for_learning_physics/"
+    ],
+    "subreddits": [
+      "r/PhysicsStudents"
+    ],
+    "field_guess": "physics",
+    "upvotes": 7,
+    "quotes": [
+      "I\u2019m fond of this one. https://www.pearson.com/en-us/pearsonplus/p/9780136874331"
+    ],
+    "first_seen": "2026-10-22T13:16:34.525563+00:00",
     "thread_count": 1
   },
   {
@@ -2817,7 +2953,7 @@
       "r/gamedev"
     ],
     "field_guess": "design",
-    "upvotes": 43,
+    "upvotes": 44,
     "quotes": [
       "If you want 'advanced' things. It almost will never be in a video tutorial.    What I do is look for blog/posts, sample projects, templates, sometimes patreon, or other places.   Also like I do a few advanced things and I post my stuff on g"
     ],
@@ -2890,6 +3026,23 @@
       "Paul's Notes are my favorite so far.  He has very good explanations,  many example problems and answers with walk throughs that help you understand how to get to a solution. https://tutorial.math.lamar.edu/ Combine it with the other great r"
     ],
     "first_seen": "2026-10-08T02:44:52.469086+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://tutorial.math.lamar.edu/classes/de/de.aspx",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/PhysicsStudents/comments/1pgqu1m/undergraduate_linear_algebra_andor_mathematical/"
+    ],
+    "subreddits": [
+      "r/PhysicsStudents"
+    ],
+    "field_guess": "physics",
+    "upvotes": 3,
+    "quotes": [
+      "The university I went to tried to replace Calc III, Differential Equations, and Linear Algebra with a two semester Math Methods course.  Both Arfken and Boas' Math Method books are decent overviews of different topics (and I've used both bo"
+    ],
+    "first_seen": "2026-10-21T13:16:27.706050+00:00",
     "thread_count": 1
   },
   {
@@ -2970,7 +3123,7 @@
       "r/gamedev"
     ],
     "field_guess": "design",
-    "upvotes": 43,
+    "upvotes": 44,
     "quotes": [
       "If you want 'advanced' things. It almost will never be in a video tutorial.    What I do is look for blog/posts, sample projects, templates, sometimes patreon, or other places.   Also like I do a few advanced things and I post my stuff on g"
     ],
@@ -3213,6 +3366,40 @@
       "Since I prefer videos, I would recommend 3blue1brown, floatheadphysics, Rational Thinker,  and Kathy loves physics. Angela Collier is cool too.  https://youtube.com/@mahesh_shenoy  https://youtu.be/YdOXS_9_P4U  https://youtube.com/@kathy_lo"
     ],
     "first_seen": "2026-10-08T02:44:52.464425+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/@beardmeetscalculus",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/EngineeringStudents/comments/1ul8hl7/what_engineering_resource_do_you_wish_existed/"
+    ],
+    "subreddits": [
+      "r/EngineeringStudents"
+    ],
+    "field_guess": "engineering",
+    "upvotes": 3,
+    "quotes": [
+      "Cleaned link: https://youtube.com/@beardmeetscalculus  --- *Tracking parameters were removed from the original URL(s).*"
+    ],
+    "first_seen": "2026-10-22T13:16:34.525853+00:00",
+    "thread_count": 1
+  },
+  {
+    "url": "https://youtube.com/@beardmeetscalculus?si=GXazomeqmvhqEG-C",
+    "mentions": 1,
+    "threads": [
+      "https://www.reddit.com/r/EngineeringStudents/comments/1ul8hl7/what_engineering_resource_do_you_wish_existed/"
+    ],
+    "subreddits": [
+      "r/EngineeringStudents"
+    ],
+    "field_guess": "engineering",
+    "upvotes": 3,
+    "quotes": [
+      "I struggled so much in Calc2 -- would have loved to have had this https://youtube.com/@beardmeetscalculus?si=GXazomeqmvhqEG-C"
+    ],
+    "first_seen": "2026-10-22T13:16:34.525841+00:00",
     "thread_count": 1
   },
   {

@@ -309,7 +309,11 @@ def test_every_gate_produces_an_actionable_verb() -> None:
         ("qualify", "Qualify for"),
         ("advance", "Advance to"),
         ("nominate", "Get nominated for"),
-        ("teacher", "Find a teacher to enter"),
+        # Deliberately NOT "Find a teacher": the prep step for this gate already
+        # says that, and printing both two lines apart reads as a stutter rather
+        # than as two steps. Finding the adult is the prerequisite; this is the
+        # step that finishes it.
+        ("teacher", "Get your teacher to submit"),
     ]:
         plan = build_roadmap(
             {"grade": "11"}, SPINE, RESOURCES, [gated("o1", "Some Program", gate)], MISSIONS, TODAY,
@@ -318,6 +322,31 @@ def test_every_gate_produces_an_actionable_verb() -> None:
         assert len(steps) == 1, f"{gate} produced {len(steps)} steps"
         assert steps[0]["title"].startswith(expected), (
             f"gate {gate!r} produced {steps[0]['title']!r}"
+        )
+
+
+def test_a_gated_step_never_repeats_its_own_prep_step() -> None:
+    """Two steps, two different instructions.
+
+    Seen on a real plan: "Find the teacher or coach who can enter ACS ChemClub
+    with you" followed two lines later by "Find a teacher to enter ACS ChemClub
+    with you". The prep step and the application step were the same sentence
+    twice, which reads as a bug in the plan rather than as a route through it.
+    """
+    for gate in ("qualify", "advance", "nominate", "teacher"):
+        plan = build_roadmap(
+            {"grade": "11"}, SPINE, RESOURCES,
+            [gated("o1", "Some Program", gate)], MISSIONS, TODAY,
+        )
+        titles = [s["title"] for p in plan["phases"] for s in p["steps"]
+                  if s["opportunity_id"] == "o1"]
+        assert len(titles) == 2, f"{gate} should produce a prep and an application"
+        prep, application = titles
+        # Compare on the leading verb phrase, which is what a reader actually
+        # sees differ; the programme name is the same in both by design.
+        first_words = lambda t: " ".join(t.split()[:3]).lower().rstrip(".")
+        assert first_words(prep) != first_words(application), (
+            f"gate {gate!r} says the same thing twice: {prep!r} then {application!r}"
         )
 
 

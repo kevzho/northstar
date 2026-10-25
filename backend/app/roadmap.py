@@ -103,7 +103,12 @@ GATE_STEP: dict[str, tuple[str, str]] = {
         "Entry needs a nomination or recommendation — ask early, not late.",
     ),
     "teacher": (
-        "Find a teacher to enter {title} with you.",
+        # NOT "find a teacher" — the prep step above already says that, and a
+        # plan that prints "Find the teacher or coach who can enter ACS ChemClub
+        # with you" and then "Find a teacher to enter ACS ChemClub with you" two
+        # lines later reads as a stutter rather than as two steps. Finding the
+        # adult is the prerequisite; this is the thing that finishes it.
+        "Get your teacher to submit the {title} entry before the deadline.",
         "An adult applies or registers the team, not a student individually.",
     ),
 }
