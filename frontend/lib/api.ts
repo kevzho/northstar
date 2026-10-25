@@ -14,6 +14,7 @@
  *     by a small helper that pulls the live session from lib/supabase.
  */
 
+import { readDetail } from "./error-detail";
 import { supabase } from "./supabase";
 import type {
   MatchResult,
@@ -81,7 +82,8 @@ export async function authedFetch(
     // out and when it resets — and throwing only the status discards them.
     let detail = "";
     try {
-      detail = ((await res.clone().json()) as { detail?: string }).detail ?? "";
+      const body = (await res.clone().json()) as { detail?: unknown };
+      detail = readDetail(body.detail);
     } catch {
       // Non-JSON body (a proxy error page, say); the status has to speak.
     }

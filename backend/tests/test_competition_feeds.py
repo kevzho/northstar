@@ -320,6 +320,14 @@ def test_every_structured_scraper_is_trusted_by_the_verifier() -> None:
     import re
 
     verify = importlib.import_module("verify_and_import")
+    resources = importlib.import_module("import_resources")
+
+    # TWO POOLS, TWO TRUST LISTS, ONE RULE. Opportunity scrapers feed
+    # reddit_candidates.json and are reached via KNOWN_REAL_SOURCES; resource
+    # scrapers feed resource_candidates.json and are reached via
+    # CATALOGUE_SOURCES. A scraper is trusted if its own importer trusts it --
+    # being in the wrong list is the same silent failure as being in neither.
+    trusted = set(verify.KNOWN_REAL_SOURCES) | set(resources.CATALOGUE_SOURCES)
 
     emitted: dict[str, str] = {}
     for script in sorted(SCRIPTS.glob("scrape_*.py")):
@@ -331,8 +339,7 @@ def test_every_structured_scraper_is_trusted_by_the_verifier() -> None:
             emitted[match.group(1)] = script.name
 
     assert emitted, "no structured scrapers found; has the naming changed?"
-    missing = {src: where for src, where in emitted.items()
-               if src not in verify.KNOWN_REAL_SOURCES}
+    missing = {src: where for src, where in emitted.items() if src not in trusted}
     assert not missing, (
         f"these scrapers write a source the verifier does not trust: {missing}. "
         "Their candidates will sort below every reddit thread in the pool and "
@@ -479,6 +486,11 @@ def test_every_scraper_dedupes_on_the_canonical_form() -> None:
         "scrape_all.py",
         "scrape_reddit.py",
         "scrape_reddit_resources.py",  # see test_the_comment_scraper_... below
+        # OpenStax keys on the publisher's own slug, which is unique by
+        # construction and already canonical -- there is no second spelling of
+        # a book for canonical_url to collapse. Its dedupe guarantee is tested
+        # directly below instead.
+        "scrape_openstax.py",
     }
     for script in sorted(SCRIPTS.glob("scrape_*.py")):
         if script.name in exempt:
@@ -565,3 +577,30 @@ def test_title_dedupe_collapses_format_words_but_never_sibling_competitions() ->
     assert host_path("http://broadinstitute.org/bssp") == host_path(
         "https://www.broadinstitute.org/bssp/"
     )
+
+
+def test_openstax_only_ships_books_the_publisher_still_lists() -> None:
+    """OpenStax tells us which of its books are dead, and we have to listen.
+
+    Of 129 entries in their catalogue, 45 are retired, unlisted or deprecated.
+    Importing those would recreate by hand the exact defect
+    retire_dead_opportunities.py exists to undo -- a shelf carrying programmes
+    and textbooks their own publisher has withdrawn.
+    """
+    import importlib
+    import sys
+
+    sys.path.insert(0, str(SCRIPTS))
+    openstax = importlib.import_module("scrape_openstax")
+    source = (SCRIPTS / "scrape_openstax.py").read_text()
+
+    assert 'book_state") or "").lower() == "live"' in source, (
+        "the live-only filter is gone; retired textbooks will reach the shelf"
+    )
+    # And the url it emits is the book itself, not the React shell whose server
+    # HTML is the single word "OpenStax" and from which nothing can be verified.
+    assert "/details/books/" not in openstax.DETAIL
+    assert openstax.DETAIL.startswith("https://openstax.org/books/")
+
+    # Slugs are unique per book, so the pool cannot gain two rows for one book.
+    assert "{slug}" in openstax.DETAIL

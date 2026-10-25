@@ -74,6 +74,17 @@ FAIL_FAST_AFTER = 5
 # Lower it when the queue runs dry.
 MIN_THREADS = 2
 
+# Sources that are a publisher's own catalogue rather than somebody's comment,
+# and so have no reddit threads to count. Without this they sit at
+# thread_count 0 behind two hundred links that do have one, and the queue never
+# reaches them -- the identical trap KNOWN_REAL_SOURCES exists for in
+# verify_and_import.py, which that file's docstring describes as a scrape that
+# "succeeded daily and imported nothing".
+#
+# Trusted to be REACHED, not trusted to be right: every page is still fetched,
+# and a free claim that cannot be quoted from it is still refused.
+CATALOGUE_SOURCES = frozenset({"openstax"})
+
 SYSTEM = f"""You read one web page and decide whether it is FREE learning material a US high-school student could actually use.
 
 Reply with JSON only:
@@ -174,6 +185,9 @@ def rank_key(candidate: dict) -> tuple:
     one thread agreeing -- see tally() in scrape_reddit_resources.py.
     """
     return (
+        # A publisher's own catalogue first: it has no threads to count and is
+        # the densest source of material a student will actually recognise.
+        0 if candidate.get("source") in CATALOGUE_SOURCES else 1,
         -int(candidate.get("thread_count") or 0),
         -int(candidate.get("mentions") or 0),
         -int(candidate.get("upvotes") or 0),
@@ -214,6 +228,7 @@ def main(argv: list[str] | None = None) -> int:
             int(c.get("thread_count") or 0) >= MIN_THREADS
             # A human who marked it "keep" outranks the counter.
             or c.get("review") == "keep"
+            or c.get("source") in CATALOGUE_SOURCES
         )
     ]
     queue.sort(key=rank_key)

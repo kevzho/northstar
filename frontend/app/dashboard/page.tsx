@@ -4,6 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { AppNav } from "@/components/AppNav";
+import { FieldPlanet } from "@/components/decor/field-planets";
+import { daysUntil } from "@/lib/countdown";
+import { fieldColor } from "@/lib/field-colors";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/use-auth";
 import { authedFetch, fetchMatches, fetchOutcomes, isApiError } from "@/lib/api";
@@ -31,6 +34,9 @@ export default function DashboardPage() {
   const router = useRouter();
   const [checking, setChecking] = useState(false);
   const [studentName, setStudentName] = useState<string | null>(null);
+  // One timestamp per mount, not one per render: two Date.now() calls in a
+  // single render can straddle midnight and disagree with each other.
+  const [now] = useState(() => Date.now());
   const [matches, setMatches] = useState<MatchResult[] | null>(null);
   const [matchesFailed, setMatchesFailed] = useState(false);
   const [profileFailed, setProfileFailed] = useState(false);
@@ -121,12 +127,6 @@ export default function DashboardPage() {
     return () => { cancelled = true; };
   }, [loading, user, router]);
 
-  async function signOut() {
-    const { supabase } = await import("@/lib/supabase");
-    await supabase.auth.signOut();
-    window.location.href = "/";
-  }
-
   if (loading || checking) {
     return (
       <LoadingScreen
@@ -157,9 +157,14 @@ export default function DashboardPage() {
   const closingSoon = (matches ?? [])
     .map(({ opportunity }) => {
       if (!opportunity.deadline) return null;
-      const due = new Date(`${opportunity.deadline}T23:59:59`).getTime();
-      if (Number.isNaN(due)) return null;
-      const days = Math.ceil((due - Date.now()) / 86_400_000);
+      // Calendar days, from lib/countdown.ts. This used to be
+      // ceil((deadline 23:59:59 - Date.now()) / 86400000), which is the
+      // duration-labelled-as-a-day-count bug for the third time in this
+      // codebase: at 22:00 a thing closing tonight had two hours left and the
+      // strip said "1d". Date.now() in a render body was also an impurity the
+      // linter was flagging, and a stable per-mount clock fixes both.
+      const days = daysUntil(opportunity.deadline, now);
+      if (Number.isNaN(days)) return null;
       return days >= 0 && days <= 30 ? { opportunity, days } : null;
     })
     .filter((entry): entry is NonNullable<typeof entry> => entry !== null)
@@ -198,17 +203,7 @@ export default function DashboardPage() {
   return (
     <main className="min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
-        <AppNav
-          right={
-            <Button variant="outline"
-              type="button"
-              onClick={signOut}
-              className="h-10 px-4 font-semibold"
-            >
-              Sign out
-            </Button>
-          }
-        />
+        <AppNav />
 
         <header className="py-10">
           <p className="eyebrow">Mission control</p>
@@ -423,7 +418,8 @@ export default function DashboardPage() {
             the judge-facing centerpiece, so it cannot be URL-only. */}
         <section className="grid gap-4 md:grid-cols-2">
           <Link href="/map" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
-            <h2 className="h-display text-section text-foreground">
+            <h2 className="h-display flex items-center gap-2 text-section text-foreground">
+              <FieldPlanet field="physics" className="h-5 w-5" style={{ color: fieldColor("physics") }} />
               Your pathway map
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -432,7 +428,8 @@ export default function DashboardPage() {
             </p>
           </Link>
           <Link href="/opportunities" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
-            <h2 className="h-display text-section text-foreground">
+            <h2 className="h-display flex items-center gap-2 text-section text-foreground">
+              <FieldPlanet field="cs" className="h-5 w-5" style={{ color: fieldColor("cs") }} />
               All recommendations
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -441,7 +438,8 @@ export default function DashboardPage() {
             </p>
           </Link>
           <Link href="/learn" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
-            <h2 className="h-display text-section text-foreground">
+            <h2 className="h-display flex items-center gap-2 text-section text-foreground">
+              <FieldPlanet field="math" className="h-5 w-5" style={{ color: fieldColor("math") }} />
               The shelf
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -451,7 +449,8 @@ export default function DashboardPage() {
             </p>
           </Link>
           <Link href="/mentors" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
-            <h2 className="h-display text-section text-foreground">
+            <h2 className="h-display flex items-center gap-2 text-section text-foreground">
+              <FieldPlanet field="health" className="h-5 w-5" style={{ color: fieldColor("health") }} />
               Mentor matches
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -459,7 +458,8 @@ export default function DashboardPage() {
             </p>
           </Link>
           <Link href="/projects" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
-            <h2 className="h-display text-section text-foreground">
+            <h2 className="h-display flex items-center gap-2 text-section text-foreground">
+              <FieldPlanet field="engineering" className="h-5 w-5" style={{ color: fieldColor("engineering") }} />
               Projects to join
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -468,25 +468,19 @@ export default function DashboardPage() {
             </p>
           </Link>
           <Link href="/discover" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
-            <h2 className="h-display text-section text-foreground">
+            <h2 className="h-display flex items-center gap-2 text-section text-foreground">
+              <FieldPlanet field="humanities" className="h-5 w-5" style={{ color: fieldColor("humanities") }} />
               Find your people
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Discover students who share your fields and path, then compare
-              records side by side.
-            </p>
-          </Link>
-          <Link href="/teamup" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
-            <h2 className="h-display text-section text-foreground">
-              Team up
-            </h2>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Find a collaborator or study buddy — pick who you&apos;d build
-              with, connect only when it&apos;s mutual.
+              Students matched on your fields and your path, and the ones
+              looking for someone to build with. Compare records, or team up on
+              a project neither of you would finish alone.
             </p>
           </Link>
           <Link href="/advisor" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
-            <h2 className="h-display text-section text-foreground">
+            <h2 className="h-display flex items-center gap-2 text-section text-foreground">
+              <FieldPlanet field="interdisciplinary" className="h-5 w-5" style={{ color: fieldColor("interdisciplinary") }} />
               Explore unusual routes
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -495,7 +489,8 @@ export default function DashboardPage() {
             </p>
           </Link>
           <Link href="/profile" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
-            <h2 className="h-display text-section text-foreground">
+            <h2 className="h-display flex items-center gap-2 text-section text-foreground">
+              <FieldPlanet field="design" className="h-5 w-5" style={{ color: fieldColor("design") }} />
               Edit profile
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">

@@ -32,7 +32,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { FieldPlanet } from "@/components/decor/field-planets";
 import { StarGlyph } from "@/components/decor/star-glyph";
+import { fieldColor } from "@/lib/field-colors";
+import type { OpportunityField } from "@/lib/types";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useAuth } from "@/lib/use-auth";
 
@@ -42,14 +45,21 @@ import { useAuth } from "@/lib/use-auth";
  * shown.
  */
 const SECTIONS = [
-  { href: "/opportunities", label: "Programs", match: "/opportunities", open: true },
-  { href: "/learn", label: "Learn", match: "/learn", open: true },
-  { href: "/plan", label: "Plan", match: "/plan", open: false },
+  // Dashboard first, because it is where a signed-in student lands and there
+  // was no way back to it from anywhere except the wordmark.
+  { href: "/dashboard", label: "Dashboard", match: "/dashboard", open: false, planet: "interdisciplinary" },
+  { href: "/opportunities", label: "Programs", match: "/opportunities", open: true, planet: "cs" },
+  { href: "/learn", label: "Learn", match: "/learn", open: true, planet: "math" },
+  { href: "/plan", label: "Plan", match: "/plan", open: false, planet: "engineering" },
   // "Profile", not "You". A student looking for their profile scans a nav for
   // the word and does not find it, and /profile is where the trait scores, the
   // field sky, the evidence timeline and the public-handle control all live.
-  { href: "/profile", label: "Profile", match: "/profile", open: false },
-  { href: "/discover", label: "People", match: "/discover", open: false },
+  { href: "/profile", label: "Profile", match: "/profile", open: false, planet: "design" },
+  // One destination, not two. Discover and Team up were separate entries that
+  // both answer "find someone to work with"; splitting them made the social
+  // half look twice as big as it is and sent students to whichever they
+  // happened to click.
+  { href: "/discover", label: "People", match: "/discover", open: false, planet: "humanities" },
 ] as const;
 
 /**
@@ -87,6 +97,12 @@ export function AppNav({
   /** Page-specific actions rendered left of the theme toggle. */
   right?: React.ReactNode;
 }) {
+  async function signOut() {
+    const { supabase } = await import("@/lib/supabase");
+    await supabase.auth.signOut();
+    window.location.href = "/";
+  }
+
   const pathname = usePathname() || "/";
   const { user, loading } = useAuth();
   const signedIn = Boolean(user);
@@ -135,10 +151,17 @@ export function AppNav({
                   aria-current={current ? "page" : undefined}
                   className={
                     current
-                      ? "border-b-2 border-star px-2 py-1 text-sm font-semibold text-foreground"
-                      : "border-b-2 border-transparent px-2 py-1 text-sm font-medium text-muted-foreground hover:text-foreground"
+                      ? "flex items-center gap-1.5 border-b-2 border-star px-2 py-1 text-sm font-semibold text-foreground"
+                      : "flex items-center gap-1.5 border-b-2 border-transparent px-2 py-1 text-sm font-medium text-muted-foreground hover:text-foreground"
                   }
                 >
+                  <FieldPlanet
+                    field={section.planet as OpportunityField}
+                    className="h-3.5 w-3.5"
+                    style={{
+                      color: current ? fieldColor(section.planet) : undefined,
+                    }}
+                  />
                   {section.label}
                 </Link>
               );
@@ -149,6 +172,27 @@ export function AppNav({
 
       <div className="flex items-center gap-3">
         {right}
+        {/* Account controls belong next to each other and on every page.
+            "Edit profile" was a card three screens down the dashboard and
+            "Sign out" was in the dashboard's own right slot, so from any other
+            page there was no way to do either without going back first. */}
+        {!loading && signedIn ? (
+          <>
+            <Link
+              href="/profile"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground"
+            >
+              Edit profile
+            </Link>
+            <button
+              type="button"
+              onClick={signOut}
+              className="text-sm font-medium text-muted-foreground hover:text-foreground"
+            >
+              Sign out
+            </button>
+          </>
+        ) : null}
         <ThemeToggle />
       </div>
     </div>

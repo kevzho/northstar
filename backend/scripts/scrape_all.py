@@ -36,6 +36,7 @@ import scrape_reddit
 import refresh_deadlines
 import check_links
 import import_resources
+import scrape_openstax
 import scrape_reddit_resources
 import scrape_sciencefairs
 import verify_and_import
@@ -72,6 +73,12 @@ STAGES = (
     # in a reply, which is why the opportunity pool was never going to feed this
     # (891 of 11,293 pooled candidates carry a non-reddit URL at all).
     ("reddit-resources", scrape_reddit_resources, False),
+    # A publisher's own catalogue, which is how the shelf stops being 44 rows
+    # of archetype skill rungs and starts carrying the subjects a high
+    # schooler actually takes. Only books OpenStax marks "live": 45 of their
+    # 129 are retired, unlisted or deprecated, and importing those would be
+    # the exact defect retire_dead_opportunities.py exists to undo.
+    ("openstax", scrape_openstax, False),
     ("verify+import", verify_and_import, True),
     # Fetches each candidate page and refuses any free claim it cannot quote
     # from it. Not required: a provider outage here costs a day of shelf growth,
