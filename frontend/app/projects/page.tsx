@@ -69,7 +69,7 @@ export default function ProjectsPage() {
   }, [answers]);
 
   return (
-    <main className="min-h-screen px-6 py-8 sm:px-8">
+    <main className="bleed-root min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
         <AppNav
           homeHref="/dashboard"

@@ -54,7 +54,7 @@ const waypoints = [
     planet: "ringed" as const,
     title: "Students on the same path",
     description:
-      "Team-up matches you against students whose path, fields and working style line up with yours — not by school or grade. Compare plans, split a project, or just have someone to ask. Opt-in, and you can leave at any time.",
+      "Team-up matches you against students whose path, fields and working style line up with yours, not by school or grade. Compare plans, split a project, or just have someone to ask. Opt-in, and you can leave at any time.",
   },
 ];
 
@@ -215,7 +215,7 @@ export default function Home() {
       */}
       <SpriteSky className="fixed inset-0 -z-10" />
       <section className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-6 py-8 sm:px-8 lg:px-10">
-        <nav className="bleed-bg sticky top-0 z-40 flex items-center justify-between py-4">
+        <nav className="bleed-bg sticky top-0 z-40 -mt-8 flex items-center justify-between py-4">
           <Link
             href="/"
             className="flex items-center gap-2 text-lg tracking-tight text-foreground"

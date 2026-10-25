@@ -137,7 +137,7 @@ export default function DashboardPage() {
 
   if (!user) {
     return (
-      <main className="flex min-h-screen items-center justify-center px-6">
+      <main className="bleed-root flex min-h-screen items-center justify-center px-6">
         <div className="rounded-lg border bg-card w-full max-w-md p-6 text-center">
           <h1 className="h-display text-3xl text-foreground">
             Sign in required

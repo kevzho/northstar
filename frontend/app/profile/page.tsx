@@ -152,7 +152,7 @@ export default function ProfilePage() {
   }, [isReal, JSON.stringify(fieldScores)]);
 
   return (
-    <main className="min-h-screen px-6 py-8 sm:px-8">
+    <main className="bleed-root min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
         <AppNav homeHref="/dashboard"
           right={
@@ -225,8 +225,7 @@ export default function ProfilePage() {
         <section className="rounded-lg border bg-card mt-8 p-5">
           <p className="text-note leading-6 text-muted-foreground">
             Bars are drawn against your own strongest signal, so the shape is
-            readable. These compare your six signals to each other — not to
-            other students.
+            readable. These compare your six signals to each other, not to other students.
           </p>
           <div className="mt-5 grid gap-5">
             {ordered.map((trait, index) => {
@@ -267,7 +266,7 @@ export default function ProfilePage() {
             Field interest
           </h2>
           <p className="mt-1 text-xs leading-5 text-muted-foreground">
-            Ten worlds, one sky — your answers as shares of a whole, always
+            Ten worlds, one sky. Your answers as shares of a whole, always
             summing to 100.
           </p>
           {serverShift || shifts.length > 0 ? (
@@ -316,8 +315,8 @@ export default function ProfilePage() {
               Evidence timeline
             </h2>
             <p className="mt-1 text-xs leading-5 text-muted-foreground">
-              Every recorded step — assessments, missions, outcomes,
-              bookmarks — newest first. This record is the product.
+              Every recorded step, newest first: assessments, missions, outcomes,
+              bookmarks.
             </p>
             <ul className="mt-4 grid gap-3">
               {timeline.slice(0, 12).map((event, index) => (

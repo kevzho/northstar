@@ -241,8 +241,8 @@ export function RoadmapTree({
         <span className="flex items-start gap-2">
           <Rule kind="required" />
           <span>
-            <span className="text-foreground">Required.</span> The programme says
-            so — its own entry rule.
+            <span className="text-foreground">Required.</span> The programme&rsquo;s own
+            entry rule.
           </span>
         </span>
         <span className="flex items-start gap-2">
@@ -270,7 +270,7 @@ export function RoadmapTree({
           <span>
             <span className="text-foreground">No line into it.</span> A locked
             programme, drawn with no edge because no step on this tree reaches
-            it — only a birthday does. The grade it opens at is on the node.
+            it. Only a birthday does, and the grade it opens at is on the node.
           </span>
         </span>
       </figcaption>

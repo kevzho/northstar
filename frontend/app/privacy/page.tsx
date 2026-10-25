@@ -41,7 +41,7 @@ function Section({
 
 export default function PrivacyPage() {
   return (
-    <main className="min-h-screen px-6 py-8 sm:px-8">
+    <main className="bleed-root min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-2xl">
         <AppNav />
 
@@ -72,7 +72,7 @@ export default function PrivacyPage() {
               and your location preference.
             </li>
             <li>
-              Your assessment results — six behavioral trait scores and a
+              Your assessment results: six behavioral trait scores and a
               field-interest map. The individual answers stay in your browser
               and are not sent to us.
             </li>
@@ -95,7 +95,7 @@ export default function PrivacyPage() {
             </li>
           </ul>
           <p>
-            We do not store your password — sign-in goes through Google or a
+            We do not store your password. Sign-in goes through Google or a
             one-time email link. We do not use advertising trackers, and there
             is no analytics vendor on this site.
           </p>

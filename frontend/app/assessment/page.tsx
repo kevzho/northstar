@@ -64,7 +64,7 @@ export default function AssessmentPage() {
   const left = total - answered;
 
   return (
-    <main className="min-h-screen px-6 py-8 sm:px-8">
+    <main className="bleed-root min-h-screen px-6 py-8 sm:px-8">
       <ScrollProgress className="fixed inset-x-0 top-0 z-50 h-0.5 bg-star" />
       <div className="mx-auto max-w-5xl">
         <AppNav homeHref="/dashboard"

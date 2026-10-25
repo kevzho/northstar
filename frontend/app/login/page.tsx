@@ -65,7 +65,7 @@ function LoginInner() {
   }
 
   return (
-    <main className="min-h-screen px-6 py-8 sm:px-8">
+    <main className="bleed-root min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-5xl flex-col">
         <AppNav
           right={

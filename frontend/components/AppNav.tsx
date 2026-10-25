@@ -98,7 +98,23 @@ export function AppNav({
     null;
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-y-3 border-b border-border pb-5">
+    /*
+      FLUSH TO THE TOP, AND IT STAYS THERE.
+
+      This was a static row sitting inside the page's own `py-8`, so 32px of
+      dead space opened above it and the bar read as a strip floating in the
+      content rather than as the top of the application. It also scrolled away
+      — on /learn, which is 16,000px tall, you lost every navigation link
+      three screens in.
+
+      `-mt-8` cancels the page padding above it; `py-4` gives the bar its own.
+      `.bleed-bg` paints the background and the hairline out to the window
+      edges while the contents stay aligned with the centred column, and it
+      provides the bottom border, so `border-b` is gone from here rather than
+      drawn twice. The landing page has worked this way since the sprite sky
+      shipped; every other page just never got it.
+    */
+    <div className="bleed-bg sticky top-0 z-40 -mt-8 flex flex-wrap items-center justify-between gap-y-3 py-4">
       <div className="flex items-center gap-6">
         <Link href={homeHref} className="flex items-center gap-2 text-foreground">
           <StarGlyph className="h-3.5 w-3.5 text-star" />

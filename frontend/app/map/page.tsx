@@ -285,7 +285,7 @@ export default function MapPage() {
   }, [data, router, view]);
 
   return (
-    <main className="min-h-screen px-4 py-8 sm:px-6">
+    <main className="bleed-root min-h-screen px-4 py-8 sm:px-6">
       <div className="mx-auto max-w-7xl">
         <AppNav
           homeHref="/dashboard"

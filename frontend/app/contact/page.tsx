@@ -17,7 +17,7 @@ export default function ContactPage() {
   const { t } = useLanguage();
 
   return (
-    <main className="flex min-h-screen flex-col px-6 py-8 sm:px-8">
+    <main className="bleed-root flex min-h-screen flex-col px-6 py-8 sm:px-8">
       <div className="mx-auto w-full max-w-3xl flex-1">
         <AppNav
           right={

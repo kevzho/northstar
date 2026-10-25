@@ -158,7 +158,7 @@ export default function FuturesPage() {
   }
 
   return (
-    <main className="min-h-screen px-6 py-8 sm:px-8">
+    <main className="bleed-root min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
         <AppNav homeHref="/dashboard"
           right={
@@ -316,7 +316,7 @@ export default function FuturesPage() {
                 <p className="mt-3 text-xs leading-5 text-muted-foreground">
                   {exhausted
                     ? "You have now seen all twenty-four. If none of them is you, the option above is the honest one."
-                    : "Ranked by how unlike the cards above they are, not by fit — so the percentages will be lower, and that is the point."}
+                    : "Ranked by how unlike the cards above they are, not by fit, so the percentages will be lower."}
                 </p>
                 {broadError ? (
                   <p aria-live="polite" className="mt-3 text-note leading-6 text-foreground">

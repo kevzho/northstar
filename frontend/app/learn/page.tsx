@@ -155,7 +155,7 @@ export default function LearnPage() {
   }, [shelf]);
 
   return (
-    <main className="min-h-screen px-6 py-8 sm:px-8">
+    <main className="bleed-root min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
         <AppNav
           homeHref="/"
@@ -172,8 +172,7 @@ export default function LearnPage() {
             Things you can start tonight
           </h1>
           <p className="mt-4 max-w-2xl text-lede text-muted-foreground">
-            Free material, no account needed — not here and not on the other
-            end. Every row quotes the sentence on its own page that proves it is
+            Free material, and no account needed here or on the other end. Every row quotes the sentence on its own page that proves it is
             free, because a student with no money who clicks through to a
             paywall has been failed by the thing that was supposed to help.
           </p>
@@ -212,9 +211,8 @@ export default function LearnPage() {
               The shelf is not loading
             </h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
-              This is not an empty shelf — it is a server that did not answer.
-              Reload, and if it keeps happening the catalog of programmes is
-              still up.
+              The server did not answer. Reload, and if it keeps happening the
+              catalog of programmes is still up.
             </p>
             <Button render={<Link href="/opportunities" />} className="mt-6 h-11 px-5">
               Browse programmes instead
@@ -273,7 +271,7 @@ export default function LearnPage() {
             {groups.length === 0 ? (
               <p className="mt-8 text-sm leading-6 text-muted-foreground">
                 Nothing on the shelf matches that yet. The shelf grows by
-                verification, not by volume — an unverified row would be worth
+                verification, not by volume. An unverified row would be worth
                 less than an empty filter.
               </p>
             ) : (
@@ -365,7 +363,7 @@ export default function LearnPage() {
               <p className="mt-2 max-w-2xl text-sm leading-7 text-muted-foreground">
                 This shelf is short on purpose. Every row was opened, read, and
                 quoted before it went up, and that is slower than scraping a
-                thousand links — but a list of free resources where three are
+                thousand links. But a list of free resources where three are
                 paywalled is worse for a student with no money than a list of
                 forty where none are.{" "}
                 <Link href="/contact" className="font-semibold text-aurora">

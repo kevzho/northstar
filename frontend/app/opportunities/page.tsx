@@ -242,7 +242,7 @@ function OpportunitiesList() {
   ].sort();
 
   return (
-    <main className="min-h-screen px-6 py-8 sm:px-8">
+    <main className="bleed-root min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
         {/* The right slot offered "Back to dashboard" to everyone, including
             visitors with no account, for whom /dashboard bounces to /login. A
@@ -273,7 +273,7 @@ function OpportunitiesList() {
           </h1>
           <p className="mt-4 max-w-2xl text-lede text-muted-foreground">
             {signedOut
-              ? "Every opportunity on the high-school shelf, open ones first and spread across fields \u2014 sorting by date alone handed the top of this page to whichever feed posts most often. Links are re-checked nightly, and a programme whose site disappears is retired rather than left to pad the total."
+              ? "Every opportunity on the high-school shelf, open ones first and spread across fields. Sorting by date alone gave the top of this page to whichever feed posts most often. Links are re-checked nightly, and a programme whose site disappears is retired rather than left to pad the total."
               : view === "all"
                 ? "Every opportunity in the catalog, sorted by deadline. Switch back to Matched to see them ranked for your profile."
                 : "Ranked by the Northstar match engine against your profile. Or browse the entire bank."}
@@ -427,7 +427,7 @@ function OpportunitiesList() {
               Could not load your recommendations
             </h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
-              The Northstar backend did not answer — this is a connection
+              The Northstar backend did not answer. This is a connection
               problem, not an empty list. Sign in again or retry.
             </p>
             <Button

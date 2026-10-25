@@ -13,7 +13,7 @@ import { AppNav } from "@/components/AppNav";
 
 export default function NotFound() {
   return (
-    <main className="min-h-screen px-6 py-8 sm:px-8">
+    <main className="bleed-root min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-3xl">
         <AppNav />
 

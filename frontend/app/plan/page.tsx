@@ -194,7 +194,7 @@ export default function PlanPage() {
     : null;
 
   return (
-    <main className="min-h-screen px-6 py-8 sm:px-8">
+    <main className="bleed-root min-h-screen px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-5xl">
         <AppNav homeHref="/dashboard"
           right={
@@ -225,7 +225,7 @@ export default function PlanPage() {
                     archetype.label
                   }${fit !== null ? ` (${fit}% fit)` : ""} — your trait profile, and your ranked matches.`
                 : broad
-                  ? "Built from your trait profile, the fields you lean toward, and the opportunities open to you now — no career label attached."
+                  ? "Built from your trait profile, the fields you lean toward, and the opportunities open to you now. No career label attached."
                   : "A concrete action list that turns a future path into visible progress within one month."}
             </p>
         </header>
@@ -255,7 +255,7 @@ export default function PlanPage() {
             </h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
               The plan is generated from your traits and chosen path. Take the
-              twenty-question assessment first — about five minutes.
+              twenty-question assessment first. It takes about five minutes.
             </p>
             <Button
               render={<Link href="/assessment" />}
@@ -271,7 +271,7 @@ export default function PlanPage() {
             </h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
               Pick one of your three future paths and the plan will be built
-              around it — its starter project, your traits, and your deadlines.
+              around it: its starter project, your traits, and your deadlines.
             </p>
             <Button
               render={<Link href="/futures" />}
@@ -320,7 +320,7 @@ export default function PlanPage() {
                   What unlocks what.
                 </h2>
                 <p className="mt-2 max-w-2xl text-sm leading-7 text-muted-foreground">
-                  The trunk is the work that compounds — learn it, build with it,
+                  The trunk is the work that compounds: learn it, build with it,
                   put it somewhere people can see. The branches are work nothing
                   is stopping you starting today. The columns at the bottom are
                   the programmes this is all for, each with the thing that gets
@@ -355,9 +355,9 @@ export default function PlanPage() {
                 Other students are on this same path.
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-7 text-muted-foreground">
-                Team-up matches on the same signals that built this plan — your
-                path, your fields, how you work — so the people it finds are
-                working through the same steps you are. Compare plans, split a
+                Team-up matches on the same signals that built this plan: your
+                path, your fields, how you work. The people it finds are working
+                through the same steps you are. Compare plans, split a
                 project, or just have someone to ask.
               </p>
               <div className="mt-4 flex flex-wrap gap-3">
