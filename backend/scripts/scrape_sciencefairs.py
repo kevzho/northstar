@@ -1,4 +1,9 @@
 """
+ROBOTS. findafair.societyforscience.org publishes no robots.txt and
+societyforscience.org publishes "Disallow:" (an empty rule, meaning allow),
+verified 2026-10-24. That is no longer taken on trust: app/robots.py asks
+before the listing is fetched and fails closed if the file cannot be read.
+
 Society for Science Find-a-Fair -> candidate pool. ISEF-affiliated science fairs.
 
 WHY THIS SOURCE. It is the only feed found so far that supplies all three things
@@ -119,6 +124,17 @@ def parse_fairs(page: str) -> list[dict]:
     return out
 
 
+
+def _permitted(url: str) -> bool:
+    """robots.txt, asked rather than assumed. See app/robots.py."""
+    from app.robots import allowed
+
+    if allowed(url, USER_AGENT):
+        return True
+    print(f"  robots.txt disallows {url} for {USER_AGENT.split('/')[0]}; skipping.")
+    return False
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--limit", type=int, default=MAX_IMPORT)
@@ -132,6 +148,8 @@ def main(argv: list[str] | None = None) -> int:
     session = requests.Session()
     session.headers.update({"User-Agent": USER_AGENT})
     try:
+        if not _permitted(BASE):
+            return 0
         landing = session.get(BASE, timeout=30)
         landing.raise_for_status()
     except requests.RequestException as error:

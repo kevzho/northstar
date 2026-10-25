@@ -189201,7 +189201,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "us",
-    "needs_review": false
+    "needs_review": false,
+    "review": "auto-kept"
   },
   {
     "source": "curated-access",
@@ -189215,7 +189216,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "us",
-    "needs_review": false
+    "needs_review": false,
+    "review": "auto-skip"
   },
   {
     "source": "curated-access",
@@ -189229,7 +189231,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "us",
-    "needs_review": false
+    "needs_review": false,
+    "review": "auto-kept"
   },
   {
     "source": "curated-access",
@@ -189258,7 +189261,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "us",
-    "needs_review": false
+    "needs_review": false,
+    "review": "auto-kept"
   },
   {
     "source": "curated-access",
@@ -189272,7 +189276,8 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "us",
-    "needs_review": false
+    "needs_review": false,
+    "review": "auto-skip"
   },
   {
     "source": "curated-access",
@@ -189286,6 +189291,7 @@
     "type_guess": "program",
     "audience_guess": "high_school",
     "location_guess": "us",
-    "needs_review": false
+    "needs_review": false,
+    "review": "auto-skip"
   }
 ]

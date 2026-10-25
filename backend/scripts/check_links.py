@@ -45,17 +45,25 @@ from app.link_health import (  # noqa: E402
 
 LEDGER = pathlib.Path(__file__).parent / "scraped" / "link_health_ledger.json"
 
-# A real browser's string. Not evasion — the point is to ask the way a student's
-# browser asks, so that what we record is what they would experience. A bot UA
-# gets refused by hosts that serve people fine, and those refusals are noise.
+# WE SAY WHO WE ARE. This used to send a Chrome string, justified in a comment
+# as "asking the way a student's browser asks". That was a rationalisation: a
+# 403 from Akamai or Cloudflare is a site saying it does not want automated
+# traffic, and wearing a browser's name to get past it is ignoring the answer
+# rather than not hearing it. Every other scraper here identifies itself and
+# carries a contact address, and the one piece of code whose entire job is
+# checking other people's sites had no business being the exception.
+#
+# The cost is real and accepted: more hosts refuse this, so more rows land on
+# "inconclusive" and are never retired. That is the correct direction to fail.
+# app/link_health.py only ever retires on a domain that has stopped resolving,
+# which no User-Agent can influence either way.
 USER_AGENT = (
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
-    "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+    "northstar-linkcheck/1.0 (student nonprofit opportunity catalog; "
+    "verifying links we publish; contact: dev.thorfinn@gmail.com)"
 )
 HEADERS = {
     "User-Agent": USER_AGENT,
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-    "Accept-Language": "en-US,en;q=0.9",
 }
 TIMEOUT_S = 20
 WORKERS = 8

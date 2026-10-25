@@ -32,7 +32,10 @@ the organiser's page, and an aggregator's summary is not evidence about the
 the deadline is the verifier's job, from the source that actually knows it.
 
 ROBOTS. pathwaystoscience.org/robots.txt carries no Disallow rules -- it is a
-bare sitemap pointer -- so the listing and detail pages are permitted. The
+bare sitemap pointer -- so the listing and detail pages are permitted. That
+used to be this sentence and nothing else, which is a comment rather than a
+check: it would keep scraping through a rule added tomorrow. app/robots.py now
+asks before each fetch and fails closed if the file cannot be read. The
 detail fetches are serialised with a delay because 80 requests from one student
 project should not be the reason anyone's afternoon gets worse.
 
@@ -181,6 +184,8 @@ def official_url(session: requests.Session, slug: str) -> str:
     """
     detail = f"{BASE}/programhub.aspx?sort={slug}"
     try:
+        if not _permitted(detail):
+            return ""
         response = session.get(detail, timeout=25)
         response.raise_for_status()
     except requests.RequestException:
@@ -210,6 +215,17 @@ def us_date(value: str) -> str:
         return ""
 
 
+
+def _permitted(url: str) -> bool:
+    """robots.txt, asked rather than assumed. See app/robots.py."""
+    from app.robots import allowed
+
+    if allowed(url, USER_AGENT):
+        return True
+    print(f"  robots.txt disallows {url} for {USER_AGENT.split('/')[0]}; skipping.")
+    return False
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--limit", type=int, default=0, help="cap programmes this run")
@@ -226,6 +242,8 @@ def main(argv: list[str] | None = None) -> int:
     session = requests.Session()
     session.headers.update({"User-Agent": USER_AGENT})
     try:
+        if not _permitted(LISTING):
+            return 0
         listing = session.get(LISTING, timeout=35)
         listing.raise_for_status()
     except requests.RequestException as error:
