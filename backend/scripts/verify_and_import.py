@@ -55,6 +55,15 @@ KNOWN_REAL_SOURCES = frozenset(
         # confirmed. Without this it would queue behind ten thousand reddit
         # threads and never be judged at all.
         "curated-breadth",
+        # The same arrangement for the access list
+        # (scripts/seed_access_candidates.py): programmes that exist because of
+        # who is missing from STEM. Measured 2026-10-24, only 13 of 180 live
+        # high-school rows served those students explicitly, and the honest fix
+        # was to go and find more rather than to describe the catalog as
+        # something it was not. Trusted to be REACHED, not trusted to be right:
+        # each page is still fetched and read, and refused if it cannot be
+        # confirmed.
+        "curated-access",
     }
 )
 MAX_VERIFY_PER_RUN = 60   # token/rate budget per daily run
