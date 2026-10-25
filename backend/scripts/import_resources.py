@@ -41,7 +41,12 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
 from app.db import get_supabase  # noqa: E402
 from app.llm import LLMUnavailable, chat  # noqa: E402
-from app.resource_verifier import KINDS, decide_resource  # noqa: E402
+from app.resource_verifier import (  # noqa: E402
+    FIELD_ALIASES,
+    FIELDS,
+    KINDS,
+    decide_resource,
+)
 
 POOL = pathlib.Path(__file__).parent / "scraped" / "resource_candidates.json"
 LEDGER = pathlib.Path(__file__).parent / "scraped" / "resource_import_ledger.json"
@@ -280,6 +285,10 @@ def main(argv: list[str] | None = None) -> int:
                 or verdict.get("free_evidence") not in text
                 else "teaches nothing" if not verdict.get("teaches_a_skill")
                 else "not reachable" if verdict.get("high_school_reachable") is False
+                else "unknown field: " + str(verdict.get("field"))
+                if str(verdict.get("field") or "").strip().lower() not in FIELDS
+                and FIELD_ALIASES.get(str(verdict.get("field") or "").strip().lower())
+                is None
                 else "low confidence"
             )
             refused[why] = refused.get(why, 0) + 1

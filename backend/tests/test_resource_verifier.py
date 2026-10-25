@@ -185,11 +185,37 @@ def test_a_kind_the_table_would_reject_is_refused_here_instead() -> None:
     assert accepted(kind="COURSE") is not None  # case is not the row's problem
 
 
-def test_a_resource_with_no_valid_field_is_refused() -> None:
+def test_a_subject_the_enum_lacks_is_mapped_rather_than_refused() -> None:
+    """The bug this caught, in production, on the day OpenStax landed.
+
+    public.opportunity_field predates the learning shelf and has no
+    "chemistry". Asked to classify a chemistry textbook, every model tested
+    answers "chemistry" -- correctly -- and the row was then refused and
+    reported as "low confidence", which is both wrong and unhelpful. It cost
+    the shelf every chemistry, statistics and economics title in the import.
+
+    These are normalisations, not guesses: each maps to where the existing
+    catalog already files that subject, so the shelf and the opportunity
+    catalog keep agreeing with each other.
+    """
+    for said, stored in [
+        ("chemistry", "biology"),
+        ("statistics", "math"),
+        ("economics", "business"),
+        ("psychology", "health"),
+        ("history", "humanities"),
+        ("astronomy", "physics"),
+    ]:
+        row = accepted(field=said)
+        assert row is not None, f"{said!r} was refused"
+        assert row["opportunity_field"] == stored, f"{said!r} -> {row['opportunity_field']}"
+
+
+def test_a_resource_with_no_field_at_all_is_still_refused() -> None:
     """The subject filter on /learn is how most students will find it. A row
     with no field is on the shelf and off the index."""
-    assert accepted(field="chemistry") is None
     assert accepted(field="") is None
+    assert accepted(field="quidditch") is None
 
 
 def test_an_aggregator_or_a_shortener_is_never_the_resource() -> None:

@@ -22,5 +22,341 @@
   "https://theodinproject.com": {
     "at": "2026-10-08T02:47:10.179364+00:00",
     "why": "imported"
+  },
+  "https://openstax.org/books/additive-manufacturing-essentials/pages/preface": {
+    "at": "2026-10-25T03:46:44.541109+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/algebra-1/pages/preface": {
+    "at": "2026-10-25T03:46:45.895583+00:00",
+    "why": "unreachable"
+  },
+  "https://openstax.org/books/algebra-and-trigonometry-2e/pages/preface": {
+    "at": "2026-10-25T03:47:04.614140+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/american-government-4e/pages/preface": {
+    "at": "2026-10-25T03:47:25.185640+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/anatomy-and-physiology-2e/pages/preface": {
+    "at": "2026-10-25T03:47:37.772181+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/astronomy-2e/pages/preface": {
+    "at": "2026-10-25T03:48:05.186935+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/biology-2e/pages/preface": {
+    "at": "2026-10-25T03:48:26.982314+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/biology-ap-courses/pages/preface": {
+    "at": "2026-10-25T03:48:48.273687+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/business-ethics/pages/preface": {
+    "at": "2026-10-25T03:49:07.267173+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/business-law-i-essentials-2e/pages/preface": {
+    "at": "2026-10-25T03:49:28.099740+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/calculus-volume-1/pages/preface": {
+    "at": "2026-10-25T03:49:46.846588+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/calculus-volume-3/pages/preface": {
+    "at": "2026-10-25T03:50:36.437578+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/clinical-nursing-skills/pages/preface": {
+    "at": "2026-10-25T03:51:31.194005+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/college-algebra-2e/pages/preface": {
+    "at": "2026-10-25T03:51:45.917455+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/college-algebra-corequisite-support-2e/pages/preface": {
+    "at": "2026-10-25T03:52:12.765708+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/college-physics-2e/pages/preface": {
+    "at": "2026-10-25T03:52:32.318738+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/college-physics-ap-courses-2e/pages/preface": {
+    "at": "2026-10-25T03:52:47.480544+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/college-success/pages/preface": {
+    "at": "2026-10-25T03:53:03.035988+00:00",
+    "why": "quote not on page"
+  },
+  "https://openstax.org/books/college-success-concise/pages/preface": {
+    "at": "2026-10-25T03:53:20.331184+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/concepts-biology/pages/preface": {
+    "at": "2026-10-25T03:53:41.961952+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/contemporary-mathematics/pages/preface": {
+    "at": "2026-10-25T03:53:58.001925+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/elementary-algebra-2e/pages/preface": {
+    "at": "2026-10-25T03:54:14.264042+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/entrepreneurship/pages/preface": {
+    "at": "2026-10-25T03:54:31.217876+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/foundations-information-systems/pages/preface": {
+    "at": "2026-10-25T03:54:44.632374+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/fundamentals-nursing/pages/preface": {
+    "at": "2026-10-25T03:54:56.979425+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/intermediate-algebra-2e/pages/preface": {
+    "at": "2026-10-25T03:55:11.967261+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/introduction-anthropology/pages/preface": {
+    "at": "2026-10-25T03:55:24.052862+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/introduction-behavioral-neuroscience/pages/preface": {
+    "at": "2026-10-25T03:55:47.617232+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/introduction-business-2e/pages/preface": {
+    "at": "2026-10-25T03:55:56.941484+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/introduction-computer-science/pages/preface": {
+    "at": "2026-10-25T03:56:17.602873+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/introduction-intellectual-property/pages/preface": {
+    "at": "2026-10-25T03:56:18.892379+00:00",
+    "why": "unreachable"
+  },
+  "https://openstax.org/books/introduction-philosophy/pages/preface": {
+    "at": "2026-10-25T03:56:32.996176+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/introduction-political-science/pages/preface": {
+    "at": "2026-10-25T03:56:47.022802+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/introduction-python-programming/pages/preface": {
+    "at": "2026-10-25T03:57:05.966694+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/introduction-sociology-3e/pages/preface": {
+    "at": "2026-10-25T03:57:19.126836+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/introductory-business-statistics-2e/pages/preface": {
+    "at": "2026-10-25T03:57:33.376442+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/introductory-statistics-2e/pages/preface": {
+    "at": "2026-10-25T03:57:40.659590+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/lifespan-development/pages/preface": {
+    "at": "2026-10-25T03:57:49.582557+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/maternal-newborn-nursing/pages/preface": {
+    "at": "2026-10-25T03:58:00.116587+00:00",
+    "why": "not reachable"
+  },
+  "https://openstax.org/books/medical-surgical-nursing/pages/preface": {
+    "at": "2026-10-25T03:58:26.437345+00:00",
+    "why": "not reachable"
+  },
+  "https://openstax.org/books/microbiology/pages/preface": {
+    "at": "2026-10-25T03:58:43.823281+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/nutrition/pages/preface": {
+    "at": "2026-10-25T03:58:50.716066+00:00",
+    "why": "not reachable"
+  },
+  "https://openstax.org/books/organic-chemistry/pages/preface": {
+    "at": "2026-10-25T03:58:52.017323+00:00",
+    "why": "unreachable"
+  },
+  "https://openstax.org/books/organizational-behavior/pages/preface": {
+    "at": "2026-10-25T03:58:59.123745+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/pharmacology/pages/preface": {
+    "at": "2026-10-25T03:59:09.337856+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/physics/pages/preface": {
+    "at": "2026-10-25T03:59:23.375804+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/population-health/pages/preface": {
+    "at": "2026-10-25T03:59:35.542939+00:00",
+    "why": "not reachable"
+  },
+  "https://openstax.org/books/prealgebra-2e/pages/preface": {
+    "at": "2026-10-25T03:59:42.477203+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/precalculus-2e/pages/preface": {
+    "at": "2026-10-25T03:59:49.522499+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/preparing-for-college-success/pages/preface": {
+    "at": "2026-10-25T04:00:09.019858+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/principles-financial-accounting/pages/preface": {
+    "at": "2026-10-25T04:00:21.385111+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/principles-managerial-accounting/pages/preface": {
+    "at": "2026-10-25T04:00:35.290559+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/principles-data-science/pages/preface": {
+    "at": "2026-10-25T04:00:50.169468+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/principles-economics-3e/pages/preface": {
+    "at": "2026-10-25T04:01:01.995955+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/principles-finance-2e/pages/preface": {
+    "at": "2026-10-25T04:01:21.935554+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/principles-macroeconomics-3e/pages/preface": {
+    "at": "2026-10-25T04:01:45.355823+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/principles-management/pages/preface": {
+    "at": "2026-10-25T04:02:01.122099+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/principles-marketing/pages/preface": {
+    "at": "2026-10-25T04:02:16.452621+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/principles-microeconomics-3e/pages/preface": {
+    "at": "2026-10-25T04:02:37.210502+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/psychiatric-mental-health/pages/preface": {
+    "at": "2026-10-25T04:02:56.360790+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/statistics/pages/preface": {
+    "at": "2026-10-25T04:03:28.943358+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/us-history/pages/preface": {
+    "at": "2026-10-25T04:03:42.234091+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/university-physics-volume-1/pages/preface": {
+    "at": "2026-10-25T04:03:55.181506+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/university-physics-volume-2/pages/preface": {
+    "at": "2026-10-25T04:04:19.185871+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/university-physics-volume-3/pages/preface": {
+    "at": "2026-10-25T04:04:36.665888+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/world-history-volume-1/pages/preface": {
+    "at": "2026-10-25T04:04:56.876752+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/workplace-software-skills/pages/preface": {
+    "at": "2026-10-25T04:05:09.849666+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/world-history-volume-2/pages/preface": {
+    "at": "2026-10-25T04:05:34.746810+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/writing-guide/pages/preface": {
+    "at": "2026-10-25T04:05:47.370007+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/c\u00e1lculo-volumen-1/pages/preface": {
+    "at": "2026-10-25T04:05:48.760812+00:00",
+    "why": "unreachable"
+  },
+  "https://openstax.org/books/c\u00e1lculo-volumen-2/pages/preface": {
+    "at": "2026-10-25T04:05:50.034941+00:00",
+    "why": "unreachable"
+  },
+  "https://openstax.org/books/c\u00e1lculo-volumen-3/pages/preface": {
+    "at": "2026-10-25T04:05:51.290108+00:00",
+    "why": "unreachable"
+  },
+  "https://openstax.org/books/f\u00edsica-universitaria-volumen-1/pages/preface": {
+    "at": "2026-10-25T04:05:52.553180+00:00",
+    "why": "unreachable"
+  },
+  "https://openstax.org/books/f\u00edsica-universitaria-volumen-2/pages/preface": {
+    "at": "2026-10-25T04:05:53.971861+00:00",
+    "why": "unreachable"
+  },
+  "https://openstax.org/books/f\u00edsica-universitaria-volumen-3/pages/preface": {
+    "at": "2026-10-25T04:05:55.218828+00:00",
+    "why": "unreachable"
+  },
+  "https://openstax.org/books/introducci\u00f3n-estad\u00edstica/pages/preface": {
+    "at": "2026-10-25T04:05:56.461934+00:00",
+    "why": "unreachable"
+  },
+  "https://openstax.org/books/introducci\u00f3n-estad\u00edstica-empresarial/pages/preface": {
+    "at": "2026-10-25T04:05:57.747649+00:00",
+    "why": "unreachable"
+  },
+  "https://openstax.org/books/prec\u00e1lculo-2ed/pages/preface": {
+    "at": "2026-10-25T04:05:59.088157+00:00",
+    "why": "unreachable"
+  },
+  "https://openstax.org/books/qu\u00edmica-2ed/pages/preface": {
+    "at": "2026-10-25T04:06:00.663250+00:00",
+    "why": "unreachable"
+  },
+  "https://openstax.org/books/qu\u00edmica-comenzando-\u00e1tomos-2ed/pages/preface": {
+    "at": "2026-10-25T04:06:01.944205+00:00",
+    "why": "unreachable"
+  },
+  "https://openstax.org/books/calculus-volume-2/pages/preface": {
+    "at": "2026-10-25T13:17:08.579928+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/chemistry-2e/pages/preface": {
+    "at": "2026-10-25T13:17:23.108432+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/chemistry-atoms-first-2e/pages/preface": {
+    "at": "2026-10-25T14:12:56.090055+00:00",
+    "why": "imported"
+  },
+  "https://openstax.org/books/psychology-2e/pages/preface": {
+    "at": "2026-10-25T14:13:10.889208+00:00",
+    "why": "imported"
   }
 }

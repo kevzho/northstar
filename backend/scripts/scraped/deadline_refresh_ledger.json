@@ -39,6 +39,11 @@
     "outcome": "found",
     "title": "NTU x ST Engineering Hackathon"
   },
+  "0544dc7c-a2cf-43e4-8e36-d36f44cb2e23": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "outcome": "no_date_on_page",
+    "title": "SMASH Academy"
+  },
   "06297918-0ad4-40c2-b572-2813918cbd9b": {
     "at": "2026-10-08T13:17:43.881201+00:00",
     "outcome": "no_date_on_page",
@@ -48,6 +53,11 @@
     "at": "2026-10-08T13:17:43.881201+00:00",
     "outcome": "no_date_on_page",
     "title": "Bennington Young Writers Awards"
+  },
+  "088d8647-29d0-4e80-a046-7ee471f4aa97": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "outcome": "unreadable",
+    "title": "Technovation Girls"
   },
   "090a0932-c6e6-4b04-a0fc-bdabf1ea6453": {
     "at": "2026-10-23T13:18:04.302303+00:00",
@@ -105,10 +115,20 @@
     "title": "Girls Hoo Hack 2026",
     "was": "2026-10-18"
   },
+  "11323217-596d-4ff6-a915-f83561aac1dd": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "outcome": "no_date_on_page",
+    "title": "The Gates Scholarship"
+  },
   "11c05582-15a2-4476-8711-8045a60645e2": {
     "at": "2026-10-07T21:19:40.680994+00:00",
     "outcome": "no_date_on_page",
     "title": "The Junior Academy and the 1000 Girls, 1000 Futures Program"
+  },
+  "1269ce1f-9c13-411e-9e7d-34ac2084b136": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "outcome": "no_date_on_page",
+    "title": "Posse Foundation Full-Tuition Leadership Scholarship"
   },
   "12779360-893d-4853-abde-edccbb2435be": {
     "at": "2026-10-16T13:18:31.736591+00:00",
@@ -155,10 +175,20 @@
     "title": "Codeforces Round (Div. 1 + Div. 2)",
     "was": "2026-10-17"
   },
+  "1fac74eb-1a35-422a-9968-737ceb2a3a41": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "outcome": "unreadable",
+    "title": "Girls Who Code Summer Immersion Program"
+  },
   "206e6f42-997f-468e-ae3a-1c69cb16c351": {
     "at": "2026-10-07T21:17:57.023576+00:00",
     "outcome": "no_date_on_page",
     "title": "Davidson Fellows Scholarship"
+  },
+  "22dbcf6a-9fdf-4c0f-81fa-2f08ac9dcf20": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "outcome": "no_date_on_page",
+    "title": "Jack Kent Cooke Young Scholars Program"
   },
   "23c071ed-8eb1-474c-9fe0-f54ad4622d86": {
     "at": "2026-10-07T21:13:44.195648+00:00",
@@ -260,6 +290,12 @@
     "title": "WarriorHacks 2.0",
     "was": "2026-10-14"
   },
+  "34d12753-3c7a-4b99-b1e5-7ffda438828d": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "outcome": "cleared",
+    "title": "Black Code Collective Hacktoberfest",
+    "was": "2026-10-24"
+  },
   "3636f217-a9cc-40c5-8cec-5c08b8ec9afc": {
     "at": "2026-10-07T21:16:37.351098+00:00",
     "outcome": "no_date_on_page",
@@ -335,6 +371,11 @@
     "title": "De Anza Hackathon 5.0",
     "was": "2026-10-17"
   },
+  "427957d6-c94e-4038-9b0d-11136b2c5370": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "outcome": "no_date_on_page",
+    "title": "AISES Scholarships and Pre-College Programs"
+  },
   "441546d6-f272-4875-a93c-df65a7379462": {
     "at": "2026-10-07T21:16:37.351098+00:00",
     "outcome": "no_date_on_page",
@@ -374,6 +415,17 @@
     "title": "Agentic Enterprise AI Hackathon",
     "was": "2026-10-17"
   },
+  "4e7d7ade-2a27-493e-9f9a-ed163d98ba9a": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "outcome": "cleared",
+    "title": "Taskforge Hackathon",
+    "was": "2026-10-24"
+  },
+  "4ed24852-6ec8-4b2d-82f4-6fbe19a53cbb": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "outcome": "unreadable",
+    "title": "NSBE Jr. Pre-College Program"
+  },
   "50208e51-5360-4026-b431-1c7e44d2e3c5": {
     "at": "2026-10-19T13:18:39.331864+00:00",
     "outcome": "cleared",
@@ -396,6 +448,27 @@
     "outcome": "cleared",
     "title": "Get Hired Hack",
     "was": "2026-10-10"
+  },
+  "57726295-08fd-4d66-8c4f-63b5fb88f987": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "outcome": "no_date_on_page",
+    "title": "LEDA Career Institute"
+  },
+  "57ea4549-6e22-4578-992e-6fb473445c37": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "outcome": "no_date_on_page",
+    "title": "Hidden Genius Project"
+  },
+  "589b2fb2-bbb7-4895-9bc6-2835c32072ee": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "outcome": "cleared",
+    "title": "Neighborhood Hacks",
+    "was": "2026-10-24"
+  },
+  "59027368-a1b9-41c2-81bf-9a2aa8633c31": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "outcome": "no_date_on_page",
+    "title": "Project SEED \u2013 Paid Summer Research Placement for High\u2011School Students"
   },
   "5941e9bc-0452-447b-a726-d169e0aa63dd": {
     "at": "2026-10-11T13:17:17.441165+00:00",
@@ -568,6 +641,18 @@
     "title": "Pumpkin Playground Hackathon",
     "was": "2026-10-23"
   },
+  "775a9ad7-0332-4022-a33d-c9abeda354f6": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "outcome": "cleared",
+    "title": "Neighborhood Hacks Hackathon",
+    "was": "2026-10-24"
+  },
+  "775b886b-b2cc-468e-a707-e654ef15b213": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "outcome": "cleared",
+    "title": "Deal Flow: NYC's First VC Hackathon",
+    "was": "2026-10-24"
+  },
   "7798dcba-1e81-4361-a1cb-6998423c0750": {
     "at": "2026-10-07T21:19:40.680994+00:00",
     "outcome": "unreadable",
@@ -591,6 +676,11 @@
     "title": "DEADFACE CTF 2026",
     "was": "2026-10-17"
   },
+  "7d909438-159c-400a-9f0c-87bbac8bf481": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "outcome": "no_date_on_page",
+    "title": "NCWIT Award for Aspirations in Computing"
+  },
   "804c2c38-419f-4176-b6c7-20a000a68daf": {
     "at": "2026-10-19T13:18:39.331864+00:00",
     "outcome": "cleared",
@@ -603,10 +693,22 @@
     "title": "BioGENEius Challenge",
     "was": "2026-04-01"
   },
+  "81a0a77e-b7f7-4269-a8aa-7a038ce69669": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "outcome": "cleared",
+    "title": "uXperience Design Jam",
+    "was": "2026-10-24"
+  },
   "82df6fb8-3722-4d75-a424-f1fa5dd0f6ed": {
     "at": "2026-10-08T13:17:43.881201+00:00",
     "outcome": "no_date_on_page",
     "title": "YoungArts National Awards"
+  },
+  "83266e18-f34b-4417-a0eb-fc1ba9294714": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "deadline": "2027-02-21",
+    "outcome": "found",
+    "title": "Stanford SHTEM Summer Internships"
   },
   "84b5e0e6-5950-4820-afb1-1288eb190ee6": {
     "at": "2026-10-07T21:17:57.023576+00:00",
@@ -809,6 +911,11 @@
     "title": "MLAI Hackathon 2026",
     "was": "2026-10-16"
   },
+  "9d3c607b-b340-42b3-9d75-dafb3104d4a5": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "outcome": "no_date_on_page",
+    "title": "Hispanic Scholarship Fund"
+  },
   "9dbd1624-5a02-4b16-b70a-34965a3619e9": {
     "at": "2026-10-16T13:18:31.736591+00:00",
     "outcome": "cleared",
@@ -880,6 +987,11 @@
     "outcome": "cleared",
     "title": "Hyperbloom October - UI/UX and Web Design Hackathon",
     "was": "2026-10-19"
+  },
+  "a642798e-01bb-4691-a2bc-977fe4f85bbc": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "outcome": "no_date_on_page",
+    "title": "Kode With Klossy Free Two-Week Coding Camp"
   },
   "a82c0d83-c761-425e-b0a9-1c19499bfbb7": {
     "at": "2026-10-15T13:18:40.536639+00:00",
@@ -984,6 +1096,11 @@
     "outcome": "found",
     "title": "Broad Summer Scholars Program (BSSP)"
   },
+  "ba99ae2b-0063-4d85-8b23-f2bcbdc43aa0": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "outcome": "no_date_on_page",
+    "title": "AI4ALL Summer Program"
+  },
   "bc1fc68e-220a-4652-b448-02ad9faed677": {
     "at": "2026-10-07T21:17:57.023576+00:00",
     "outcome": "unreadable",
@@ -1026,6 +1143,12 @@
     "outcome": "no_date_on_page",
     "title": "Blacks at Microsoft (BAM) Scholarship"
   },
+  "c06ccf50-5f55-4a47-86bd-e030d57baef7": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "outcome": "cleared",
+    "title": "SpartHill Hacks 2026: IBM AI Challenge",
+    "was": "2026-10-24"
+  },
   "c0e08ef9-633f-453b-b571-94a308646114": {
     "at": "2026-10-07T21:17:57.023576+00:00",
     "outcome": "no_date_on_page",
@@ -1053,6 +1176,12 @@
     "at": "2026-10-07T21:19:40.680994+00:00",
     "outcome": "no_date_on_page",
     "title": "Quantum Cryptography School for Young Students (QCSYS)"
+  },
+  "c3d57fb5-1bb3-418d-8cfb-fe5aace10b76": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "outcome": "cleared",
+    "title": "Sierra Hacks 2026",
+    "was": "2026-10-24"
   },
   "c3f904d9-66bc-4c66-9cc7-265dd1aa1b7c": {
     "at": "2026-10-07T21:16:37.351098+00:00",
@@ -1239,6 +1368,11 @@
     "outcome": "cleared",
     "title": "Arm + ExecuTorch: Edge AI Challenge",
     "was": "2026-10-18"
+  },
+  "e516fadf-fa10-4aae-acc0-f8b18e5cdbd6": {
+    "at": "2026-10-25T13:18:07.803751+00:00",
+    "outcome": "unreadable",
+    "title": "BSides Peoria CTF 2026"
   },
   "e542300c-d229-4c5c-b02e-5eb62f841bf3": {
     "at": "2026-10-07T21:13:44.195648+00:00",

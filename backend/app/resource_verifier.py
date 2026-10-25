@@ -46,6 +46,51 @@ FIELDS = frozenset({
     "interdisciplinary", "design", "business", "humanities", "health",
 })
 
+# SUBJECTS THE ENUM DOES NOT HAVE, mapped to the one it does.
+#
+# The enum predates the learning shelf and was built for opportunities, where
+# "chemistry" never came up. Asked to classify a chemistry textbook, every
+# model tested answers "chemistry" -- correctly -- and the row was then refused
+# and reported as "low confidence", which is both wrong and unhelpful. Measured
+# 2026-10-25: this silently cost the shelf every chemistry, statistics and
+# economics title in the OpenStax import.
+#
+# These are NORMALISATIONS, not guesses: each one is where the existing catalog
+# already files that subject (ACS ChemClub is tagged biology, the National
+# Economics Challenge is business), so the shelf and the opportunity catalog
+# keep agreeing with each other.
+FIELD_ALIASES: dict[str, str] = {
+    "chemistry": "biology",
+    "chem": "biology",
+    "life science": "biology",
+    "life sciences": "biology",
+    "science": "biology",
+    "statistics": "math",
+    "stats": "math",
+    "mathematics": "math",
+    "economics": "business",
+    "finance": "business",
+    "accounting": "business",
+    "computer science": "cs",
+    "programming": "cs",
+    "software": "cs",
+    "astronomy": "physics",
+    "earth science": "physics",
+    "psychology": "health",
+    "nursing": "health",
+    "medicine": "health",
+    "anatomy": "health",
+    "sociology": "humanities",
+    "history": "humanities",
+    "philosophy": "humanities",
+    "writing": "humanities",
+    "english": "humanities",
+    "government": "humanities",
+    "political science": "humanities",
+    "art": "design",
+    "media": "design",
+}
+
 # High enough that an unclear page is left for a human. The cost of a wrong
 # "free" here is a student clicking into a paywall; the cost of a false negative
 # is one row we did not add.
@@ -198,7 +243,10 @@ def decide_resource(candidate: dict, verdict: dict, page: str) -> dict | None:
     if kind not in KINDS:
         return None
 
-    field = str(verdict.get("field") or "").strip().lower()
+    field = FIELD_ALIASES.get(
+        str(verdict.get("field") or "").strip().lower(),
+        str(verdict.get("field") or "").strip().lower(),
+    )
     if field not in FIELDS:
         return None
 
