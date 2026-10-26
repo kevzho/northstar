@@ -48,6 +48,13 @@ Reply with JSON only:
 
 Rules:
 - Exactly 2 or 3 steps. Each one is a thing the student does, in order.
+- THE LAST STEP MUST FINISH THE STEP YOU WERE GIVEN. Read its final clause and
+  land on it. "Build a web app" ends with the app built, not with a formula
+  written down. "Publish it where someone outside your school can read it" ends
+  with it published, not formatted. "Up to confidence intervals" ends at
+  confidence intervals, not at sampling distributions. Stopping early is the
+  worst thing you can do here: it quietly makes the student's plan easier than
+  it is, and they will believe you.
 - `title` is an imperative under 90 characters: "Sketch the three screens on paper".
 - `detail` is one sentence under 220 characters saying what done looks like.
 - These are the INSIDE of the step you were given. Do not restate it, do not go
@@ -55,7 +62,8 @@ Rules:
 - NEVER write a url, a domain, or a tool's website. Name a tool if it helps.
 - NEVER tell them to apply to a named programme, competition or scholarship.
   Applications come from their verified matches, not from you.
-- Concrete beats encouraging. No "explore", no "consider", no "dive into".
+- Concrete beats encouraging. No "explore", no "consider", no "dive into". Name
+  the actual thing: not "a simple digital tool" but "a spreadsheet".
 """
 
 

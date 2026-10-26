@@ -11,7 +11,13 @@ from __future__ import annotations
 
 import json
 
-from app.branch_generation import MAX_DETAIL, MAX_TITLE, build_prompt, parse_branch
+from app.branch_generation import (
+    MAX_DETAIL,
+    MAX_TITLE,
+    SYSTEM_PROMPT,
+    build_prompt,
+    parse_branch,
+)
 
 
 def reply(steps) -> str:
@@ -123,3 +129,46 @@ def test_the_roadmap_reads_the_branches_back() -> None:
         "disappear on reload"
     )
     assert "branches" in constants, "the roadmap response stopped carrying branches"
+
+
+def test_the_prompt_demands_the_last_step_land_on_the_parent() -> None:
+    """The rule that makes a small model usable here.
+
+    Measured 2026-10-26. Without this rule, nemotron-3.5-bolt-e4b broke "Build a
+    simple web app" into "define the inputs" and "write down the formula" -- it
+    never built the app. Same for "publish it where someone outside your school
+    can read it", which ended at "format the document", and "up to confidence
+    intervals", which ended at sampling distributions. Twelve blind graders,
+    comparing three models with the order rotated, ranked it worst 12/12 and
+    called it truncated on 9 of 9 steps where truncating was possible.
+
+    With the rule, the same model lands on the parent step's final clause 12/12
+    and averages 3.0 sub-steps instead of 2.1 -- no model change, no extra
+    latency. Deleting the rule costs nothing a type checker or a parse test can
+    see, which is exactly why it is asserted here.
+    """
+    assert "LAST STEP MUST FINISH" in SYSTEM_PROMPT
+    # The three worked examples are what carried it; a bare instruction did not
+    # exist before and the paraphrase alone was never measured.
+    assert "final clause" in SYSTEM_PROMPT
+    for landed in ("app built", "published", "confidence intervals"):
+        assert landed in SYSTEM_PROMPT, f"the {landed!r} example was dropped"
+
+
+def test_a_truncated_breakdown_still_parses() -> None:
+    """Honesty about what the gates can and cannot catch.
+
+    parse_branch refuses urls, named programmes, bad counts and duplicates. It
+    cannot refuse a breakdown that stops short, because a truncated one is
+    well-formed: two concrete sub-steps that happen to omit the point of the
+    step. That is why the rule above lives in the prompt and is tested there --
+    there is no validator to fall back on.
+    """
+    truncated = reply([
+        {"title": "Define input variables", "detail": "List the fixed and variable costs."},
+        {"title": "Determine the calculation formula", "detail": "Write down the break-even formula."},
+    ])
+    assert parse_branch(truncated) is not None, (
+        "if this ever starts refusing, the comment above is wrong and the "
+        "prompt rule is no longer the only defence"
+    )
