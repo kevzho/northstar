@@ -25,6 +25,7 @@ import {
   type BranchStep,
 } from "@/lib/api";
 import { SpineControl } from "@/components/SpineControl";
+import { SubSteps } from "@/components/SubSteps";
 import type { LearningResource, Roadmap } from "@/lib/api";
 import { MissionBoard } from "@/components/MissionBoard";
 import { findArchetype, generatePlan, skillKeyFor } from "@/lib/plan";
@@ -508,48 +509,16 @@ export default function PlanPage() {
                                   with no idea what the first hour of that is.
                                   The sub-steps draw as branches on the tree
                                   above and read as text here. */}
-                              {branches[step.step_key]?.length ? (
-                                <ol className="mt-3 grid gap-2 border-l border-aurora-dim/40 pl-3">
-                                  {branches[step.step_key].map((sub, i) => (
-                                    <li key={sub.title}>
-                                      <p className="text-sm leading-6 text-foreground">
-                                        <span className="font-mono text-xs text-aurora">
-                                          {i + 1}.
-                                        </span>{" "}
-                                        {sub.title}
-                                      </p>
-                                      <p className="text-xs leading-5 text-muted-foreground">
-                                        {sub.detail}
-                                      </p>
-                                    </li>
-                                  ))}
-                                </ol>
-                              ) : (
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    breakDown({
-                                      step_key: step.step_key,
-                                      title: step.title,
-                                      category: step.category,
-                                    })
-                                  }
-                                  disabled={branching === step.step_key}
-                                  className="mt-3 text-xs font-medium text-aurora underline decoration-border underline-offset-4 hover:text-foreground disabled:opacity-60"
-                                >
-                                  {branching === step.step_key
-                                    ? "Breaking it down…"
-                                    : "Break this into steps"}
-                                </button>
-                              )}
-                              {branchError[step.step_key] ? (
-                                <p
-                                  aria-live="polite"
-                                  className="mt-2 text-xs leading-5 text-foreground"
-                                >
-                                  {branchError[step.step_key]}
-                                </p>
-                              ) : null}
+                              <SubSteps
+                                stepKey={step.step_key}
+                                title={step.title}
+                                category={step.category}
+                                branches={branches}
+                                branching={branching}
+                                branchError={branchError}
+                                onBreakDown={breakDown}
+                                depth={0}
+                              />
                               {step.edge_note ? (
                                 /* The overprint. A step whose edge is an
                                    authored generalisation rather than a

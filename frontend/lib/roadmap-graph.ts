@@ -300,17 +300,39 @@ export function buildRoadmapTree(
   // laid out on its parent's free side: the learn branch already uses the
   // right, so these take the left, which is empty now that missions are not
   // drawn here.
+  // A sub-step can be broken down too, so a parent here may itself be a branch
+  // node created by an earlier pass. Object key order is not guaranteed to put
+  // a parent before its child, so iterate by DEPTH: every node at depth n
+  // exists before anything at depth n+1 looks for it. Without this, opening a
+  // sub-step's sub-steps worked or silently vanished depending on insertion
+  // order, which is the worst of both.
   const branches = options.branches ?? {};
-  for (const [parentKey, subSteps] of Object.entries(branches)) {
+  const depthOf = (key: string) => key.split("::branch:").length - 1;
+  const byDepth = Object.keys(branches).sort(
+    (a, b) => depthOf(a) - depthOf(b),
+  );
+
+  for (const parentKey of byDepth) {
+    const subSteps = branches[parentKey];
     const parent = nodes.find((n) => n.key === parentKey);
-    if (!parent || !subSteps.length) continue;
+    if (!parent || !subSteps?.length) continue;
+    // Each generation steps further out from the trunk so a sub-step's own
+    // sub-steps do not land on top of their aunts. Depth is capped at
+    // BRANCH_MAX_DEPTH where the control is drawn, so this cannot walk off the
+    // canvas.
+    const depth = depthOf(parentKey) + 1;
+    const outward = Math.min(depth - 1, 2) * 6;
+    const side = parent.x <= TRUNK_X ? "right" : "left";
     subSteps.slice(0, 3).forEach((sub, index) => {
       nodes.push({
         key: `${parentKey}::branch:${index}`,
         title: sub.title,
         nodeKind: "step",
         row: parent.row + index,
-        x: parent.x === LEFT_X ? RIGHT_X : LEFT_X,
+        x:
+          side === "left"
+            ? Math.max(4, LEFT_X - outward)
+            : Math.min(96, RIGHT_X + outward),
         weight: "branch",
         parent: parentKey,
         edge: "anytime",

@@ -12,6 +12,7 @@ from __future__ import annotations
 import json
 
 from app.branch_generation import (
+    BRANCH_MAX_DEPTH,
     MAX_DETAIL,
     MAX_TITLE,
     SYSTEM_PROMPT,
@@ -172,3 +173,47 @@ def test_a_truncated_breakdown_still_parses() -> None:
         "if this ever starts refusing, the comment above is wrong and the "
         "prompt rule is no longer the only defence"
     )
+
+
+def test_the_depth_cap_is_enforced_on_the_server() -> None:
+    """A sub-step is itself a step, so the breakdown recurses -- and each
+    generation is a model call behind a button on a diagram.
+
+    The UI stops drawing the control at BRANCH_MAX_DEPTH, but the UI is not the
+    thing being billed. This asserts the handler refuses a key already at the
+    cap, so a crafted request cannot nest forever.
+    """
+    import ast
+    import pathlib
+
+    tree = ast.parse(pathlib.Path("app/main.py").read_text())
+    handler = next(
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.FunctionDef) and node.name == "branch_step"
+    )
+    names = {n.id for n in ast.walk(handler) if isinstance(n, ast.Name)}
+    assert "BRANCH_MAX_DEPTH" in names, (
+        "POST /roadmap/branch no longer checks depth; nesting is unbounded"
+    )
+    constants = {
+        n.value
+        for n in ast.walk(handler)
+        if isinstance(n, ast.Constant) and isinstance(n.value, str)
+    }
+    assert "::branch:" in constants, "the depth check stopped counting branch keys"
+
+
+def test_the_cap_matches_the_ui() -> None:
+    """Two numbers that must agree, in two languages.
+
+    If the server cap were lower than the UI's, a student would press a control
+    that always refuses. If it were higher, the cost control would be advisory.
+    """
+    import pathlib
+    import re
+
+    ui = pathlib.Path("../frontend/components/SubSteps.tsx").read_text()
+    found = re.search(r"BRANCH_MAX_DEPTH\s*=\s*(\d+)", ui)
+    assert found, "SubSteps.tsx no longer declares BRANCH_MAX_DEPTH"
+    assert int(found.group(1)) == BRANCH_MAX_DEPTH

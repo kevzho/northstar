@@ -144,21 +144,41 @@ def _tokens_spent(sb, since: str) -> int:
     return spent
 
 
-def budget_block(sb, student: str) -> str | None:
+def budget_block(
+    sb,
+    student: str,
+    *,
+    per_student: bool = True,
+    what: str = "advisor",
+) -> str | None:
     """Why this call must be refused, or None to let it through.
 
     Ordered cheapest-to-explain first, and burst before daily so a spike
     gets "try again in a minute" rather than "come back tomorrow".
+
+    ``per_student`` exists because this wallet is shared by more than the
+    advisor. Breaking a plan step into sub-steps bills the same provider and
+    writes the same ledger row, so it must respect the global and the money
+    ceilings -- but it already has its own per-student policy in app/limits.py
+    ("branch": 25 a day). Counting it against the advisor's ten questions too
+    made the real cap ten, silently, and answered a press of "Break this into
+    steps" with "you have used your 10 advisor questions" -- a limit the
+    student had not reached about a feature they had not used.
+
+    ``what`` names the thing being refused, for the same reason.
     """
     if _spent(sb, _since(minutes=1)) >= GLOBAL_PER_MINUTE:
-        return "The advisor is busy right now — try again in a minute."
-    if _spent(sb, _since(days=1), student) >= settings.advisor_per_student_daily:
+        return f"The {what} is busy right now — try again in a minute."
+    if (
+        per_student
+        and _spent(sb, _since(days=1), student) >= settings.advisor_per_student_daily
+    ):
         return (
-            f"You have used your {settings.advisor_per_student_daily} advisor "
+            f"You have used your {settings.advisor_per_student_daily} {what} "
             "questions for today. This resets 24 hours after your first one."
         )
     if _spent(sb, _since(days=1)) >= settings.advisor_global_daily:
-        return "The advisor has reached today's shared limit. Try again tomorrow."
+        return f"The {what} has reached today's shared limit. Try again tomorrow."
 
     # The money limit, checked last because it is the most expensive to compute
     # (it reads rows rather than a count) and the least likely to fire. A call
@@ -169,7 +189,7 @@ def budget_block(sb, student: str) -> str | None:
     # tokens either way.
     budget = settings.advisor_daily_token_budget
     if budget > 0 and _tokens_spent(sb, _since(days=1)) >= budget:
-        return "The advisor has reached today's shared limit. Try again tomorrow."
+        return f"The {what} has reached today's shared limit. Try again tomorrow."
     return None
 
 

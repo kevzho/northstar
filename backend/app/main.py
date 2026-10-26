@@ -1317,7 +1317,12 @@ def create_app() -> FastAPI:
         programme, one step, six steps, or two identical ones.
         """
         from .advisor import budget_block, record_call
-        from .branch_generation import SYSTEM_PROMPT, build_prompt, parse_branch
+        from .branch_generation import (
+            BRANCH_MAX_DEPTH,
+            SYSTEM_PROMPT,
+            build_prompt,
+            parse_branch,
+        )
         from .db import get_supabase
         from .limits import limit_block, record_event
 
@@ -1330,6 +1335,22 @@ def create_app() -> FastAPI:
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail="A step_key and step_title are required.",
+            )
+
+        # DEPTH CAP, enforced here and not only in the UI. A sub-step can be
+        # broken down too -- "spine:project::branch:0::branch:1" -- and each
+        # generation is a model call behind a button, so unbounded nesting is
+        # an unbounded bill on one page. components/SubSteps.tsx stops offering
+        # the control at the same number; this is what makes that a rule rather
+        # than a suggestion, because the client is not the thing being billed.
+        if step_key.count("::branch:") >= BRANCH_MAX_DEPTH:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=(
+                    "That is as far down as a step breaks. If the move in "
+                    "front of you still is not startable, it is probably a "
+                    "different step."
+                ),
             )
 
         sb = get_supabase()
@@ -1353,7 +1374,11 @@ def create_app() -> FastAPI:
             raise HTTPException(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=refused
             )
-        blocked = budget_block(sb, user.id)
+        # Not against the advisor's ten questions: limits.py already caps
+        # this at 25 a day per student. See budget_block's docstring.
+        blocked = budget_block(
+            sb, user.id, per_student=False, what="step breakdown"
+        )
         if blocked:
             raise HTTPException(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=blocked

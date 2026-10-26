@@ -36,6 +36,15 @@ import re
 
 MIN_STEPS = 2
 MAX_STEPS = 3
+
+# How many generations deep a step may be broken down. A sub-step is itself a
+# step -- "code the calculation logic" is the same cliff a layer down from
+# "build the app" -- so the breakdown recurses, keyed by composition:
+# "spine:project::branch:0::branch:1". Three is far past the point where a move
+# is startable, and each generation is a model call behind a button, so the cap
+# is a cost control as much as a design one. Mirrored in
+# frontend/components/SubSteps.tsx, which stops drawing the control there.
+BRANCH_MAX_DEPTH = 3
 MAX_TITLE = 90
 MAX_DETAIL = 220
 
