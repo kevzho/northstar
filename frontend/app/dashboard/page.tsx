@@ -417,14 +417,26 @@ export default function DashboardPage() {
             no inbound link anywhere in the app before this — the pathway map is
             the judge-facing centerpiece, so it cannot be URL-only. */}
         <section className="grid gap-4 md:grid-cols-2">
-          <Link href="/map" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
-            <h2 className="h-display flex items-center gap-2 text-section text-foreground">
-              <FieldPlanet field="physics" className="h-5 w-5" style={{ color: fieldColor("physics") }} />
-              Your pathway map
+          {/* THE ONE THAT MATTERS, SIZED LIKE IT. Everything else on this
+              grid is a place to look something up; this is the thing the
+              assessment was for. It spans both columns so a student's eye
+              lands on it first.
+
+              It points at /plan, not /map. The orbital map is one view of the
+              plan rather than a second destination, and sending students to it
+              first meant they met the decoration before the instructions. */}
+          <Link
+            href="/plan"
+            className="rounded-lg border-2 border-star/50 bg-card p-6 transition-colors hover:border-star md:col-span-2"
+          >
+            <h2 className="h-display flex items-center gap-2 text-2xl text-foreground">
+              <FieldPlanet field="physics" className="h-6 w-6" style={{ color: fieldColor("physics") }} />
+              Your plan
             </h2>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              See your matches as orbits — each field is a star, and the
-              programs matched to you circle it. Inner orbits close soonest.
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+              What to learn, what to build, where to put it, and which
+              programmes that opens &mdash; as a route with the steps in order.
+              Includes the orbital map of your matches.
             </p>
           </Link>
           <Link href="/opportunities" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">

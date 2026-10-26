@@ -220,6 +220,9 @@ opportunity to look for instead.
 or predict what the student "will" become — you explore, the matching engine ranks.
 3. Speak plainly to a student. Two short paragraphs maximum, then up to three \
 cited suggestions as a list.
+4. Write PLAIN TEXT. No markdown: no **bold**, no ##headings, no backticks. \
+Start a list item with "- " and nothing else. The answer is rendered as text, \
+and asterisks reach the student as literal asterisks.
 """
 
 
@@ -281,8 +284,17 @@ def ask_advisor(question: str, profile: dict, sources: list[dict]) -> ChatResult
                 ),
             },
         ],
-        max_tokens=700,
+        # 700 truncated real answers mid-word -- a student saw "giving you
+        # hands-" and nothing after it. gpt-oss-20b emits its reasoning as
+        # message content before the answer, the same thing that made every
+        # spine generation fail, so the ceiling has to cover the preamble as
+        # well as the reply. The answer itself is ~250 tokens.
+        max_tokens=1600,
         temperature=0.7,
+        # Stops the preamble at the source rather than paying for it, which is
+        # most of why this page felt slow. Dropped by providers that do not
+        # know the parameter.
+        reasoning_effort="none",
         timeout=45,
     )
     return result

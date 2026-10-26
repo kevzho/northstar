@@ -16,6 +16,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { AppNav } from "@/components/AppNav";
+import { parseBlocks } from "@/lib/plain-text";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { askAdvisor, isApiError } from "@/lib/api";
@@ -151,8 +152,47 @@ export default function AdvisorPage() {
           </section>
         ) : exchange ? (
           <section className="rounded-lg border bg-card mt-8 p-6">
-            <div className="whitespace-pre-wrap text-base leading-7 text-foreground">
-              {exchange.answer}
+            {/* Parsed, not pre-wrapped. The model writes the occasional bold
+                run or bullet however firmly the prompt asks it not to, and
+                whitespace-pre-wrap put the asterisks on screen. Elements are
+                built from parsed spans, so nothing here can emit markup. */}
+            <div className="grid gap-4 text-base leading-7 text-foreground">
+              {parseBlocks(exchange.answer).map((block, index) =>
+                block.kind === "list" ? (
+                  <ul key={index} className="grid gap-2 pl-1">
+                    {block.items.map((item, i) => (
+                      <li key={i} className="flex gap-2">
+                        <span aria-hidden="true" className="text-aurora">
+                          &mdash;
+                        </span>
+                        <span>
+                          {item.map((span, j) =>
+                            span.bold ? (
+                              <strong key={j} className="font-semibold">
+                                {span.text}
+                              </strong>
+                            ) : (
+                              <span key={j}>{span.text}</span>
+                            ),
+                          )}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p key={index}>
+                    {block.spans.map((span, j) =>
+                      span.bold ? (
+                        <strong key={j} className="font-semibold">
+                          {span.text}
+                        </strong>
+                      ) : (
+                        <span key={j}>{span.text}</span>
+                      ),
+                    )}
+                  </p>
+                ),
+              )}
             </div>
             {exchange.sources.length > 0 ? (
               <div className="mt-6 border-t border-border pt-4">

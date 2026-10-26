@@ -11,11 +11,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { motion, useScroll, useTransform } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { RoadmapTree } from "@/components/RoadmapTree";
 import { buildRoadmapTree, firstActionable } from "@/lib/roadmap-graph";
-import { Planet, Ship } from "@/components/decor/voyage";
+import { Planet } from "@/components/decor/voyage";
 import { autoGenerateSpine, fetchMatches, fetchResources, fetchRoadmap } from "@/lib/api";
 import { SpineControl } from "@/components/SpineControl";
 import type { LearningResource, Roadmap } from "@/lib/api";
@@ -27,6 +26,7 @@ import { useStoredAnswers } from "@/lib/use-assessment";
 import { useChosenPath } from "@/lib/use-chosen-path";
 import { useRequireAuth } from "@/lib/use-require-auth";
 import { AppNav } from "@/components/AppNav";
+import { SpriteSky } from "@/components/decor/sprite-sky";
 import { LoadingSection } from "@/components/decor/orbit-loader";
 
 const LEG_PLANETS = ["moon", "ringed", "giant"] as const;
@@ -57,12 +57,6 @@ const STEP_CHIP: Record<string, string> = {
 const AUTHORED_EDGES = ["artifact", "ladder", "evidence"];
 
 export default function PlanPage() {
-  const voyageRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: voyageRef,
-    offset: ["start 0.7", "end 0.7"],
-  });
-  const shipTop = useTransform(scrollYProgress, [0, 1], ["1%", "97%"]);
   const answers = useStoredAnswers();
   const chosen = useChosenPath();
   // Built from this student's own assessment, so it needs an account.
@@ -194,7 +188,12 @@ export default function PlanPage() {
     : null;
 
   return (
-    <main className="bleed-root min-h-screen px-6 py-8 sm:px-8">
+    <main className="bleed-root relative min-h-screen px-6 py-8 sm:px-8">
+      {/* The same sky the landing page has. /plan is where a student spends
+          the most time and it was the flattest surface in the product; the
+          planets in the roadmap tree were floating on nothing. Fixed and
+          behind everything, so it parallaxes without moving the content. */}
+      <SpriteSky className="fixed inset-0 -z-10" />
       <div className="mx-auto max-w-5xl">
         <AppNav homeHref="/dashboard"
           right={
@@ -327,6 +326,14 @@ export default function PlanPage() {
                   you in stacked above it. Tap any node to jump to its step.
                 </p>
                 <p className="mt-2 max-w-2xl text-sm leading-7 text-muted-foreground">
+                  Prefer it as orbits?{" "}
+                  <Link href="/map" className="font-semibold text-aurora">
+                    The same plan drawn as a sky
+                  </Link>
+                  {" "}&mdash; one star per field, your matches circling it,
+                  innermost closing soonest.
+                </p>
+                <p className="mt-2 max-w-2xl text-sm leading-7 text-muted-foreground">
                   The learn steps come off{" "}
                   <Link href="/learn" className="font-semibold text-aurora">
                     the shelf
@@ -374,20 +381,14 @@ export default function PlanPage() {
               </div>
             </section>
 
-            {/* The voyage: three legs along a dashed course, the rocket
-                riding scroll from launch to arrival. */}
-            <section ref={voyageRef} className="relative mt-10">
-              <div
-                aria-hidden
-                className="absolute bottom-6 left-7 top-6 border-l border-dashed border-border"
-              />
-              <motion.div
-                aria-hidden
-                style={{ top: shipTop }}
-                className="absolute left-7 z-10 -translate-x-1/2"
-              >
-                <Ship className="h-7 w-5 text-star" />
-              </motion.div>
+            {/* THE STEP LIST, under the tree rather than beside it.
+                This used to carry its own dashed rail and a scroll-driven
+                rocket, which was the whole picture back when the plan was a
+                list. The roadmap tree above is now that picture, and two
+                dotted spines on one page read as one diagram overlapping
+                another. The rail is gone; the planets stay, because they are
+                what tells you which phase you are reading. */}
+            <section className="relative mt-10">
               {/* THE ROADMAP. This replaced a list of plain strings that
                   generatePlan() built client-side. Steps now come from
                   GET /roadmap, which sequences four kinds of work — learn,
