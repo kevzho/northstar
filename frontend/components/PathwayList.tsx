@@ -1,7 +1,7 @@
 /**
  * The conforming text alternative to the orbital map.
  *
- * app/map/page.tsx says it plainly: the SVG is "decorative and mouse-only.
+ * components/PathwayMap.tsx says it plainly: the SVG is "decorative and mouse-only.
  * Keyboard and screen reader users need the conforming list alternative." This
  * is that alternative. It is not a summary of the picture — it carries the same
  * information, from the same data, in the same order, and its links go to the

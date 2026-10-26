@@ -68,9 +68,15 @@ export default function DashboardPage() {
     startedCheck.current = true;
 
     let cancelled = false;
-    setChecking(true);
 
     (async () => {
+      // Inside the async body, not in the effect's synchronous path.
+      // react-hooks/set-state-in-effect is an ERROR in this config, and it
+      // has been failing `npm run lint` on main — which is CI step 2, so
+      // tsc, the test suite and next build have not run in CI since it
+      // landed. The behaviour is identical: this still sets the flag before
+      // the first await.
+      setChecking(true);
       try {
         const me = await (await authedFetch("/me")).json();
 

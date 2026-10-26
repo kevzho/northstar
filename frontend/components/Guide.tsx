@@ -75,17 +75,7 @@ const GUIDE: [string, GuideEntry][] = [
         "“For you” is ranked against your profile; “All” is the full catalog.",
         "Log outcomes when you hear back — accepted or not, it sharpens your map.",
       ],
-      links: [{ href: "/map", label: "See your pathway map" }],
-    },
-  ],
-  [
-    "/map",
-    {
-      title: "Your pathway map",
-      tips: [
-        "Each field is a star; the programs matched to you orbit it. Inner orbits close soonest.",
-        "The warm mark is always you — your current waypoint.",
-      ],
+      links: [{ href: "/plan", label: "See your plan and map" }],
     },
   ],
   [

@@ -1,7 +1,7 @@
 /**
  * One colour per field, shared by every surface that draws a field.
  *
- * Lived only inside app/map/page.tsx, so the profile's field map and the
+ * Lived only inside the orbital map (now components/PathwayMap.tsx), so the profile's field map and the
  * orbital map could have disagreed about what biology looks like. A colour
  * that means something must mean it everywhere or it means nothing.
  *

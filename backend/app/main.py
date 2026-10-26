@@ -2295,6 +2295,34 @@ def create_app() -> FastAPI:
 
         opportunities = fetch_shelf(sb, shelf_for(student))
 
+        # A DISMISSED PROGRAMME MUST NOT ORBIT.
+        #
+        # /match drops them (see the behavioral-signals block there); this
+        # endpoint never did. While the map was its own route that was merely
+        # inconsistent. Now that it renders inside /plan, a programme the
+        # student explicitly marked "not for me" would circle its star inches
+        # from a step list, mission board and roadmap tree that all come from
+        # /match and therefore never mention it -- the one thing they said no
+        # to, drawn as the brightest object on the page.
+        #
+        # Additive and failure-tolerant, exactly like /match: a dismissals
+        # query that errors must never blank the map.
+        dismissed_ids: set[str] = set()
+        try:
+            gone = (
+                sb.table("dismissals")
+                .select("opportunity_id")
+                .eq("student_id", user.id)
+                .execute()
+            )
+            dismissed_ids = {d["opportunity_id"] for d in (gone.data or [])}
+        except Exception:
+            pass
+        if dismissed_ids:
+            opportunities = [
+                o for o in opportunities if o.get("id") not in dismissed_ids
+            ]
+
         results = score_opportunities(student, opportunities)
 
         # Limit to top 14 for a readable graph

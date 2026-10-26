@@ -13,7 +13,17 @@
 
 import { describe, expect, it } from "vitest";
 
-const SECTIONS = ["/opportunities", "/learn", "/plan", "/profile", "/discover"];
+// Mirrors AppNav.tsx SECTIONS, in the same order: the resolution below is a
+// prefix scan, so order is part of the behaviour. /dashboard was added to
+// the nav and not here, which is exactly the drift this duplication risks.
+const SECTIONS = [
+  "/dashboard",
+  "/opportunities",
+  "/learn",
+  "/plan",
+  "/profile",
+  "/discover",
+];
 
 const ALIASES: Record<string, string> = {
   "/futures": "/profile",
@@ -48,7 +58,7 @@ const IN_APP = [
 ];
 
 /** Routes that deliberately belong to no section. */
-const OUTSIDE = ["/", "/login", "/onboarding", "/faq", "/contact", "/privacy", "/dashboard"];
+const OUTSIDE = ["/", "/login", "/onboarding", "/faq", "/contact", "/privacy"];
 
 describe("nav section resolution", () => {
   it("lights a section for every in-app route", () => {

@@ -12,6 +12,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { PathwayMap } from "@/components/PathwayMap";
 import { RoadmapTree } from "@/components/RoadmapTree";
 import { buildRoadmapTree, firstActionable } from "@/lib/roadmap-graph";
 import { Planet } from "@/components/decor/voyage";
@@ -326,14 +327,6 @@ export default function PlanPage() {
                   you in stacked above it. Tap any node to jump to its step.
                 </p>
                 <p className="mt-2 max-w-2xl text-sm leading-7 text-muted-foreground">
-                  Prefer it as orbits?{" "}
-                  <Link href="/map" className="font-semibold text-aurora">
-                    The same plan drawn as a sky
-                  </Link>
-                  {" "}&mdash; one star per field, your matches circling it,
-                  innermost closing soonest.
-                </p>
-                <p className="mt-2 max-w-2xl text-sm leading-7 text-muted-foreground">
                   The learn steps come off{" "}
                   <Link href="/learn" className="font-semibold text-aurora">
                     the shelf
@@ -568,6 +561,37 @@ export default function PlanPage() {
             </section>
           </>
         )}
+
+        {/* THE SAME PLAN, DRAWN AS A SKY.
+            OUTSIDE the conditional chain above, deliberately. It was inside
+            it, which meant the map needed a trait profile AND a charted path
+            to render -- and both of those live in THIS browser's
+            localStorage. The old /map route needed only a session, so a
+            student in a private window, on a second device, or after clearing
+            site data went from "here is your map" to "take the assessment",
+            with no route left to reach it: /map now redirects here.
+
+            PathwayMap needs none of that. GET /pathways re-scores
+            server-side from the students row and the component carries its
+            own loading and empty states, so a session is the only thing it
+            has ever required. Gated by useRequireAuth above, like the rest of
+            the page. */}
+        <section className="mt-10 border-y border-border py-8">
+          <p className="eyebrow">The same plan, as a sky</p>
+          <h2 className="h-display mt-2 text-xl text-foreground">
+            Where these programmes actually sit.
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm leading-7 text-muted-foreground">
+            One star per field, your matches orbiting it, innermost closing
+            soonest. Use the list view if you would rather read it than look at
+            it &mdash; it is the same matches in the same order, and it is the
+            one you can operate by keyboard.
+          </p>
+          <div className="mt-6">
+            <PathwayMap />
+          </div>
+        </section>
+
       </div>
     </main>
   );
