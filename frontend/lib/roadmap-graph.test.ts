@@ -52,7 +52,11 @@ describe("buildRoadmapTree", () => {
     const { nodes } = buildRoadmapTree(steps);
     const keys = nodes.filter((n) => n.step).map((n) => n.key);
     expect(new Set(keys).size).toBe(keys.length);
-    for (const s of steps) expect(keys).toContain(s.step_key);
+    for (const s of steps) {
+      // Missions are the one deliberate omission; see the dedicated test.
+      if (s.step_key.startsWith("mission:")) continue;
+      expect(keys).toContain(s.step_key);
+    }
   });
 
   it("never drops a step kind the layout does not recognise", () => {
@@ -103,21 +107,48 @@ describe("buildRoadmapTree", () => {
     const map = byKey(nodes);
     expect(map.get("learn:r2")?.edge).toBe("anytime");
     expect(map.get("learn:r2")?.x).toBe(RIGHT_X);
-    expect(map.get("mission:m1")?.edge).toBe("anytime");
-    expect(map.get("mission:m1")?.x).toBe(LEFT_X);
     expect(map.get("outreach:cold-email")?.edge).toBe("anytime");
   });
 
-  it("keeps a mission when there is no build step to hang it on", () => {
+  it("keeps missions off the tree, because the page already lists them", () => {
+    // MissionBoard renders the same missions directly above this figure, with
+    // their descriptions and a completion control. Drawing them again as
+    // branches put two more cards on a crowded left margin for work you
+    // cannot act on from there.
+    const { nodes } = buildRoadmapTree(fullPlan());
+    expect(nodes.find((n) => n.key.startsWith("mission:"))).toBeUndefined();
+  });
+
+  it("does not let an excluded mission become the trunk", () => {
+    // The orphan sweep exists so an unrecognised step kind is never silently
+    // dropped — which means it will happily adopt a mission and make it a
+    // trunk node, leaving the applications parented to a mission instead of
+    // to publish. Excluding it from the layout means excluding it from the
+    // sweep too.
+    const { nodes } = buildRoadmapTree(fullPlan());
+    const map = byKey(nodes);
+    expect(map.get("apply:opp-b")?.parent).toBe("spine:publish");
+    expect(nodes.filter((n) => n.weight === "trunk").map((n) => n.key)).toEqual([
+      "root",
+      "learn:r1",
+      "spine:project",
+      "spine:publish",
+    ]);
+  });
+
+  it("keeps a sided step when there is no trunk step to hang it on", () => {
     // "None of these are me" with no generated spine yet: no spine:project.
+    // The branch still has to land somewhere rather than vanish — it hangs
+    // off wherever the trunk has reached. Written with outreach now that
+    // missions are off the tree entirely.
     const steps = [
       step({ step_key: "learn:r1" }),
-      step({ step_key: "mission:m1", category: "project", title: "Mission one" }),
+      step({ step_key: "outreach:cold-email", category: "outreach", title: "Email two people" }),
     ];
     const { nodes } = buildRoadmapTree(steps);
-    const mission = byKey(nodes).get("mission:m1");
-    expect(mission).toBeDefined();
-    expect(mission?.parent).toBe("learn:r1");
+    const outreach = byKey(nodes).get("outreach:cold-email");
+    expect(outreach).toBeDefined();
+    expect(outreach?.parent).toBe("learn:r1");
   });
 
   it("builds a tree from nothing but a root", () => {

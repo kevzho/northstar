@@ -184,7 +184,18 @@ export function buildRoadmapTree(
     {
       step: project,
       kind: "build",
-      sides: missions,
+      // NO MISSIONS ON THE TREE.
+      //
+      // They were drawn as branches off Build, which put two more cards on an
+      // already crowded left margin for work the page has ALREADY listed:
+      // MissionBoard renders the same missions, with their descriptions and a
+      // completion control, directly above this figure. The tree was repeating
+      // it in a form you cannot act on.
+      //
+      // They are still in `steps` and still reach the list below, so nothing
+      // is lost — the orphan sweep further down picks up anything this layout
+      // declines to place, which is exactly what it is for.
+      sides: [],
       sideKind: "mission",
       side: "left",
     },
@@ -250,6 +261,11 @@ export function buildRoadmapTree(
     if (placed.has(step.step_key)) continue;
     if (step.category === "application") continue;
     if (step.step_key.startsWith("prep:")) continue;
+    // Missions are deliberately not on this tree (see the build stage above).
+    // Without this they fall through here, become TRUNK nodes, and the
+    // applications then hang off a mission instead of off publish — which is
+    // worse than the clutter the exclusion was meant to remove.
+    if (step.step_key.startsWith("mission:")) continue;
     push({
       key: step.step_key,
       title: step.title,

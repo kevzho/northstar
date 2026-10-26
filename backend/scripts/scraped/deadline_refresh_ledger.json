@@ -227,6 +227,12 @@
     "outcome": "no_date_on_page",
     "title": "Jackie Robinson Foundation Scholarship Award"
   },
+  "2adc23b5-bcea-4885-8bee-a66dcbf336ef": {
+    "at": "2026-10-26T13:34:30.401111+00:00",
+    "outcome": "cleared",
+    "title": "UGAHacks CADathon",
+    "was": "2026-10-25"
+  },
   "2ae09b64-856f-418e-80b2-9a712f82130d": {
     "at": "2026-10-07T21:17:57.023576+00:00",
     "outcome": "cleared",
@@ -261,6 +267,12 @@
     "outcome": "cleared",
     "title": "Hack the Valley 11",
     "was": "2026-10-18"
+  },
+  "2e0c94c5-7e91-4e08-80fe-054c85d85687": {
+    "at": "2026-10-26T13:34:30.401111+00:00",
+    "outcome": "cleared",
+    "title": "Glitchathon Hackathon",
+    "was": "2026-10-25"
   },
   "2ebd8e19-a873-47b1-974b-5a90c7a40c3e": {
     "at": "2026-10-16T13:18:31.736591+00:00",
@@ -336,11 +348,23 @@
     "title": "Company Brain Hackathon",
     "was": "2026-10-13"
   },
+  "3d3fda07-0242-467a-bfdd-162a3db1f41d": {
+    "at": "2026-10-26T13:34:30.401111+00:00",
+    "outcome": "cleared",
+    "title": "DS+X Hackathon 2026",
+    "was": "2026-10-25"
+  },
   "3d4f38f0-683d-4fe7-9b7c-8e92e955a263": {
     "at": "2026-10-16T13:18:31.736591+00:00",
     "outcome": "cleared",
     "title": "Marjot Foundation Independent Research in Environmental Sciences",
     "was": "2026-10-15"
+  },
+  "3ea6adf8-969e-4b3d-a109-3fe136ca74a0": {
+    "at": "2026-10-26T13:34:30.401111+00:00",
+    "outcome": "cleared",
+    "title": "Gator Hack V - AI Days 2026",
+    "was": "2026-10-25"
   },
   "3edde1ca-7065-4365-b7ea-485a7d1779eb": {
     "at": "2026-10-11T13:17:17.441165+00:00",
@@ -432,6 +456,12 @@
     "title": "IKU Womxn in STEM Hackathon",
     "was": "2026-10-18"
   },
+  "5051636c-b315-4842-b634-b169e0a1b90d": {
+    "at": "2026-10-26T13:34:30.401111+00:00",
+    "outcome": "cleared",
+    "title": "2026 AI for Good Hackathon",
+    "was": "2026-10-25"
+  },
   "508fc8ba-9350-4a96-8330-ab28fe8adad5": {
     "at": "2026-10-07T21:17:57.023576+00:00",
     "outcome": "cleared",
@@ -448,6 +478,12 @@
     "outcome": "cleared",
     "title": "Get Hired Hack",
     "was": "2026-10-10"
+  },
+  "5762cca5-21e5-467c-803e-df1a3ea42f97": {
+    "at": "2026-10-26T13:34:30.401111+00:00",
+    "deadline": "2026-11-15",
+    "outcome": "found",
+    "title": "Non\u2011Trivial Fellowship"
   },
   "57726295-08fd-4d66-8c4f-63b5fb88f987": {
     "at": "2026-10-25T13:18:07.803751+00:00",
@@ -658,17 +694,35 @@
     "outcome": "unreadable",
     "title": "Introductory College Level Experience in Microbiology (iCLEM)"
   },
+  "786d32a8-7abd-4e95-8ab6-7bb8b53484ad": {
+    "at": "2026-10-26T13:34:30.401111+00:00",
+    "outcome": "cleared",
+    "title": "HarborHack 2026",
+    "was": "2026-10-25"
+  },
   "790ebd2e-c654-4e36-ab5f-f5bfe9d76f94": {
     "at": "2026-10-07T21:13:44.195648+00:00",
     "outcome": "cleared",
     "title": "Davidson Fellows Scholarship",
     "was": "2026-02-15"
   },
+  "7987282f-38d4-461f-95a8-c4e0148f02bb": {
+    "at": "2026-10-26T13:34:30.401111+00:00",
+    "outcome": "cleared",
+    "title": "Cal Hacks 13.0",
+    "was": "2026-10-25"
+  },
   "79e1700a-9d5f-4030-8261-af456ea02026": {
     "at": "2026-10-07T21:19:40.680994+00:00",
     "outcome": "cleared",
     "title": "StormHacks 2026 Hackathon",
     "was": "2026-10-04"
+  },
+  "7b623f24-6f52-4469-a6c0-524341a79283": {
+    "at": "2026-10-26T13:34:30.401111+00:00",
+    "outcome": "cleared",
+    "title": "HackTX 2026 Hackathon",
+    "was": "2026-10-25"
   },
   "7d52ed8b-2640-4a11-b0f7-e36aa20e95c9": {
     "at": "2026-10-18T13:18:06.465479+00:00",
@@ -939,6 +993,12 @@
     "title": "BoxLang-AI-ANIA-2026 Hackathon",
     "was": "2026-10-11"
   },
+  "9e93c07b-65b7-4835-9d0e-f86501e555c5": {
+    "at": "2026-10-26T13:34:30.401111+00:00",
+    "outcome": "cleared",
+    "title": "IEEE ClimateChain Global Hackathon",
+    "was": "2026-10-25"
+  },
   "9eb85183-8c18-4d14-89db-68c4f92a5de6": {
     "at": "2026-10-07T21:19:40.680994+00:00",
     "outcome": "no_date_on_page",
@@ -987,6 +1047,12 @@
     "outcome": "cleared",
     "title": "Hyperbloom October - UI/UX and Web Design Hackathon",
     "was": "2026-10-19"
+  },
+  "a5e5dcf3-1b4b-491d-8904-08fc39757668": {
+    "at": "2026-10-26T13:34:30.401111+00:00",
+    "outcome": "cleared",
+    "title": "GLITCHATHON",
+    "was": "2026-10-25"
   },
   "a642798e-01bb-4691-a2bc-977fe4f85bbc": {
     "at": "2026-10-25T13:18:07.803751+00:00",
@@ -1211,6 +1277,12 @@
     "title": "Knight Hacks IX Hackathon",
     "was": "2026-10-11"
   },
+  "c77e3f95-a621-4d00-9e04-9a0d40097d83": {
+    "at": "2026-10-26T13:34:30.401111+00:00",
+    "outcome": "cleared",
+    "title": "Gator Hack V \u2013 AI Days 2026 Hackathon",
+    "was": "2026-10-25"
+  },
   "c79f22e4-e2cf-493a-870e-e9ebc83560ba": {
     "at": "2026-10-07T21:16:37.351098+00:00",
     "outcome": "cleared",
@@ -1278,6 +1350,12 @@
     "title": "Multimodal AI Hackathon 2026",
     "was": "2026-10-14"
   },
+  "d23d9567-99f3-458a-8adb-c708546e5586": {
+    "at": "2026-10-26T13:34:30.401111+00:00",
+    "outcome": "cleared",
+    "title": "Hack for Social Impact SF 2026",
+    "was": "2026-10-25"
+  },
   "d5e0772c-19ff-424a-9c65-7c86e2c11128": {
     "at": "2026-10-07T21:16:37.351098+00:00",
     "outcome": "no_date_on_page",
@@ -1288,6 +1366,12 @@
     "outcome": "cleared",
     "title": "FortID CTF 2026 Jeopardy Competition",
     "was": "2026-10-09"
+  },
+  "d6957169-5778-4601-8ee9-65f1f97a4742": {
+    "at": "2026-10-26T13:34:30.401111+00:00",
+    "deadline": "2026-11-14",
+    "outcome": "found",
+    "title": "DSH Hacks V2"
   },
   "d9d7c75d-1f67-42ef-a033-aeed183f5d09": {
     "at": "2026-10-07T21:13:44.195648+00:00",

@@ -310,8 +310,20 @@ export default function LearnPage() {
                               {row.host}
                             </span>
                           </a>
+                          {/* TWO LINES BY DEFAULT, THE REST ON REQUEST.
+                              Measured across the shelf: why_this_one runs to
+                              699 characters and the free-evidence quote to
+                              599, with 42 of 109 rows over 300. Printed in
+                              full, every card was a paragraph and the page was
+                              a wall you scroll rather than a shelf you scan.
+
+                              Clamped, NOT truncated: nothing is cut from the
+                              data and the quote is never shortened, because a
+                              receipt that has been trimmed is not a receipt.
+                              A native <details> holds the rest, so it opens
+                              with the keyboard and needs no state. */}
                           {row.why_this_one ? (
-                            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                            <p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">
                               {row.why_this_one}
                             </p>
                           ) : null}
@@ -321,13 +333,27 @@ export default function LearnPage() {
                               {row.prerequisite || "nothing"}
                             </span>
                           </div>
-                          {/* The receipt. Quoted, not paraphrased — the words on
-                              their page, so a student can check us. */}
-                          {row.free_evidence ? (
-                            <p className="mt-2 border-l border-border pl-3 text-xs leading-5 text-muted-foreground italic">
-                              &ldquo;{row.free_evidence}&rdquo;
-                            </p>
-                          ) : null}
+                          <details className="group mt-2">
+                            <summary className="cursor-pointer list-none text-xs text-aurora marker:hidden">
+                              <span className="group-open:hidden">
+                                Why this one, and the line that proves it is free
+                              </span>
+                              <span className="hidden group-open:inline">Close</span>
+                            </summary>
+                            {row.why_this_one ? (
+                              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                                {row.why_this_one}
+                              </p>
+                            ) : null}
+                            {/* The receipt. Quoted, not paraphrased — the
+                                words on their page, so a student can check
+                                us. Never clamped. */}
+                            {row.free_evidence ? (
+                              <p className="mt-2 border-l border-border pl-3 text-xs leading-5 text-muted-foreground italic">
+                                &ldquo;{row.free_evidence}&rdquo;
+                              </p>
+                            ) : null}
+                          </details>
                         </li>
                       ))}
                     </ul>

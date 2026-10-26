@@ -34,7 +34,15 @@ import { fieldColor } from "@/lib/field-colors";
 import type { EdgeKind, NodeKind, RoadmapTree as Tree, TreeNode } from "@/lib/roadmap-graph";
 import type { OpportunityField } from "@/lib/types";
 
-const ROW_H = 118;
+/**
+ * Row pitch, in pixels.
+ *
+ * A node is a chip (~16px), 1-3 clamped title lines (20px each on the trunk)
+ * and 8px of padding top and bottom: about 100px at its tallest. 132 leaves a
+ * real gap between a full-height node and the next row instead of the 18px
+ * that made two neighbouring cards read as one box.
+ */
+const ROW_H = 132;
 /** Canvas floor. Four canopy columns need this much room before they collide. */
 const MIN_W = "46rem";
 
@@ -115,7 +123,13 @@ function Node({ node, here }: { node: TreeNode; here: boolean }) {
         </span>
       </span>
       <span
-        className={`mt-1 block ${
+        /* NO `block` HERE. line-clamp-3 works by setting display:-webkit-box,
+           and `block` sets display:block — whichever Tailwind emits later
+           wins, which was `block`. So the clamp never applied, a long step
+           title rendered all ten of its lines, and the node overflowed its
+           118px row into the one below it. That is the overlap on /plan:
+           LEARN and BUILD drawn as one merged box. */
+        className={`mt-1 ${
           trunk ? "text-[0.8rem] leading-5 text-foreground" : "text-xs leading-[1.15rem]"
         } ${node.nodeKind === "horizon" ? "text-muted-foreground" : ""} line-clamp-3`}
       >
@@ -261,8 +275,16 @@ export function RoadmapTree({
         </span>
         {/* Said once, here, rather than left as an unexplained orphan row: a
             node with no edge into it looks like a drawing error until you know
-            that nothing on this tree reaches it. */}
-        <span className="flex items-start gap-2 sm:col-span-3">
+            that nothing on this tree reaches it.
+
+            Only when there IS one. A legend entry explaining a mark that does
+            not appear on the figure is a different kind of confusion: the
+            reader goes looking for it. */}
+        <span
+          className={`flex items-start gap-2 sm:col-span-3 ${
+            tree.nodes.some((n) => n.nodeKind === "horizon") ? "" : "hidden"
+          }`}
+        >
           <span
             aria-hidden="true"
             className="mt-1 h-3 w-7 shrink-0 rounded-sm border border-dashed border-border"
