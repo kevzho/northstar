@@ -248,26 +248,6 @@ export default function LearnPage() {
               />
             </div>
 
-            {groups.length > 3 ? (
-              <nav
-                aria-label="Jump to a subject"
-                className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1"
-              >
-                <span className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-muted-foreground">
-                  Jump to
-                </span>
-                {groups.map((group) => (
-                  <a
-                    key={group.skillKey}
-                    href={`#shelf-${group.skillKey}`}
-                    className="text-xs text-muted-foreground underline decoration-border underline-offset-4 hover:text-foreground"
-                  >
-                    {group.name}
-                  </a>
-                ))}
-              </nav>
-            ) : null}
-
             {groups.length === 0 ? (
               <p className="mt-8 text-sm leading-6 text-muted-foreground">
                 Nothing on the shelf matches that yet. The shelf grows by
