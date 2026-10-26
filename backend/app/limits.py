@@ -74,6 +74,15 @@ POLICIES: dict[str, tuple[int | None, int, str]] = {
         "not come back usable. Your matches and deadlines are still here — pick "
         "a path on Future paths and you will get a project with it.",
     ),
+    # Branching a step. Pressable once per node on a diagram with a dozen
+    # nodes, so the per-student ceiling is what stops an idle afternoon from
+    # costing a month of credit. Generous enough that a student breaking down
+    # every step of a real plan never meets it.
+    "branch": (
+        25, 60 * 24,
+        "You have broken down a lot of steps today. The ones you already have "
+        "are saved \u2014 come back tomorrow for more.",
+    ),
     "mentor_apply": (
         None, 60,
         "This form has had a lot of submissions in the last hour. Try again "
@@ -91,6 +100,7 @@ GLOBAL_PER_WINDOW: dict[str, int] = {
     # signups start, and the one that stops a bug costing a month of credit
     # overnight.
     "auto_spine": 400,
+    "branch": 1500,
     "friend_request": 2000,
     "report": 300,
     "handle": 500,

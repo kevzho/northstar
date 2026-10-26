@@ -475,16 +475,6 @@ export default function DashboardPage() {
               Mentors ranked by how their expertise lines up with your profile.
             </p>
           </Link>
-          <Link href="/projects" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
-            <h2 className="h-display flex items-center gap-2 text-section text-foreground">
-              <FieldPlanet field="engineering" className="h-5 w-5" style={{ color: fieldColor("engineering") }} />
-              Projects to join
-            </h2>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Real open-source repos in your fields with good first issues
-              open right now.
-            </p>
-          </Link>
           <Link href="/discover" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
             <h2 className="h-display flex items-center gap-2 text-section text-foreground">
               <FieldPlanet field="humanities" className="h-5 w-5" style={{ color: fieldColor("humanities") }} />
@@ -494,26 +484,6 @@ export default function DashboardPage() {
               Students matched on your fields and your path, and the ones
               looking for someone to build with. Compare records, or team up on
               a project neither of you would finish alone.
-            </p>
-          </Link>
-          <Link href="/advisor" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
-            <h2 className="h-display flex items-center gap-2 text-section text-foreground">
-              <FieldPlanet field="interdisciplinary" className="h-5 w-5" style={{ color: fieldColor("interdisciplinary") }} />
-              Explore unusual routes
-            </h2>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Ask about directions the rankings can&apos;t see — answers
-              grounded in your verified matches.
-            </p>
-          </Link>
-          <Link href="/profile" className="rounded-lg border bg-card transition-colors hover:border-primary p-5">
-            <h2 className="h-display flex items-center gap-2 text-section text-foreground">
-              <FieldPlanet field="design" className="h-5 w-5" style={{ color: fieldColor("design") }} />
-              Edit profile
-            </h2>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              All your details, traits, and sharing settings on one page —
-              edit anything to refine your matches.
             </p>
           </Link>
         </section>

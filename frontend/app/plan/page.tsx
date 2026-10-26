@@ -16,7 +16,14 @@ import { PathwayMap } from "@/components/PathwayMap";
 import { RoadmapTree } from "@/components/RoadmapTree";
 import { buildRoadmapTree, firstActionable } from "@/lib/roadmap-graph";
 import { Planet } from "@/components/decor/voyage";
-import { autoGenerateSpine, fetchMatches, fetchResources, fetchRoadmap } from "@/lib/api";
+import {
+  autoGenerateSpine,
+  branchStep,
+  fetchMatches,
+  fetchResources,
+  fetchRoadmap,
+  type BranchStep,
+} from "@/lib/api";
 import { SpineControl } from "@/components/SpineControl";
 import type { LearningResource, Roadmap } from "@/lib/api";
 import { MissionBoard } from "@/components/MissionBoard";
@@ -132,6 +139,42 @@ export default function PlanPage() {
    * per student per thirty days, so a profile the model keeps declining cannot
    * retry on every page load. Silent on failure: they did not ask for this.
    */
+  /**
+   * Sub-steps, keyed by the step they were asked for.
+   *
+   * Held here rather than in the tree so one state owns them: the tree draws
+   * them as branches and the step list below renders them as text, and those
+   * two must never disagree about what the student asked for.
+   */
+  const [branches, setBranches] = useState<Record<string, BranchStep[]>>({});
+  const [branching, setBranching] = useState<string | null>(null);
+  const [branchError, setBranchError] = useState<Record<string, string>>({});
+
+  async function breakDown(step: { step_key: string; title: string; category: string }) {
+    setBranching(step.step_key);
+    setBranchError((e) => ({ ...e, [step.step_key]: "" }));
+    try {
+      const steps = await branchStep({
+        stepKey: step.step_key,
+        stepTitle: step.title,
+        stepCategory: step.category,
+      });
+      setBranches((current) => ({ ...current, [step.step_key]: steps }));
+    } catch (caught) {
+      // Every refusal from that endpoint is one to read: out of allowance,
+      // out of budget, model unreachable, or a breakdown that tried to put an
+      // unverified link or programme in the plan. The plan is unchanged in
+      // all of them, which is worth saying rather than failing silently.
+      setBranchError((e) => ({
+        ...e,
+        [step.step_key]:
+          caught instanceof Error ? caught.message : "Could not break that down just now.",
+      }));
+    } finally {
+      setBranching(null);
+    }
+  }
+
   const askedForSpine = useRef(false);
   useEffect(() => {
     let live = true;
@@ -184,7 +227,7 @@ export default function PlanPage() {
   const tree = roadmap
     ? buildRoadmapTree(
         roadmap.phases.flatMap((phase) => phase.steps),
-        { fieldOf: (id) => fieldById.get(id), horizon: roadmap.horizon },
+        { fieldOf: (id) => fieldById.get(id), horizon: roadmap.horizon, branches },
       )
     : null;
 
@@ -447,6 +490,56 @@ export default function PlanPage() {
                                   </p>
                                 );
                               })()}
+                              {/* BREAK THIS DOWN.
+                                  The plan could be accepted whole or
+                                  regenerated whole and nothing in between,
+                                  which is no use to a student looking at
+                                  "build a web app that calculates break-even"
+                                  with no idea what the first hour of that is.
+                                  The sub-steps draw as branches on the tree
+                                  above and read as text here. */}
+                              {branches[step.step_key]?.length ? (
+                                <ol className="mt-3 grid gap-2 border-l border-aurora-dim/40 pl-3">
+                                  {branches[step.step_key].map((sub, i) => (
+                                    <li key={sub.title}>
+                                      <p className="text-sm leading-6 text-foreground">
+                                        <span className="font-mono text-xs text-aurora">
+                                          {i + 1}.
+                                        </span>{" "}
+                                        {sub.title}
+                                      </p>
+                                      <p className="text-xs leading-5 text-muted-foreground">
+                                        {sub.detail}
+                                      </p>
+                                    </li>
+                                  ))}
+                                </ol>
+                              ) : (
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    breakDown({
+                                      step_key: step.step_key,
+                                      title: step.title,
+                                      category: step.category,
+                                    })
+                                  }
+                                  disabled={branching === step.step_key}
+                                  className="mt-3 text-xs font-medium text-aurora underline decoration-border underline-offset-4 hover:text-foreground disabled:opacity-60"
+                                >
+                                  {branching === step.step_key
+                                    ? "Breaking it down…"
+                                    : "Break this into steps"}
+                                </button>
+                              )}
+                              {branchError[step.step_key] ? (
+                                <p
+                                  aria-live="polite"
+                                  className="mt-2 text-xs leading-5 text-foreground"
+                                >
+                                  {branchError[step.step_key]}
+                                </p>
+                              ) : null}
                               {step.edge_note ? (
                                 /* The overprint. A step whose edge is an
                                    authored generalisation rather than a

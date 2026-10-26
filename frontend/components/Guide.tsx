@@ -293,6 +293,28 @@ export function Guide() {
               ))}
             </div>
           ) : null}
+
+          {/* THE ADVISOR LIVES HERE NOW.
+              It was a dashboard tile and a route of its own, which made
+              "ask a question about this" something you navigated away to do —
+              and the thing you wanted to ask about was whatever page you just
+              left. The guide is already the per-page helper in the corner of
+              every screen; asking it a question is the same gesture as reading
+              its tips, so it is the same panel. */}
+          <div className="mt-4 border-t border-border pt-3">
+            <p className="text-xs leading-5 text-muted-foreground">
+              Want a route the rankings cannot see? Ask the advisor &mdash; it
+              answers only from your own verified matches, and shows which ones
+              it used.
+            </p>
+            <Link
+              href="/advisor"
+              className="mt-2 inline-flex items-center gap-1.5 border border-star/60 px-3 py-1.5 text-xs font-semibold text-foreground transition hover:border-star"
+            >
+              <StarGlyph className="h-2.5 w-2.5 text-star" />
+              Ask the route advisor →
+            </Link>
+          </div>
         </section>
       ) : null}
       {/*

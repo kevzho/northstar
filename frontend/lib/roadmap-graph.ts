@@ -117,6 +117,15 @@ export function buildRoadmapTree(
     /** Field of an opportunity, for colour. Usually built from /matches. */
     fieldOf?: (opportunityId: string) => string | undefined;
     horizon?: RoadmapHorizon[];
+    /**
+     * Sub-steps a student asked for, keyed by the step they hang under.
+     *
+     * Drawn as a cluster off their parent with an "anytime" edge, because
+     * that is what they are: the inside of a step you have already decided to
+     * take. They are not another route through the tree, so they never become
+     * trunk nodes and never adopt the applications.
+     */
+    branches?: Record<string, { title: string; detail: string }[]>;
   } = {},
 ): RoadmapTree {
   const fieldOf = options.fieldOf ?? (() => undefined);
@@ -282,6 +291,36 @@ export function buildRoadmapTree(
     });
     trunk = step.step_key;
     row += 1;
+  }
+
+  // Sub-steps, hung under whichever node the student opened.
+  //
+  // Placed after the stages and before the canopy so they sit beside the
+  // trunk they belong to rather than among the programmes. Each cluster is
+  // laid out on its parent's free side: the learn branch already uses the
+  // right, so these take the left, which is empty now that missions are not
+  // drawn here.
+  const branches = options.branches ?? {};
+  for (const [parentKey, subSteps] of Object.entries(branches)) {
+    const parent = nodes.find((n) => n.key === parentKey);
+    if (!parent || !subSteps.length) continue;
+    subSteps.slice(0, 3).forEach((sub, index) => {
+      nodes.push({
+        key: `${parentKey}::branch:${index}`,
+        title: sub.title,
+        nodeKind: "step",
+        row: parent.row + index,
+        x: parent.x === LEFT_X ? RIGHT_X : LEFT_X,
+        weight: "branch",
+        parent: parentKey,
+        edge: "anytime",
+        step: null,
+        opportunityId: null,
+        field: parent.field,
+        note: sub.detail,
+      });
+    });
+    row = Math.max(row, parent.row + subSteps.length);
   }
 
   // The canopy: what the ladder is for. One column per programme, the gate

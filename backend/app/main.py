@@ -1262,6 +1262,136 @@ def create_app() -> FastAPI:
         plan["spine_hollow"] = bool(spine) and not resources
         return plan
 
+    @app.post("/roadmap/branch")
+    def branch_step(body: dict | None = None, user: CurrentUser = RequireUser) -> dict:
+        """Break one step of this student's plan into the moves inside it.
+
+        THE THING THE PLAN COULD NOT DO. A roadmap step is a whole instruction
+        -- "build a web app that calculates break-even" -- and a student who
+        has never shipped one has no way to ask what that actually involves.
+        They could accept the plan or regenerate the whole spine. Nothing in
+        between. This is the in between: point at a step, get two or three
+        concrete moves, written from the same profile the step came from.
+
+        IDEMPOTENT PER STEP. One row per (student, parent step), replaced on
+        request. Asking twice means wanting a different answer, not a second
+        list -- and an unbounded children table behind a button on a diagram is
+        how a plan becomes a thousand-item outline nobody reads.
+
+        GATES, in the order they are cheapest to answer:
+          1. a step_key, and a step title to work from
+          2. app/limits.py "branch": 25 per student per day, 1500 across
+             everyone -- this is a control on a diagram with a dozen nodes
+          3. the advisor budget, the same wallet as the advisor, the manual
+             regenerate and the automatic first path
+
+        Refusals are quiet and leave the plan exactly as it was. See
+        app/branch_generation.py for what is rejected: a url, a named
+        programme, one step, six steps, or two identical ones.
+        """
+        from .advisor import budget_block, record_call
+        from .branch_generation import SYSTEM_PROMPT, build_prompt, parse_branch
+        from .db import get_supabase
+        from .limits import limit_block, record_event
+
+        data = body or {}
+        step_key = str(data.get("step_key") or "").strip()[:120]
+        step_title = str(data.get("step_title") or "").strip()[:400]
+        step_category = str(data.get("step_category") or "step").strip()[:40]
+        reason = str(data.get("reason") or "").strip()[:300]
+        if not step_key or not step_title:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="A step_key and step_title are required.",
+            )
+
+        sb = get_supabase()
+
+        prof = (
+            sb.table("students")
+            .select("id, grade, trait_scores, field_scores")
+            .eq("id", user.id)
+            .maybe_single()
+            .execute()
+        )
+        student = prof.data if prof else None
+        if not student:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Student profile not found.",
+            )
+
+        refused = limit_block(sb, "branch", user.id)
+        if refused:
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=refused
+            )
+        blocked = budget_block(sb, user.id)
+        if blocked:
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=blocked
+            )
+
+        # Counted before the call. Counting successes would make a step the
+        # model keeps refusing free, and therefore pressable forever.
+        record_event(sb, "branch", user.id)
+
+        from .llm import LLMUnavailable, chat as llm_chat
+
+        try:
+            result = llm_chat(
+                base=settings.llm_api_base,
+                key=settings.llm_api_key,
+                model=settings.llm_model,
+                messages=[
+                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {
+                        "role": "user",
+                        "content": build_prompt(step_title, step_category, student, reason),
+                    },
+                ],
+                max_tokens=900,
+                temperature=0.4,
+                response_format={"type": "json_object"},
+                reasoning_effort="none",
+            )
+        except LLMUnavailable:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail=(
+                    "Could not reach the model just now. Your plan is "
+                    "unchanged."
+                ),
+            )
+
+        record_call(
+            sb, user.id, f"branch:{user.id}:{step_key}", step_title,
+            result.text[:2000], [],
+            (result.prompt_tokens, result.completion_tokens, result.total_tokens),
+        )
+
+        steps = parse_branch(result.text)
+        if not steps:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=(
+                    "That came back as something we will not put in a plan \u2014 "
+                    "a link we have not checked, a programme we cannot verify, "
+                    "or not a real breakdown. Your plan is unchanged."
+                ),
+            )
+
+        sb.table("roadmap_branches").upsert(
+            {
+                "user_id": user.id,
+                "parent_step_key": step_key,
+                "steps": steps,
+                "model": settings.llm_model,
+            },
+            on_conflict="user_id,parent_step_key",
+        ).execute()
+        return {"parent_step_key": step_key, "steps": steps}
+
     @app.post("/roadmap/spine/auto")
     def auto_generate_spine(user: CurrentUser = RequireUser) -> dict:
         """Write this student a first path, if nobody ever has.

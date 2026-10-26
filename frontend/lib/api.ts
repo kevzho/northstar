@@ -335,6 +335,41 @@ export async function deleteAccount(confirm: string): Promise<void> {
   });
 }
 
+/** Two or three moves inside one step of a plan. */
+export type BranchStep = { title: string; detail: string };
+
+/**
+ * Break one roadmap step into the moves it is made of.
+ *
+ * The plan could previously only be accepted whole or regenerated whole. This
+ * is the middle: point at a step, get what is inside it, written from the same
+ * profile the step came from.
+ *
+ * Throws with the server's own message, because every refusal here is one a
+ * student should read — out of allowance, out of budget, model unreachable, or
+ * a breakdown that tried to put an unverified link or programme in their plan.
+ * In all of them the plan is unchanged, and saying so is more useful than a
+ * generic failure.
+ */
+export async function branchStep(input: {
+  stepKey: string;
+  stepTitle: string;
+  stepCategory: string;
+  reason?: string;
+}): Promise<BranchStep[]> {
+  const response = await authedFetch("/roadmap/branch", {
+    method: "POST",
+    body: JSON.stringify({
+      step_key: input.stepKey,
+      step_title: input.stepTitle,
+      step_category: input.stepCategory,
+      reason: input.reason ?? "",
+    }),
+  });
+  const body = (await response.json()) as { steps?: BranchStep[] };
+  return body.steps ?? [];
+}
+
 /** The evidence timeline: every recorded step, newest first. */
 export async function fetchTimeline(): Promise<TimelineEvent[]> {
   return (await authedFetch("/timeline")).json();
