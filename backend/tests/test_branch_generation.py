@@ -89,3 +89,37 @@ def test_the_prompt_carries_the_student_not_just_the_step() -> None:
     assert "out of 100" in prompt
     assert "math" in prompt
     assert "I do not know where to start" in prompt
+
+
+def test_the_roadmap_reads_the_branches_back() -> None:
+    """A write-only table looks exactly like a working feature until someone
+    refreshes.
+
+    POST /roadmap/branch persisted to roadmap_branches from the day it shipped
+    and GET /roadmap never selected from it, so a student could break a step
+    down, reload, and watch the breakdown vanish while its row sat in Postgres.
+    Checked against the AST rather than the file text: a constant in the tree is
+    code the handler runs, so this cannot pass on a comment that merely
+    mentions the table.
+    """
+    import ast
+    import pathlib
+
+    tree = ast.parse(pathlib.Path("app/main.py").read_text())
+    handlers = {
+        node.name: node
+        for node in ast.walk(tree)
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+    }
+    assert "roadmap" in handlers, "GET /roadmap handler was renamed"
+
+    constants = {
+        n.value
+        for n in ast.walk(handlers["roadmap"])
+        if isinstance(n, ast.Constant) and isinstance(n.value, str)
+    }
+    assert "roadmap_branches" in constants, (
+        "GET /roadmap no longer reads roadmap_branches; saved breakdowns will "
+        "disappear on reload"
+    )
+    assert "branches" in constants, "the roadmap response stopped carrying branches"

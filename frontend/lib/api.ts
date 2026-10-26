@@ -723,6 +723,12 @@ export type Roadmap = {
    * which is when offering a written-for-you path is a fix rather than a nag.
    */
   spine_hollow: boolean;
+  /**
+   * Sub-steps this student has already asked for, keyed by the step they hang
+   * under. Sent on every load so a breakdown survives a refresh instead of
+   * living only in the tab that requested it.
+   */
+  branches: Record<string, BranchStep[]>;
 };
 
 /** The build/publish steps rewritten for one student. */

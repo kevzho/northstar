@@ -1260,6 +1260,26 @@ def create_app() -> FastAPI:
         # genuinely empty rather than nagging everyone.
         plan["spine_source"] = (spine or {}).get("source", "authored")
         plan["spine_hollow"] = bool(spine) and not resources
+
+        # Sub-steps this student already asked for, keyed by the step they hang
+        # under. Without this the table was write-only: you could break a step
+        # down, reload, and watch the breakdown disappear while its row sat in
+        # Postgres. Unread rows are worse than no rows -- they look like the
+        # feature works until someone refreshes.
+        try:
+            saved = (
+                sb.table("roadmap_branches")
+                .select("parent_step_key, steps")
+                .eq("user_id", user.id)
+                .execute()
+            ).data or []
+        except Exception:
+            saved = []
+        plan["branches"] = {
+            row["parent_step_key"]: row["steps"]
+            for row in saved
+            if isinstance(row.get("steps"), list) and row["steps"]
+        }
         return plan
 
     @app.post("/roadmap/branch")
@@ -1338,39 +1358,70 @@ def create_app() -> FastAPI:
 
         from .llm import LLMUnavailable, chat as llm_chat
 
-        try:
-            result = llm_chat(
-                base=settings.llm_api_base,
-                key=settings.llm_api_key,
-                model=settings.llm_model,
-                messages=[
-                    {"role": "system", "content": SYSTEM_PROMPT},
+        # TWO ATTEMPTS, AND WHY THE SECOND ONE EXISTS. Measured 2026-10-26 over
+        # four real steps x three tries: gpt-oss-20b ignored
+        # reasoning_effort="none" and spent the reply thinking out loud --
+        # "We need to break ONE step of a high-school student's plan", then
+        # counting characters by hand -- so the JSON never arrived inside 900
+        # tokens. 5 of 12 usable. At 1600 tokens, 10 of 12 but a 16s median.
+        # nemotron-3.5-bolt-e4b was 12 of 12 at 1.7s and is the default now.
+        #
+        # A retry is not a fix for a bad model, it is cover for the tail. One
+        # extra call, only when the first reply was unusable, with the schema
+        # restated. Worst case per press is two provider calls, so the 25/day
+        # in limits.py is a 50-call ceiling, not 25. Said plainly because a
+        # retry hidden behind a rate limit is how a budget stops meaning what
+        # it says.
+        user_prompt = build_prompt(step_title, step_category, student, reason)
+        attempts: list[str] = []
+        steps = None
+        for attempt in range(2):
+            messages = [
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": user_prompt},
+            ]
+            if attempt:
+                messages.append(
                     {
                         "role": "user",
-                        "content": build_prompt(step_title, step_category, student, reason),
-                    },
-                ],
-                max_tokens=900,
-                temperature=0.4,
-                response_format={"type": "json_object"},
-                reasoning_effort="none",
-            )
-        except LLMUnavailable:
-            raise HTTPException(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail=(
-                    "Could not reach the model just now. Your plan is "
-                    "unchanged."
-                ),
-            )
+                        "content": (
+                            "Your last reply was not usable. Reply with the "
+                            'JSON object only -- {"steps": [{"title": "...", '
+                            '"detail": "..."}]} -- and nothing before or '
+                            "after it. No reasoning, no preamble."
+                        ),
+                    }
+                )
+            try:
+                result = llm_chat(
+                    base=settings.llm_api_base,
+                    key=settings.llm_api_key,
+                    model=settings.llm_model,
+                    messages=messages,
+                    max_tokens=1600,
+                    temperature=0.4,
+                    response_format={"type": "json_object"},
+                    reasoning_effort="none",
+                )
+            except LLMUnavailable:
+                raise HTTPException(
+                    status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                    detail=(
+                        "Could not reach the model just now. Your plan is "
+                        "unchanged."
+                    ),
+                )
 
-        record_call(
-            sb, user.id, f"branch:{user.id}:{step_key}", step_title,
-            result.text[:2000], [],
-            (result.prompt_tokens, result.completion_tokens, result.total_tokens),
-        )
+            attempts.append(result.text)
+            record_call(
+                sb, user.id, f"branch:{user.id}:{step_key}:{attempt}", step_title,
+                result.text[:2000], [],
+                (result.prompt_tokens, result.completion_tokens, result.total_tokens),
+            )
+            steps = parse_branch(result.text)
+            if steps:
+                break
 
-        steps = parse_branch(result.text)
         if not steps:
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,

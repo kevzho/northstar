@@ -9,7 +9,7 @@
  * plainly what signing in would add.
  */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PathwayMap } from "@/components/PathwayMap";
@@ -146,7 +146,17 @@ export default function PlanPage() {
    * them as branches and the step list below renders them as text, and those
    * two must never disagree about what the student asked for.
    */
-  const [branches, setBranches] = useState<Record<string, BranchStep[]>>({});
+  const [localBranches, setLocalBranches] = useState<Record<string, BranchStep[]>>({});
+  /**
+   * What the server has saved, with anything asked for in this tab on top.
+   * Local wins because it is newer: the endpoint persists before it answers,
+   * so a breakdown generated here is already the stored row, and a roadmap
+   * response fetched before that write must not paint over it.
+   */
+  const branches = useMemo(
+    () => ({ ...(roadmap?.branches ?? {}), ...localBranches }),
+    [roadmap?.branches, localBranches],
+  );
   const [branching, setBranching] = useState<string | null>(null);
   const [branchError, setBranchError] = useState<Record<string, string>>({});
 
@@ -159,7 +169,7 @@ export default function PlanPage() {
         stepTitle: step.title,
         stepCategory: step.category,
       });
-      setBranches((current) => ({ ...current, [step.step_key]: steps }));
+      setLocalBranches((current) => ({ ...current, [step.step_key]: steps }));
     } catch (caught) {
       // Every refusal from that endpoint is one to read: out of allowance,
       // out of budget, model unreachable, or a breakdown that tried to put an

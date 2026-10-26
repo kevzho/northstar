@@ -87,7 +87,15 @@ class Settings(BaseModel):
     # verifier call returned 410 for the next four weeks, unnoticed.
     llm_api_key: str = ""
     llm_api_base: str = "https://integrate.api.nvidia.com/v1"
-    llm_model: str = "openai/gpt-oss-20b"
+    # WHY NOT gpt-oss-20b, which this was until 2026-10-26. It ignores
+    # reasoning_effort="none" and spends the reply thinking out loud, so a
+    # json_object request comes back as prose and the parse fails. Measured
+    # across all five prompt families (verifier, spine, resource, deadline,
+    # advisor) it scored 0/2 on the verifier; on the branch prompt it gave a
+    # usable answer 5 times in 12 at 900 tokens. bolt-e4b passed every family
+    # 2/2, every json+quote check 3/3, and the branch prompt 12 of 12, at a
+    # 1.7s median against gpt-oss-20b's 12-16s.
+    llm_model: str = "nvidia/nemotron-3.5-bolt-e4b"
 
     # Per-job provider override for the VERIFIER only, falling back to the
     # LLM_* values above when unset.
@@ -142,7 +150,7 @@ class Settings(BaseModel):
             verifier_model=os.getenv("VERIFIER_MODEL", ""),
             llm_api_key=os.getenv("LLM_API_KEY", ""),
             llm_api_base=os.getenv("LLM_API_BASE", "https://integrate.api.nvidia.com/v1"),
-            llm_model=os.getenv("LLM_MODEL", "openai/gpt-oss-20b"),
+            llm_model=os.getenv("LLM_MODEL", "nvidia/nemotron-3.5-bolt-e4b"),
             advisor_per_student_daily=_int("ADVISOR_PER_STUDENT_DAILY", 10),
             advisor_global_daily=_int("ADVISOR_GLOBAL_DAILY", 150),
             advisor_daily_token_budget=_int("ADVISOR_DAILY_TOKEN_BUDGET", 3_000_000),
