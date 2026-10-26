@@ -6,14 +6,17 @@
  * A fixed assistant in the bottom-right of every page. Deliberately
  * deterministic: it explains the page you are on (what it is, what to do
  * next, where it leads) from a hand-written route map, so it works
- * signed-out, offline from the backend, and without any LLM key. The
- * conversational route advisor stays its own page; the guide links there
- * for open-ended questions instead of pretending to be one.
+ * signed-out, offline from the backend, and without any LLM key.
+ *
+ * The route advisor is docked in here too, as a box you type into rather than
+ * a page you leave for -- see components/AdvisorConsole.tsx. The tips above it
+ * stay hand-written and keyless; only the question box needs the backend.
  */
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { AdvisorConsole } from "@/components/AdvisorConsole";
 import { StarGlyph } from "@/components/decor/star-glyph";
 
 type GuideEntry = {
@@ -39,12 +42,11 @@ const GUIDE: [string, GuideEntry][] = [
       title: "Home base",
       tips: [
         "Your charted path, next waypoint, and today's moves live here.",
-        "Stuck on direction? The route advisor answers open questions.",
+        "Stuck on direction? Ask the box at the bottom of this panel.",
       ],
       links: [
         { href: "/opportunities", label: "Browse opportunities" },
-        { href: "/advisor", label: "Ask the route advisor" },
-      ],
+        ],
     },
   ],
   [
@@ -302,18 +304,15 @@ export function Guide() {
               every screen; asking it a question is the same gesture as reading
               its tips, so it is the same panel. */}
           <div className="mt-4 border-t border-border pt-3">
-            <p className="text-xs leading-5 text-muted-foreground">
-              Want a route the rankings cannot see? Ask the advisor &mdash; it
-              answers only from your own verified matches, and shows which ones
-              it used.
+            <p className="eyebrow">Ask a question</p>
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">
+              A route the rankings cannot see.
             </p>
-            <Link
-              href="/advisor"
-              className="mt-2 inline-flex items-center gap-1.5 border border-star/60 px-3 py-1.5 text-xs font-semibold text-foreground transition hover:border-star"
-            >
-              <StarGlyph className="h-2.5 w-2.5 text-star" />
-              Ask the route advisor →
-            </Link>
+            {/* Typed into here, not linked to. Going to /advisor to ask about
+                the page you were on meant leaving the page you were on. */}
+            <div className="mt-3">
+              <AdvisorConsole compact />
+            </div>
           </div>
         </section>
       ) : null}
