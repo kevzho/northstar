@@ -127,6 +127,13 @@ def create_app() -> FastAPI:
             "commit": (os.getenv("VERCEL_GIT_COMMIT_SHA") or "local")[:7],
             "semantic": capability(semantic_probe),
             "advisor": capability(advisor_probe),
+            # Which model is answering, because LLM_MODEL is set per
+            # environment and a code default says nothing about production. On
+            # 2026-10-26 the branch endpoint was fixed, deployed and still
+            # broken, because prod pinned gpt-oss-20b and there was no way to
+            # see that from outside. The name of a hosted model is public; the
+            # key is what is secret, and that is not here.
+            "model": settings.llm_model or "unset",
         }
 
     @app.get("/me")

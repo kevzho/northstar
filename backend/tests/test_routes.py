@@ -58,6 +58,16 @@ def test_health_is_public(client: TestClient) -> None:
     assert body["commit"]
     assert body["semantic"] in ("available", "unconfigured", "unavailable")
     assert body["advisor"] in ("available", "unconfigured", "unavailable")
+    # And which model is answering. LLM_MODEL is set per environment, so the
+    # code default says nothing about production: the branch endpoint was once
+    # fixed, deployed, and still broken on a pinned model nobody could see from
+    # outside. A hosted model's name is public; the key is not reported here.
+    assert body["model"]
+    from app.settings import settings as live
+
+    # An empty key is a substring of everything, so only assert the real case.
+    if live.llm_api_key:
+        assert live.llm_api_key not in str(body)
 
 
 def test_health_reports_unconfigured_when_the_llm_key_is_absent(
