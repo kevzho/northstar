@@ -110,30 +110,24 @@ describe("buildRoadmapTree", () => {
     expect(map.get("outreach:cold-email")?.edge).toBe("anytime");
   });
 
-  it("keeps missions off the tree, because the page already lists them", () => {
-    // MissionBoard renders the same missions directly above this figure, with
-    // their descriptions and a completion control. Drawing them again as
-    // branches put two more cards on a crowded left margin for work you
-    // cannot act on from there.
+  it("draws missions as branches, each on a row of its own", () => {
+    // They were excluded entirely, because falling through the trunk loop made
+    // them trunk nodes and the applications then hung off a mission instead of
+    // off publish. Placing them as branches is the fix; leaving them off the
+    // diagram was only a workaround.
     const { nodes } = buildRoadmapTree(fullPlan());
-    expect(nodes.find((n) => n.key.startsWith("mission:"))).toBeUndefined();
-  });
-
-  it("does not let an excluded mission become the trunk", () => {
-    // The orphan sweep exists so an unrecognised step kind is never silently
-    // dropped, which means it will happily adopt a mission and make it a
-    // trunk node, leaving the applications parented to a mission instead of
-    // to publish. Excluding it from the layout means excluding it from the
-    // sweep too.
-    const { nodes } = buildRoadmapTree(fullPlan());
-    const map = byKey(nodes);
-    expect(map.get("apply:opp-b")?.parent).toBe("spine:publish");
-    expect(nodes.filter((n) => n.weight === "trunk").map((n) => n.key)).toEqual([
-      "root",
-      "learn:r1",
-      "spine:project",
-      "spine:publish",
-    ]);
+    const missions = nodes.filter((n) => n.nodeKind === "mission");
+    expect(missions.length).toBeGreaterThan(0);
+    for (const mission of missions) {
+      expect(mission.weight).toBe("branch");
+      expect(mission.edge).toBe("anytime");
+      // Nothing else may share the row, which is what kept them clear of the
+      // canopy columns.
+      const sharing = nodes.filter(
+        (n) => n.row === mission.row && n.key !== mission.key,
+      );
+      expect(sharing, `row ${mission.row}`).toHaveLength(0);
+    }
   });
 
   it("keeps a sided step when there is no trunk step to hang it on", () => {

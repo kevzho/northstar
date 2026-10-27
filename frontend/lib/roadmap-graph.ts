@@ -158,6 +158,8 @@ export function buildRoadmapTree(
 
   let row = 1;
   let trunk = "root";
+  /** The canopy reads `row` directly, so it must start below the missions. */
+  let sawMission = false;
 
   const learn = steps.filter((s) => s.step_key.startsWith("learn:"));
   const project = steps.find((s) => s.step_key === "spine:project") ?? null;
@@ -271,11 +273,37 @@ export function buildRoadmapTree(
     if (placed.has(step.step_key)) continue;
     if (step.category === "application") continue;
     if (step.step_key.startsWith("prep:")) continue;
-    // Missions are deliberately not on this tree (see the build stage above).
-    // Without this they fall through here, become TRUNK nodes, and the
-    // applications then hang off a mission instead of off publish, which is
-    // worse than the clutter the exclusion was meant to remove.
-    if (step.step_key.startsWith("mission:")) continue;
+    // MISSIONS HANG OFF THE TRUNK, THEY ARE NOT PART OF IT.
+    //
+    // They were excluded entirely, because falling through here made them
+    // TRUNK nodes and the applications then hung off a mission instead of off
+    // publish. The fix for that is to place them as branches rather than to
+    // leave them off the diagram: a proof mission is work nothing is stopping
+    // you starting today, which is exactly what a dotted branch means here.
+    if (step.step_key.startsWith("mission:")) {
+      const host = nodes.findLast((n) => n.weight === "trunk") ?? nodes[0];
+      // A ROW OF ITS OWN, not host.row + n. Sharing rows with the canopy put
+      // a mission at column 17 next to an application column at 37, which is
+      // 20 apart on a canvas where the widest node is 21% -- they overlapped.
+      // Taking the shared counter also keeps the canopy below them.
+      row += 1;
+      nodes.push({
+        key: step.step_key,
+        title: step.title,
+        nodeKind: "mission",
+        row,
+        x: LEFT_X,
+        weight: "branch",
+        parent: host.key,
+        edge: "anytime",
+        step,
+        opportunityId: null,
+        field: null,
+        note: step.edge_note ?? null,
+      });
+      sawMission = true;
+      continue;
+    }
     push({
       key: step.step_key,
       title: step.title,
@@ -301,6 +329,11 @@ export function buildRoadmapTree(
   // laid out on its parent's free side: the learn branch already uses the
   // right, so these take the left, which is empty now that missions are not
   // drawn here.
+  // The last mission sits ON `row`, and the canopy's gateRow is `row`, so
+  // without this the two share a line and a mission at column 17 lands beside
+  // an application column at 37.
+  if (sawMission) row += 1;
+
   // The canopy: what the ladder is for. One column per programme, the gate
   // stacked directly above the application it opens.
   if (applications.length) {

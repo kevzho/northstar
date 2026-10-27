@@ -87,6 +87,12 @@ export default function PlanPage() {
   const [roadmapSettled, setRoadmapSettled] = useState(false);
   /** Which view of the same plan is showing. See the tablist below. */
   const [planView, setPlanView] = useState<"route" | "order">("route");
+  /** The mission whose panel is open beside the diagram, if any. */
+  const [openMission, setOpenMission] = useState<{
+    key: string;
+    title: string;
+    note: string | null;
+  } | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -575,8 +581,55 @@ export default function PlanPage() {
                   onBreakDown={breakDown}
                   branching={branching}
                   branches={branches}
+                  selectedKey={openMission?.key ?? null}
+                  onSelectMission={(node) =>
+                    setOpenMission((current) =>
+                      current?.key === node.key
+                        ? null
+                        : { key: node.key, title: node.title, note: node.note },
+                    )
+                  }
                 />
                   </>
+                ) : null}
+
+                {/* THE MISSION, BESIDE THE MAP.
+                    Proof missions were listed in a board further down the
+                    page, so a node and its text were never on screen at the
+                    same time. Opening in place keeps the diagram as the thing
+                    you are reading rather than an index into it. Clicking the
+                    same node again closes it. */}
+                {openMission ? (
+                  <aside
+                    aria-label={`Mission: ${openMission.title}`}
+                    className="mt-4 border border-star/50 bg-panel-raised p-4"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="eyebrow">Proof mission</p>
+                        <h3 className="h-display mt-1 text-lg text-foreground">
+                          {openMission.title}
+                        </h3>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setOpenMission(null)}
+                        aria-label="Close the mission"
+                        className="font-mono text-xs text-muted-foreground transition hover:text-foreground"
+                      >
+                        &#10005;
+                      </button>
+                    </div>
+                    {openMission.note ? (
+                      <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
+                        {openMission.note}
+                      </p>
+                    ) : null}
+                    <p className="mt-3 text-xs leading-5 text-muted-foreground">
+                      Nothing is stopping you starting this today. Log it on
+                      the mission board below when it is done.
+                    </p>
+                  </aside>
                 ) : null}
               </div>
 

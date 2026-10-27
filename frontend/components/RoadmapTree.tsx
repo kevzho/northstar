@@ -27,7 +27,7 @@
  * right-angle elbow, an axis-aligned line cannot be skewed by that scale.
  */
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FieldPlanet } from "@/components/decor/field-planets";
 import { Ship } from "@/components/decor/voyage";
 import { BRANCH_MAX_DEPTH } from "@/components/SubSteps";
@@ -110,6 +110,8 @@ type BreakDown = {
   onBreak: (() => void) | null;
   busy: boolean;
   hasBranches: boolean;
+  kind: "step" | "mission";
+  selected: boolean;
 };
 
 function Node({
@@ -200,22 +202,29 @@ function Node({
           onClick={breakdown.onBreak}
           disabled={breakdown.busy}
           aria-label={
-            breakdown.hasBranches
-              ? `Rewrite the steps inside: ${node.title}`
-              : `Break into steps: ${node.title}`
+            breakdown.kind === "mission"
+              ? `Open mission: ${node.title}`
+              : breakdown.hasBranches
+                ? `Rewrite the steps inside: ${node.title}`
+                : `Break into steps: ${node.title}`
           }
+          aria-pressed={breakdown.kind === "mission" ? breakdown.selected : undefined}
           title={node.title}
           className={`${shell} w-full ${
             breakdown.busy ? "animate-pulse border-star" : "hover:border-star"
-          }`}
+          } ${breakdown.selected ? "border-star bg-star/10" : ""}`}
         >
           {body}
           <span className="mt-1.5 block font-mono text-[0.55rem] uppercase tracking-[0.14em] text-aurora">
-            {breakdown.busy
-              ? "breaking down…"
-              : breakdown.hasBranches
-                ? "+ again"
-                : "+ steps"}
+            {breakdown.kind === "mission"
+              ? breakdown.selected
+                ? "open"
+                : "read it"
+              : breakdown.busy
+                ? "breaking down…"
+                : breakdown.hasBranches
+                  ? "+ again"
+                  : "+ steps"}
           </span>
         </button>
       ) : node.step ? (
@@ -238,6 +247,8 @@ export function RoadmapTree({
   onBreakDown,
   branching = null,
   branches = {},
+  onSelectMission,
+  selectedKey = null,
 }: {
   tree: Tree;
   hereKey?: string | null;
@@ -250,6 +261,9 @@ export function RoadmapTree({
   }) => void;
   branching?: string | null;
   branches?: Record<string, unknown[]>;
+  /** A mission opens a panel instead of breaking down: it is already written. */
+  onSelectMission?: (node: TreeNode) => void;
+  selectedKey?: string | null;
 }) {
   /**
    * Centre the canvas on the trunk once it exists.
@@ -265,6 +279,66 @@ export function RoadmapTree({
     if (!node) return;
     node.scrollLeft = Math.max(0, (node.scrollWidth - node.clientWidth) / 2);
   }, [tree]);
+
+  /**
+   * Zoom, and drag to move around.
+   *
+   * A plan with three applications and a few breakdowns is wider and taller
+   * than a laptop viewport, and a horizontal scrollbar is a poor way to read
+   * a diagram. Zoom is a transform on the canvas rather than a change to the
+   * layout maths, so every node keeps its position relative to its edges and
+   * nothing re-flows at a new scale.
+   *
+   * Deliberately NOT bare-wheel zoom: the diagram sits in a long page, and
+   * hijacking the wheel traps a reader trying to scroll past it. Ctrl or the
+   * meta key with the wheel is the gesture browsers already use for zoom, and
+   * the buttons work for everyone else.
+   */
+  const [zoom, setZoom] = useState(1);
+  const nudge = (by: number) =>
+    setZoom((z) => Math.min(1.8, Math.max(0.5, Math.round((z + by) * 20) / 20)));
+
+  const drag = useRef<{ x: number; y: number; left: number; top: number } | null>(
+    null,
+  );
+  const [dragging, setDragging] = useState(false);
+
+  function onPointerDown(event: React.PointerEvent<HTMLDivElement>) {
+    // Only a drag on empty canvas. A pointerdown that started on a node is
+    // that node's click, and stealing it would make the diagram unusable.
+    if ((event.target as HTMLElement).closest("button, a")) return;
+    const node = scroller.current;
+    if (!node) return;
+    drag.current = {
+      x: event.clientX,
+      y: event.clientY,
+      left: node.scrollLeft,
+      top: node.scrollTop,
+    };
+    setDragging(true);
+    node.setPointerCapture(event.pointerId);
+  }
+
+  function onPointerMove(event: React.PointerEvent<HTMLDivElement>) {
+    const start = drag.current;
+    const node = scroller.current;
+    if (!start || !node) return;
+    node.scrollLeft = start.left - (event.clientX - start.x);
+    node.scrollTop = start.top - (event.clientY - start.y);
+  }
+
+  function endDrag(event: React.PointerEvent<HTMLDivElement>) {
+    if (!drag.current) return;
+    drag.current = null;
+    setDragging(false);
+    scroller.current?.releasePointerCapture(event.pointerId);
+  }
+
+  function onWheel(event: React.WheelEvent<HTMLDivElement>) {
+    if (!event.ctrlKey && !event.metaKey) return;
+    event.preventDefault();
+    nudge(event.deltaY > 0 ? -0.1 : 0.1);
+  }
 
   if (tree.nodes.length <= 1) return null;
   const byKey = new Map(tree.nodes.map((node) => [node.key, node]));
@@ -284,8 +358,64 @@ export function RoadmapTree({
           column is one programme, its gate stacked above it, and letting them
           wrap on a narrow screen would put a gate above a different programme's
           application, which is worse than a scrollbar. */}
-      <div ref={scroller} className="overflow-x-auto pb-2">
-        <div className="relative" style={{ minWidth: MIN_W, height }}>
+      <div className="mt-3 flex items-center gap-1.5">
+        <button
+          type="button"
+          onClick={() => nudge(-0.1)}
+          disabled={zoom <= 0.5}
+          aria-label="Zoom out"
+          className="border border-border px-2 py-1 font-mono text-xs text-muted-foreground transition hover:border-foreground hover:text-foreground disabled:opacity-40"
+        >
+          &minus;
+        </button>
+        <button
+          type="button"
+          onClick={() => nudge(0.1)}
+          disabled={zoom >= 1.8}
+          aria-label="Zoom in"
+          className="border border-border px-2 py-1 font-mono text-xs text-muted-foreground transition hover:border-foreground hover:text-foreground disabled:opacity-40"
+        >
+          +
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setZoom(1);
+            const node = scroller.current;
+            if (node) {
+              node.scrollLeft = Math.max(0, (node.scrollWidth - node.clientWidth) / 2);
+              node.scrollTop = 0;
+            }
+          }}
+          className="border border-border px-2 py-1 text-xs text-muted-foreground transition hover:border-foreground hover:text-foreground"
+        >
+          Reset
+        </button>
+        <span className="ml-1 font-mono text-[0.65rem] text-muted-foreground">
+          {Math.round(zoom * 100)}% &middot; drag to move
+        </span>
+      </div>
+      <div
+        ref={scroller}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+        onWheel={onWheel}
+        className={`overflow-auto overscroll-contain pb-2 ${
+          dragging ? "cursor-grabbing select-none" : "cursor-grab"
+        }`}
+        style={{ maxHeight: "min(70vh, 720px)" }}
+      >
+        <div
+          className="relative origin-top-left"
+          style={{
+            minWidth: MIN_W,
+            height,
+            transform: `scale(${zoom})`,
+            width: `${100 / zoom}%`,
+          }}
+        >
           <svg
             aria-hidden="true"
             className="absolute inset-0 h-full w-full"
@@ -314,7 +444,11 @@ export function RoadmapTree({
               // steps, and nothing past the cap may be opened. Counting
               // "::branch:" is the same depth rule the server enforces.
               const depth = node.key.split("::branch:").length - 1;
+              // A mission is written by hand and already has its text; there
+              // is nothing for a model to break down, so clicking it opens it.
+              const isMission = node.nodeKind === "mission";
               const openable =
+                !isMission &&
                 Boolean(onBreakDown) &&
                 node.nodeKind !== "root" &&
                 node.nodeKind !== "horizon" &&
@@ -325,8 +459,11 @@ export function RoadmapTree({
                   node={node}
                   here={node.key === hereKey}
                   breakdown={{
-                    onBreak:
-                      openable && onBreakDown
+                    onBreak: isMission
+                      ? onSelectMission
+                        ? () => onSelectMission(node)
+                        : null
+                      : openable && onBreakDown
                         ? () =>
                             onBreakDown({
                               step_key: node.key,
@@ -336,6 +473,8 @@ export function RoadmapTree({
                         : null,
                     busy: branching === node.key,
                     hasBranches: Boolean(branches[node.key]),
+                    kind: isMission ? "mission" : "step",
+                    selected: selectedKey === node.key,
                   }}
                 />
               );
