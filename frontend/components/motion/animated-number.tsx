@@ -1,7 +1,7 @@
 'use client';
 /**
  * Vendored from motion-primitives (ibelick/motion-primitives, MIT), with the
- * polymorphic `as` prop dropped — every call site here renders a span, and
+ * polymorphic `as` prop dropped, every call site here renders a span, and
  * React 19's types reject the original `motion.create(as)` cast.
  */
 import { cn } from '@/lib/utils';

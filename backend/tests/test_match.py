@@ -4,7 +4,7 @@ Behavioural tests for the TF-IDF match engine (backend/app/match.py).
 These pin the properties the student can defend in the CAC interview: ranking is
 driven by profile overlap, the documented boosters actually fire, the score stays
 in [0, 1], and the explanation names the reason. The booster magnitudes belong to
-the student (ARCHITECTURE.md §2) — the tests assert relationships, not constants,
+the student (ARCHITECTURE.md §2), the tests assert relationships, not constants,
 so tuning the numbers does not break the suite.
 """
 
@@ -261,7 +261,7 @@ def test_matcher_knows_every_field_in_the_enum() -> None:
 # Semantic booster. TF-IDF is lexical: measured on the live catalog, a student
 # who writes "I want to help people with cancer" gets every row after the first
 # pinned at the 0.05 noise floor, and Stanford Institutes of Medicine Summer
-# Research — the one relevant programme — sits at rank 33. With the semantic
+# Research, the one relevant programme, sits at rank 33. With the semantic
 # term and assessment field scores present it reaches rank 1, and Broad Summer
 # Scholars moves 9 -> 4 while a maths camp moves 27 -> 20.
 # ---------------------------------------------------------------------------
@@ -290,7 +290,7 @@ def test_absent_semantic_scores_change_nothing() -> None:
     """The feature must degrade to exactly the previous behaviour.
 
     A missing profile embedding, an unembedded catalog, or an unreachable
-    provider all produce {} — and none of them may alter a score.
+    provider all produce {}, and none of them may alter a score.
     """
     opps = [_sem_opp("a", "Alpha Research"), _sem_opp("b", "Beta Program", "cs")]
     base = score_opportunities(SEM_STUDENT, opps, [])
@@ -321,7 +321,7 @@ def test_a_strong_semantic_match_escapes_the_lexical_noise_floor() -> None:
     """The floor is what made embeddings pointless without this exemption.
 
     A row with no shared words, no field match and no tag overlap is capped at
-    0.05. That cap is what buried Stanford SIMR at rank 33 — the semantic term
+    0.05. That cap is what buried Stanford SIMR at rank 33, the semantic term
     was computed and then discarded.
     """
     # Nothing lexical in common with the student, and a field they did not pick.
@@ -346,7 +346,7 @@ def test_a_floored_row_does_not_claim_a_semantic_lift() -> None:
     """The explanation must not describe a contribution the floor discarded.
 
     Before this, 28 rows read "close in meaning to what you wrote" while
-    scoring 0.050 — an unfalsifiable reason attached to a non-result.
+    scoring 0.050, an unfalsifiable reason attached to a non-result.
     """
     opps = [_sem_opp("a", "Zzzz Qqqq", field="math"), _sem_opp("b", "Wwww Vvvv", field="math")]
     results = score_opportunities(

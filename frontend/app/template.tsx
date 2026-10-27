@@ -5,7 +5,7 @@
  *
  * WHY A TEMPLATE AND NOT experimental.viewTransition. Next 16 ships a
  * `viewTransition` config flag that wires React's ViewTransition component into
- * the router, which would be the tidier answer — but it needs React's canary
+ * the router, which would be the tidier answer, but it needs React's canary
  * channel and this app is on 19.2.4 stable. Upgrading React to canary 19 days
  * before a submission deadline, with a demo video still to record, buys a
  * slightly nicer crossfade at the cost of every other thing React touches.

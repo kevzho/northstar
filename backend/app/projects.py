@@ -1,11 +1,11 @@
 """
-GitHub project recommendations — what a student should build next.
+GitHub project recommendations, what a student should build next.
 
 Real repositories, not generated ideas. The GitHub Search API is queried
 once per field with qualifiers that make every result approachable by
 construction: it must carry open good-first-issues, sit in a stars band
 that filters out both toys and monoliths, and have been pushed recently.
-Ranking on top of that is a sum of visible signals — same philosophy as
+Ranking on top of that is a sum of visible signals, same philosophy as
 the opportunity matcher in ``app/match.py``: every score is explainable
 in one line.
 
@@ -91,7 +91,7 @@ def _fetch_repos(field: str) -> list[dict]:
 
 
 def rank_repos(items: list[dict], field: str) -> list[dict]:
-    """Pure ranking over raw Search API items — no network, unit-testable.
+    """Pure ranking over raw Search API items, no network, unit-testable.
 
     Score components (each visible in the explanation):
       +0.30  stars, scaled within the approachability band

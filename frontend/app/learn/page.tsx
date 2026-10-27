@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * The shelf — free material a student can start tonight.
+ * The shelf, free material a student can start tonight.
  *
  * WHY THIS PAGE EXISTS. Northstar was an opportunity hub with a learning
  * catalog hidden inside it. public.learning_resources had 40-odd verified free
@@ -13,7 +13,7 @@
  * And a catalog of programmes answers "what can I apply to", which for most
  * students is not the question most of the year. Four of the shelf's deadlines
  * are open at any given time; a Tuesday in February has none. The honest answer
- * to "what do I do now" is usually not an application — it is a free course, a
+ * to "what do I do now" is usually not an application, it is a free course, a
  * problem set, a textbook somebody put online. That half needs no account, no
  * transcript, no teacher and no money, which is why this page is public.
  *
@@ -68,10 +68,10 @@ type Group = {
 };
 
 /**
- * skill_label is written as "statistical honesty — confounders, base rates, and
+ * skill_label is written as "statistical honesty, confounders, base rates, and
  * when a trend is noise": a name and a gloss in one string, because on /plan it
  * is read inside a sentence. As a heading the whole thing wraps to three lines,
- * so it is split — the name leads, the gloss explains underneath.
+ * so it is split, the name leads, the gloss explains underneath.
  *
  * Em dash, en dash or a spaced hyphen, because the seeded rows use an em dash
  * and the first AI-imported row came back with an en dash. Splitting on one
@@ -130,7 +130,7 @@ export default function LearnPage() {
     }
     // Case-insensitive, because the seeded labels are lowercase ("sampling
     // discipline") and the model-written ones are not ("Python programming
-    // basics") — a raw sort put the two newest rows above all twelve others
+    // basics"), a raw sort put the two newest rows above all twelve others
     // for no reason a reader could see.
     return [...out.values()].sort((a, b) =>
       a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
@@ -345,7 +345,7 @@ export default function LearnPage() {
                                 {row.why_this_one}
                               </p>
                             ) : null}
-                            {/* The receipt. Quoted, not paraphrased — the
+                            {/* The receipt. Quoted, not paraphrased, the
                                 words on their page, so a student can check
                                 us. Never clamped. */}
                             {row.free_evidence ? (

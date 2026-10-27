@@ -1,8 +1,8 @@
 """
 One OpenAI-compatible chat call, usable against providers that disagree.
 
-WHY THIS EXISTS. Two jobs call an LLM — the route advisor (student-facing) and
-the nightly candidate verifier (no student data) — and they no longer want the
+WHY THIS EXISTS. Two jobs call an LLM, the route advisor (student-facing) and
+the nightly candidate verifier (no student data), and they no longer want the
 same provider. NVIDIA NIM's free tier has retired a model out from under this
 project twice: meta/llama-3.1-70b-instruct on 2026-08-26 (four silent weeks of
 410s) and again in the local .env that was never updated. Azure AI Foundry on a
@@ -17,8 +17,8 @@ THE PARAMETER THAT DIFFERS. Sending `max_tokens` to gpt-5.6 on Azure returns:
         Use 'max_completion_tokens' instead.
 
 while NIM accepts only `max_tokens`. Rather than hardcode a provider sniff on
-the URL — which silently breaks the day a provider changes hostname or a third
-one appears — the first call tries `max_tokens`, reads that specific error, and
+the URL, which silently breaks the day a provider changes hostname or a third
+one appears, the first call tries `max_tokens`, reads that specific error, and
 retries with the other name, remembering the answer per (base, model) for the
 rest of the process. Self-correcting, and it costs one extra request once.
 
@@ -54,7 +54,7 @@ MAX_ATTEMPTS = 4
 # A 429 is the provider asking us to wait, not an error. Honour Retry-After once
 # rather than failing the candidate: on a shared deployment a burst from another
 # caller is routine, and dropping work because someone else was busy is the
-# wrong response. One retry only — a queue that retries forever turns a busy
+# wrong response. One retry only, a queue that retries forever turns a busy
 # minute into a stuck nightly job.
 RATE_LIMIT_RETRIES = 1
 MAX_RETRY_WAIT_S = 30
@@ -88,7 +88,7 @@ def _adapt(dialect: dict, body: str, payload: dict) -> bool:
     """Learn one thing from a 400 and mutate the dialect. False if unlearnable.
 
     Two adaptations, both driven by what the provider actually said rather than
-    by sniffing its hostname — a URL check silently breaks the day a provider
+    by sniffing its hostname, a URL check silently breaks the day a provider
     renames a domain or a third one appears. Observed in production:
 
         "Unsupported parameter: 'max_tokens' is not supported with this model.
@@ -127,7 +127,7 @@ def chat(
     ``base`` is the OpenAI-compatible root, e.g.
     ``https://integrate.api.nvidia.com/v1`` or
     ``https://<resource>.cognitiveservices.azure.com/openai/v1``. Both accept
-    ``Authorization: Bearer`` — verified against production before this shipped,
+    ``Authorization: Bearer``, verified against production before this shipped,
     which is why there is no per-provider auth branch.
     """
     root = base.rstrip("/")

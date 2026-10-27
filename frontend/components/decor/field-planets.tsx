@@ -1,11 +1,11 @@
 /**
- * Field planets — "every field is a world."
+ * Field planets, "every field is a world."
  *
  * Ten tiny line-art worlds, one per opportunity field, drawn in
  * currentColor so they print in either theme. Each form is a mnemonic,
  * not a logo: CS is a world with satellites, physics a ringed giant,
  * health carries a pulse across its equator. They ride wherever a field
- * name appears — cards, chips, the profile field map — so the same world
+ * name appears, cards, chips, the profile field map, so the same world
  * means the same thing everywhere.
  *
  * Same family as the voyage glyphs (decor/voyage.tsx), one size down:
@@ -80,7 +80,7 @@ const PLANET_PATHS: Record<OpportunityField, React.ReactNode> = {
       <path d="M12.5 11.5 4 20M10 9.5l-6 6M14 13.5l-6 6" />
     </>
   ),
-  // A cratered moon — the archive of every impact.
+  // A cratered moon, the archive of every impact.
   humanities: (
     <>
       <circle cx="12" cy="12" r="7.5" />
@@ -107,7 +107,7 @@ export function FieldPlanet({
   className?: string;
   /**
    * For callers that size and colour a world rather than inheriting the text
-   * line — the profile's field sky draws each one at a size proportional to
+   * line, the profile's field sky draws each one at a size proportional to
    * its share, which a utility class cannot express.
    */
   style?: React.CSSProperties;

@@ -51,15 +51,15 @@ SEMANTIC_WEIGHT = 0.15
 #
 # The floor below caps a row at 0.05 when tfidf is 0 and no field or tag
 # matched. Measured on the live catalog, that pins EVERY row after the first at
-# 0.050 for a goal like "I want to help people with cancer" — including Stanford
+# 0.050 for a goal like "I want to help people with cancer", including Stanford
 # Institutes of Medicine Summer Research, the one genuinely relevant programme.
 # Without this exemption the semantic term would be computed and then discarded
 # by the floor, which is the whole failure it exists to fix.
 SEMANTIC_FLOOR_ESCAPE = 0.55
 
 # The lexical noise floor itself, named so other modules can ASK rather than
-# hardcode 0.05. app/roadmap.py needs it: a row pinned here matched nothing —
-# no shared words, no field, no tag, no meaning — and the roadmap must not turn
+# hardcode 0.05. app/roadmap.py needs it: a row pinned here matched nothing -
+# no shared words, no field, no tag, no meaning, and the roadmap must not turn
 # a row the matcher called noise into "Apply to this".
 NOISE_FLOOR = 0.05
 
@@ -107,7 +107,7 @@ INTEREST_TO_FIELD = {
     "neuroscience": "health",
 }
 
-# Tiny stopword set — keeps the engine small and predictable.
+# Tiny stopword set, keeps the engine small and predictable.
 _STOPWORDS = {
     "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "has",
     "in", "is", "it", "of", "on", "or", "that", "the", "to", "via", "with",
@@ -219,7 +219,7 @@ def _explain(status_tf: float, field_note: str | None, grade_fit: bool,
              bookmark_note: bool = False, location_note: str | None = None,
              semantic_lift: bool = False) -> str:
     bits: list[str] = []
-    # These two describe the TF-IDF term, which is LEXICAL — shared words. They
+    # These two describe the TF-IDF term, which is LEXICAL, shared words. They
     # used to read "strong/partial semantic match", which was never accurate and
     # became actively confusing once a real semantic term existed alongside it.
     if status_tf > 0.3:
@@ -267,13 +267,13 @@ def score_opportunities(
     (``opportunity_id`` + ``status``); when present and a trained ALS
     artifact exists, a small centered collaborative term joins the score.
 
-    ``bookmarked_fields`` counts the student's bookmarks per field — a
+    ``bookmarked_fields`` counts the student's bookmarks per field, a
     small behavioral nudge toward fields they keep saving. ``dismissed_ids``
     are excluded outright: "not for me" means not in the list.
 
     ``semantic`` maps opportunity_id to cosine similarity in [0,1], from
     public.semantic_scores(). It is normalised across the candidate set before
-    use, because the absolute scale of one embedding model means little — what
+    use, because the absolute scale of one embedding model means little, what
     matters is which of THIS student's options are closest. Absent or empty, the
     scoring is exactly what it was before embeddings existed.
 
@@ -290,7 +290,7 @@ def score_opportunities(
     # Normalise similarity within this student's shelf. Absolute cosine values
     # from this model sit in a narrow band (measured: 0.13-0.25 across a real
     # catalog), so min-max scaling is what turns them into a usable ranking
-    # signal. A flat set — every row equally similar — carries no information
+    # signal. A flat set, every row equally similar, carries no information
     # and is dropped rather than amplified into noise.
     sem_norm: dict[str, float] = {}
     if semantic:
@@ -332,7 +332,7 @@ def score_opportunities(
             student_fields.add(mapped)
 
     # Collaborative signal: {} unless the student has logged outcomes AND a
-    # trained artifact exists — so the engine behaves identically to the
+    # trained artifact exists, so the engine behaves identically to the
     # pure TF-IDF version for brand-new students.
     collab = collaborative_scores(
         outcomes or [], [o.get("id") for o in opps if o.get("id")]
@@ -340,9 +340,9 @@ def score_opportunities(
 
     # Quiz field-interest shares (0-100, sum 100), synced from the
     # assessment. When present, the field boost scales with the share
-    # instead of firing flat — a 56% field pushes harder than a 12% one.
+    # instead of firing flat, a 56% field pushes harder than a 12% one.
     field_scores = student.get("field_scores") or {}
-    # Location preference gives a small boost, never a hard filter — an
+    # Location preference gives a small boost, never a hard filter, an
     # 'international' preference must not empty a mostly-US catalog. Global
     # opportunities (open to all) satisfy either preference.
     location_pref = student.get("location_pref") or "either"
@@ -416,7 +416,7 @@ def score_opportunities(
         )
         # Noise floor: without a lexical or semantic signal, a row is tail
         # noise and is capped rather than surfaced. A strong semantic match IS
-        # a signal, so it escapes — otherwise the term above would be computed
+        # a signal, so it escapes, otherwise the term above would be computed
         # and then thrown away by this line.
         semantic_signal = sem is not None and sem >= SEMANTIC_FLOOR_ESCAPE
         if (
@@ -434,7 +434,7 @@ def score_opportunities(
             location_note=location_note,
             # Only claim the semantic lift if it SURVIVED the floor. Reporting a
             # contribution the floor then discarded made the explanation
-            # contradict the score — MIT PRIMES read "close in meaning to what
+            # contradict the score, MIT PRIMES read "close in meaning to what
             # you wrote" while scoring 0.050, which is exactly the kind of
             # unfalsifiable reason this product refuses to show.
             semantic_lift=semantic_term > 0.02 and score > 0.05,

@@ -5,7 +5,7 @@ Twenty-two catalog rows were corrected by hand because they carried an
 application deadline for something a student cannot apply to: you qualify for
 USAMO by exam score, you advance to ISEF from a regional fair, and a TEACHER
 applies for a Lemelson-MIT InvenTeam grant. app/roadmap.py reads the column to
-choose the step verb, so a wrong gate produces "Apply to USAMO" — a step no
+choose the step verb, so a wrong gate produces "Apply to USAMO", a step no
 student can take, in the one place this product promises to say what to do next.
 
 The verifier had no notion of it, so every AI-imported row took the default.
@@ -68,7 +68,7 @@ def test_every_valid_gate_is_passed_through(gate: str) -> None:
 
 @pytest.mark.parametrize("bad", ["", None, "APPLY ", "lottery", "audition", 7, [], "teacher;drop"])
 def test_an_unusable_gate_falls_back_to_apply(bad) -> None:
-    """Not a guess — the floor. The prompt tells the model to lower its
+    """Not a guess, the floor. The prompt tells the model to lower its
     confidence when the text does not say, and CONFIDENCE_FLOOR keeps the
     unclear ones out, so the fallback only ever applies to rows that were
     already confident about everything else."""
@@ -78,7 +78,7 @@ def test_an_unusable_gate_falls_back_to_apply(bad) -> None:
 
 
 def test_case_and_whitespace_are_tolerated() -> None:
-    """Models emit "Teacher" and " qualify" — rejecting those would silently
+    """Models emit "Teacher" and " qualify", rejecting those would silently
     downgrade a correct answer to the default."""
     assert decide(CANDIDATE, verdict(entry_gate="Teacher"))["entry_gate"] == "teacher"
     assert decide(CANDIDATE, verdict(entry_gate="  QUALIFY "))["entry_gate"] == "qualify"

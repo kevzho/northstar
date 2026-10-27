@@ -5,8 +5,8 @@
  *
  * Real GitHub repositories worth contributing to, ranked per field by the
  * backend (GET /projects, app/projects.py). The fields come from the
- * quiz's field-interest scores — the same signal that personalizes
- * /futures — so a math-leaning student sees math repos, not a generic
+ * quiz's field-interest scores, the same signal that personalizes
+ * /futures, so a math-leaning student sees math repos, not a generic
  * trending list. Every card shows the score's reasons, matching the
  * "every score is a sum you can check" rule.
  */
@@ -39,7 +39,7 @@ export default function ProjectsPage() {
   const answers = useStoredAnswers();
   // Built from this student's own assessment, so it needs an account.
   // Signed out this used to render a heading and an empty shell while the
-  // API answered 401 — gated and broken look identical from there.
+  // API answered 401, gated and broken look identical from there.
   useRequireAuth();
   const [projects, setProjects] = useState<ProjectRec[] | null>(null);
   const [failed, setFailed] = useState(false);

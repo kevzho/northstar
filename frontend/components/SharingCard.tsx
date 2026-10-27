@@ -28,7 +28,7 @@ export function SharingCard() {
         setIsPublic(Boolean(me.public_profile));
         setLoaded(true);
       } catch {
-        // Signed out — the card simply doesn't render.
+        // Signed out, the card simply doesn't render.
       }
     })();
     return () => {

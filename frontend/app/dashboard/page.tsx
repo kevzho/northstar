@@ -29,7 +29,7 @@ export default function DashboardPage() {
   const { user, loading } = useAuth();
   // Built from this student's own assessment, so it needs an account.
   // Signed out this used to render a heading and an empty shell while the
-  // API answered 401 — gated and broken look identical from there.
+  // API answered 401, gated and broken look identical from there.
   useRequireAuth();
   const router = useRouter();
   const [checking, setChecking] = useState(false);
@@ -72,7 +72,7 @@ export default function DashboardPage() {
     (async () => {
       // Inside the async body, not in the effect's synchronous path.
       // react-hooks/set-state-in-effect is an ERROR in this config, and it
-      // has been failing `npm run lint` on main — which is CI step 2, so
+      // has been failing `npm run lint` on main, which is CI step 2, so
       // tsc, the test suite and next build have not run in CI since it
       // landed. The behaviour is identical: this still sets the flag before
       // the first await.
@@ -80,7 +80,7 @@ export default function DashboardPage() {
       try {
         const me = await (await authedFetch("/me")).json();
 
-        // A row can exist without onboarding being finished — an account
+        // A row can exist without onboarding being finished, an account
         // created before this check, or a future partial-save path. Trust
         // the flag, not the row's existence.
         if (me?.onboarded !== true) {
@@ -91,7 +91,7 @@ export default function DashboardPage() {
           return;
         }
 
-        // Profile exists and is complete — greet by name, fetch matches.
+        // Profile exists and is complete, greet by name, fetch matches.
         if (!cancelled) {
           setStudentName((me?.name ?? "").trim() || null);
           setChecking(false);
@@ -99,7 +99,7 @@ export default function DashboardPage() {
             const data = await fetchMatches();
             if (!cancelled) setMatches(data);
           } catch {
-            // Failure is not emptiness — the page says so instead of
+            // Failure is not emptiness, the page says so instead of
             // showing a permanent spinner.
             if (!cancelled) {
               setMatches(null);
@@ -120,7 +120,7 @@ export default function DashboardPage() {
         setChecking(false);
         // 404 is the only status that means "no profile yet." A 500, a
         // dropped connection or an expired session is a failure to ANSWER
-        // the question, and must not be read as an answer — the old code
+        // the question, and must not be read as an answer, the old code
         // caught all of them and wrote a stub row in response.
         if (isApiError(err) && err.status === 404) {
           router.push("/onboarding");
@@ -367,7 +367,7 @@ export default function DashboardPage() {
         )}
 
         {/* Outcome history. NOTE: logging an outcome fires the migration_004
-            trigger that writes public.pathway_edges — but nothing reads that
+            trigger that writes public.pathway_edges, but nothing reads that
             table. GET /pathways derives its edges at request time from shared
             tags and field (main.py, "self-contained graph that renders even
             without seeded pathway_edges"). Outcomes DO feed recommendations,
@@ -420,7 +420,7 @@ export default function DashboardPage() {
         ) : null}
 
         {/* Every in-app route reachable from one place. /map and /mentors had
-            no inbound link anywhere in the app before this — the pathway map is
+            no inbound link anywhere in the app before this, the pathway map is
             the judge-facing centerpiece, so it cannot be URL-only. */}
         <section className="grid gap-4 md:grid-cols-2">
           {/* THE ONE THAT MATTERS, SIZED LIKE IT. Everything else on this

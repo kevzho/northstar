@@ -1,12 +1,12 @@
 "use client";
 
 /**
- * ProfileDetailsCard — every editable student field on one card.
+ * ProfileDetailsCard, every editable student field on one card.
  *
  * "Edit your profile" used to send students back through the onboarding
  * wizard; this card replaces that trip. It loads the saved row from /me,
  * shows all details inline, and saves the whole form in one click.
- * Renders nothing when signed out — the profile page also serves
+ * Renders nothing when signed out, the profile page also serves
  * anonymous quiz-takers, who have no row to edit.
  */
 
@@ -60,7 +60,7 @@ export function ProfileDetailsCard() {
         setSocials(me.social_links ?? {});
         setLoaded(true);
       } catch {
-        // Signed out or no row yet — the card simply doesn't render.
+        // Signed out or no row yet, the card simply doesn't render.
       }
     })();
     return () => {

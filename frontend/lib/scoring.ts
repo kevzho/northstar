@@ -1,5 +1,5 @@
 /**
- * Assessment scoring — turns answers into trait scores and future paths.
+ * Assessment scoring, turns answers into trait scores and future paths.
  *
  * All of the inputs already existed: every choice in `lib/assessment.ts` carries
  * its own trait deltas, and every archetype in `lib/archetypes.ts` carries a
@@ -20,7 +20,7 @@
  *        - unconventional→ of the rest, the one pointing furthest from "safe"
  *
  * Every number is tunable in one place. If the scoring design changes, change
- * it here and in the docstring — nothing else reads the raw deltas.
+ * it here and in the docstring, nothing else reads the raw deltas.
  */
 
 import {
@@ -147,7 +147,7 @@ export function scoreTraits(answers: AssessmentAnswers): TraitScores {
 }
 
 // ---------------------------------------------------------------------------
-// Field interest — scored from the field-signal questions: the picks
+// Field interest, scored from the field-signal questions: the picks
 // (q4-q6) and the interest statements (l7-l14).
 // ---------------------------------------------------------------------------
 
@@ -223,7 +223,7 @@ export function scoreFieldInterests(answers: AssessmentAnswers): FieldScores {
 
 /**
  * The fields the quiz says clearly lead: top two, but the runner-up only
- * counts when it holds at least half the leader's share — one dominant
+ * counts when it holds at least half the leader's share, one dominant
  * interest should read as one, not be padded into two.
  */
 export function leadingFields(scores: FieldScores): OpportunityField[] {
@@ -264,7 +264,7 @@ export type ScoredArchetype = {
 /**
  * Interest bonus: +4 per opportunity field shared between the archetype and
  * the student's stated interests, capped at +8 and 99 total. Cosine still
- * dominates — interests break ties and surface professions in the student's
+ * dominates, interests break ties and surface professions in the student's
  * own fields, they never override the trait profile.
  */
 const INTEREST_BONUS_PER_FIELD = 4;
@@ -302,7 +302,7 @@ export function rankArchetypes(
       // trait shape and the archetype's, on a shared 0-100 axis
       // (archetype traits are authored 0-10). Cosine was used before,
       // but two all-positive 6-vectors almost always cosine to 0.9+,
-      // which pinned every archetype at "99% fit" — RMS distance keeps
+      // which pinned every archetype at "99% fit", RMS distance keeps
       // the ranking honest AND the percentages spread out.
       const target = vector(archetype.traits).map((t) => t * 10);
       const gap = Math.sqrt(
@@ -330,7 +330,7 @@ export function rankArchetypes(
  * The three slots the futures page fills, plus the answer a student is allowed
  * to give instead.
  *
- * "broad" is not a fourth archetype — it is the absence of one. A student who
+ * "broad" is not a fourth archetype, it is the absence of one. A student who
  * does not recognise themselves in three suggested professions used to have no
  * move: no charted path meant no spine, and a roadmap with no build or publish
  * step. Declining now produces a plan written from their traits, grade, fields
@@ -354,7 +354,7 @@ const PATH_LABELS: Record<PathKind, string> = {
   ambitious: "Ambitious fit",
   unconventional: "Unconventional fit",
   divergent: "Further afield",
-  // Never rendered on a path card — there is no card for it. Present so the
+  // Never rendered on a path card, there is no card for it. Present so the
   // map stays exhaustive and a future caller cannot read undefined.
   broad: "Broader interests",
 };
@@ -399,7 +399,7 @@ export function selectFuturePaths(
 
   if (rest.length > 0) {
     // Most demanding archetype among the top half of the student's own
-    // ranking — a stretch that is still plausibly theirs, so "ambitious"
+    // ranking, a stretch that is still plausibly theirs, so "ambitious"
     // varies by student instead of always being the most demanding
     // archetype in the library.
     const plausible = rest.slice(0, Math.max(1, Math.ceil(rest.length / 2)));
@@ -439,7 +439,7 @@ export function selectFuturePaths(
  * The three on /futures are the top of one ranking, so a student who does not
  * recognise themselves in any of them has only two moves: take one anyway, or
  * decline the whole exercise. Handing them ranks four, five and six would not
- * help — those are the near-neighbours of the three they just turned down, by
+ * help, those are the near-neighbours of the three they just turned down, by
  * construction.
  *
  * So this ranks the remainder by DISTANCE from what they have seen: the
@@ -448,7 +448,7 @@ export function selectFuturePaths(
  * batch, so each round travels further rather than circling.
  *
  * THE FIT WILL BE LOWER, AND THE CARD SAYS SO. These are selected against
- * similarity, not for fit — calling a 41% match a discovery would be the same
+ * similarity, not for fit, calling a 41% match a discovery would be the same
  * dishonesty as the hollow spines. The number stays on the card and the
  * rationale names what it was chosen for.
  *
@@ -467,7 +467,7 @@ export function divergentPaths(
   if (remaining.length === 0) return [];
 
   const shown = ranked.filter((r) => seenSet.has(r.archetype.id));
-  // Nothing seen yet (a caller asking for divergence first) — fall back to the
+  // Nothing seen yet (a caller asking for divergence first), fall back to the
   // top-ranked vector so "away from here" still means something.
   const reference = (shown.length ? shown : ranked.slice(0, 1)).map((r) =>
     vector(r.archetype.traits),

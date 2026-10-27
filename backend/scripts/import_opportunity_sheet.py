@@ -9,7 +9,7 @@ WHAT THE SHEET IS, AND IS NOT. stem_competitions_1000.xlsx says so itself:
      intentionally not included. Add them as you verify each entry."
 
 So it is a leads list, not a catalog. It carries a name, a category, an
-organizer and sometimes a URL — and none of deadline, grade range, cost or entry
+organizer and sometimes a URL, and none of deadline, grade range, cost or entry
 route, which are the four fields that decide whether a student can act on a row.
 Importing it as-is would add hundreds of rows that say nothing actionable, which
 is the state this catalog spent a week climbing out of.
@@ -17,8 +17,8 @@ is the state this catalog spent a week climbing out of.
 WHAT THIS DOES. For each lead it fetches the programme's own page and asks the
 model to read it: is this real, does it take high schoolers, when does it close,
 what does it cost, and who can enter it. A row is written only when the page
-supports it. That is the same standard the landing page claims — "the hand-picked
-part of the shelf is checked against each programme's own website" — applied by
+supports it. That is the same standard the landing page claims, "the hand-picked
+part of the shelf is checked against each programme's own website", applied by
 machine so it can run over hundreds of rows instead of thirty-five.
 
 Rows that fail are reported, not silently dropped: a lead whose page no longer
@@ -26,7 +26,7 @@ mentions high schoolers is worth knowing about.
 
 The column contract, and what the last run's 24-of-2000 conversion rate was
 caused by, are in northstar-docs/SHEET-SPEC.md. Read that before changing the
-filters here — most of the loss is in the sheet, not in this script.
+filters here, most of the loss is in the sheet, not in this script.
 
 Usage:
     cd backend && .venv/bin/python scripts/import_opportunity_sheet.py \
@@ -69,7 +69,7 @@ CONFIDENCE_FLOOR = 0.75
 # the first fifty.
 #
 # Also the record of what was rejected and why, which is the part worth a human's
-# time — a lead whose page no longer mentions high schoolers is a fact about the
+# time, a lead whose page no longer mentions high schoolers is a fact about the
 # programme, not noise.
 LEDGER = pathlib.Path(__file__).parent / "scraped" / "sheet_import_ledger.json"
 
@@ -149,8 +149,8 @@ KNOWN_CYCLE = "known typical annual cycle"
 def recurrence_month_of(row: dict) -> int | None:
     """A month for opportunities.recurrence_month, or None.
 
-    WHY NOT deadline. `typical_deadline` is prose — "Application ~mid-December",
-    "Via national team selection", "Rolling / open enrollment" — and the sheet's
+    WHY NOT deadline. `typical_deadline` is prose, "Application ~mid-December",
+    "Via national team selection", "Rolling / open enrollment", and the sheet's
     README is explicit: "None of these are verified dates for the 2026-27 cycle.
     Deadlines shift year to year and some programs change format or pause."
 
@@ -160,7 +160,7 @@ def recurrence_month_of(row: dict) -> int | None:
     expire_opportunities retire the row when the invented date passed.
 
     recurrence_month is the column for exactly this: 20260923120000 defines it as
-    "may we make a claim about when this opens NEXT year?" — and pairs it with
+    "may we make a claim about when this opens NEXT year?", and pairs it with
     recurrence_verified_at, which stays NULL here because no human checked the
     programme's site. NULL there means the UI says "no confirmed window" instead
     of projecting a date, which is the truth about this data.
@@ -193,7 +193,7 @@ def norm_title(value: str) -> str:
 # Measured in batch one: the model refused all ten TSA state rows it reached, each
 # for the same correct reason, at the cost of a page fetch and a completion each.
 # There are 369 such rows. Verifying them needs a state-specific URL the sheet
-# does not have, so they are skipped before the spend rather than after it — and
+# does not have, so they are skipped before the spend rather than after it, and
 # reported, because a state round is genuinely useful once someone finds its page.
 TEMPLATE_SCOPES = ("State", "Regional")
 
@@ -318,7 +318,7 @@ def to_row(lead: dict, verdict: dict, stamp: str) -> dict | None:
         "location_scope": "us" if lead.get("country") == "United States" else "global",
         "tags": [],
         # Its own provenance. Not 'ai' (that means scraped from a forum or
-        # Devpost) and not 'human' (nobody read this page personally) — a
+        # Devpost) and not 'human' (nobody read this page personally), a
         # curated lead, machine-verified against the programme's own site.
         "added_by": "sheet",
         "entry_gate": gate,
@@ -400,7 +400,7 @@ def main() -> int:
     # named Codeforces contests. Neither the title nor the exact URL collides, so
     # both would land and a student would see a generic entry beside six specific
     # ones. Of 307 eligible leads, 122 share a host with something already
-    # shelved — too many to wave through and too many to assume are all dupes.
+    # shelved, too many to wave through and too many to assume are all dupes.
     # They are held back by default and reported, because deciding between "the
     # generic row is redundant" and "this is a different programme at the same
     # university" is a judgement, not a rule.

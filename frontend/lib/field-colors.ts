@@ -5,7 +5,7 @@
  * orbital map could have disagreed about what biology looks like. A colour
  * that means something must mean it everywhere or it means nothing.
  *
- * Tuned to read against both grounds — the bistre night and the manila paper —
+ * Tuned to read against both grounds, the bistre night and the manila paper -
  * which is why none of them is fully saturated.
  */
 import type { OpportunityField } from "@/lib/types";

@@ -4,7 +4,7 @@
  * It is a string when we raise HTTPException ourselves, and an ARRAY of
  * `{loc, msg, type}` objects when FastAPI rejects a request body. The old code
  * annotated it `string` and interpolated it, so every validation error reached
- * the UI as the literal text "[object Object]" — which is what a student saw
+ * the UI as the literal text "[object Object]", which is what a student saw
  * when "My interests are broader" failed: a screen telling them nothing at all
  * about what went wrong, on the one screen that was supposed to explain itself.
  *

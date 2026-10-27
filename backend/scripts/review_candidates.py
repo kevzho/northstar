@@ -1,5 +1,5 @@
 """
-Catalog review tool — the scraped pool, one keystroke at a time.
+Catalog review tool, the scraped pool, one keystroke at a time.
 
 Walks every unreviewed candidate in scraped/reddit_candidates.json and
 turns a decision into either a row in public.opportunities (keep) or a
@@ -8,7 +8,7 @@ so quitting mid-session loses nothing, and re-runs of the scraper never
 resurrect anything you have already judged.
 
 Keys:
-    k  keep — prompts once for a deadline, then upserts to Supabase
+    k  keep, prompts once for a deadline, then upserts to Supabase
     l  cycle location scope (us / international / global)
     d  drop
     f  cycle field guess        t  cycle type guess

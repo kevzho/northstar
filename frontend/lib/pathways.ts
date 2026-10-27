@@ -3,7 +3,7 @@
  *
  * The map draws urgency as distance from a star; the list draws it as position
  * in an ordered list. Those are the same claim, so they must come from the same
- * sort — if they drift, the alternative stops being equivalent and starts being
+ * sort, if they drift, the alternative stops being equivalent and starts being
  * a second, quieter opinion about what is urgent.
  *
  * Pure and DOM-free so it can be tested directly, the way lib/scoring.ts is.
@@ -32,7 +32,7 @@ export function daysOut(deadline: string | null | undefined, now = Date.now()): 
 
 /**
  * One group per field, each sorted soonest-deadline-first, groups ordered by
- * size — the same three rules the SVG uses to lay out its solar systems.
+ * size, the same three rules the SVG uses to lay out its solar systems.
  *
  * Note what is absent: the map's `.slice(0, 8)`. A ninth planet has nowhere to
  * go in a fixed cell, but a list has room, and dropping a student's ninth-most
@@ -58,7 +58,7 @@ export function groupByField(nodes: PathwayNode[], now = Date.now()) {
  * The urgency an orbit radius shows, said in words.
  *
  * Counts CALENDAR days, not elapsed hours. `daysOut` is deliberately
- * fractional, because sorting wants the finer signal — but rounding that
+ * fractional, because sorting wants the finer signal, but rounding that
  * fraction for a label is wrong in a way that reads as a lie: a deadline at
  * 23:59 tonight is 0.8 days away at lunchtime, which rounds to 1, and the page
  * tells a student "Closes tomorrow" about something that closes tonight. On a

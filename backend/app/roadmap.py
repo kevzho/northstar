@@ -1,7 +1,7 @@
 """
 Build one student's roadmap: an ordered sequence of concrete steps.
 
-Northstar ranked opportunities. This sequences them, and — more importantly —
+Northstar ranked opportunities. This sequences them, and, more importantly -
 fills the space in front of them with things a student can do this week.
 
 WHY THE TIME AXIS IS GRADE, NOT DEADLINE. Measured against production:
@@ -103,7 +103,7 @@ GATE_STEP: dict[str, tuple[str, str]] = {
         "Entry needs a nomination or recommendation — ask early, not late.",
     ),
     "teacher": (
-        # NOT "find a teacher" — the prep step above already says that, and a
+        # NOT "find a teacher", the prep step above already says that, and a
         # plan that prints "Find the teacher or coach who can enter ACS ChemClub
         # with you" and then "Find a teacher to enter ACS ChemClub with you" two
         # lines later reads as a stutter rather than as two steps. Finding the
@@ -151,7 +151,7 @@ def label_for_months(months: float, grade: int | None, today: date) -> str:
         return "Next few months" if months < 4 else "Later"
 
     # ACADEMIC years, not calendar years. A step five months out from
-    # September lands in February — still the same school year, still the same
+    # September lands in February, still the same school year, still the same
     # grade. Counting calendar years rolled it over and told a senior their
     # February deadline fell "After graduation".
     total = today.month - 1 + int(round(months))
@@ -199,7 +199,7 @@ def _is_open(opp: dict, today: date) -> bool:
 # How many "apply to this" steps a plan may contain.
 #
 # A plan is a sequence, not an inbox. Ten applications in the Now phase is a
-# list of links with a deadline attached — the thing this product exists to
+# list of links with a deadline attached, the thing this product exists to
 # replace. Four is enough to be useful and few enough to be a decision.
 MAX_APPLICATION_STEPS = 4
 
@@ -210,7 +210,7 @@ def _worth_applying(result: dict, already: int) -> bool:
     TWO RULES, AND THE FIRST IS THE IMPORTANT ONE.
 
     Respect the matcher's own verdict. app/match.py pins a row at NOISE_FLOOR
-    when it matched nothing at all — no shared words, no field, no tag, no
+    when it matched nothing at all, no shared words, no field, no tag, no
     semantic signal. The roadmap used to iterate every open, grade-eligible row
     regardless of score, so a biology-focused 10th grader's personalised learning
     path was nine capture-the-flag security competitions, each scored 0.0500,
@@ -230,7 +230,7 @@ def _worth_applying(result: dict, already: int) -> bool:
         return False
     score = (result.get("score") or {}).get("score")
     if score is None:
-        return True  # no score available (tests, older callers) — do not hide it
+        return True  # no score available (tests, older callers), do not hide it
     return score > NOISE_FLOOR
 
 
@@ -462,7 +462,7 @@ def build_roadmap(
         edge_note="A common route: most students never send the email.",
         # Explicitly near-term. Added last, so without this it inherited its
         # insertion index as a time position and landed under "After
-        # graduation" — advice to send an email in three years.
+        # graduation", advice to send an email in three years.
         due_in_months=2.0,
     )
 

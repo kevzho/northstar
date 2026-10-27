@@ -45,7 +45,7 @@ const waypoints = [
   },
   // 04 exists because the feature did, and nobody could find it. Team-up has
   // matched on chosen_archetype, chosen_kind and field_scores since it shipped
-  // — the same signals that build the plan — and it was reachable only from the
+  //, the same signals that build the plan, and it was reachable only from the
   // nav on a signed-in page. A student who never signs in never learns the
   // product has other students in it at all, which is the part that turns a
   // list of programmes into a reason to come back.
@@ -61,7 +61,7 @@ const waypoints = [
 /*
  * Ursa Minor, hand-plotted. The line draws itself on load (pathLength
  * normalizes the two subpaths to the CSS dash length) and ends at Polaris,
- * which stays lit. Decorative only — hidden from assistive tech.
+ * which stays lit. Decorative only, hidden from assistive tech.
  */
 function Constellation() {
   const scatter = [
@@ -187,7 +187,7 @@ export default function Home() {
   const { t } = useLanguage();
   const router = useRouter();
   // A signed-in student who hits the marketing page (usually by clicking the
-  // wordmark) wants their app, not the pitch — send them to the dashboard so
+  // wordmark) wants their app, not the pitch, send them to the dashboard so
   // the logo never dumps them back on the signed-out hero.
   const { user, loading } = useAuth();
   useEffect(() => {
@@ -272,7 +272,7 @@ export default function Home() {
                 Try the assessment first
               </Button>
             </div>
-            {/* The one thing on this site that needs nothing from you — no
+            {/* The one thing on this site that needs nothing from you, no
                 account, no assessment, no waiting for a deadline. Worth saying
                 in the hero rather than three screens down, because a student
                 who leaves without signing up should still leave with
@@ -294,7 +294,7 @@ export default function Home() {
 
         {/* Real deadlines, soonest first, straight from the shelf. Placed here
             because the hero makes a claim and this is the first thing that can
-            check it — and because a visitor who scrolls past the fold should hit
+            check it, and because a visitor who scrolls past the fold should hit
             evidence, not another paragraph. Renders nothing at all if the query
             fails or nothing is open; see CatalogSignals. */}
         <div className="bleed-x mb-14">
@@ -306,7 +306,7 @@ export default function Home() {
             How you find it
           </h2>
           {/* The pathway: three worlds along a dashed course, revealed on
-              scroll — the same shape as the product itself. */}
+              scroll, the same shape as the product itself. */}
           <div ref={pathwayRef} className="relative mt-12">
             <div
               aria-hidden
@@ -357,7 +357,7 @@ export default function Home() {
                       {waypoint.description}
                     </p>
                     {/* The figure repeats the paragraph's shape rather than
-                        decorating it — six bars for six traits, three paths for
+                        decorating it, six bars for six traits, three paths for
                         three directions, ranked rows with their reasons. Capped
                         narrow so it reads as a diagram in the margin, not an
                         illustration competing with the type. */}
@@ -380,7 +380,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Why this exists — the one band printed on paper rather than sky.
+        {/* Why this exists, the one band printed on paper rather than sky.
             The register change is the section break: the page around it stays
             night, so this reads as a page from the atlas rather than another
             scroll of the same surface. Palette comes from the shared `.light`
@@ -389,7 +389,7 @@ export default function Home() {
             Every number here is a claim about the CATALOG, not about how many
             people have used it. A judge can verify each one by querying the
             catalog. The audit that produced these numbers lives in
-            northstar-docs/CATALOG-AUDIT.md — it was on this page and should
+            northstar-docs/CATALOG-AUDIT.md, it was on this page and should
             not have been. Guarded by backend/tests/test_impact_claims.py. */}
         <div className="panel-paper bleed-x">
           <section
@@ -421,8 +421,8 @@ export default function Home() {
             </p>
           </div>
           {/* Three dated rows, each one clickable. The page no longer states a
-              shelf size or a verification practice — those were removed on
-              2026-09-27 — so this is now the only claim in the section a visitor
+              shelf size or a verification practice, those were removed on
+              2026-09-27, so this is now the only claim in the section a visitor
               can check for themselves, which makes it carry more weight than it
               did, not less. Renders nothing when nothing is genuinely recent. */}
           <RecentlyAdded />

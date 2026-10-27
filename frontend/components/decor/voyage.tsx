@@ -1,5 +1,5 @@
 /**
- * Shared voyage glyphs — the minimal worlds and the rocket that travels
+ * Shared voyage glyphs, the minimal worlds and the rocket that travels
  * between them. Used by the landing pathway and the 30-day mission plan so
  * the "interplanetary journey" reads as one system across pages.
  */

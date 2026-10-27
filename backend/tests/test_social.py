@@ -1,5 +1,5 @@
 """
-Unit tests for the peer-affinity math — pure, no database.
+Unit tests for the peer-affinity math, pure, no database.
 """
 
 from app.social import affinity, leading_fields

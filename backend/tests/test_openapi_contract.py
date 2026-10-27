@@ -4,7 +4,7 @@ Contract drift gate: the committed API schema must match the live app.
 frontend/lib/api-schema.json is what the frontend's generated types are
 built from (npm run gen:api). If a backend change alters the OpenAPI
 schema without regenerating, the frontend is silently typed against a
-stale contract — this test turns that into a red build with the fix in
+stale contract, this test turns that into a red build with the fix in
 the message.
 """
 

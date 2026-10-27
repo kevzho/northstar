@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * FAQ — the questions students, parents, and CAC judges actually ask.
+ * FAQ, the questions students, parents, and CAC judges actually ask.
  * Copy is translated through lib/i18n so the language selector reaches it.
  */
 

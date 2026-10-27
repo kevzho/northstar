@@ -3,7 +3,7 @@
  *
  * The landing page's nav lives inside the centred `max-w-6xl` column and
  * carried `bg-background/80`, so its background was painted to the column's
- * width, not the viewport's. For most of the page that is invisible — the bar
+ * width, not the viewport's. For most of the page that is invisible, the bar
  * and the page behind it are the same colour, so nobody can see where one stops
  * and the other starts.
  *

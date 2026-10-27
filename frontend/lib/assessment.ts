@@ -32,7 +32,7 @@ export const likertLabels: Record<LikertValue, string> = {
  * A rating's share of its question's deltas: 1 pays nothing, 5 pays in full,
  * 3 pays half. Keeping the multiplier in [0, 1] rather than [-1, 1] is what
  * lets Likert items reuse the same "sum, then divide by the achievable
- * maximum" normalization the choice questions already use — a trait can never
+ * maximum" normalization the choice questions already use, a trait can never
  * be driven negative, so the 0-100 range holds without clamping.
  *
  * Reverse-coded items invert it, so agreeing with "I need clear instructions"
@@ -77,7 +77,7 @@ export type LikertQuestion = {
 
 export type AssessmentQuestion = ChoiceQuestion | LikertQuestion;
 
-/** One-line meanings shown under the profile bars — high is a shape,
+/** One-line meanings shown under the profile bars, high is a shape,
  * not a grade; every trait names a way of working, not a virtue. */
 export const traitDescriptions: Record<TraitKey, string> = {
   builder: "Defaults to making things — shipping beats theorizing.",
@@ -103,8 +103,8 @@ export const traitLabels: Record<TraitKey, string> = {
 /**
  * The bank: 20 questions, the two formats interleaved on purpose.
  *
- * Scenario picks force a tradeoff — choosing the hackathon is choosing *not*
- * to choose the research fair — which is what pulls the field percentages
+ * Scenario picks force a tradeoff, choosing the hackathon is choosing *not*
+ * to choose the research fair, which is what pulls the field percentages
  * apart instead of letting them cluster. Agreement statements measure each
  * trait on its own axis, which a forced pick cannot do: liking both building
  * and analysis is a real answer, and only the 1-5 items can record it.

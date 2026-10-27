@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Polaris — the corner guide.
+ * Polaris, the corner guide.
  *
  * A fixed assistant in the bottom-right of every page. Deliberately
  * deterministic: it explains the page you are on (what it is, what to do
@@ -218,7 +218,7 @@ export function Guide() {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
-  // Close when navigating so the panel always describes the current page —
+  // Close when navigating so the panel always describes the current page -
   // state adjusted during render, per the React "you might not need an
   // effect" pattern.
   const [lastPath, setLastPath] = useState(pathname);
@@ -298,7 +298,7 @@ export function Guide() {
 
           {/* THE ADVISOR LIVES HERE NOW.
               It was a dashboard tile and a route of its own, which made
-              "ask a question about this" something you navigated away to do —
+              "ask a question about this" something you navigated away to do -
               and the thing you wanted to ask about was whatever page you just
               left. The guide is already the per-page helper in the corner of
               every screen; asking it a question is the same gesture as reading

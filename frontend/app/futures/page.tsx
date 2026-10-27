@@ -4,7 +4,7 @@
  * Future paths.
  *
  * Previously this took `archetypes.slice(0, 3)` and labelled them safe /
- * ambitious / unconventional in array order — the same three for everyone. The
+ * ambitious / unconventional in array order, the same three for everyone. The
  * paths are now selected against the student's trait vector by
  * lib/scoring.ts#selectFuturePaths, and every archetype shows its fit score.
  */
@@ -38,7 +38,7 @@ const emptySubscribe = () => () => {};
 export default function FuturesPage() {
   // Built from this student's own assessment, so it needs an account.
   // Signed out this used to render a heading and an empty shell while the
-  // API answered 401 — gated and broken look identical from there.
+  // API answered 401, gated and broken look identical from there.
   useRequireAuth();
   const router = useRouter();
   const answers = useStoredAnswers();
@@ -54,7 +54,7 @@ export default function FuturesPage() {
         const me = (await response.json()) as StudentProfile;
         if (!cancelled) setFields(interestFields(me.interests ?? []));
       } catch {
-        // Signed out — traits-only ranking.
+        // Signed out, traits-only ranking.
       }
     })();
     return () => {
@@ -63,7 +63,7 @@ export default function FuturesPage() {
   }, []);
   const traits = answers ? scoreTraits(answers) : null;
   // Stated interests (onboarding) plus what the quiz's field-signal
-  // questions revealed — union, so neither source can erase the other.
+  // questions revealed, union, so neither source can erase the other.
   const quizFields = answers ? leadingFields(scoreFieldInterests(answers)) : [];
   const allFields = [...new Set([...fields, ...quizFields])];
   const paths = traits ? selectFuturePaths(traits, allFields) : null;
@@ -93,8 +93,8 @@ export default function FuturesPage() {
    * Three cards out of twenty-four archetypes is a narrow window, and a student
    * who recognises themselves in none of them previously had two moves: take
    * one anyway, or decline the whole exercise. Ranks four to six would not have
-   * helped — they are the near-neighbours of the three just turned down, by
-   * construction — so lib/scoring.ts#divergentPaths ranks the remainder by
+   * helped, they are the near-neighbours of the three just turned down, by
+   * construction, so lib/scoring.ts#divergentPaths ranks the remainder by
    * distance from everything seen so far, and each press moves further out.
    *
    * Only the ROUND COUNT is state. The batches are replayed from the current
@@ -124,8 +124,8 @@ export default function FuturesPage() {
    * roadmap with no build or publish step at all.
    *
    * So declining produces a plan instead of a dead end. The model writes a
-   * spine from what the student actually has — their traits, grade, fields and
-   * real matched opportunities — and uses the archetype only as context it can
+   * spine from what the student actually has, their traits, grade, fields and
+   * real matched opportunities, and uses the archetype only as context it can
    * do without. No career label is stored.
    */
   async function goBroad() {
@@ -142,8 +142,8 @@ export default function FuturesPage() {
     } catch (caught) {
       // Swallowing this sent a student to a plan with no build or publish step
       // and nothing saying why. Every refusal from that endpoint is one they
-      // should read — out of budget, model unreachable, or a path that came
-      // back pointing at a skill with nothing behind it — and in all three
+      // should read, out of budget, model unreachable, or a path that came
+      // back pointing at a skill with nothing behind it, and in all three
       // their matched opportunities and deadlines are still waiting on /plan,
       // so the offer is to continue rather than a dead end.
       setBroadening(false);
@@ -299,7 +299,7 @@ export default function FuturesPage() {
                 </Button>
                 {/* The other way out of a narrow window: more of the library,
                     picked for distance rather than rank. Sits under "none of
-                    these" because it is the same impulse answered differently —
+                    these" because it is the same impulse answered differently -
                     one asks for no label, this one asks for a different one. */}
                 <Button
                   variant="outline"

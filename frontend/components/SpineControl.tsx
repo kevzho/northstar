@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * "This path isn't mine." — the control that acts on it.
+ * "This path isn't mine.", the control that acts on it.
  *
  * The build and publish steps on /plan used to come from one of twenty-four
  * authored spines, picked by archetype. Two students who both land on
@@ -23,7 +23,7 @@
  * to learning_resources, and twelve of the twenty-four point at a key with no
  * resource behind it, so those students' learn step renders as nothing at all.
  * The backend reports that as `spine_hollow`, and only then does this lead with
- * the offer — a fix where the shelf is genuinely empty, rather than a nag at
+ * the offer, a fix where the shelf is genuinely empty, rather than a nag at
  * everyone.
  */
 

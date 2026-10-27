@@ -121,7 +121,7 @@ describe("buildRoadmapTree", () => {
 
   it("does not let an excluded mission become the trunk", () => {
     // The orphan sweep exists so an unrecognised step kind is never silently
-    // dropped — which means it will happily adopt a mission and make it a
+    // dropped, which means it will happily adopt a mission and make it a
     // trunk node, leaving the applications parented to a mission instead of
     // to publish. Excluding it from the layout means excluding it from the
     // sweep too.
@@ -138,7 +138,7 @@ describe("buildRoadmapTree", () => {
 
   it("keeps a sided step when there is no trunk step to hang it on", () => {
     // "None of these are me" with no generated spine yet: no spine:project.
-    // The branch still has to land somewhere rather than vanish — it hangs
+    // The branch still has to land somewhere rather than vanish, it hangs
     // off wherever the trunk has reached. Written with outreach now that
     // missions are off the tree entirely.
     const steps = [
@@ -222,7 +222,7 @@ describe("buildRoadmapTree", () => {
   it("never puts two nodes close enough to overlap on the same row", () => {
     // The nodes are absolutely positioned, so nothing stops them colliding
     // except this. 158px is the widest branch node on a 736px canvas floor,
-    // which is 21% — so columns must stay further apart than that.
+    // which is 21%, so columns must stay further apart than that.
     const { nodes } = buildRoadmapTree(fullPlan(), {
       horizon: [1, 2, 3, 4].map((n) => ({
         title: `Locked ${n}`,

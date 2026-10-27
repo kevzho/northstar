@@ -1,12 +1,12 @@
 /**
- * 30-day plan generation — turns a chosen future path into concrete actions.
+ * 30-day plan generation, turns a chosen future path into concrete actions.
  *
  * The plan used to be a hardcoded list, identical for every student. It is now
  * assembled from three inputs the app already computes, by rules simple enough
  * to explain out loud:
  *
  *   1. The chosen archetype supplies the spine: a starter project, a way to
- *      publish it, and a skill sprint — one entry per archetype below.
+ *      publish it, and a skill sprint, one entry per archetype below.
  *   2. The trait profile bends the plan: the strongest trait gets a lean-in
  *      action, the weakest gets a stretch action.
  *   3. Real matches (when signed in) supply application targets: the top-scored
@@ -315,7 +315,7 @@ export function generatePlan(
   const weakest = ordered[ordered.length - 1];
 
   // Application targets: top two matches by score, plus the best-scored
-  // competition or scholarship if the top two didn't include one — every
+  // competition or scholarship if the top two didn't include one, every
   // voyage should have at least one award to compete for. Anything due
   // inside the month is urgent (week one); the rest belong to week four.
   const ranked = matches ?? [];
@@ -393,7 +393,7 @@ export function generatePlan(
 }
 
 // ---------------------------------------------------------------------------
-// Persistence — the chosen path, same localStorage pattern as the assessment.
+// Persistence, the chosen path, same localStorage pattern as the assessment.
 // ---------------------------------------------------------------------------
 
 export const CHOSEN_PATH_KEY = "northstar.plan.chosen-path";
@@ -436,7 +436,7 @@ export function traitLabel(trait: TraitKey): string {
  *
  * Joins SPINES[].skillKey to public.learning_resources.skill_key, so the plan
  * can show a student WHERE to learn the skill it tells them to learn. Returns
- * "" for the 12 archetypes that still fall through to FALLBACK_SPINE — those
+ * "" for the 12 archetypes that still fall through to FALLBACK_SPINE, those
  * have no authored skill rung yet, and an empty key means the plan renders
  * without a resource block rather than showing the wrong one.
  */

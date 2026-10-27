@@ -2,7 +2,7 @@
   "components": {
     "schemas": {
       "AssessmentProfileSync": {
-        "description": "Request body for POST /assessment-profile.\n\nOnly these two columns are touched \u2014 deliberately not an upsert of the\nwhole profile, so a quiz sync can never clobber onboarding fields.",
+        "description": "Request body for POST /assessment-profile.\n\nOnly these two columns are touched, deliberately not an upsert of the\nwhole profile, so a quiz sync can never clobber onboarding fields.",
         "properties": {
           "field_scores": {
             "additionalProperties": {
@@ -459,7 +459,7 @@
         "type": "object"
       },
       "StudentProfileCreate": {
-        "description": "Request body for POST /students (upsert).\n\n``id`` is omitted \u2014 the backend derives it from the JWT ``sub`` claim.\n``email`` is omitted \u2014 the backend copies it from ``auth.users.email``\nvia the Supabase client, or the client may supply it. If absent the\nupsert leaves the column alone.\n\n``consent`` (bool, default False) \u2014 when True the backend stamps\n``consented_at = now()`` on the row; when False the column is left\nuntouched (so we never revoke an earlier consent via a stub call).",
+        "description": "Request body for POST /students (upsert).\n\n``id`` is omitted, the backend derives it from the JWT ``sub`` claim.\n``email`` is omitted, the backend copies it from ``auth.users.email``\nvia the Supabase client, or the client may supply it. If absent the\nupsert leaves the column alone.\n\n``consent`` (bool, default False), when True the backend stamps\n``consented_at = now()`` on the row; when False the column is left\nuntouched (so we never revoke an earlier consent via a stub call).",
         "properties": {
           "audience": {
             "$ref": "#/components/schemas/Audience",
@@ -609,7 +609,7 @@
     },
     "/advisor": {
       "post": {
-        "description": "Exploratory route advice grounded in the student's own matches.\n\nReturns {answer, sources, cached} where sources are the numbered\ncatalog entries the model was allowed to cite. 503 when no LLM key\nis configured \u2014 the feature is off, not broken. 429 when the credit\nbudget for the student, the minute, or the day is used up.",
+        "description": "Exploratory route advice grounded in the student's own matches.\n\nReturns {answer, sources, cached} where sources are the numbered\ncatalog entries the model was allowed to cite. 503 when no LLM key\nis configured, the feature is off, not broken. 429 when the credit\nbudget for the student, the minute, or the day is used up.",
         "operationId": "route_advisor_advisor_post",
         "requestBody": {
           "content": {
@@ -652,7 +652,7 @@
     },
     "/assessment-profile": {
       "post": {
-        "description": "Persist the quiz's trait + field scores onto the student row.\n\nTouches only those two columns (see AssessmentProfileSync). 404s\nwhen no profile row exists yet. The row is created by POST /students\nat the end of onboarding \u2014 the dashboard no longer writes a stub\nahead of it, because that stub made an abandoned onboarding\npermanent.",
+        "description": "Persist the quiz's trait + field scores onto the student row.\n\nTouches only those two columns (see AssessmentProfileSync). 404s\nwhen no profile row exists yet. The row is created by POST /students\nat the end of onboarding, the dashboard no longer writes a stub\nahead of it, because that stub made an abandoned onboarding\npermanent.",
         "operationId": "sync_assessment_profile_assessment_profile_post",
         "requestBody": {
           "content": {
@@ -830,7 +830,7 @@
     },
     "/catalog": {
       "get": {
-        "description": "The full opportunity bank \u2014 every catalog entry, unranked.\n\nDistinct from /match (personalized, scored): this is browse-all,\nfor a student who wants to see everything and filter it themselves.\nSanitized the same way (opportunity_field -> field).",
+        "description": "The full opportunity bank, every catalog entry, unranked.\n\nDistinct from /match (personalized, scored): this is browse-all,\nfor a student who wants to see everything and filter it themselves.\nSanitized the same way (opportunity_field -> field).",
         "operationId": "catalog_catalog_get",
         "responses": {
           "200": {
@@ -854,7 +854,7 @@
     },
     "/catalog/public": {
       "get": {
-        "description": "The high-school shelf, to anyone, signed in or not.\n\nNOT under /public/. That prefix already has `/public/{handle}`, which\ntakes any string, is registered earlier, and therefore swallowed\n`/public/catalog` as a profile lookup for the handle \"catalog\" \u2014\nanswering with its uniform 404. Ordering could fix it; a path that\ncannot collide fixes it permanently.\n\nWHY THIS EXISTS. Every catalog route was auth-gated, so a visitor who\nclicked \"Opportunities\" before making an account got a heading and an\nempty page -- not a locked door, just nothing. Measured on 2026-10-05:\n/opportunities, /discover and /plan each rendered zero rows signed out,\nwhile the API answered 401 to /match, /discover and /roadmap. Some\npeople read that as broken rather than as gated, and the catalog is the\nstrongest thing this project has to show.\n\nWHY IT IS A SEPARATE ROUTE RATHER THAN /catalog WITH OPTIONAL AUTH.\n/catalog returns dict(row) -- the whole record, including added_by,\nverified_at, retired_reason and the recurrence columns. None of that is\nsecret, and all of it is curation bookkeeping that the open internet has\nno reason to receive. The fields below are an allowlist, so a column\nadded to the table later is private until someone decides otherwise.\n\nUnranked by construction: ranking needs a student, and there isn't one.",
+        "description": "The high-school shelf, to anyone, signed in or not.\n\nNOT under /public/. That prefix already has `/public/{handle}`, which\ntakes any string, is registered earlier, and therefore swallowed\n`/public/catalog` as a profile lookup for the handle \"catalog\" -\nanswering with its uniform 404. Ordering could fix it; a path that\ncannot collide fixes it permanently.\n\nWHY THIS EXISTS. Every catalog route was auth-gated, so a visitor who\nclicked \"Opportunities\" before making an account got a heading and an\nempty page -- not a locked door, just nothing. Measured on 2026-10-05:\n/opportunities, /discover and /plan each rendered zero rows signed out,\nwhile the API answered 401 to /match, /discover and /roadmap. Some\npeople read that as broken rather than as gated, and the catalog is the\nstrongest thing this project has to show.\n\nWHY IT IS A SEPARATE ROUTE RATHER THAN /catalog WITH OPTIONAL AUTH.\n/catalog returns dict(row) -- the whole record, including added_by,\nverified_at, retired_reason and the recurrence columns. None of that is\nsecret, and all of it is curation bookkeeping that the open internet has\nno reason to receive. The fields below are an allowlist, so a column\nadded to the table later is private until someone decides otherwise.\n\nUnranked by construction: ranking needs a student, and there isn't one.",
         "operationId": "public_catalog_catalog_public_get",
         "responses": {
           "200": {
@@ -921,7 +921,7 @@
     },
     "/discover": {
       "get": {
-        "description": "Opted-in peers who share the student's interests, ranked.\n\nGated by the target's public_profile flag \u2014 only findable students\nappear \u2014 and by same audience. Excludes anyone already connected.\nEmpty list (not an error) when the student has no profile or when\nno one else has opted in yet.",
+        "description": "Opted-in peers who share the student's interests, ranked.\n\nGated by the target's public_profile flag, only findable students\nappear, and by same audience. Excludes anyone already connected.\nEmpty list (not an error) when the student has no profile or when\nno one else has opted in yet.",
         "operationId": "discover_discover_get",
         "responses": {
           "200": {
@@ -966,7 +966,7 @@
         "summary": "List Dismissals"
       },
       "post": {
-        "description": "Mark an opportunity \"not for me\" \u2014 excluded from /match.",
+        "description": "Mark an opportunity \"not for me\", excluded from /match.",
         "operationId": "create_dismissal_dismissals_post",
         "requestBody": {
           "content": {
@@ -1178,7 +1178,7 @@
     },
     "/friends/{student_id}/compare": {
       "get": {
-        "description": "Side-by-side records \u2014 accepted friendships only.",
+        "description": "Side-by-side records, accepted friendships only.",
         "operationId": "compare_with_friend_friends__student_id__compare_get",
         "parameters": [
           {
@@ -1221,7 +1221,7 @@
     },
     "/health": {
       "get": {
-        "description": "Liveness, plus which build is answering.\n\n\"Is the new code actually deployed?\" was unanswerable from outside, and\nbeing unable to answer it cost real time twice: once when three files\nwere committed but never pushed while main.py imported them (Vercel kept\nserving the last good build, so the symptom was \"old behaviour\", not an\nerror), and once when the backend simply lagged the frontend and that\nlooked like a bug.\n\ncommit is Vercel's build SHA, short.\n\nsemantic and advisor report whether each feature can actually RUN, not\nwhether its module imports. The first version of this endpoint checked\nimportability and would have answered \"available\" on a host with no\nLLM_API_KEY \u2014 a false green in the exact check written to prevent one.\nBoth features need that key: without it /advisor 503s and no student\never gets a profile embedding, while the code and the frontend look\ncompletely fine.",
+        "description": "Liveness, plus which build is answering.\n\n\"Is the new code actually deployed?\" was unanswerable from outside, and\nbeing unable to answer it cost real time twice: once when three files\nwere committed but never pushed while main.py imported them (Vercel kept\nserving the last good build, so the symptom was \"old behaviour\", not an\nerror), and once when the backend simply lagged the frontend and that\nlooked like a bug.\n\ncommit is Vercel's build SHA, short.\n\nsemantic and advisor report whether each feature can actually RUN, not\nwhether its module imports. The first version of this endpoint checked\nimportability and would have answered \"available\" on a host with no\nLLM_API_KEY, a false green in the exact check written to prevent one.\nBoth features need that key: without it /advisor 503s and no student\never gets a profile embedding, while the code and the frontend look\ncompletely fine.",
         "operationId": "health_health_get",
         "responses": {
           "200": {
@@ -1500,7 +1500,7 @@
         "summary": "Uncomplete Mission"
       },
       "post": {
-        "description": "Record mission evidence onto the student record.\n\nIdempotent by the unique(student_id, mission_id) constraint \u2014\ncompleting twice updates the evidence instead of duplicating.",
+        "description": "Record mission evidence onto the student record.\n\nIdempotent by the unique(student_id, mission_id) constraint -\ncompleting twice updates the evidence instead of duplicating.",
         "operationId": "complete_mission_missions__mission_id__complete_post",
         "parameters": [
           {
@@ -1656,7 +1656,7 @@
     },
     "/pathways": {
       "get": {
-        "description": "Return nodes + edges for the Northstar pathway map.\n\nNodes are the student's matched opportunities (from /match scores).\nEdges are derived from shared tags + same field between nodes \u2014 a\nself-contained graph that renders even without seeded pathway_edges.\nEach node carries ``score`` and ``field`` for coloring/sizing in D3.",
+        "description": "Return nodes + edges for the Northstar pathway map.\n\nNodes are the student's matched opportunities (from /match scores).\nEdges are derived from shared tags + same field between nodes, a\nself-contained graph that renders even without seeded pathway_edges.\nEach node carries ``score`` and ``field`` for coloring/sizing in D3.",
         "operationId": "pathways_pathways_get",
         "responses": {
           "200": {
@@ -1723,7 +1723,7 @@
     },
     "/public/{handle}": {
       "get": {
-        "description": "The shareable record \u2014 deliberately unauthenticated.\n\nServes highlights only, and only for students who opted in\n(public_profile true). Everyone else is a uniform 404, so the\nendpoint cannot be used to probe which handles exist.",
+        "description": "The shareable record, deliberately unauthenticated.\n\nServes highlights only, and only for students who opted in\n(public_profile true). Everyone else is a uniform 404, so the\nendpoint cannot be used to probe which handles exist.",
         "operationId": "public_profile_public__handle__get",
         "parameters": [
           {
@@ -1948,7 +1948,7 @@
     },
     "/roadmap/spine": {
       "post": {
-        "description": "Write this student a different path, because they said so.\n\nA student turning a plan down is the most useful signal this system\ngets \u2014 better than any trait score, because they are telling you\ndirectly \u2014 so the rejected plan and their reason go into the prompt and\nthe model is told not to repeat it. Without that, a regenerate button is\na dice roll that can hand back the same idea reworded.\n\nRefusal is still a success path. If the model picks a skill rung with no\nresources, writes a url, or returns prose that will not parse, the\nstudent keeps what they had and is told so plainly. See\napp/spine_generation.py.\n\nCharged against the advisor budget, because it is the same provider and\nthe same wallet, and a regenerate button with no ceiling is the one\ncontrol a bored student will hold down.",
+        "description": "Write this student a different path, because they said so.\n\nA student turning a plan down is the most useful signal this system\ngets, better than any trait score, because they are telling you\ndirectly, so the rejected plan and their reason go into the prompt and\nthe model is told not to repeat it. Without that, a regenerate button is\na dice roll that can hand back the same idea reworded.\n\nRefusal is still a success path. If the model picks a skill rung with no\nresources, writes a url, or returns prose that will not parse, the\nstudent keeps what they had and is told so plainly. See\napp/spine_generation.py.\n\nCharged against the advisor budget, because it is the same provider and\nthe same wallet, and a regenerate button with no ceiling is the one\ncontrol a bored student will hold down.",
         "operationId": "regenerate_spine_roadmap_spine_post",
         "requestBody": {
           "content": {
@@ -2100,7 +2100,7 @@
     },
     "/teamup/candidates": {
       "get": {
-        "description": "Ranked collaborator candidates for the signed-in student.\n\n409 until the student opts in themselves \u2014 you cannot browse the\npool without being in it. Excludes existing connections (any\nstatus), anyone already decided on, and blocked pairs.",
+        "description": "Ranked collaborator candidates for the signed-in student.\n\n409 until the student opts in themselves, you cannot browse the\npool without being in it. Excludes existing connections (any\nstatus), anyone already decided on, and blocked pairs.",
         "operationId": "teamup_candidates_route_teamup_candidates_get",
         "responses": {
           "200": {
@@ -2124,7 +2124,7 @@
     },
     "/teamup/interest": {
       "post": {
-        "description": "Record interest or a pass; mutual interest connects both students.\n\nThe target never learns about a one-sided decision \u2014 the response\nonly says ``matched`` when BOTH said interested, at which point an\naccepted friendship is created (or the pending one is upgraded).",
+        "description": "Record interest or a pass; mutual interest connects both students.\n\nThe target never learns about a one-sided decision, the response\nonly says ``matched`` when BOTH said interested, at which point an\naccepted friendship is created (or the pending one is upgraded).",
         "operationId": "record_teamup_interest_teamup_interest_post",
         "requestBody": {
           "content": {

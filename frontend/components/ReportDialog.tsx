@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * ReportDialog — the safety valve on every social surface.
+ * ReportDialog, the safety valve on every social surface.
  *
  * Reports go to a human moderation queue; the reported student never
  * sees who filed. The optional "also block" checkbox is the hard wall:

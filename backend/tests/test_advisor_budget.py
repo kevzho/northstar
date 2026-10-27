@@ -1,5 +1,5 @@
 """
-Spend controls on /advisor — the only user-facing feature that costs money.
+Spend controls on /advisor, the only user-facing feature that costs money.
 
 The free NIM tier is a fixed pool of calls, not a monthly allowance, so
 these caps are the difference between "a student burned their questions"

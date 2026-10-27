@@ -1,12 +1,12 @@
 "use client";
 
 /**
- * The public evidence record — northstar.study/p/<handle>.
+ * The public evidence record, northstar.study/p/<handle>.
  *
  * Opt-in only; the backend serves highlights (trait/field shape, chosen
  * path, mission evidence, positive outcomes) and 404s uniformly for
  * private or unknown handles. This page is the product's proof artifact:
- * a shareable, verifiable trajectory — a GitHub profile for becoming
+ * a shareable, verifiable trajectory, a GitHub profile for becoming
  * someone.
  */
 

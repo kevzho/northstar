@@ -13,11 +13,11 @@ Five such pairs sit on the high-school shelf because the 35-row seed and the
 RSI twice in one ranked list, which reads as a broken product rather than a
 thorough one.
 
-Retired, not deleted — same contract as every other removal here, because
+Retired, not deleted, same contract as every other removal here, because
 outcomes, bookmarks, matches and dismissals all cascade from opportunities(id).
 
 WHICH COPY SURVIVES. The richer record: a real deadline first, then the longer
-description, then the older row. Not provenance — the curated rows are usually
+description, then the older row. Not provenance, the curated rows are usually
 better scoped, but not always, and "has a deadline" is the field a student
 actually needs.
 
@@ -40,9 +40,9 @@ from app.db import get_supabase  # noqa: E402
 # Pairs the exact-title pass cannot see, because the same programme was entered
 # under two different names. Each was confirmed by hand to be one programme:
 #
-#   SEES  — "STEM Enhancement in Earth Science" IS what the acronym expands to.
-#   STS   — the same Society for Science competition, once with the acronym.
-#   USAPhO — the "Physics Olympiad Summer Camp" is not a programme you enter. It
+#   SEES, "STEM Enhancement in Earth Science" IS what the acronym expands to.
+#   STS, the same Society for Science competition, once with the acronym.
+#   USAPhO, the "Physics Olympiad Summer Camp" is not a programme you enter. It
 #            is the training camp the top ~20 USAPhO scorers are invited to, so
 #            listing it beside USAPhO offers a student a door that does not exist.
 #

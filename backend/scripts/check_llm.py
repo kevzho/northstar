@@ -42,7 +42,7 @@ def probe(label: str, base: str, key: str, model: str) -> bool:
     try:
         # Through app.llm.chat deliberately, NOT a hand-rolled POST. The old
         # version sent max_tokens and temperature 0 directly, which Azure
-        # gpt-5.6 rejects with a 400 — so the preflight would have failed the
+        # gpt-5.6 rejects with a 400, so the preflight would have failed the
         # whole nightly workflow the moment the verifier moved provider, and the
         # printed diagnosis would have been "model unavailable" when the model
         # was fine. A health check that cannot speak the dialect the real caller

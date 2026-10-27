@@ -146,7 +146,7 @@ export function PathwayMap() {
     if (!data || !svgRef.current || data.nodes.length === 0) return;
 
     /* Solar systems: one per field the student matches. A central sun
-       (the field) with opportunity-planets orbiting it — inner orbits are
+       (the field) with opportunity-planets orbiting it, inner orbits are
        sooner deadlines, so the closest planets are the most urgent.
        Deterministic layout (no physics) so the map is the same each
        visit. Planet sprites: Kenney's planet pack, /public/planets. */

@@ -49,7 +49,7 @@ export default function AssessmentPage() {
   /**
    * Best-effort server sync before navigating: signed-in students get
    * their trait + field scores onto the student row (which makes /match
-   * proportional); signed-out students just proceed — the profile page
+   * proportional); signed-out students just proceed, the profile page
    * works from localStorage either way.
    */
   function finishAssessment() {

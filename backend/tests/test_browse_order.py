@@ -4,7 +4,7 @@
 On 2026-09-25, 123 of 186 live rows had a deadline that had already passed.
 /catalog ordered by deadline ascending, which put the MOST expired row first,
 and a comment excused it by claiming "the frontend filters to open
-opportunities by default" — frontend/app/opportunities/page.tsx falls back to
+opportunities by default", frontend/app/opportunities/page.tsx falls back to
 status "all", so it does not. The first card a student saw was the worst one.
 
 Closed rows are still returned: a sophomore needs to know RSI exists and closes
@@ -25,7 +25,7 @@ def browse_order(opp: dict) -> tuple[int, float, str]:
     """Mirror of the key in app/main.py's /catalog route.
 
     Kept in step by test_browse_order_matches_the_route below, which reads the
-    route's source — a copied heuristic that silently drifts is worse than none.
+    route's source, a copied heuristic that silently drifts is worse than none.
     """
     today_iso = TODAY.isoformat()
     raw = opp.get("deadline")
@@ -132,7 +132,7 @@ def test_the_browse_page_is_spread_across_fields_not_owned_by_one_feed() -> None
     assert len(spread) == len(rows), "rows were dropped"
     assert {r["id"] for r in spread} == {r["id"] for r in rows}, "rows were changed"
 
-    # The single most urgent row is still first — urgency is not sacrificed.
+    # The single most urgent row is still first, urgency is not sacrificed.
     assert spread[0] == rows[0]
     # And the first three now show three different fields instead of one.
     assert len({r["field"] for r in spread[:3]}) == 3

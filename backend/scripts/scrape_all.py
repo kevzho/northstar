@@ -46,7 +46,7 @@ STAGES = (
     ("reddit", scrape_reddit, False),
     ("devpost", scrape_devpost, False),
     # Recurring competitions, added because the shelf's real problem was never
-    # the row count — it was that four of 55 high-school rows were open at once.
+    # the row count, it was that four of 55 high-school rows were open at once.
     # Annual programmes cannot fix that; their deadlines cluster in winter by
     # nature. These two feeds always have something open, need no auth, and
     # publish whether an unaffiliated individual may enter.

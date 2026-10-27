@@ -3,7 +3,7 @@
 /**
  * A 2D sprite collage that leans with the pointer.
  *
- * REPLACES THE THREE.JS SKY. The old landing background was a WebGL scene —
+ * REPLACES THE THREE.JS SKY. The old landing background was a WebGL scene -
  * three depth shells of star sprites, two spiral galaxies, two shaded planets,
  * a leaning camera. It pulled three.js into the page for decoration, and the
  * decoration read as a generic space scene rather than as anything belonging to
@@ -20,7 +20,7 @@
  * page's own interactions.
  *
  * DETERMINISTIC, NOT RANDOM. The same ten positions render on every visit, from
- * a seeded generator — the sky reads as a place rather than a screensaver, which
+ * a seeded generator, the sky reads as a place rather than a screensaver, which
  * is the principle the old in-app star layer was written on before it was
  * removed for breaking mobile layout.
  *
@@ -46,7 +46,7 @@ function mulberry32(seed: number) {
 
 /**
  * Three depth bands. `depth` is how far a band travels against the pointer, in
- * pixels at full deflection — far things barely move, near things lead.
+ * pixels at full deflection, far things barely move, near things lead.
  */
 const BANDS = [
   { count: 5, depth: 8, size: [26, 42], opacity: 0.16, blur: 1.1 },

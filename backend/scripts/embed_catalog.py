@@ -89,7 +89,7 @@ def main() -> int:
         except EmbeddingUnavailable as error:
             # Fail the run rather than leave a partial batch looking complete.
             # A row with no embedding is simply absent from semantic_scores(),
-            # which degrades to lexical-only scoring — the safe direction.
+            # which degrades to lexical-only scoring, the safe direction.
             sys.exit(f"embedding failed after {written} rows: {error}")
 
         for row, vector in zip(chunk, vectors):

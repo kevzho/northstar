@@ -22,7 +22,7 @@ import { useRequireAuth } from "@/lib/use-require-auth";
 export default function MentorsPage() {
   // Built from this student's own assessment, so it needs an account.
   // Signed out this used to render a heading and an empty shell while the
-  // API answered 401 — gated and broken look identical from there.
+  // API answered 401, gated and broken look identical from there.
   useRequireAuth();
   const [mentors, setMentors] = useState<MentorMatch[]>([]);
   const [loading, setLoading] = useState(true);
@@ -60,7 +60,7 @@ export default function MentorsPage() {
       await navigator.clipboard.writeText(text);
       setCopied(mentorId);
     } catch {
-      // Clipboard unavailable — the draft is still selectable text.
+      // Clipboard unavailable, the draft is still selectable text.
     }
   }
 

@@ -1,5 +1,5 @@
 """
-Guards on app/catalog.py — the shared, cached, audience-filtered accessor.
+Guards on app/catalog.py, the shared, cached, audience-filtered accessor.
 
 GET /match is called from three frontend pages. It used to select("*") the
 whole 144-row catalog and filter by audience in Python: 106 KB per call,
@@ -128,7 +128,7 @@ def test_shelf_for_validates_against_the_enum() -> None:
 
 
 def test_public_view_drops_description_but_scoring_keeps_it() -> None:
-    """description is 23% of the payload and no list view renders it —
+    """description is 23% of the payload and no list view renders it -
     but app/match.py feeds it into the TF-IDF corpus, so the ROW must keep it.
     """
     sb = FakeSB(ROWS)
@@ -150,7 +150,7 @@ def test_retired_rows_never_reach_a_student() -> None:
     The seeded catalog contained a scholarship whose final cohort was the class
     of 2016, a competition re-scoped to middle school, and two programs that
     never accepted high schoolers. They are stamped rather than deleted because
-    outcomes/bookmarks/matches/dismissals cascade from opportunities(id) — so
+    outcomes/bookmarks/matches/dismissals cascade from opportunities(id), so
     the read path is what has to exclude them.
     """
     sb = FakeSB(ROWS)

@@ -1,5 +1,5 @@
 /**
- * Invariant tests for the scoring engine — the code a judge will ask about.
+ * Invariant tests for the scoring engine, the code a judge will ask about.
  *
  * These pin properties, not constants (same philosophy as the backend's
  * test_match.py): trait scores stay in bounds, field shares always sum to
@@ -50,7 +50,7 @@ function answersByIndex(
 
 /**
  * Picks that all point at CS, with every rating question at "Strongly
- * disagree" so the non-CS interest statements pay out nothing — CS should
+ * disagree" so the non-CS interest statements pay out nothing, CS should
  * then lead by a wide margin.
  */
 const CS_LEANING: AssessmentAnswers = {

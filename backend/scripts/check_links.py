@@ -3,9 +3,9 @@ Check every link on the shelf, and retire the ones that are really gone.
 
 WHY. /opportunities says, to everyone, signed in or not: "Each one has been
 checked against the programme's own page, and anything that stopped holding up
-was removed rather than left to pad the total." On 2026-10-12 that was false —
+was removed rather than left to pad the total." On 2026-10-12 that was false -
 seven of sixty-six open rows did not load, four of them CTF domains that had
-stopped resolving entirely — and nothing in the daily job had ever looked. This
+stopped resolving entirely, and nothing in the daily job had ever looked. This
 is the thing that makes the sentence true.
 
 HOW IT AVOIDS BEING THE BIGGER PROBLEM. See app/link_health.py: a refusal aimed

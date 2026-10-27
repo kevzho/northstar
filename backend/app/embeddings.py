@@ -2,14 +2,14 @@
 Embedding client for semantic matching.
 
 app/match.py scores lexically, which cannot connect "I want to help people with
-cancer" to "Stanford Institutes of Medicine Summer Research" — no shared tokens.
+cancer" to "Stanford Institutes of Medicine Summer Research", no shared tokens.
 Measured on the live catalog, TF-IDF pins every row after the first at the
 booster floor of 0.050, i.e. no signal at all. Embeddings surface the medicine
 programme TF-IDF never reaches.
 
 WHAT THIS IS NOT. Not a replacement for the deterministic engine. The semantic
 term is one capped booster among seven, so every score still decomposes into
-named reasons — which is the product's whole position on explainability, and a
+named reasons, which is the product's whole position on explainability, and a
 score a student cannot interrogate only helps someone who already has an adult
 to interpret it.
 
@@ -25,7 +25,7 @@ measurably degrades retrieval, so the two helpers below are separate rather than
 one function with a flag nobody remembers to set.
 
 COST. Opportunities are embedded once, on the nightly cron, only where the
-column is NULL — about 60 calls on the day the catalog grows by 60, and 2 on a
+column is NULL, about 60 calls on the day the catalog grows by 60, and 2 on a
 normal day. A student profile is embedded when it changes. Request time makes no
 API call at all: the similarity is a Postgres function (semantic_scores).
 """
@@ -150,7 +150,7 @@ def semantic_scores(sb, student_id: str) -> dict[str, float]:
 
     Calls public.semantic_scores(), which keeps the 2048-float vectors in the
     database and returns one float per row. Returns {} when the student has no
-    profile embedding, when nothing is embedded yet, or on any error — and
+    profile embedding, when nothing is embedded yet, or on any error, and
     scoring then falls back to exactly the lexical behaviour that shipped
     before embeddings existed.
     """
@@ -169,7 +169,7 @@ def semantic_scores(sb, student_id: str) -> dict[str, float]:
 def refresh_student_embedding(sb, student_id: str, student: dict) -> bool:
     """Re-embed a student profile after it changes. Best effort.
 
-    Called from the routes that alter a scoring input — the profile itself and
+    Called from the routes that alter a scoring input, the profile itself and
     the assessment sync. One call per edit, not per request: three students
     today means roughly three calls a week.
 

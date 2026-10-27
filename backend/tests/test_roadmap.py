@@ -1,5 +1,5 @@
 """
-Tests for app/roadmap.py — the sequencer.
+Tests for app/roadmap.py, the sequencer.
 
 Pure function, no network, tested exhaustively the way app/match.py is. The
 properties here are the ones that make the roadmap honest rather than merely
@@ -149,7 +149,7 @@ def test_unparseable_grade_does_not_invent_unlock_dates() -> None:
     assert out["grade"] is None
     assert out["horizon_months"] == MIN_HORIZON_MONTHS
     steps = [s for p in out["phases"] for s in p["steps"]]
-    # Unknown grade means we cannot say they are ineligible, so it may appear —
+    # Unknown grade means we cannot say they are ineligible, so it may appear -
     # but it must still respect the deadline gate.
     assert all(s["edge_reason"] != "eligibility" for s in steps)
 
@@ -272,7 +272,7 @@ def test_no_authored_step_is_pushed_past_the_horizon() -> None:
 # apply to. Seven catalog rows are gated: you qualify for USAMO by AMC score,
 # you advance to ISEF from an affiliated fair, and a TEACHER applies for a
 # Lemelson InvenTeam grant. The sequencer read the deadline and ignored the
-# gate, so it emitted "Apply to USAMO" — a step no student can take, in the one
+# gate, so it emitted "Apply to USAMO", a step no student can take, in the one
 # place the product promises to say what to do next.
 
 
@@ -354,7 +354,7 @@ def test_a_curated_entry_note_wins_over_the_generic_one() -> None:
     """The audit wrote a specific sentence per row; it must not be discarded.
 
     It now lands on the PREPARATION step rather than the application, because
-    that is the step it is an instruction for — "Qualify by score on the AMC 10
+    that is the step it is an instruction for, "Qualify by score on the AMC 10
     or AMC 12" tells you what to do, and the thing you do it before is the
     application. Printing it on both made a student read the same sentence
     twice, directly under itself.
@@ -394,7 +394,7 @@ def test_a_gated_step_still_counts_as_dated() -> None:
     Two now, not one: a gated programme produces the preparation step AND the
     application it unlocks. Both are grounded in the same calendar fact and in a
     requirement the programme itself states, so counting both is the honest
-    reading — this metric separates computed facts from authored guesses, and
+    reading, this metric separates computed facts from authored guesses, and
     neither of these is a guess.
     """
     plan = build_roadmap(
@@ -407,7 +407,7 @@ def test_the_preparation_step_comes_before_the_thing_it_unlocks() -> None:
     """The whole point of the step.
 
     Telling a student to qualify for USAMO is useless underneath "Apply to
-    USAMO" — a plan in the wrong order is not a plan. The prep step is placed a
+    USAMO", a plan in the wrong order is not a plan. The prep step is placed a
     hair earlier on the time axis so it can never sort below its application.
     """
     plan = build_roadmap(
@@ -434,7 +434,7 @@ def test_an_ungated_application_gets_no_preparation_step() -> None:
 
 def test_the_preparation_step_uses_the_programmes_own_words() -> None:
     """Measured 2026-10-05: all 18 gated high-school rows carry an entry_note a
-    human wrote after reading the programme's page — "Qualification is by AMC
+    human wrote after reading the programme's page, "Qualification is by AMC
     score", "Entry is through your ACS local section exam". That sentence is
     the specific instruction a student needs, and the generic gate line is only
     the fallback when there is none."""
@@ -479,7 +479,7 @@ def test_a_missing_or_unknown_gate_falls_back_to_apply() -> None:
 # noise; the roadmap never asked.
 #
 # Latent while four rows were open. Adding recurring competition feeds made it
-# visible — the plan was always willing to do this, it just lacked the material.
+# visible, the plan was always willing to do this, it just lacked the material.
 
 
 def scored(oid, title, score, deadline="2026-11-01", grade_min=9):
@@ -526,7 +526,7 @@ def test_applications_are_capped_so_a_plan_stays_a_plan() -> None:
 
 
 def test_the_cap_keeps_the_best_matches_not_the_first_ones() -> None:
-    """``ranked`` arrives sorted by score, so the cap must preserve that order —
+    """``ranked`` arrives sorted by score, so the cap must preserve that order -
     otherwise the plan's four applications are arbitrary."""
     ranked = [scored("best", "Best Match", 0.90),
               scored("mid", "Middling Match", 0.50),
@@ -559,7 +559,7 @@ def test_a_student_with_no_archetype_still_gets_build_and_publish_steps() -> Non
 
     A student who declines all three suggested careers has no archetype, so
     spine_for("") returns None and the roadmap used to come back with no build
-    or publish rung at all — the plan for someone who rejected the framing was
+    or publish rung at all, the plan for someone who rejected the framing was
     thinner than the plan for someone who accepted it, which is backwards.
 
     Their spine comes from the model instead, written against their traits,

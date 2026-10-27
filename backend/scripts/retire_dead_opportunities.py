@@ -16,7 +16,7 @@ dismissals all reference opportunities(id) with `on delete cascade`, so
 deleting would destroy any student history attached to the row, and the row is
 also the evidence of why it was removed.
 
-Idempotent — re-running only re-stamps the same rows.
+Idempotent, re-running only re-stamps the same rows.
 
 Usage:
     cd backend && .venv/bin/python scripts/retire_dead_opportunities.py [--dry-run]

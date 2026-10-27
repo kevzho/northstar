@@ -73,7 +73,7 @@ class Settings(BaseModel):
     advisor_cache_ttl_h: int = 24
 
     # Optional: the route advisor (POST /advisor) and the nightly candidate
-    # verifier — any OpenAI-compatible chat API. Absent key = 503, feature off.
+    # verifier, any OpenAI-compatible chat API. Absent key = 503, feature off.
     #
     # Production uses NVIDIA NIM's free tier. The defaults name it rather than
     # a provider this project has never called: the old defaults said DeepSeek
@@ -105,7 +105,7 @@ class Settings(BaseModel):
     # student data anywhere, so it can move to a paid-but-stable provider today.
     # The advisor sends a student's trait scores, interests and goal statement in
     # their own words, and frontend/app/privacy/page.tsx names NVIDIA as the
-    # recipient — so moving it requires changing a promise made to minors about
+    # recipient, so moving it requires changing a promise made to minors about
     # where their words go, in four languages, and that is a deliberate act and
     # not a config change.
     #
@@ -117,7 +117,7 @@ class Settings(BaseModel):
 
     @property
     def verifier_provider(self) -> tuple[str, str, str]:
-        """(base, key, model) for the verifier — its own, else the shared one."""
+        """(base, key, model) for the verifier, its own, else the shared one."""
         return (
             self.verifier_api_base or self.llm_api_base,
             self.verifier_api_key or self.llm_api_key,
@@ -130,7 +130,7 @@ class Settings(BaseModel):
             """Unset, empty, or malformed all fall back to the default.
 
             os.getenv returns "" for a set-but-empty variable, which int()
-            rejects — and a CI runner exporting an undefined secret produces
+            rejects, and a CI runner exporting an undefined secret produces
             exactly that.
             """
             try:

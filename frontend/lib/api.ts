@@ -52,7 +52,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 /**
  * Build a JSON fetch request with the current Supabase access token attached.
- * When no session exists the caller receives a 401 from the backend — the
+ * When no session exists the caller receives a 401 from the backend, the
  * UI gate already runs useAuth() before this, so that path is rare.
  */
 /** An HTTP failure, with the status and the server's message kept intact. */
@@ -78,8 +78,8 @@ export async function authedFetch(
   });
   if (!res.ok) {
     // Carry the server's own message out with the error. Some refusals are
-    // written for the student to read — /advisor's 429 says which budget ran
-    // out and when it resets — and throwing only the status discards them.
+    // written for the student to read, /advisor's 429 says which budget ran
+    // out and when it resets, and throwing only the status discards them.
     let detail = "";
     try {
       const body = (await res.clone().json()) as { detail?: unknown };
@@ -129,8 +129,8 @@ export async function saveStudentProfile(
  * Calls GET /match on the FastAPI backend, which runs the TF-IDF scoring
  * pipeline and returns MatchResult[] sorted by score desc.
  *
- * Cached in memory for MATCH_CACHE_MS. Three pages call this — the dashboard,
- * /opportunities and /plan — and a student moving between them in one session
+ * Cached in memory for MATCH_CACHE_MS. Three pages call this, the dashboard,
+ * /opportunities and /plan, and a student moving between them in one session
  * re-ran the whole pipeline each time: a catalog read, four more queries, and
  * a write, to return a list that had not changed. The ranking only moves when
  * the profile, a bookmark, a dismissal or an outcome changes, and each of
@@ -138,7 +138,7 @@ export async function saveStudentProfile(
  *
  * Deliberately a module-level variable, not sessionStorage: the point is to
  * collapse duplicate calls inside one navigation session, and it should not
- * survive a reload — a reload is a student asking for fresh data.
+ * survive a reload, a reload is a student asking for fresh data.
  */
 const MATCH_CACHE_MS = 60_000;
 let matchCache: { at: number; inflight: Promise<MatchResult[]> } | null = null;
@@ -325,7 +325,7 @@ export async function uncompleteMission(missionId: string): Promise<void> {
  * Delete this account and everything attached to it.
  *
  * `confirm` must be the account's own email address. The API enforces that
- * too — the typed confirmation in the UI is not the only gate, because an API
+ * too, the typed confirmation in the UI is not the only gate, because an API
  * that is a softer door than its button is not actually gated.
  */
 export async function deleteAccount(confirm: string): Promise<void> {
@@ -346,7 +346,7 @@ export type BranchStep = { title: string; detail: string };
  * profile the step came from.
  *
  * Throws with the server's own message, because every refusal here is one a
- * student should read — out of allowance, out of budget, model unreachable, or
+ * student should read, out of allowance, out of budget, model unreachable, or
  * a breakdown that tried to put an unverified link or programme in their plan.
  * In all of them the plan is unchanged, and saying so is more useful than a
  * generic failure.
@@ -380,7 +380,7 @@ export async function fetchTimeline(): Promise<TimelineEvent[]> {
  *
  * 503 when the feature is unconfigured; 429 when a spend cap is hit, with a
  * student-readable reason in `detail`. `cached` marks an answer replayed
- * from a previous identical question — those cost no LLM credits.
+ * from a previous identical question, those cost no LLM credits.
  */
 export async function askAdvisor(question: string): Promise<{
   answer: string;
@@ -588,8 +588,8 @@ export async function fetchCatalog(): Promise<Opportunity[]> {
  *
  * A plain fetch, not authedFetch: there is no session to attach, and sending an
  * Authorization header of `undefined` is how a public route starts 401ing for
- * the people it exists for. The server returns an allowlist of fields — no
- * curation bookkeeping — and marks each row `is_open` so the client does not
+ * the people it exists for. The server returns an allowlist of fields, no
+ * curation bookkeeping, and marks each row `is_open` so the client does not
  * re-derive today's date.
  */
 export async function fetchPublicCatalog(): Promise<Opportunity[]> {
@@ -630,7 +630,7 @@ export type ShelfResource = Omit<LearningResource, "verified_at"> & {
  * something their plan had not told them to learn had no route to it, and a
  * visitor could not see it was there at all.
  *
- * A plain fetch for the same reason fetchPublicCatalog uses one — there is no
+ * A plain fetch for the same reason fetchPublicCatalog uses one, there is no
  * session to attach, and sending an Authorization header of `undefined` is how
  * a public route starts 401ing for the people it exists for.
  */
@@ -645,8 +645,8 @@ export async function fetchPublicShelf(): Promise<ShelfResource[]> {
 /**
  * Free learning resources for one spine skill rung.
  *
- * The plan's skill step used to be an instruction with nowhere to go — "run a
- * focused 5-hour sprint on statistics" — which is only useful to a student who
+ * The plan's skill step used to be an instruction with nowhere to go, "run a
+ * focused 5-hour sprint on statistics", which is only useful to a student who
  * already knew where to learn statistics. This is the where.
  *
  * Returns [] rather than throwing: a plan that renders without its resources
@@ -672,7 +672,7 @@ export type RoadmapStep = {
   step_key: string;
   /**
    * Why this step sits where it does. "gate" was missing here while
-   * roadmap.py had been emitting it since entry_gate shipped — a prep step
+   * roadmap.py had been emitting it since entry_gate shipped, a prep step
    * ("Enter the affiliated fair that leads to ISEF") and every non-apply
    * application carry it. It belongs with "window" and "eligibility": a rule
    * the programme published, not a generalisation of ours.
@@ -751,7 +751,7 @@ export type AutoSpine = {
 /**
  * Ask for a first path, if nobody ever wrote one.
  *
- * Fired by /plan when the roadmap comes back with has_spine false — a student
+ * Fired by /plan when the roadmap comes back with has_spine false, a student
  * who never charted a path on /futures otherwise gets a plan with no project
  * in it at all, which is the one thing this product promises to tell them.
  *
@@ -777,7 +777,7 @@ export async function autoGenerateSpine(): Promise<AutoSpine> {
  * different rather than the same idea reworded.
  *
  * Throws with the server's own message, because every refusal here is one a
- * student should read — out of budget, model unreachable, or a path that came
+ * student should read, out of budget, model unreachable, or a path that came
  * back pointing at a skill with nothing behind it. In all three their current
  * path is unchanged, and saying so is more useful than a generic failure.
  */
@@ -802,7 +802,7 @@ export async function regenerateSpine(reason: string): Promise<GeneratedSpine> {
 }
 
 /**
- * The student's sequenced roadmap — what to do, in order.
+ * The student's sequenced roadmap, what to do, in order.
  *
  * Returns null rather than throwing, so /plan can fall back to the client-side
  * generatePlan() when signed out or when the backend is unreachable. A student

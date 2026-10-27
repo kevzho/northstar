@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Team up — mutual-interest collaborator and study-buddy matching.
+ * Team up, mutual-interest collaborator and study-buddy matching.
  *
  * Not dating. The deck shows what a student is building and studying;
  * "Interested" is invisible to them unless they picked you too, at which
@@ -47,7 +47,7 @@ const PITCH_MAX = 240;
 export default function TeamupPage() {
   // Built from this student's own assessment, so it needs an account.
   // Signed out this used to render a heading and an empty shell while the
-  // API answered 401 — gated and broken look identical from there.
+  // API answered 401, gated and broken look identical from there.
   useRequireAuth();
   const [enabled, setEnabled] = useState<boolean | null>(null);
   const [pitch, setPitch] = useState("");

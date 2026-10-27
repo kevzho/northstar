@@ -6,7 +6,7 @@ tokens whose public keys are published at
 ``<SUPABASE_URL>/auth/v1/.well-known/jwks.json``; older projects (and the
 test suite) sign **HS256** with the static ``SUPABASE_JWT_SECRET``. This
 dependency accepts both: the token's own header picks the path, and each
-path allows exactly one algorithm — so neither can be used to confuse the
+path allows exactly one algorithm, so neither can be used to confuse the
 other, and "alg=none" is rejected everywhere.
 
 The ``sub`` claim is the ``auth.users.id`` UUID, which we key student rows
@@ -82,7 +82,7 @@ def get_current_user(request: Request) -> CurrentUser:
             allowed = ["HS256"]
         # Supabase access tokens carry aud="authenticated"; the test suite's
         # minimal tokens carry none. Signature + expiry are the security
-        # boundary here, and `sub` is what we act on — so aud is not
+        # boundary here, and `sub` is what we act on, so aud is not
         # enforced rather than maintaining two token dialects.
         payload = jwt.decode(
             token, key, algorithms=allowed, options={"verify_aud": False}

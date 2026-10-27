@@ -1,5 +1,5 @@
 """
-Collaborative filtering via alternating least squares (ALS) — pure stdlib.
+Collaborative filtering via alternating least squares (ALS), pure stdlib.
 
 The TF-IDF engine scores what a student *says* (interests, goals). This
 module scores what students *did*: logged outcomes become a students x
@@ -11,17 +11,17 @@ Two halves, deliberately separated:
   Training (offline, scripts/train_als.py): alternate closed-form
   least-squares solves for user rows and item rows until RMSE settles,
   then write the ITEM factors to app/data/als_item_factors.json. User
-  factors are never shipped — they are derivable and privacy-irrelevant
+  factors are never shipped, they are derivable and privacy-irrelevant
   to keep.
 
-  Serving (here, at request time): "fold in" the current student — one
+  Serving (here, at request time): "fold in" the current student, one
   regularized least-squares solve of their own outcomes against the fixed
-  item factors — then predict a score for every opportunity. Students with
+  item factors, then predict a score for every opportunity. Students with
   no logged outcomes get no collaborative signal (the term simply stays
   out of their ranking; nothing is invented for them).
 
 The linear algebra is a k x k Gaussian elimination (k = 8), small enough
-to derive by hand — consistent with the rest of the engine, no numpy.
+to derive by hand, consistent with the rest of the engine, no numpy.
 """
 
 from __future__ import annotations
@@ -193,7 +193,7 @@ def collaborative_scores(
     """Map opportunity_id → collaborative score in [0, 1].
 
     Returns {} when there is no trained model or the student has no usable
-    outcomes — callers treat an empty dict as "no collaborative signal."
+    outcomes, callers treat an empty dict as "no collaborative signal."
     Predictions live on the rating scale [-0.5, 1.0] and are mapped
     linearly onto [0, 1] so 0.5 means "no opinion."
     """

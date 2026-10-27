@@ -4,7 +4,7 @@
  * The one in-app nav row: wordmark, the four places there are, page actions.
  *
  * WHAT THIS REPLACES. A wordmark and a page-specific right slot, and nothing
- * else — so the app was hub-and-spoke with a weak hub. Measured 2026-10-08:
+ * else, so the app was hub-and-spoke with a weak hub. Measured 2026-10-08:
  * /dashboard linked to eight places, and every other page linked to two to
  * five, mostly sideways or back. From /profile a student could reach only
  * /assessment and /futures. From /map, only /dashboard and /onboarding. /plan
@@ -12,7 +12,7 @@
  * across them.
  *
  * FIVE DESTINATIONS, NOT TWENTY-TWO. The routes group into five things a
- * student is actually doing — finding something to apply to, finding something
+ * student is actually doing, finding something to apply to, finding something
  * to learn, working out what to do next, understanding themselves, and finding
  * people. Everything else is a detail page reached from one of those. A nav
  * listing every route would be the same problem with more words in it.
@@ -21,7 +21,7 @@
  * deadline you can miss and a gate you might not pass. A free textbook has
  * neither. Filing the shelf under applications is how it ended up reachable
  * only from a roadmap step, and how the product had nothing to say to a student
- * in a month when nothing is open — which is most months.
+ * in a month when nothing is open, which is most months.
  *
  * SIGNED OUT IT SHOWS WHAT WORKS SIGNED OUT. Three of the five need an account;
  * two do not. Offering a visitor five links that bounce them to /login is worse
@@ -120,7 +120,7 @@ export function AppNav({
       This was a static row sitting inside the page's own `py-8`, so 32px of
       dead space opened above it and the bar read as a strip floating in the
       content rather than as the top of the application. It also scrolled away
-      — on /learn, which is 16,000px tall, you lost every navigation link
+     , on /learn, which is 16,000px tall, you lost every navigation link
       three screens in.
 
       `-mt-8` cancels the page padding above it; `py-4` gives the bar its own.
@@ -138,7 +138,7 @@ export function AppNav({
         </Link>
 
         {/* Hidden while the session resolves rather than flashing the wrong
-            state on every hard refresh — the same reason use-require-auth
+            state on every hard refresh, the same reason use-require-auth
             waits before redirecting. */}
         {!loading ? (
           <nav aria-label="Sections" className="flex items-center gap-1">

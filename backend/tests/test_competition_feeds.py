@@ -2,7 +2,7 @@
 Guards on the recurring-competition feeds.
 
 These exist because volume is the easy half. Every high-volume competition feed
-that is free and needs no auth is computer science — CTFtime, Codeforces,
+that is free and needs no auth is computer science, CTFtime, Codeforces,
 Devpost, Hack Club, Kaggle, all of it. app/match.py boosts a field match, so an
 uncapped import makes CS crowd out every other field and a student who wrote
 "biology" starts being shown capture-the-flag events. The shelf would get bigger
@@ -63,7 +63,7 @@ def test_a_combined_division_round_is_not_discouraged() -> None:
     """A Div. 1 + Div. 2 round is enterable by Div. 2 competitors.
 
     Matching "Div. 1" first told a beginner to skip a contest they were welcome
-    at — eligible but walled, the same error as a juniors-only programme listed
+    at, eligible but walled, the same error as a juniors-only programme listed
     for grades 9-12.
     """
     combined = codeforces.beginner_note("Codeforces Round (Div. 1 + Div. 2)")
@@ -105,7 +105,7 @@ def test_feed_candidates_are_verified_before_the_reddit_pool() -> None:
 
     The pool holds 9,000+ reddit candidates, the per-run verify cap is 60, and
     ordering inside a tier falls back to pool order, which is score-descending.
-    A structured feed has no upvotes, so its entries sort last of all — the
+    A structured feed has no upvotes, so its entries sort last of all, the
     adapters would run daily, write candidates, and import nothing, which looks
     exactly like working.
     """
@@ -389,7 +389,7 @@ def test_a_fair_without_an_upcoming_date_is_not_imported() -> None:
     89 fair rows landed and 3 of them had a date. `interdisciplinary` went to
     54% of the high-school shelf. Every one of the 89 contains the words
     "science" and "fair" and 64 contain "engineering", so to the matcher they
-    are one row repeated — and location_scope is us/international/global, with
+    are one row repeated, and location_scope is us/international/global, with
     no state granularity, so a student in Alabama is shown all 89 rather than
     the four that are theirs.
 
@@ -413,7 +413,7 @@ def test_the_pathways_detail_fetch_happens_once_per_programme() -> None:
     """Politeness, and it is measurable.
 
     Without a cache this scraper fetched all ~80 detail pages on every daily run
-    to rediscover addresses it already had — 80 requests a day at a small
+    to rediscover addresses it already had, 80 requests a day at a small
     nonprofit directory to learn nothing. The listing changes a few times a
     year; the mapping from a slug to the organiser's own site does not change at
     all. Measured after the fix: 66 fetched on the first run, 0 on the second.

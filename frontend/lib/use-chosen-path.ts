@@ -5,7 +5,7 @@
  *
  * Identical pattern to lib/use-assessment.ts: localStorage is an external
  * store read through `useSyncExternalStore`, so every subscriber re-renders
- * the moment the choice changes — in this tab via writeChosenPath, in another
+ * the moment the choice changes, in this tab via writeChosenPath, in another
  * tab via the browser's `storage` event.
  */
 
@@ -50,7 +50,7 @@ export function writeChosenPath(path: ChosenPath): void {
   try {
     window.localStorage.setItem(CHOSEN_PATH_KEY, JSON.stringify(path));
   } catch {
-    // Private browsing or a full quota — the in-memory value still updates.
+    // Private browsing or a full quota, the in-memory value still updates.
   }
   notify();
 }
@@ -60,7 +60,7 @@ export function resetChosenPath(): void {
   try {
     window.localStorage.removeItem(CHOSEN_PATH_KEY);
   } catch {
-    // Nothing to do — a failed clear leaves the previous choice in place.
+    // Nothing to do, a failed clear leaves the previous choice in place.
   }
   notify();
 }

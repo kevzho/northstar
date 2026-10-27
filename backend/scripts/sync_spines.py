@@ -3,7 +3,7 @@ Regenerate backend/app/spines.py from frontend/lib/plan.ts.
 
 The spines are authored in TypeScript because that is where /plan renders them,
 including signed-out. The backend needs them so GET /roadmap can sequence
-without trusting client-supplied content — a student posting their own project
+without trusting client-supplied content, a student posting their own project
 text into public.actions would destroy the provenance the foreign keys exist to
 guarantee.
 

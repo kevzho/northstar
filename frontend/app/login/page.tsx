@@ -12,7 +12,7 @@ import { supabase } from "@/lib/supabase";
 function LoginInner() {
   // Set by lib/use-require-auth.ts when a personal page turned someone away.
   // Saying which page, and that it was gated rather than broken, is the whole
-  // reason that redirect exists — the pages used to render an empty shell and
+  // reason that redirect exists, the pages used to render an empty shell and
   // leave people to guess.
   const params = useSearchParams();
   const gated = params.get("reason") === "account";

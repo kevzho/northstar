@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Contact — a direct line to the maker, plus the opportunity-suggestion
+ * Contact, a direct line to the maker, plus the opportunity-suggestion
  * ask (a cheap acquisition channel). Copy is translated through lib/i18n.
  */
 

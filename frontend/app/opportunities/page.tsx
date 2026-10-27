@@ -57,7 +57,7 @@ const typeValues = new Set(typeFilters.map((f) => f.value));
 
 /**
  * Read a filter out of the query string, falling back to "all" for anything
- * that is not a value we render — a hand-edited or stale URL must not produce
+ * that is not a value we render, a hand-edited or stale URL must not produce
  * a select with no matching option.
  */
 function readParam<T extends string>(
@@ -76,7 +76,7 @@ function OpportunitiesList() {
 
   const [matches, setMatches] = useState<MatchResult[]>([]);
   const [loadFailed, setLoadFailed] = useState(false);
-  // Ids dismissed this session, newest last — drives the undo strip.
+  // Ids dismissed this session, newest last, drives the undo strip.
   const [dismissedHere, setDismissedHere] = useState<string[]>([]);
   const [catalog, setCatalog] = useState<Opportunity[] | null>(null);
   const { user, loading: authLoading } = useAuth();
@@ -168,7 +168,7 @@ function OpportunitiesList() {
     if (view !== "all" || catalog !== null) return;
     let mounted = true;
     // Signed out there is no profile to rank against, so the public shelf is
-    // the whole offer — and it is a far better first impression than the empty
+    // the whole offer, and it is a far better first impression than the empty
     // page this rendered until 2026-10-05.
     (signedOut ? fetchPublicCatalog() : fetchCatalog())
       .then((rows) => {
@@ -207,7 +207,7 @@ function OpportunitiesList() {
     return true;
   }
 
-  // A row with no state is not "somewhere else" — it is national or online, so
+  // A row with no state is not "somewhere else", it is national or online, so
   // it is available to a student in any state and must survive the filter.
   // Dropping those would turn "Alabama" into "only the four Alabama fairs" and
   // hide Regeneron from them.
@@ -351,7 +351,7 @@ function OpportunitiesList() {
             <option value="paid">Paid</option>
           </NativeSelect>
           {/* Built from the states the catalog actually has rows for, not a
-              list of 50 — offering Wyoming when nothing is in Wyoming is a
+              list of 50, offering Wyoming when nothing is in Wyoming is a
               dead end dressed as a choice. Hidden entirely until locality
               exists, because an empty filter teaches a student the feature
               does not work. */}

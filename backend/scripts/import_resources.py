@@ -304,7 +304,7 @@ def main(argv: list[str] | None = None) -> int:
 
         try:
             sb.table("learning_resources").insert(row).execute()
-        except Exception as error:  # noqa: BLE001 — postgrest raises broadly
+        except Exception as error:  # noqa: BLE001, postgrest raises broadly
             print(f"  insert failed {url[:60]}: {error}")
             continue
         ledger[url] = {"at": datetime.now(timezone.utc).isoformat(), "why": "imported"}

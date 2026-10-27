@@ -3,8 +3,8 @@
 /**
  * The way into the mentor directory. There was not one.
  *
- * `table("mentors")` appeared exactly once in the backend — the read in
- * GET /mentors — so the directory's empty state promised it "will fill with
+ * `table("mentors")` appeared exactly once in the backend, the read in
+ * GET /mentors, so the directory's empty state promised it "will fill with
  * mentors who have agreed in writing to hear from students" and nothing could
  * ever make that true. It was not empty for want of volunteers. There was
  * nowhere to volunteer.

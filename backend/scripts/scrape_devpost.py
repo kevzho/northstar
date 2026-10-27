@@ -1,9 +1,9 @@
 """
-Devpost scraper — open hackathons into the candidate pool.
+Devpost scraper, open hackathons into the candidate pool.
 
 Second source after Reddit, and a structurally better one: Devpost's
 public JSON endpoint returns titles, URLs, themes, and submission
-windows, so candidates arrive with real deadlines — the field the
+windows, so candidates arrive with real deadlines, the field the
 catalog needs most and Reddit posts almost never state.
 
 Entries merge into the same review pool (scraped/reddit_candidates.json,
@@ -128,11 +128,11 @@ def main() -> None:
                 "type_guess": "competition",
                 # AUDIENCE IS A CONSERVATIVE GUESS, AND DELIBERATELY SO.
                 #
-                # Devpost's JSON gives titles, URLs, themes and deadlines — no
+                # Devpost's JSON gives titles, URLs, themes and deadlines, no
                 # eligibility text. So there is nothing here to determine
                 # whether a hackathon accepts a 15-year-old, and the verifier
                 # cannot tell either: it is handed this blurb, which says only
-                # "Open hackathon — themes: X, Y".
+                # "Open hackathon, themes: X, Y".
                 #
                 # This used to check the title alone, which is why 134 of 138
                 # AI-imported rows landed on the college shelf: a title almost
@@ -141,7 +141,7 @@ def main() -> None:
                 #
                 # But the DEFAULT stays college, on purpose. Of the nine seeded
                 # opportunities retired after an audit, four were retired
-                # precisely because high schoolers could not apply — NSF REU,
+                # precisely because high schoolers could not apply, NSF REU,
                 # CERN, Jackson Lab, Broadcom MASTERS. Guessing high_school here
                 # would repeat that error across 134 rows at once. Hiding a
                 # hackathon a student could have entered is a real cost; sending

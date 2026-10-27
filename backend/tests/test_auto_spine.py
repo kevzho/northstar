@@ -47,7 +47,7 @@ class _Table:
     @property
     def not_(self):
         # postgrest chains `.not_.is_(...)`, so not_ is a PROPERTY returning
-        # something with is_ on it — not a method.
+        # something with is_ on it, not a method.
         return self
 
     def is_(self, *a, **k):

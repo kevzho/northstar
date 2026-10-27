@@ -3,7 +3,7 @@ Route-level smoke tests using FastAPI's TestClient.
 
 These need no Supabase credentials: they cover the public routes and assert that
 every data route fails closed with 401 when the Authorization header is absent
-or invalid. That is the property that matters for a public deploy — a missing
+or invalid. That is the property that matters for a public deploy, a missing
 token must never reach the service-role Supabase client.
 """
 
@@ -74,7 +74,7 @@ def test_health_reports_unconfigured_when_the_llm_key_is_absent(
     client: TestClient,
 ) -> None:
     """The first version of /health checked whether app.embeddings IMPORTED,
-    which is true on a host with no LLM_API_KEY — so it answered "available"
+    which is true on a host with no LLM_API_KEY, so it answered "available"
     for a feature that cannot run. Both /advisor and every profile embedding
     need that key, and production did not have it while the code and the
     frontend looked fine. A health check that goes green on the outage it was
@@ -134,7 +134,7 @@ def test_every_route_except_public_ones_declares_auth() -> None:
         # made an account sees opportunities rather than an empty page. Every
         # catalog route was gated until 2026-10-05, and /opportunities,
         # /discover and /plan each rendered zero rows signed out while the API
-        # answered 401 — which reads as broken rather than as gated.
+        # answered 401, which reads as broken rather than as gated.
         #
         # It is a separate route from /catalog precisely so this entry is not a
         # loophole: /catalog returns the whole row including added_by,
@@ -147,7 +147,7 @@ def test_every_route_except_public_ones_declares_auth() -> None:
         # served as a profile lookup and 404ing.
         "/catalog/public",
         # Deliberately public: the learning shelf. Same reasoning as the
-        # catalog above, and the stronger case — free material a student can
+        # catalog above, and the stronger case, free material a student can
         # start tonight is the half of this product that needs no account, no
         # transcript, no teacher and no money, so putting it behind a login was
         # backwards. Allowlisted in app/resources.py SHELF_FIELDS; see
@@ -156,7 +156,7 @@ def test_every_route_except_public_ones_declares_auth() -> None:
         # Deliberately public: someone offering to mentor is not a student and
         # must not have to create a student account to volunteer. It writes to
         # mentor_applications, which no public role can read or write, and
-        # never to public.mentors — see test_a_mentor_application_cannot_reach
+        # never to public.mentors, see test_a_mentor_application_cannot_reach
         # _the_live_directory below.
         "/mentors/apply",
     }
@@ -218,7 +218,7 @@ def test_public_catalog_serves_an_allowlist_not_the_row() -> None:
     # Retired rows are never browsable, and this is the high-school shelf.
     # Both filters moved into fetch_shelf when this route started sharing its
     # cache, so the guarantee is asserted on BEHAVIOUR rather than on the text
-    # of this one function — a source-string check would have gone green on a
+    # of this one function, a source-string check would have gone green on a
     # route that had quietly stopped filtering.
     assert "fetch_shelf" in body and '"high_school"' in body
     import inspect as _inspect
@@ -241,7 +241,7 @@ def test_locality_is_the_one_thing_recall_cannot_give_and_must_survive() -> None
 
     That fact was already being scraped and then dropped. scrape_sciencefairs.py
     extracts each fair's territory and passes "Bullock County, AL";
-    app/verifier.py collapsed it into location_scope — an enum of three values —
+    app/verifier.py collapsed it into location_scope, an enum of three values -
     and every regional fair in the catalog read location=NULL.
     """
     import ast
@@ -285,7 +285,7 @@ def test_a_mentor_application_cannot_reach_the_live_directory() -> None:
     directory could never fill. Adding one had to not also add a way for a
     stranger to put their address in front of children: applications land in
     mentor_applications, which carries no RLS policy for anon or authenticated,
-    and a person moves them across. The separation is the safeguard — a status
+    and a person moves them across. The separation is the safeguard, a status
     column on the live table would not be, because nothing enforces reading it.
     """
     import inspect
@@ -320,7 +320,7 @@ def test_the_consent_sentence_is_stored_not_referenced() -> None:
 
 
 def test_mentor_matching_works_when_the_directory_is_not_empty() -> None:
-    """The directory being empty is a data state, not a broken feature — but
+    """The directory being empty is a data state, not a broken feature, but
     nothing was proving the ranking still worked, because every test ran
     against zero rows."""
     from app.mentors import score_mentors
@@ -454,7 +454,7 @@ def test_every_handler_can_resolve_the_names_it_calls() -> None:
         return out
 
     def top_level_bindings(body: list) -> set[str]:
-        """Only what the MODULE binds — see the docstring above."""
+        """Only what the MODULE binds, see the docstring above."""
         out: set[str] = set()
         for stmt in body:
             if isinstance(stmt, (ast.Import, ast.ImportFrom)):
@@ -492,7 +492,7 @@ def test_every_handler_can_resolve_the_names_it_calls() -> None:
         node for node in create_app.body
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
     ]
-    # What create_app binds for its handlers to close over — its own body, minus
+    # What create_app binds for its handlers to close over, its own body, minus
     # the handlers' private locals.
     enclosing = {arg.arg for arg in create_app.args.args}
     enclosing |= {handler.name for handler in handlers}
@@ -525,8 +525,8 @@ def test_every_handler_can_resolve_the_names_it_calls() -> None:
 def test_a_completion_can_be_taken_back_and_only_your_own() -> None:
     """Marking a mission done used to be a one-way door.
 
-    The only write was an upsert, so a student who ticked the wrong card — or
-    ticked one and then did not finish it — was stuck looking at a claim about
+    The only write was an upsert, so a student who ticked the wrong card, or
+    ticked one and then did not finish it, was stuck looking at a claim about
     themselves they could not correct. An evidence record nobody can amend is
     not a stronger record, it is one people stop trusting.
 
@@ -588,7 +588,7 @@ def test_deleting_an_account_requires_typing_the_email_and_removes_everything() 
 
     Two things are pinned. It refuses without a matching confirmation, because
     the API must not be a softer door than the typed confirmation in the UI.
-    And it VERIFIES the cascade afterwards rather than assuming it fired — a
+    And it VERIFIES the cascade afterwards rather than assuming it fired, a
     student told their data is gone when it is not is worse off than one shown
     an error.
     """
@@ -640,7 +640,7 @@ def test_deleting_an_account_requires_typing_the_email_and_removes_everything() 
             assert response.status_code == 400, body
         assert deleted == [], "an account was deleted without confirmation"
 
-        # The real thing, case-insensitively — a student typing their own
+        # The real thing, case-insensitively, a student typing their own
         # address in lowercase is confirming, not failing a string match.
         response = client.request("DELETE", "/me", json={"confirm": "student@example.com"})
         assert response.status_code == 204

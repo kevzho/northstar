@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * RoadmapTree — the plan as a branching route, roadmap.sh style.
+ * RoadmapTree, the plan as a branching route, roadmap.sh style.
  *
  * Replaces JourneyMap, which drew one horizontal row of dots per phase. That
  * said WHEN but could not say WHICH THING UNLOCKS WHICH, and the second is the
@@ -12,19 +12,19 @@
  * kinds are drawn differently and named in the key underneath:
  *
  *   solid gold      the programme's own rule (entry_gate / entry_note)
- *   dashed magenta  our generalisation — the same --advisory overprint the step
+ *   dashed magenta  our generalisation, the same --advisory overprint the step
  *                   cards use for an authored edge_note, so the two agree
  *   dotted grey     nothing gates it; it belongs to that stage, that is all
  *
  * ACCESSIBILITY. The nodes are one <ol> in ladder order with real text, so the
  * sequence survives without the picture; the SVG carries only the connectors and
- * is hidden. Every node is an anchor to its own card in the list below — which
+ * is hidden. Every node is an anchor to its own card in the list below, which
  * means it works with no JavaScript, keyboard-navigates in ladder order, and
  * gives a screen reader "link, Apply to RSI" rather than an unlabelled dot.
  *
  * Coordinates: x is a percentage, y is pixels. The SVG scales non-uniformly to
  * match, which is why every stroke is non-scaling and every connector is a
- * right-angle elbow — an axis-aligned line cannot be skewed by that scale.
+ * right-angle elbow, an axis-aligned line cannot be skewed by that scale.
  */
 
 import { useEffect, useRef } from "react";
@@ -124,7 +124,7 @@ function Node({ node, here }: { node: TreeNode; here: boolean }) {
       </span>
       <span
         /* NO `block` HERE. line-clamp-3 works by setting display:-webkit-box,
-           and `block` sets display:block — whichever Tailwind emits later
+           and `block` sets display:block, whichever Tailwind emits later
            wins, which was `block`. So the clamp never applied, a long step
            title rendered all ten of its lines, and the node overflowed its
            118px row into the one below it. That is the overlap on /plan:
@@ -190,7 +190,7 @@ export function RoadmapTree({
    * Centre the canvas on the trunk once it exists.
    *
    * At 390px the canvas is twice the viewport, and a scroller starts at
-   * scrollLeft 0 — so a student on a phone opened this to the left-hand
+   * scrollLeft 0, so a student on a phone opened this to the left-hand
    * branches with the trunk entirely off-screen, which is the one part they
    * need. Does nothing on a wide screen, where there is no overflow to centre.
    */
@@ -215,8 +215,8 @@ export function RoadmapTree({
 
   return (
     <figure className={className}>
-      {/* Sideways scroll rather than a reflow. The columns ARE the data — one
-          column is one programme, its gate stacked above it — and letting them
+      {/* Sideways scroll rather than a reflow. The columns ARE the data, one
+          column is one programme, its gate stacked above it, and letting them
           wrap on a narrow screen would put a gate above a different programme's
           application, which is worse than a scrollbar. */}
       <div ref={scroller} className="overflow-x-auto pb-2">

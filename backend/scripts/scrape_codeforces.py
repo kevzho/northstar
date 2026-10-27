@@ -3,7 +3,7 @@ Codeforces -> candidate pool. Algorithmic contests an individual enters alone.
 
 The complement to CTFtime: where CTFs are occasional and team-flavoured, a
 Codeforces round is strictly individual, free, requires nothing but an account,
-and one runs every few days — roughly 150 a year. For a student with no
+and one runs every few days, roughly 150 a year. For a student with no
 counsellor, no team and no teacher sponsor, this is the lowest-barrier
 competitive STEM thing that exists, and it is a real line on an application.
 
@@ -14,7 +14,7 @@ catalog previously ended up with 123 expired rows out of 195.
 Division matters and is preserved in the blurb. Div. 3 and Div. 4 are written
 for beginners; Div. 1 is not, and sending a student who has never competed to a
 Div. 1 round is the same failure as sending a sophomore to a juniors-only
-programme — technically eligible, practically a wall.
+programme, technically eligible, practically a wall.
 
 No auth, no key, documented public API. Field is always cs; see
 scrape_ctftime.py's docstring for why that is capped rather than celebrated.
@@ -41,7 +41,7 @@ API = "https://codeforces.com/api/contest.list"
 USER_AGENT = "northstar-catalog/1.0 (student nonprofit opportunity map)"
 
 # Small on purpose. Six to eight rounds are typically scheduled at a time, and
-# the feed refills continuously — there is no reason to hold more.
+# the feed refills continuously, there is no reason to hold more.
 MAX_IMPORT = 10
 
 
@@ -50,7 +50,7 @@ def beginner_note(name: str) -> str:
 
     Order matters. A "Div. 1 + Div. 2" round is a COMBINED round that Div. 2
     competitors enter normally, so matching "Div. 1" first told a beginner to
-    skip a contest they were welcome at — the same eligible-but-walled mistake
+    skip a contest they were welcome at, the same eligible-but-walled mistake
     as listing a juniors-only programme for grades 9-12. Combined rounds are
     checked before either division alone.
     """
@@ -121,7 +121,7 @@ def main() -> None:
             "deadline_guess": start.date().isoformat(),
             "field_guess": "cs",
             "type_guess": "competition",
-            # Genuinely open to any age — Codeforces has no enrolment
+            # Genuinely open to any age, Codeforces has no enrolment
             # requirement, which is exactly why it belongs on the shelf that
             # has almost nothing open.
             "audience_guess": "high_school",

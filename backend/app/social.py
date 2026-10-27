@@ -61,7 +61,7 @@ def mission_counts(sb, student_ids: list[str]) -> dict[str, int]:
     """Completed-mission counts for a set of students, in ONE query.
 
     Both discover and team-up used to fire one count query per candidate,
-    which is where the pages' lag came from — a page of 12 candidates was
+    which is where the pages' lag came from, a page of 12 candidates was
     12 extra round-trips.
     """
     if not student_ids:
@@ -170,7 +170,7 @@ def discover_peers(sb, me: dict, exclude_ids: set[str], limit: int = 12) -> list
 
     scored.sort(key=lambda p: p["_score"], reverse=True)
     top = scored[:limit]
-    # Missions completed — the "what they're doing" learning hook —
+    # Missions completed, the "what they're doing" learning hook -
     # batched into one query for just the page that will be shown.
     counts = mission_counts(sb, [p["student_id"] for p in top])
     for p in top:
@@ -206,7 +206,7 @@ def teamup_candidates(sb, me: dict, exclude_ids: set[str], limit: int = 8) -> li
     """Opted-in, same-audience students ranked for collaboration fit.
 
     Like discover, but the pool is only students who explicitly enabled
-    team-up matching, and nobody is dropped for low affinity — the pitch
+    team-up matching, and nobody is dropped for low affinity, the pitch
     ("what I'm building") is signal the score can't see. A candidate's
     handle is exposed only when their profile is public, so team-up never
     leaks a private student's handle.

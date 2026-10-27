@@ -53,7 +53,7 @@ from .match import score_opportunities
 
 # How many scored rows GET /match persists into public.matches. The route used
 # to write every one (144 per call). Twenty is more than any surface renders
-# and keeps a live denominator for the impact figure — see the upsert comment
+# and keeps a live denominator for the impact figure, see the upsert comment
 # in match().
 MATCHES_PERSISTED = 20
 
@@ -99,7 +99,7 @@ def create_app() -> FastAPI:
         semantic and advisor report whether each feature can actually RUN, not
         whether its module imports. The first version of this endpoint checked
         importability and would have answered "available" on a host with no
-        LLM_API_KEY — a false green in the exact check written to prevent one.
+        LLM_API_KEY, a false green in the exact check written to prevent one.
         Both features need that key: without it /advisor 503s and no student
         ever gets a profile embedding, while the code and the frontend look
         completely fine.
@@ -213,7 +213,7 @@ def create_app() -> FastAPI:
                 detail="Failed to upsert student profile",
             )
         # Re-embed the profile: interests and goals are both scoring inputs, and
-        # `goals` is the only free text a student writes — the only field that
+        # `goals` is the only free text a student writes, the only field that
         # can express "I want to help people with cancer". Best effort: a stale
         # embedding costs ranking precision, a 500 here costs the student their
         # onboarding.
@@ -231,7 +231,7 @@ def create_app() -> FastAPI:
 
         Touches only those two columns (see AssessmentProfileSync). 404s
         when no profile row exists yet. The row is created by POST /students
-        at the end of onboarding — the dashboard no longer writes a stub
+        at the end of onboarding, the dashboard no longer writes a stub
         ahead of it, because that stub made an abandoned onboarding
         permanent.
         """
@@ -257,7 +257,7 @@ def create_app() -> FastAPI:
                 detail="Student profile not found. POST /students to create.",
             )
 
-        # Append to history unless nothing changed — re-finishing the quiz
+        # Append to history unless nothing changed, re-finishing the quiz
         # with identical answers is a visit, not an evolution.
         try:
             latest = (
@@ -401,7 +401,7 @@ def create_app() -> FastAPI:
 
         Returns {answer, sources, cached} where sources are the numbered
         catalog entries the model was allowed to cite. 503 when no LLM key
-        is configured — the feature is off, not broken. 429 when the credit
+        is configured, the feature is off, not broken. 429 when the credit
         budget for the student, the minute, or the day is used up.
         """
 
@@ -543,7 +543,7 @@ def create_app() -> FastAPI:
 
     @app.get("/public/{handle}")
     def public_profile(handle: str) -> dict:
-        """The shareable record — deliberately unauthenticated.
+        """The shareable record, deliberately unauthenticated.
 
         Serves highlights only, and only for students who opted in
         (public_profile true). Everyone else is a uniform 404, so the
@@ -553,7 +553,7 @@ def create_app() -> FastAPI:
         from .db import get_supabase
         from .social import public_payload, valid_handle
 
-        # Unauthenticated, and `handle` reaches .eq() — whose criteria
+        # Unauthenticated, and `handle` reaches .eq(), whose criteria
         # postgrest-py does not escape. valid_handle is an allowlist, so a
         # handle that passes cannot carry a filter metacharacter. A reject
         # returns the SAME uniform 404 as an unknown handle, preserving the
@@ -742,8 +742,8 @@ def create_app() -> FastAPI:
     def discover(user: CurrentUser = RequireUser) -> list[dict]:
         """Opted-in peers who share the student's interests, ranked.
 
-        Gated by the target's public_profile flag — only findable students
-        appear — and by same audience. Excludes anyone already connected.
+        Gated by the target's public_profile flag, only findable students
+        appear, and by same audience. Excludes anyone already connected.
         Empty list (not an error) when the student has no profile or when
         no one else has opted in yet.
         """
@@ -781,7 +781,7 @@ def create_app() -> FastAPI:
         student_id: UUID,
         user: CurrentUser = RequireUser,
     ) -> dict:
-        """Side-by-side records — accepted friendships only."""
+        """Side-by-side records, accepted friendships only."""
         from .db import get_supabase
         from .social import compare_payload
 
@@ -819,7 +819,7 @@ def create_app() -> FastAPI:
     #
     # Not dating. The pool is opt-in, interest is invisible until mutual,
     # and every surface carries report + block. A match simply creates an
-    # accepted friendship — the same connection the rest of the app uses.
+    # accepted friendship, the same connection the rest of the app uses.
 
     @app.get("/teamup/settings")
     def teamup_settings(user: CurrentUser = RequireUser) -> dict:
@@ -888,7 +888,7 @@ def create_app() -> FastAPI:
     def teamup_candidates_route(user: CurrentUser = RequireUser) -> list[dict]:
         """Ranked collaborator candidates for the signed-in student.
 
-        409 until the student opts in themselves — you cannot browse the
+        409 until the student opts in themselves, you cannot browse the
         pool without being in it. Excludes existing connections (any
         status), anyone already decided on, and blocked pairs.
         """
@@ -941,7 +941,7 @@ def create_app() -> FastAPI:
     ) -> dict:
         """Record interest or a pass; mutual interest connects both students.
 
-        The target never learns about a one-sided decision — the response
+        The target never learns about a one-sided decision, the response
         only says ``matched`` when BOTH said interested, at which point an
         accepted friendship is created (or the pending one is upgraded).
         """
@@ -1052,7 +1052,7 @@ def create_app() -> FastAPI:
 
         # Validate the whole request before building a database client. A
         # malformed id is refused by shape alone, so it should never cost a
-        # connection — and a route that reaches for the client first cannot
+        # connection, and a route that reaches for the client first cannot
         # be tested without credentials, which is how this ordering slipped
         # past a local run and failed in CI.
         raw_id = str(body.get("student_id", "")).strip()
@@ -1079,7 +1079,7 @@ def create_app() -> FastAPI:
         if not target_id:
             # valid_handle is an allowlist (^[a-z0-9][a-z0-9-]{2,19}$), so a
             # handle that passes it cannot carry a PostgREST metacharacter
-            # into the .eq() below — which postgrest-py does not escape.
+            # into the .eq() below, which postgrest-py does not escape.
             row = (
                 sb.table("students")
                 .select("id")
@@ -1627,8 +1627,8 @@ def create_app() -> FastAPI:
         """Write this student a different path, because they said so.
 
         A student turning a plan down is the most useful signal this system
-        gets — better than any trait score, because they are telling you
-        directly — so the rejected plan and their reason go into the prompt and
+        gets, better than any trait score, because they are telling you
+        directly, so the rejected plan and their reason go into the prompt and
         the model is told not to repeat it. Without that, a regenerate button is
         a dice roll that can hand back the same idea reworded.
 
@@ -1883,7 +1883,7 @@ def create_app() -> FastAPI:
     ) -> dict:
         """Record mission evidence onto the student record.
 
-        Idempotent by the unique(student_id, mission_id) constraint —
+        Idempotent by the unique(student_id, mission_id) constraint -
         completing twice updates the evidence instead of duplicating.
         """
 
@@ -1989,7 +1989,7 @@ def create_app() -> FastAPI:
         sb = get_supabase()
         try:
             sb.auth.admin.delete_user(user.id)
-        except Exception as error:  # noqa: BLE001 — the SDK raises broadly
+        except Exception as error:  # noqa: BLE001, the SDK raises broadly
             raise HTTPException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
                 detail=(
@@ -2034,7 +2034,7 @@ def create_app() -> FastAPI:
         body: DismissalCreate,
         user: CurrentUser = RequireUser,
     ) -> dict:
-        """Mark an opportunity "not for me" — excluded from /match."""
+        """Mark an opportunity "not for me", excluded from /match."""
         from .db import get_supabase
 
         sb = get_supabase()
@@ -2100,7 +2100,7 @@ def create_app() -> FastAPI:
         opportunities = fetch_shelf(sb, shelf_for(student))
 
         # Behavioral signals: bookmarks nudge their fields up a little;
-        # dismissed opportunities leave the list entirely. Both additive —
+        # dismissed opportunities leave the list entirely. Both additive -
         # a fetch failure must never block matching.
         bookmarked_fields: dict[str, int] = {}
         dismissed_ids: set[str] = set()
@@ -2128,7 +2128,7 @@ def create_app() -> FastAPI:
             pass
 
         # The student's own outcomes feed the collaborative term. Additive
-        # signal only — its absence must never block matching.
+        # signal only, its absence must never block matching.
         try:
             logged = (
                 sb.table("outcomes")
@@ -2154,19 +2154,19 @@ def create_app() -> FastAPI:
             semantic=semantic_scores(sb, user.id),
         )
         # Sanitize to the shape the frontend expects: ``opportunity_field``
-        # becomes ``field``, and ``description`` is dropped — it is 23% of the
+        # becomes ``field``, and ``description`` is dropped, it is 23% of the
         # payload, no list view renders it, and GET /opportunities/{id} serves
         # it to the one page that does. It stays in what was SCORED above,
         # because app/match.py feeds it into the TF-IDF corpus.
         for r in results:
             r["opportunity"] = public_view(r["opportunity"])
 
-        # Persist the scored set into public.matches — upsert keyed on
+        # Persist the scored set into public.matches, upsert keyed on
         # the existing unique(student_id, opportunity_id) constraint. We
         # send only the FK columns + score + explanation so the row
         # stays valid for the matches table's check constraints.
-        # Bounded to the top MATCHES_PERSISTED. This wrote every scored row —
-        # 144 per call, 432,000 rows/day at 1,000 students — into a table no
+        # Bounded to the top MATCHES_PERSISTED. This wrote every scored row -
+        # 144 per call, 432,000 rows/day at 1,000 students, into a table no
         # read path touches. It is NOT deleted, because it is the denominator
         # for "opportunities served" in the impact figure; it is capped at more
         # than any surface renders.
@@ -2196,7 +2196,7 @@ def create_app() -> FastAPI:
 
         NOT under /public/. That prefix already has `/public/{handle}`, which
         takes any string, is registered earlier, and therefore swallowed
-        `/public/catalog` as a profile lookup for the handle "catalog" —
+        `/public/catalog` as a profile lookup for the handle "catalog" -
         answering with its uniform 404. Ordering could fix it; a path that
         cannot collide fixes it permanently.
 
@@ -2271,7 +2271,7 @@ def create_app() -> FastAPI:
 
     @app.get("/catalog")
     def catalog(user: CurrentUser = RequireUser) -> list[dict]:
-        """The full opportunity bank — every catalog entry, unranked.
+        """The full opportunity bank, every catalog entry, unranked.
 
         Distinct from /match (personalized, scored): this is browse-all,
         for a student who wants to see everything and filter it themselves.
@@ -2286,7 +2286,7 @@ def create_app() -> FastAPI:
         rows = (
             sb.table("opportunities")
             .select("*")
-            # Retired programs are never browsable — see
+            # Retired programs are never browsable, see
             # 20260923120000_opportunity_verification.sql for what "retired"
             # found (a program that ended in 2016, one re-scoped to middle
             # school, and two that never accepted high schoolers).
@@ -2303,7 +2303,7 @@ def create_app() -> FastAPI:
 
         # Ascending-by-deadline alone opens this route on the single MOST
         # expired row in the catalog. A comment here used to excuse that with
-        # "the frontend filters to open opportunities by default" — it does not.
+        # "the frontend filters to open opportunities by default", it does not.
         # frontend/app/opportunities/page.tsx reads ?status= and falls back to
         # "all", so the first card a student saw was the deadest one we had.
         #
@@ -2314,7 +2314,7 @@ def create_app() -> FastAPI:
         today_iso = date.today().isoformat()
 
         def browse_order(opp: dict) -> tuple[int, float, str]:
-            """(bucket, within-bucket key, title) — buckets: live-dated,
+            """(bucket, within-bucket key, title), buckets: live-dated,
             rolling, closed."""
             raw = opp.get("deadline")
             deadline = str(raw) if raw else ""
@@ -2482,7 +2482,7 @@ def create_app() -> FastAPI:
         """Return nodes + edges for the Northstar pathway map.
 
         Nodes are the student's matched opportunities (from /match scores).
-        Edges are derived from shared tags + same field between nodes — a
+        Edges are derived from shared tags + same field between nodes, a
         self-contained graph that renders even without seeded pathway_edges.
         Each node carries ``score`` and ``field`` for coloring/sizing in D3.
         """
@@ -2556,7 +2556,7 @@ def create_app() -> FastAPI:
             })
 
         # Derive edges from shared tags + same field. A same-field pair
-        # alone (0.4) qualifies; a lone shared tag (0.2) does not — weak
+        # alone (0.4) qualifies; a lone shared tag (0.2) does not, weak
         # ties are what turn the graph into a hairball.
         edges = []
         for i, n1 in enumerate(nodes):

@@ -84,12 +84,12 @@ export default function ProfilePage() {
     (a, b) => fieldScores[b] - fieldScores[a],
   );
 
-  // "Since last visit" — the evolving profile made visible. The previous
+  // "Since last visit", the evolving profile made visible. The previous
   // field distribution is snapshotted in localStorage; when it differs we
   // name the biggest movers, then store the current one.
   // Built from this student's own assessment, so it needs an account.
   // Signed out this used to render a heading and an empty shell while the
-  // API answered 401 — gated and broken look identical from there.
+  // API answered 401, gated and broken look identical from there.
   useRequireAuth();
   const [shifts, setShifts] = useState<string[]>([]);
   const [timeline, setTimeline] = useState<TimelineEvent[] | null>(null);
@@ -103,7 +103,7 @@ export default function ProfilePage() {
         if (!cancelled) setTimeline(events);
       })
       .catch(() => {
-        // Signed out — the localStorage shift note still works.
+        // Signed out, the localStorage shift note still works.
       });
     authedFetch("/me")
       .then((response) => response.json())
@@ -146,7 +146,7 @@ export default function ProfilePage() {
       }
       localStorage.setItem(KEY, JSON.stringify(fieldScores));
     } catch {
-      // Storage unavailable — the note just doesn't render.
+      // Storage unavailable, the note just doesn't render.
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isReal, JSON.stringify(fieldScores)]);
@@ -202,7 +202,7 @@ export default function ProfilePage() {
           BARS ARE SCALED TO THIS STUDENT'S OWN STRONGEST SIGNAL, NOT TO 100.
 
           They used to fill `width: score%`, and the result read as a flat row
-          of half-empty bars — a real profile came back analyst 48, risk 48,
+          of half-empty bars, a real profile came back analyst 48, risk 48,
           builder 45, ambiguity 42, collaboration 40, tempo 31, and looked like
           six ways of saying "average".
 
@@ -210,8 +210,8 @@ export default function ProfilePage() {
           has real spread (64-94 points of range per trait), but 56% of all
           scores land between 30 and 55, because the denominator is the score
           you would get by picking the most trait-maximising answer on all
-          twenty questions. Nobody does that — the questions trade traits
-          against each other — so the ceiling is unreachable and "48/100" reads
+          twenty questions. Nobody does that, the questions trade traits
+          against each other, so the ceiling is unreachable and "48/100" reads
           as below-average when it is near the top of the achievable range.
 
           Scaling to the student's own maximum makes the SHAPE visible, which is

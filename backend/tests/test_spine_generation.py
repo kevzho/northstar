@@ -54,7 +54,7 @@ def test_a_key_with_no_resources_is_refused() -> None:
 
 
 def test_the_skill_sentence_comes_from_the_catalog_not_the_model() -> None:
-    """Measured failure, first run: a student got "Rigor — a bioethics case file
+    """Measured failure, first run: a student got "Rigor, a bioethics case file
     is only as strong as its sources" attached to the key `regulatory-literacy`.
     roadmap.py would have printed that sentence and then linked four resources
     about something else. The label is human-written and already matches its
@@ -166,7 +166,7 @@ def test_trait_scores_are_already_out_of_100_and_must_not_be_scaled_again() -> N
     """students.trait_scores is stored 0-100, not 0-1.
 
     build_prompt multiplied by 100 anyway, so the model was handed "builder
-    7000%, executionTempo 6700%, analyst 4500%" — which is not a trait profile,
+    7000%, executionTempo 6700%, analyst 4500%", which is not a trait profile,
     it is noise with a percent sign on it, and it was the input to every
     personalised plan this endpoint has ever written.
     """
@@ -192,7 +192,7 @@ def test_the_spine_call_asks_for_json_and_not_for_thinking() -> None:
 
     Measured against the configured model: with neither of these, 700 tokens
     went entirely on "We need to produce JSON with three keys... Let's think:
-    they lean math, business, design. They " — truncated mid-sentence, the JSON
+    they lean math, business, design. They ", truncated mid-sentence, the JSON
     object never emitted, parse_spine found no braces, and the endpoint refused
     with "the path that came back did not meet the bar" on every request. The
     verifier learned the same lesson in app/verifier.py and says so there.

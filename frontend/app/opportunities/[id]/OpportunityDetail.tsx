@@ -7,7 +7,7 @@
  * the access token lives in the browser (supabase-js stores the session in
  * localStorage). Fetching from the server component that owns the route meant
  * `authedFetch` always sent an anonymous request, the backend answered 401, and
- * every detail page rendered as a 404 — including the ones reached from the
+ * every detail page rendered as a 404, including the ones reached from the
  * dashboard and the pathway map.
  *
  * The route file stays a server component and just unwraps `params`.

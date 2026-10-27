@@ -2,7 +2,7 @@
 A hand-written list of non-CS opportunities, pushed through the same verifier.
 
 WHY A LIST AND NOT A SCRAPER. Every structured feed that is free and needs no
-auth is computer science — ctftime, codeforces, devpost — and scrape_ctftime's
+auth is computer science, ctftime, codeforces, devpost, and scrape_ctftime's
 own docstring says so: "balance comes from curating non-CS competitions, which
 no API provides." Pathways to Science and the fair directory fixed science; they
 did nothing for history, writing, debate, economics or the arts, because those
@@ -25,7 +25,7 @@ four things, none of them open. That is not a ranking problem, it is an absence.
 
 NOTHING HERE IS INSERTED BY HAND. These are leads, not rows: a title and the
 organiser's own url, written into the candidate pool so verify_and_import
-fetches each page, reads it, and refuses anything it cannot confirm — the same
+fetches each page, reads it, and refuses anything it cannot confirm, the same
 bar every scraped row clears. A list typed from memory is exactly the kind of
 unverified content this catalog removes, so it does not get a shortcut.
 

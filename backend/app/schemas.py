@@ -77,7 +77,7 @@ class StudentProfile(BaseModel):
 class AssessmentProfileSync(BaseModel):
     """Request body for POST /assessment-profile.
 
-    Only these two columns are touched — deliberately not an upsert of the
+    Only these two columns are touched, deliberately not an upsert of the
     whole profile, so a quiz sync can never clobber onboarding fields.
     """
 
@@ -129,12 +129,12 @@ class DismissalCreate(BaseModel):
 class StudentProfileCreate(BaseModel):
     """Request body for POST /students (upsert).
 
-    ``id`` is omitted — the backend derives it from the JWT ``sub`` claim.
-    ``email`` is omitted — the backend copies it from ``auth.users.email``
+    ``id`` is omitted, the backend derives it from the JWT ``sub`` claim.
+    ``email`` is omitted, the backend copies it from ``auth.users.email``
     via the Supabase client, or the client may supply it. If absent the
     upsert leaves the column alone.
 
-    ``consent`` (bool, default False) — when True the backend stamps
+    ``consent`` (bool, default False), when True the backend stamps
     ``consented_at = now()`` on the row; when False the column is left
     untouched (so we never revoke an earlier consent via a stub call).
     """

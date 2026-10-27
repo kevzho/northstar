@@ -1,5 +1,5 @@
 """
-Tests for the verifier's guardrail — decide() is the safety boundary
+Tests for the verifier's guardrail, decide() is the safety boundary
 between a scraped post and the live catalog, so it is pinned hard. Pure
 function, no network.
 """

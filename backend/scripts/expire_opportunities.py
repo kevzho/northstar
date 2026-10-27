@@ -2,7 +2,7 @@
 Retire scraped one-off events whose deadline has passed.
 
 WHY THIS EXISTS. On 2026-09-25 the catalog held 186 live rows, and 123 of them
-had a deadline that was already gone — 101 of those were Devpost hackathons the
+had a deadline that was already gone, 101 of those were Devpost hackathons the
 scraper imported over the preceding weeks. Nothing ever removed them, because
 the import path only ever adds. /opportunities orders by deadline ascending, so
 the browse page opened on the single most-expired row in the catalog.
@@ -20,13 +20,13 @@ human.
 Curated programmes (added_by in 'seed', 'human') are annual. RSI closes in
 January every year. A past deadline there means "this year's cycle closed", not
 "the programme ended", and the right repair is a fresh deadline or a verified
-recurrence — both of which are human claims. 20260923120000 is explicit about
+recurrence, both of which are human claims. 20260923120000 is explicit about
 this: recurrence is "Only a human sets that, after checking the program's site.
 Default NULL means the honest answer is 'no confirmed window'." So this script
 reports curated expiries and changes nothing about them. Inferring next year's
 date from last year's is exactly the fabrication that column exists to prevent.
 
-Retirement is a stamp, not a DELETE — outcomes, bookmarks, matches and
+Retirement is a stamp, not a DELETE, outcomes, bookmarks, matches and
 dismissals all cascade from opportunities(id), so deleting would destroy a
 student's logged history.
 

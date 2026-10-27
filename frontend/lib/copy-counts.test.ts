@@ -3,15 +3,15 @@
  *
  * The landing page said "Seventeen prompts", the dashboard said "Fourteen
  * prompts", /futures said "eight-question assessment" and /profile explained
- * its own scoring math "across all seventeen questions" — while
+ * its own scoring math "across all seventeen questions", while
  * lib/assessment.ts held 20 the whole time and /assessment rendered "Twenty
  * prompts" one click away. Three different wrong numbers, none of which any
  * test could see, because the copy spells the count as a word.
  *
  * The rule: a count-word describing the bank must equal the bank. The one
- * legitimate exception is a line that breaks the bank into parts — the
+ * legitimate exception is a line that breaks the bank into parts, the
  * assessment page's "nine reveal how you build ... eleven reveal which
- * fields" — so a line is allowed when its own counts sum to the total.
+ * fields", so a line is allowed when its own counts sum to the total.
  * Anything else fails.
  */
 
@@ -99,7 +99,7 @@ describe("copy counts match the assessment bank", () => {
  * docs/DEMO_SCRIPT.md is read aloud on camera for the Congressional App
  * Challenge, and its "numbers you can defend" table said "Six traits, eight
  * questions" while the bank held twenty. That is the identical drift the test
- * above exists to catch — it just scans app/, components/ and lib/, which are
+ * above exists to catch, it just scans app/, components/ and lib/, which are
  * .tsx and .ts, and a Markdown file in docs/ was outside it.
  *
  * A wrong number in shipped copy is a bug. A wrong number said out loud to a
@@ -113,8 +113,8 @@ describe("the demo script", () => {
     // curated STEM programs" against a shelf of 156. The guard below only
     // matches number-words before questions/prompts, so it sailed past.
     //
-    // A catalog count cannot be checked against anything here — this file has
-    // no database — and it changes every single day the scraper runs. So the
+    // A catalog count cannot be checked against anything here, this file has
+    // no database, and it changes every single day the scraper runs. So the
     // rule is simply that the script must not spell one as a word: write the
     // digits, next to the date they were counted, and re-count before
     // recording. backend/scripts/check_impact_claims.py is what verifies a

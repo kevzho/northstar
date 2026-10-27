@@ -4,7 +4,7 @@
  * `detail` is a string when the backend raises HTTPException and an ARRAY of
  * {loc, msg, type} objects when FastAPI rejects a request body. The client
  * annotated it `string` and interpolated it, so a validation error arrived in
- * the UI as the literal text "[object Object]" — which is exactly what someone
+ * the UI as the literal text "[object Object]", which is exactly what someone
  * saw when "My interests are broader" failed. A type annotation is not a parse.
  */
 

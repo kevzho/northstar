@@ -4,9 +4,9 @@ Deciding whether a link is dead, which is not the same as deciding it failed.
 WHY THIS MODULE EXISTS. /opportunities tells every visitor: "Each one has been
 checked against the programme's own page, and anything that stopped holding up
 was removed rather than left to pad the total." On 2026-10-12 that sentence was
-false. Seven of the sixty-six open rows did not load in a real browser — four
+false. Seven of the sixty-six open rows did not load in a real browser, four
 CTF domains no longer resolved, one programme page had 404'd, one host was
-timing out through Cloudflare — and nothing in the daily job had ever checked.
+timing out through Cloudflare, and nothing in the daily job had ever checked.
 A claim that strong has to be enforced by something, or it is just confidence.
 
 THE DANGEROUS MISTAKE IS THE OPPOSITE ONE. A checker that treats every failed
@@ -41,7 +41,7 @@ So only ONE verdict retires anything: the domain itself no longer resolves.
 Nobody is bot-blocking a DNS lookup and no live organisation loses its domain
 by accident, so that is the one failure that genuinely means "this is gone". A
 404 on a domain that still answers, a TLS error, a timeout and a 5xx are all
-"moved" — kept on the shelf, flagged for a human to find the new URL.
+"moved", kept on the shelf, flagged for a human to find the new URL.
 
 Pure functions, no network, so every rule here is tested without one. The
 fetching lives in scripts/check_links.py.
@@ -64,13 +64,13 @@ INCONCLUSIVE_STATUS = frozenset({401, 403, 405, 406, 418, 429, 999})
 DEAD_STATUS = frozenset({404, 410})
 
 # Network-layer failures. A name that does not resolve is the strongest signal
-# available — nobody is bot-blocking a DNS lookup.
+# available, nobody is bot-blocking a DNS lookup.
 # These strings are copied from what the libraries ACTUALLY emit, not from what
 # they ought to. The first version of this tuple listed "gaierror" and
 # "ERR_NAME_NOT_RESOLVED" and missed every real case, because requests wraps a
 # DNS failure as `ConnectionError: ... NameResolutionError ... Failed to resolve
-# 'host'` and none of those substrings appear in it. Five dead domains — four
-# CTFs and summerinstitutes.stanford.edu — were filed as "inconclusive" and
+# 'host'` and none of those substrings appear in it. Five dead domains, four
+# CTFs and summerinstitutes.stanford.edu, were filed as "inconclusive" and
 # would have sat on the shelf forever.
 DEAD_ERRORS = (
     "NameResolutionError",

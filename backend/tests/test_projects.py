@@ -1,5 +1,5 @@
 """
-Unit tests for the GitHub project ranking — pure function, no network.
+Unit tests for the GitHub project ranking, pure function, no network.
 """
 
 from datetime import datetime, timedelta, timezone

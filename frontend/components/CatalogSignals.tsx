@@ -152,7 +152,7 @@ export function DeadlineTicker() {
           ))}
         </ul>
         {/* The clone only exists so the loop has no seam. aria-hidden alone is
-            not enough — its links stay keyboard-focusable, so tabbing walks
+            not enough, its links stay keyboard-focusable, so tabbing walks
             into content hidden from assistive tech and the focus ring vanishes
             off-screen. `inert` removes it from focus and from the a11y tree. */}
         <ul className="flex" aria-hidden inert>
@@ -173,7 +173,7 @@ export function DeadlineTicker() {
  * Scoped to high_school deliberately: the college shelf is almost entirely
  * scraped hackathons, so "newest overall" would always be three hackathons and
  * would say nothing about the shelf this page is selling. Dates are the whole
- * point — an undated "new!" is a marketing word, a dated row is a fact.
+ * point, an undated "new!" is a marketing word, a dated row is a fact.
  */
 export function RecentlyAdded() {
   const [rows, setRows] = useState<Row[] | null>(null);
@@ -190,7 +190,7 @@ export function RecentlyAdded() {
       //
       // The newest two rows on the shelf the morning this shipped were scraper
       // finds with no deadline, one of them titled "Global Research Fellowship
-      // Finance Research Scholarship" — which is what an unreviewed title looks
+      // Finance Research Scholarship", which is what an unreviewed title looks
       // like. Putting that under a paragraph about checking listings against the
       // program's own website would contradict the paragraph, and a judge who
       // clicks the newest thing on the landing page and finds nothing has
@@ -198,7 +198,7 @@ export function RecentlyAdded() {
       //
       // So: rows a person curated, or a row carrying a verified_at stamp. A
       // scraped find appears here once someone has checked it, which is the
-      // right incentive — the section rewards verification rather than volume.
+      // right incentive, the section rewards verification rather than volume.
       .or("added_by.in.(seed,human),verified_at.not.is.null")
       .order("created_at", { ascending: false })
       .limit(3)
@@ -214,14 +214,14 @@ export function RecentlyAdded() {
   // Silence beats a stale label.
   //
   // The newest curated high-school rows were 39 days old the day this shipped,
-  // because the curated shelf does not change weekly — the scraped college
+  // because the curated shelf does not change weekly, the scraped college
   // shelf does. "Recently added" over August dates in late September is the
   // kind of small lie that makes a visitor discount everything else on the
   // page, and the section exists to do the opposite. So it renders only when
   // there is something genuinely recent, and otherwise renders nothing at all.
   //
   // Practically: this stays invisible until a curated row is added or a scraped
-  // find is verified. That is the incentive we want — it rewards checking a
+  // find is verified. That is the incentive we want, it rewards checking a
   // listing, not importing one.
   const MAX_AGE_DAYS = 30;
   const fresh = (rows ?? []).filter((row) => {

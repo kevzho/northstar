@@ -6,7 +6,7 @@ WHY THIS IS THE MOST IMPORTANT SCRIPT IN THE REPO.
 Measured 2026-10-05, a frontier model with no tools and no web access was asked
 to recall 24 curated catalog rows. It knew all 24 existed: 8/8 seed, 8/8 human,
 8/8 sheet. So "this programme is real" is not information a student needs this
-catalog for — they can get it free, in a chat window, in thirty seconds.
+catalog for, they can get it free, in a chat window, in thirty seconds.
 
 What the model could not do was dates. Asked for the current deadline of twelve
 open rows it said UNKNOWN twelve times, correctly refusing to guess. That is the
@@ -15,7 +15,7 @@ gap this catalog exists to fill, and it was not filling it:
     curated rows (seed + human) with a deadline in the future:   2 of 48
     scraped rows (ai) with a deadline in the future:            52 of 94
 
-The half of the shelf with real value had dead dates — median 218 days stale,
+The half of the shelf with real value had dead dates, median 218 days stale,
 MIT PRIMES reading 2025-11-30. A student asking a chatbot got a better answer
 about Regeneron than the shelf gave them, because the chatbot said "check the
 official page" and the shelf said a date that had already passed.

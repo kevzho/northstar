@@ -1,12 +1,12 @@
 "use client";
 
 /**
- * Sky — the quiet star layer behind every in-app page.
+ * Sky, the quiet star layer behind every in-app page.
  *
  * The landing page runs the full three.js starfield; interior pages get
  * this instead: a fixed inline SVG of seeded star specks in the brand
  * monochrome (ink specks in the light "printed atlas" theme). Pure CSS,
- * no per-frame work — the only motion is a slow opacity twinkle on a
+ * no per-frame work, the only motion is a slow opacity twinkle on a
  * handful of brighter stars and one comet pass every 90 seconds, and
  * `prefers-reduced-motion` stills both via the global media query in
  * globals.css.

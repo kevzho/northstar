@@ -3,7 +3,7 @@
  *
  * GET /roadmap returns a flat list of steps bucketed into phases by time, and
  * the page rendered it as exactly that: a vertical list of cards. A list can
- * say WHEN, but it cannot say WHICH THING UNLOCKS WHICH — and that is the whole
+ * say WHEN, but it cannot say WHICH THING UNLOCKS WHICH, and that is the whole
  * question a student has when they look at a plan. "Qualify for USAMO" sitting
  * two cards under "Start Khan Academy algebra" looks like two chores; drawn as
  * an edge it is a route.
@@ -28,7 +28,7 @@
  *             thing to the next. Learn, then build, then publish, then apply.
  *             Twenty-four hand-written spines back this and public.outcomes has
  *             zero rows, so it is drawn dashed and the legend says "a common
- *             route, not a requirement" — the same stance the step cards take
+ *             route, not a requirement", the same stance the step cards take
  *             with edge_reason (see AUTHORED_EDGES in app/plan/page.tsx).
  *
  *   anytime   Nothing gates it; it sits beside the trunk because it belongs to
@@ -79,7 +79,7 @@ export type TreeNode = {
    *
    * Exists for the locked row: "LOCKED" under a column of applications, with no
    * edge reaching it, reads as a node the drawing forgot to connect. "GRADE 11"
-   * says why there is no edge — nothing on this tree reaches it, only a
+   * says why there is no edge, nothing on this tree reaches it, only a
    * birthday does.
    */
   badge?: string;
@@ -202,7 +202,7 @@ export function buildRoadmapTree(
       // it in a form you cannot act on.
       //
       // They are still in `steps` and still reach the list below, so nothing
-      // is lost — the orphan sweep further down picks up anything this layout
+      // is lost, the orphan sweep further down picks up anything this layout
       // declines to place, which is exactly what it is for.
       sides: [],
       sideKind: "mission",
@@ -240,7 +240,7 @@ export function buildRoadmapTree(
       trunk = stage.step.step_key;
     }
     // A stage with no trunk step still has its branches: a student with no
-    // charted path has no build step, and their missions must not vanish — they
+    // charted path has no build step, and their missions must not vanish, they
     // hang off wherever the trunk has reached.
     const parent = stage.step ? stage.step.step_key : trunk;
     stage.sides.forEach((side, index) => {
@@ -272,7 +272,7 @@ export function buildRoadmapTree(
     if (step.step_key.startsWith("prep:")) continue;
     // Missions are deliberately not on this tree (see the build stage above).
     // Without this they fall through here, become TRUNK nodes, and the
-    // applications then hang off a mission instead of off publish — which is
+    // applications then hang off a mission instead of off publish, which is
     // worse than the clutter the exclusion was meant to remove.
     if (step.step_key.startsWith("mission:")) continue;
     push({
@@ -391,7 +391,7 @@ export function buildRoadmapTree(
   }
 
   // Locked programmes. Drawn with no edge at all, because there is no step that
-  // reaches them — only a birthday.
+  // reaches them, only a birthday.
   const horizon = (options.horizon ?? []).slice(0, 4);
   if (horizon.length) {
     const horizonRow = row;

@@ -1,5 +1,5 @@
 """
-Reddit resource scraper — free learning material, from the COMMENTS.
+Reddit resource scraper, free learning material, from the COMMENTS.
 
 WHY A SECOND REDDIT SCRAPER. scrape_reddit.py reads post titles, which is right
 for opportunities: a programme announcement IS the post. It is wrong for

@@ -66,7 +66,7 @@ def test_a_friend_request_loop_is_stopped_and_told_why() -> None:
 
 
 def test_the_global_ceiling_catches_what_no_single_account_would() -> None:
-    """One account under its own limit, the platform over its total — a
+    """One account under its own limit, the platform over its total, a
     distributed burst that a per-student count cannot see."""
     sb = _SB({
         ("friend_request", "me"): 1,

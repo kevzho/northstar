@@ -1,5 +1,5 @@
 """
-Team-up matching — candidate ranking and block-wall behavior, no database.
+Team-up matching, candidate ranking and block-wall behavior, no database.
 
 A tiny chainable fake stands in for the Supabase client: the functions
 under test only ever chain select/eq/or_/limit and read ``.data`` off
@@ -83,7 +83,7 @@ def test_ranks_by_affinity_and_excludes_self_and_excluded() -> None:
 
 
 def test_zero_affinity_candidates_stay_in_the_deck() -> None:
-    # Unlike discover, the pitch is signal the score can't see — a student
+    # Unlike discover, the pitch is signal the score can't see, a student
     # with no field overlap must still be shown, ranked last.
     sb = FakeSB({"students": [student("different", field_scores={"design": 80})]})
     out = teamup_candidates(sb, ME, exclude_ids=set())

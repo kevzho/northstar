@@ -2,7 +2,7 @@
  * Guard: every archetype must have an authored spine.
  *
  * `generatePlan` falls back to FALLBACK_SPINE for any archetype missing from
- * SPINES. For five weeks that meant 12 of 24 archetypes — half of all students —
+ * SPINES. For five weeks that meant 12 of 24 archetypes, half of all students -
  * received generic advice while the product presented it as a personalised
  * plan, and nothing failed. A silent fallback is the worst shape for this bug:
  * the page renders, the copy reads fine, and only a student on one of the

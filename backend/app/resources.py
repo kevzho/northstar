@@ -1,5 +1,5 @@
 """
-Read path for public.learning_resources — the free material a roadmap step
+Read path for public.learning_resources, the free material a roadmap step
 points at.
 
 Kept deliberately small and separate from app/match.py: resources are not

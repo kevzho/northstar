@@ -10,7 +10,7 @@
  *
  * DELIBERATELY HARD TO DO BY ACCIDENT AND EASY TO DO ON PURPOSE. It is behind
  * a disclosure, then a typed confirmation of the account's own email. No
- * "are you sure?" dialog — a modal trains people to click through, where typing
+ * "are you sure?" dialog, a modal trains people to click through, where typing
  * your own address cannot be done without reading. The API enforces the same
  * check, so this is a real gate rather than a UI one.
  *

@@ -1,5 +1,5 @@
 /**
- * Layered horizon waves in the haikei style — three stacked organic bands
+ * Layered horizon waves in the haikei style, three stacked organic bands
  * fading toward the footer. Generated once from a seeded script (seed
  * 20261103, scripts run via node; see the commit that added this file), so
  * the curves are unique to Northstar rather than a stock asset. Decorative

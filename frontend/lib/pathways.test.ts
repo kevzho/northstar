@@ -2,7 +2,7 @@
  * Guard: the text alternative orders matches the same way the picture does.
  *
  * components/PathwayMap.tsx states that the SVG is "decorative and mouse-only", so for a
- * keyboard or screen-reader user the list is not a convenience — it is the only
+ * keyboard or screen-reader user the list is not a convenience, it is the only
  * way to use the page. That makes its ordering load-bearing: the map's entire
  * claim is that distance from the star means urgency, and if the list sorts
  * differently it quietly tells a different student a different thing is next.
@@ -140,7 +140,7 @@ describe("the map's accessibility contract", () => {
 describe("the map's rendered height, which CSS cannot cap", () => {
   // The svg is a fixed-aspect viewBox at width:100%, so its height is
   // column-width x (rows*CELL_H)/(cols*CELL_W). max-height can only crop it
-  // and min-height only pads it — neither changes the number below. This was
+  // and min-height only pads it, neither changes the number below. This was
   // the hazard an inventory pass called "guaranteed, on camera, and invisible
   // in a dev window with a short match list": a 10-field student dropped
   // ~2300px of diagram between the roadmap tree and the step list.

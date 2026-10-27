@@ -5,7 +5,7 @@
  * reason: measuring a remaining DURATION in milliseconds and then labelling the
  * result a day count. lib/pathways.ts#whenLabel had it and was fixed; the copy
  * inside CatalogSignals was missed, so until a stress test caught it every
- * deadline on the landing page read one day further away than it was — at 22:00
+ * deadline on the landing page read one day further away than it was, at 22:00
  * a thing closing tonight has two hours left, ceil(0.08) is 1, and the ticker
  * said "1d" about something that shuts before the student wakes up.
  *

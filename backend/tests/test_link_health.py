@@ -103,7 +103,7 @@ class TestShouldRetire:
 
     def test_a_single_success_clears_the_whole_record(self) -> None:
         """A page that answered at all this week is not gone, whatever else
-        happened — the point is to be shy, not consistent."""
+        happened, the point is to be shy, not consistent."""
         assert should_retire(["alive", "dead", "dead"]) is False
         assert should_retire(["dead", "alive", "dead"]) is False
 

@@ -3,7 +3,7 @@
  *
  * components/PathwayMap.tsx says it plainly: the SVG is "decorative and mouse-only.
  * Keyboard and screen reader users need the conforming list alternative." This
- * is that alternative. It is not a summary of the picture — it carries the same
+ * is that alternative. It is not a summary of the picture, it carries the same
  * information, from the same data, in the same order, and its links go to the
  * same place the planets do.
  *
@@ -23,8 +23,8 @@
  *
  * ONE DELIBERATE DIFFERENCE. The map draws `.slice(0, 8)` planets per field,
  * because a ninth orbit does not fit in the cell. This list draws all of them.
- * An alternative is allowed to carry more than the picture — it is not allowed
- * to carry less — and silently dropping a student's ninth-most-urgent match
+ * An alternative is allowed to carry more than the picture, it is not allowed
+ * to carry less, and silently dropping a student's ninth-most-urgent match
  * from the only view they can operate would be the exact failure this file
  * exists to fix.
  */

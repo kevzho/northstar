@@ -82,7 +82,7 @@ export default function OnboardingPage() {
         consent,
       });
     } catch (err) {
-      // This call is what CREATES the student row — the dashboard no
+      // This call is what CREATES the student row, the dashboard no
       // longer writes a stub ahead of it. So a failure here means the
       // account has no profile, and walking the student onward would land
       // them on a dashboard that bounces them straight back. Stop, say so,

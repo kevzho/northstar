@@ -1,5 +1,5 @@
 """
-Structural checks on the seed files and migrations — no database required.
+Structural checks on the seed files and migrations, no database required.
 
 The student runs these files by hand in the Supabase SQL Editor, so a typo costs
 a debugging round-trip. These assert the shape: row counts, idempotency clauses,

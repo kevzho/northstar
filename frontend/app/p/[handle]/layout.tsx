@@ -6,7 +6,7 @@ import type { Metadata } from "next";
  * student record, including for a crawler that arrived from a pasted link
  * and never fetched /robots.txt.
  *
- * The page stays fully reachable by anyone holding the URL — that is the
+ * The page stays fully reachable by anyone holding the URL, that is the
  * point of the record. It just stops being permanently searchable, which
  * matters because these pages belong to minors and a student who clears
  * their handle expects the page to go with it.

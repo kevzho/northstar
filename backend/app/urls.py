@@ -33,7 +33,7 @@ TRACKING_PREFIXES = ("utm_", "fbclid", "gclid", "mc_cid", "mc_eid", "ref", "igsh
 def canonical_url(raw: object) -> str:
     """A comparable form of a URL, for dedupe only.
 
-    NOT for display or for fetching — the original string is what should be
+    NOT for display or for fetching, the original string is what should be
     shown to a student and what should be requested, because this drops
     information a server may care about.
     """

@@ -7,7 +7,7 @@
  * `useSyncExternalStore` rather than a mount effect that calls setState. That
  * keeps the pages free of the cascading-render pattern the project's lint rules
  * reject, and it means every page showing trait data re-renders the moment an
- * answer changes — in this tab via `writeAnswers`, in another tab via the
+ * answer changes, in this tab via `writeAnswers`, in another tab via the
  * browser's `storage` event.
  */
 
@@ -56,7 +56,7 @@ export function writeAnswers(answers: AssessmentAnswers): void {
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
   } catch {
-    // Private browsing or a full quota — the in-memory value still updates.
+    // Private browsing or a full quota, the in-memory value still updates.
   }
   notify();
 }
@@ -66,7 +66,7 @@ export function resetAnswers(): void {
   try {
     window.localStorage.removeItem(STORAGE_KEY);
   } catch {
-    // Nothing to do — a failed clear leaves the previous answers in place.
+    // Nothing to do, a failed clear leaves the previous answers in place.
   }
   notify();
 }

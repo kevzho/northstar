@@ -2,7 +2,7 @@
 Guards on the deadline refresh.
 
 WHY THIS SCRIPT IS THE ONE THAT MATTERS. Measured 2026-10-05: a frontier model
-with no tools, asked to recall 24 curated catalog rows, knew all 24 existed —
+with no tools, asked to recall 24 curated catalog rows, knew all 24 existed -
 8/8 seed, 8/8 human, 8/8 sheet. So "this programme is real" is not information a
 student needs this catalog for. Asked instead for the current deadlines of
 twelve open rows, it said UNKNOWN twelve times, correctly refusing to guess.

@@ -3,7 +3,7 @@ Guard: every column POST /students writes must exist in the SQL migrations.
 
 Background: ``StudentProfileCreate`` has always carried an ``onboarded`` field,
 ``POST /students`` has always included it in the upsert payload, and
-``frontend/lib/types.ts`` has always declared it — but ``public.students``
+``frontend/lib/types.ts`` has always declared it, but ``public.students``
 (supabase/schema.sql) never had the column. PostgREST rejects the upsert with
 "column onboarded of relation students does not exist", so onboarding could
 never complete. migration_006 adds it; this test keeps the three layers from

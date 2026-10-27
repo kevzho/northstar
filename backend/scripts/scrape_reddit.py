@@ -1,22 +1,22 @@
 """
-Reddit opportunity scraper — candidate STEM opportunities from student subreddits.
+Reddit opportunity scraper, candidate STEM opportunities from student subreddits.
 
 Harvests posts from subreddits where real programs, competitions, internships,
 and scholarships get posted, filters them down to opportunity-shaped posts,
 and MERGES them into a growing review pool. It deliberately does NOT insert
-into the database: scraped posts are candidates, not catalog entries — the
+into the database: scraped posts are candidates, not catalog entries, the
 maintainer reviews `scraped/reddit_candidates.json`, fixes fields the
 heuristics guessed, and only then adds keepers to the seed catalog.
 
 Designed to be run repeatedly: each run paginates several pages deep per
 subreddit, runs targeted searches on top of the /new listings, and merges
-into the existing pool keyed by URL — entries you have already reviewed
+into the existing pool keyed by URL, entries you have already reviewed
 keep whatever fields you added to them (e.g. "review": "keep" / "drop"),
 and re-runs only append genuinely unseen posts.
 
 Politeness / terms:
 - Prefers Reddit's official OAuth API (app-only grant) with a descriptive
-  User-Agent and one request every ~1.5 seconds — far inside the free
+  User-Agent and one request every ~1.5 seconds, far inside the free
   tier's 100 queries/minute. Only public subreddit listings and searches.
 - Without working credentials it falls back to the public `.json`
   endpoints at one request every 6 seconds (~10/minute). Same data,
@@ -31,7 +31,7 @@ Setup (one time; optional since the public fallback works without it):
     3. Since Dec 2025 Reddit's Responsible Builder Policy gates new OAuth
        access behind a manual approval request (Data API wiki -> contact
        us -> developer, non-commercial). Until approval lands the token
-       call may 401/403 — the script detects that and uses the fallback.
+       call may 401/403, the script detects that and uses the fallback.
 
 Usage:
     cd backend && .venv/bin/python scripts/scrape_reddit.py
@@ -59,7 +59,7 @@ except ImportError:
 
 USER_AGENT = "northstar-opportunity-scraper/0.2 (student project; contact: dev.thorfinn@gmail.com)"
 
-# (subreddit, audience, field) — audience seeds each candidate's
+# (subreddit, audience, field), audience seeds each candidate's
 # audience_guess so reviewed keepers land on the right catalog shelf;
 # field is the default stamped when no FIELD_HINTS text hint overrides
 # it, which is what makes single-field subreddits (r/FRC, r/Debate)
@@ -100,7 +100,7 @@ SEARCHES = [
 SEARCH_SUBREDDITS = ["summerprogramresults", "scholarships", "ApplyingToCollege", "highschool"]
 
 # The matcher personalizes on opportunity_field, so the pool has to cover
-# every field — /new listings alone skew cs/bio (csMajors, premed) and
+# every field, /new listings alone skew cs/bio (csMajors, premed) and
 # leave math/physics/engineering underrepresented. These searches also
 # stamp the field onto the candidate when no text hint contradicts it.
 FIELD_SEARCHES: dict[str, list[str]] = {
@@ -135,7 +135,7 @@ FIELD_SEARCHES: dict[str, list[str]] = {
     "health": ["public health program high school", "medical volunteering"],
 }
 
-# College sweep — r/REU is literally Research Experiences for
+# College sweep, r/REU is literally Research Experiences for
 # Undergraduates; the others carry internship and program threads.
 COLLEGE_SEARCHES = [
     "REU application",
@@ -145,7 +145,7 @@ COLLEGE_SEARCHES = [
 ]
 COLLEGE_SEARCH_SUBREDDITS = ["csMajors", "internships", "REU"]
 
-# Finance/econ sweep — these subreddits carry internship, fellowship, and
+# Finance/econ sweep, these subreddits carry internship, fellowship, and
 # competition threads that the generic college searches miss.
 FINANCE_SEARCHES = [
     "summer analyst application",
@@ -156,7 +156,7 @@ FINANCE_SEARCHES = [
 ]
 FINANCE_SEARCH_SUBREDDITS = ["FinancialCareers", "quant"]
 
-# Volunteer sweep — service hours are the extracurricular every student
+# Volunteer sweep, service hours are the extracurricular every student
 # needs and the catalog's newest type. r/volunteer posts real openings;
 # the general HS subreddits carry "where do I volunteer" threads whose
 # answers name organizations worth cataloging.

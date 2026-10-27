@@ -2,7 +2,7 @@
  * Every in-app route must light up exactly one nav section.
  *
  * A route that resolves to none renders an unlit nav, and a student reading it
- * has no idea which of the five places they are in — which is the complaint
+ * has no idea which of the five places they are in, which is the complaint
  * that produced the nav rewrite in the first place. Audited 2026-10-18:
  * /advisor, /mentors/join and /p/[handle] all failed this.
  *

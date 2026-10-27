@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
  * slant. That makes it the rare typeface where EPISTEMIC STATUS CAN BE A
  * TYPOGRAPHIC AXIS rather than a footnote.
  *
- * This catalog already separates what it checked from what it is advising —
+ * This catalog already separates what it checked from what it is advising -
  * roadmap.py splits computed calendar facts from authored generalisations;
  * recurrence_verified_at NULL means "no confirmed window"; public.outcomes has
  * no rows. Until now that distinction lived in a magenta colour and a sentence
@@ -39,14 +39,14 @@ const recursive = Recursive({
 });
 
 /*
- * DISPLAY — a pixel face, used for headings and nothing else.
+ * DISPLAY, a pixel face, used for headings and nothing else.
  *
  * Pixelify Sans is variable 400-700, so headings still get weight hierarchy
  * rather than one flat cut, which the bitmap classics (Silkscreen, Press
  * Start 2P) cannot give.
  *
  * DELIBERATELY NOT THE BODY FACE. This product's job is reading deadlines and
- * long scraped programme descriptions, often on a phone — the shelf carries
+ * long scraped programme descriptions, often on a phone, the shelf carries
  * 150+ blurbs written by organisers, not by us. A pixel face at 15px costs
  * real comprehension on exactly the text a student has to get right, and the
  * cost lands hardest on the people this exists for. Headings carry the
@@ -58,7 +58,7 @@ const display = Pixelify_Sans({
 });
 
 /*
- * Body face — a second family, deliberately. Recursive at CASL 0 is close
+ * Body face, a second family, deliberately. Recursive at CASL 0 is close
  * enough to a neutral grotesque that using it for body too would leave the
  * axis with nothing to contrast against, and the whole device depends on the
  * reader feeling the difference.
@@ -104,7 +104,7 @@ export default function RootLayout({
 
             1. It broke mobile layout. Its SVG star circles are positioned
                past the viewport edge, pushing /opportunities to 405px inside a
-               390px window — a horizontal scroll on every phone, on the page
+               390px window, a horizontal scroll on every phone, on the page
                testers land on.
             2. It was wrong in the paper theme, rendering the same specks as
                grey dots on manila rather than inverting.

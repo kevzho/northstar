@@ -2,14 +2,14 @@
 Guard: the civic-impact claims on the landing page must stay true.
 
 The landing page now states why Northstar exists, and backs it with numbers
-about the CATALOG rather than about a userbase — there are three accounts, so
+about the CATALOG rather than about a userbase, there are three accounts, so
 any usage figure would be either embarrassing or invented. The claims are:
 
   - "more than four in five programs on the high-school shelf cost nothing to
     apply to"
 
 On 2026-09-27 the page stopped stating a shelf size, a field count, a
-verification practice, and the pre-pilot admission — the whole "what we can prove
+verification practice, and the pre-pilot admission, the whole "what we can prove
 so far" paragraph came out. The guards for those claims are kept and skip when
 the claim is absent, rather than being deleted: the failure worth catching is a
 number being put BACK without anyone checking it against the catalog. The one
@@ -26,7 +26,7 @@ could see. These assert the claims against the migrations, so a curation
 change that makes the equity claim false fails here instead of on the landing
 page a judge is reading.
 
-Seeded rows only — the live catalog needs credentials and CI has none. The
+Seeded rows only, the live catalog needs credentials and CI has none. The
 seed is what a fresh clone gets, and it is the floor the claim rests on.
 """
 
@@ -139,20 +139,20 @@ def test_stated_catalog_counts_match_the_seed_floor() -> None:
     This guard had a hole, and it showed up within the hour: it checked the
     free-share percentage and the no-usage claim, but not the raw counts. Then
     nine rows were retired, the high-school shelf went 70 -> 61, and the page
-    still said 70 — a false claim introduced by a correctness fix.
+    still said 70, a false claim introduced by a correctness fix.
 
     CI has no database credentials, so the live count cannot be read here. What
     CAN be asserted is the direction of the error that actually happened: the
     page must not claim MORE opportunities than the seed migrations define,
     since retirement only ever removes rows. A page claiming fewer than the
-    seed is fine and expected — that is what retirement looks like.
+    seed is fine and expected, that is what retirement looks like.
     """
     page = " ".join(LANDING.read_text().split())
 
     claimed = re.search(r"more than\s+(\d+)\s+opportunities", page)
     if not claimed:
         # The page stopped stating a shelf size on 2026-09-27. Nothing to bound,
-        # so this passes — but the guard stays armed rather than being deleted,
+        # so this passes, but the guard stays armed rather than being deleted,
         # because the failure it exists for is a number being ADDED back without
         # anyone checking it against the catalog.
         pytest.skip("the landing page states no shelf size")
@@ -177,7 +177,7 @@ def test_stated_catalog_counts_match_the_seed_floor() -> None:
 # The page used to narrate the audit: nine removed, ten grade ranges, fifteen
 # entry routes, eight duplicates, three accounts. Four guards pinned those
 # numbers to the scripts that did the work. The numbers were true; publishing
-# them was the wrong call — a marketing page is not a defect log, and a visitor
+# them was the wrong call, a marketing page is not a defect log, and a visitor
 # needs to know the practice exists, not read its changelog.
 #
 # So the claim shrank to one sentence ("every listing is checked against the
@@ -255,7 +255,7 @@ def _rendered_text() -> str:
 
 
 def test_the_defect_log_did_not_creep_back_onto_the_page() -> None:
-    """Not a style rule — a scope rule. These sentences were removed on purpose
+    """Not a style rule, a scope rule. These sentences were removed on purpose
     because they publish internal history. If they are wanted back, that should
     be a decision someone makes while deleting this test, not a paste."""
     page = _rendered_text()

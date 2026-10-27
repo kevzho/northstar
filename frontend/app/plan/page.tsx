@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * 30-day plan — generated, not hardcoded.
+ * 30-day plan, generated, not hardcoded.
  *
  * The plan is assembled by lib/plan.ts from the chosen future path, the trait
  * profile, and (when signed in) the student's real ranked matches with their
@@ -58,7 +58,7 @@ const STEP_CHIP: Record<string, string> = {
 /**
  * Edge reasons that are authored generalisations rather than computed facts.
  *
- * 'window' and 'eligibility' come from a deadline or a grade range — they are
+ * 'window' and 'eligibility' come from a deadline or a grade range, they are
  * checkable. These three are claims about how students get from one thing to
  * the next, backed by 24 hand-written spines and zero logged outcomes, so the
  * copy says "a common route" and never "required".
@@ -70,7 +70,7 @@ export default function PlanPage() {
   const chosen = useChosenPath();
   // Built from this student's own assessment, so it needs an account.
   // Signed out this used to render a heading and an empty shell while the
-  // API answered 401 — gated and broken look identical from there.
+  // API answered 401, gated and broken look identical from there.
   useRequireAuth();
   const [matches, setMatches] = useState<MatchResult[] | null>(null);
   const [matchesSettled, setMatchesSettled] = useState(false);
@@ -78,7 +78,7 @@ export default function PlanPage() {
   // without it, because the step itself is still a real instruction.
   const [resources, setResources] = useState<LearningResource[]>([]);
   // The sequenced roadmap from the backend. null while loading, or when signed
-  // out / unreachable — in which case the client-side generatePlan() below
+  // out / unreachable, in which case the client-side generatePlan() below
   // still renders something, minus the application steps.
   const [roadmap, setRoadmap] = useState<Roadmap | null>(null);
   const [roadmapSettled, setRoadmapSettled] = useState(false);
@@ -90,7 +90,7 @@ export default function PlanPage() {
         const data = await fetchMatches();
         if (!cancelled) setMatches(data);
       } catch {
-        // Signed out or backend unreachable — the plan generates without
+        // Signed out or backend unreachable, the plan generates without
         // application targets and the page says what signing in adds.
         if (!cancelled) setMatches(null);
       } finally {
@@ -107,7 +107,7 @@ export default function PlanPage() {
   /**
    * A student who answered "none of these are me" on /futures.
    *
-   * They have charted something — a direction without a career label — and
+   * They have charted something, a direction without a career label, and
    * findArchetype("") returns null, so the !archetype guard below used to send
    * them straight to "No path charted yet" and tell them to go and pick one of
    * the three they had just declined. Their plan comes from the generated
@@ -133,7 +133,7 @@ export default function PlanPage() {
    *
    * A plan is learn -> build -> publish -> apply, and the middle two come from
    * a spine that only arrived by charting a path on /futures. A student who
-   * never went there got three application steps and a cold email — no project
+   * never went there got three application steps and a cold email, no project
    * at all, which is the one thing this product exists to tell them.
    *
    * Fires at most once per mount, and the server refuses anything beyond three
@@ -229,7 +229,7 @@ export default function PlanPage() {
    * the gate must still be drawn attached to the thing it unlocks.
    *
    * Colour comes from the matched opportunity's own field, so an application
-   * node is the same colour here as it is on the map and in the field sky —
+   * node is the same colour here as it is on the map and in the field sky -
    * and a step we cannot colour honestly is left on the default.
    */
   const fieldById = new Map(
@@ -284,7 +284,7 @@ export default function PlanPage() {
             </p>
         </header>
 
-        {/* The plan waits on three fetches — matches, the roadmap, and the
+        {/* The plan waits on three fetches, matches, the roadmap, and the
             resources for its skill rung. Until this, the page rendered its
             header and then a blank stretch for about three seconds, which
             reads as "there is nothing here" rather than "this is coming", and
@@ -338,7 +338,7 @@ export default function PlanPage() {
           <>
             {/* Missions are written per archetype (public.missions is keyed by
                 archetype_id), so a student who declined a career label has none
-                — and inventing a set for them would be the label arriving
+               , and inventing a set for them would be the label arriving
                 through the back door. Their build and publish steps come from
                 the generated spine in the roadmap below instead. */}
             {archetype ? (
@@ -359,12 +359,12 @@ export default function PlanPage() {
                 One solar system per phase, one world per step, the rocket
                 parked on the first step not yet done. A student who opens this
                 page should be able to see where they are before reading
-                anything — the detailed cards below are the same steps, in the
+                anything, the detailed cards below are the same steps, in the
                 same order, with the reasons attached.
 
                 Completion state is not wired yet: roadmap_steps has no
                 completed_at column, so nothing is marked done and the rocket
-                sits on step one. That is honest rather than decorative — a map
+                sits on step one. That is honest rather than decorative, a map
                 that claimed progress it cannot observe would be worse than one
                 that shows the start. */}
             {tree && tree.nodes.length > 1 ? (
@@ -396,8 +396,8 @@ export default function PlanPage() {
             ) : null}
 
             {/* Travelling together. The matcher behind /teamup already pairs on
-                chosen_archetype, chosen_kind and field_scores — the same signals
-                that built this plan — so the students it surfaces are on this
+                chosen_archetype, chosen_kind and field_scores, the same signals
+                that built this plan, so the students it surfaces are on this
                 journey, not merely on this website. It was reachable only from
                 the nav, which is why nobody used it. */}
             <section
@@ -438,8 +438,8 @@ export default function PlanPage() {
             <section className="relative mt-10">
               {/* THE ROADMAP. This replaced a list of plain strings that
                   generatePlan() built client-side. Steps now come from
-                  GET /roadmap, which sequences four kinds of work — learn,
-                  build, publish, apply — on the student's grade progression
+                  GET /roadmap, which sequences four kinds of work, learn,
+                  build, publish, apply, on the student's grade progression
                   rather than on catalog deadlines. Against production only 4 of
                   61 high-school opportunities carry a usable future deadline
                   and 25 are locked above a 9th grader's grade, so a

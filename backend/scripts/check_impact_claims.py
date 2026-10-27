@@ -14,7 +14,7 @@ false:
 
 Three times, the same shape: a correctness fix to the data silently turned a
 truthful sentence into a false one. The fix is to check the claim where the
-credentials are — the daily scrape job, which is also the thing that changes the
+credentials are, the daily scrape job, which is also the thing that changes the
 numbers. Same run, same minute.
 
 Exits non-zero and names the wrong sentence, so the failure arrives the day the
@@ -82,7 +82,7 @@ def main() -> int:
     # The shelf size is stated as a FLOOR ("more than 50"), not an exact count.
     # It was exact for about four hours: the daily scrape added two high-school
     # rows and the page was wrong the same afternoon. An exact number in static
-    # copy cannot survive a catalog that grows every morning — it would redden
+    # copy cannot survive a catalog that grows every morning, it would redden
     # the build on any day the scraper found something, which trains people to
     # ignore the build. A floor is monotonic in the direction the catalog moves,
     # so it only fails when the shelf actually SHRINKS past it, which is a real

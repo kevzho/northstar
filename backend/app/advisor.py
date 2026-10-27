@@ -1,11 +1,11 @@
 """
-Route advisor — exploration, grounded in the verified catalog.
+Route advisor, exploration, grounded in the verified catalog.
 
 The clearpolicy.org pattern: a conversational answer that is only allowed
 to lean on sources we can show. The advisor receives the student's
 deterministic profile (traits, field shares, goals) plus their actual
 matched opportunities as numbered sources, and answers questions like
-"what unusual routes fit how I think?" — citing sources by number.
+"what unusual routes fit how I think?", citing sources by number.
 
 Boundaries, deliberately hard:
 - The advisor NEVER produces fit percentages or rankings; that authority
@@ -36,7 +36,7 @@ from .settings import settings
 # the cache are one table (public.advisor_calls): one row per BILLED call,
 # no row for a cache hit. That makes count(rows) mean "credits spent".
 #
-# A cache hit is checked before the budget and never consumes quota — the
+# A cache hit is checked before the budget and never consumes quota, the
 # point of the cache is that re-asking a known question is free.
 
 # The provider's free tier allows 40 requests/minute across everything using
@@ -103,7 +103,7 @@ def _tokens_spent(sb, since: str) -> int:
 
     A row's total_tokens is NULL if it predates 20260926190000 or if the
     provider returned no usage block. Those are charged
-    advisor_assumed_tokens_per_call — above the measured ~925 — because counting
+    advisor_assumed_tokens_per_call, above the measured ~925, because counting
     unknown as free would let an unmeasured provider spend without limit.
 
     The sum happens in the database on purpose. Reading the rows and adding them
@@ -182,7 +182,7 @@ def budget_block(
 
     # The money limit, checked last because it is the most expensive to compute
     # (it reads rows rather than a count) and the least likely to fire. A call
-    # ceiling is a FAIRNESS limit — it stops one student using everything. This
+    # ceiling is a FAIRNESS limit, it stops one student using everything. This
     # is the spend ceiling, and it is the one to raise as the app grows: at
     # hundreds of users the two diverge, because a long question with twelve
     # matched sources costs several times a one-line one and the provider bills
@@ -205,7 +205,7 @@ def record_call(
     """Log a billed call. This row is both the ledger entry and the cache.
 
     ``usage`` is (prompt, completion, total) from the provider. Optional so an
-    older caller still records the call rather than dropping it — an unpriced
+    older caller still records the call rather than dropping it, an unpriced
     row is charged an assumed cost by the budget, which is a better failure than
     a missing row that is charged nothing.
     """
@@ -286,7 +286,7 @@ def ask_advisor(question: str, profile: dict, sources: list[dict]) -> ChatResult
     # this cost, and the parameter negotiation means moving the advisor to
     # another vendor later is a config change rather than an edit here.
     #
-    # temperature stays 0.7 — this is the one place a little variation is wanted,
+    # temperature stays 0.7, this is the one place a little variation is wanted,
     # since an advisor that answers two students identically reads like a
     # template. A provider that refuses the value simply omits it.
     result = chat(

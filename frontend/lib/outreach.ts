@@ -1,11 +1,11 @@
 /**
- * Mentor outreach drafts — a cold email the student edits, not a form letter
+ * Mentor outreach drafts, a cold email the student edits, not a form letter
  * the student sends blind.
  *
  * The draft is a pure function of the student profile and the mentor card:
  * it names the overlap between the student's interests and the mentor's
  * expertise (that overlap is *why* the matcher ranked this mentor), asks one
- * concrete question, and stays under 150 words — short enough that a busy
+ * concrete question, and stays under 150 words, short enough that a busy
  * adult actually reads it. Bracketed [EDIT] markers show exactly where the
  * student must make it their own before sending.
  */

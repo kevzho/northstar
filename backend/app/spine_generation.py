@@ -98,8 +98,8 @@ def build_prompt(
     """The user half of the request. Only data the catalog already holds.
 
     ``rejected`` and ``reason`` carry a student's "this does not fit me". That
-    is the most useful signal this system can get — better than any trait score,
-    because the student is telling you directly — so the plan they turned down
+    is the most useful signal this system can get, better than any trait score,
+    because the student is telling you directly, so the plan they turned down
     goes in verbatim with instruction not to repeat it. Without that, a
     regenerate button is a dice roll that can hand back the same idea reworded.
     """
@@ -165,7 +165,7 @@ def parse_spine(raw: str, skill_labels: dict[str, str]) -> dict | None:
     THE SKILL SENTENCE IS NOT THE MODEL'S TO WRITE. It comes from
     learning_resources.skill_label for the key the model picked. The first
     version let the model phrase it, and a test student got the sentence
-    "Rigor — a bioethics case file is only as strong as its sources" attached to
+    "Rigor, a bioethics case file is only as strong as its sources" attached to
     the key `regulatory-literacy`: roadmap.py would have printed that sentence
     and then linked four resources about something else. The label is already
     human-written and already matches the resources, so taking it from there

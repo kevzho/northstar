@@ -1,12 +1,12 @@
 """
-LLM opportunity verifier — screens scraped candidates before they enter
+LLM opportunity verifier, screens scraped candidates before they enter
 the live catalog, so the daily loop can scrape -> verify -> import
 without a human in the hot path.
 
 Design for trust (this replaces a human gate, so it must be strict):
 - The model returns a structured verdict, never prose. It decides only
   whether a candidate is a real, current opportunity and extracts clean
-  fields — it does NOT invent programs or deadlines.
+  fields, it does NOT invent programs or deadlines.
 - decide() is a PURE function (no network) that applies the guardrails:
   is_opportunity, a confidence floor, and a usable external link. Only
   candidates that clear all three auto-promote; everything else stays in
@@ -15,7 +15,7 @@ Design for trust (this replaces a human gate, so it must be strict):
 - Every auto-promoted row is stamped added_by='ai' (migration
   20260816160000) so a bad batch is auditable and one delete away.
 
-Provider: any OpenAI-compatible chat API. NVIDIA NIM is free and works —
+Provider: any OpenAI-compatible chat API. NVIDIA NIM is free and works -
 set in backend/.env:
     LLM_API_BASE=https://integrate.api.nvidia.com/v1
     LLM_API_KEY=<your NIM key>
@@ -38,7 +38,7 @@ TYPES = ["program", "scholarship", "competition", "mentorship",
 
 CONFIDENCE_FLOOR = 0.8
 
-# A bare form or shortened link is not a verifiable organization — it's the
+# A bare form or shortened link is not a verifiable organization, it's the
 # signature of an unvetted, student-run "opportunity" the model can't judge
 # from text. These never auto-import; they drop to human review, where a
 # person can confirm the program is real before it reaches minors.
@@ -132,7 +132,7 @@ def decide(candidate: dict, verdict: dict) -> dict | None:
     is_reddit = host.endswith("reddit.com") or not host
     is_devpost = candidate.get("source") == "devpost"
     if is_reddit and not is_devpost:
-        # No real destination to send a student to — leave for a human.
+        # No real destination to send a student to, leave for a human.
         return None
     if any(host == h or host.endswith("." + h) for h in UNVERIFIABLE_HOSTS):
         # A form/shortener alone can't establish the program is real.
@@ -150,12 +150,12 @@ def decide(candidate: dict, verdict: dict) -> dict | None:
     # you qualify for USAMO by exam score, you advance to ISEF from a regional
     # fair, and a TEACHER applies for a Lemelson-MIT InvenTeam grant. app/
     # roadmap.py reads this column to pick the step verb, so without it the plan
-    # says "Apply to USAMO" — a step no student can take, in the one place this
+    # says "Apply to USAMO", a step no student can take, in the one place this
     # product promises to say what to do next.
     #
     # The verifier had no notion of it, so every AI-imported row took the column
     # default. Tested against Azure gpt-5.6, it accepted the Lemelson grant as a
-    # student opportunity at 0.98 confidence — so the scraper could quietly
+    # student opportunity at 0.98 confidence, so the scraper could quietly
     # reintroduce the whole class of defect the hand corrections removed.
     #
     # An unrecognised or missing value falls back to "apply", which is both the
@@ -267,13 +267,13 @@ def parse_locality(hint: object) -> tuple[str | None, str | None]:
     That fact was already being scraped and then dropped on this exact line.
     scrape_sciencefairs.py extracts each fair's territory from the Society for
     Science directory and passes "Bullock County, AL"; this module normalised it
-    into location_scope — an enum of three values — and the county was gone.
+    into location_scope, an enum of three values, and the county was gone.
     Every regional fair in the catalog reads location=NULL.
 
     Conservative on purpose: only a trailing two-letter code that is a real
     state is accepted. "Woods Hole, MA" yields ("Woods Hole", "MA"); "online"
     and "united states" yield nothing, because a wrong state is worse than no
-    state — it drops the row out of the filter for the student it belongs to.
+    state, it drops the row out of the filter for the student it belongs to.
     """
     text = str(hint or "").strip()
     if not text or "," not in text:
@@ -297,7 +297,7 @@ def parse_locality(hint: object) -> tuple[str | None, str | None]:
 def verify_candidate(candidate: dict, retries: int = 2) -> dict:
     """One LLM verdict for a candidate. Raises on network/parse failure.
 
-    Retries on read timeouts — free hosted tiers (NIM) cold-start slowly,
+    Retries on read timeouts, free hosted tiers (NIM) cold-start slowly,
     so a single timeout shouldn't drop an otherwise-fine candidate.
     """
     text = f"Title: {candidate.get('title', '')}\n\n{candidate.get('blurb', '')[:1500]}"
@@ -317,7 +317,7 @@ def verify_candidate(candidate: dict, retries: int = 2) -> dict:
                 # Generous on purpose. Reasoning models emit their thinking
                 # before the JSON object, so a 300-token ceiling truncated the
                 # reply mid-string and every retry truncated it identically at
-                # temperature 0 — a deterministic failure that looked flaky. The
+                # temperature 0, a deterministic failure that looked flaky. The
                 # verdict itself is ~80 tokens.
                 max_tokens=1200,
                 # DETERMINISM IS BEST-EFFORT, NOT GUARANTEED. NIM honours
@@ -325,7 +325,7 @@ def verify_candidate(candidate: dict, retries: int = 2) -> dict:
                 # of 1 ("Unsupported value: 'temperature' does not support 0.0"),
                 # so app/llm.py drops the parameter for that provider. On Azure
                 # the same candidate can therefore get different verdicts on
-                # different runs. Acceptable here — decide() re-checks every
+                # different runs. Acceptable here, decide() re-checks every
                 # verdict against hard guardrails (confidence floor, usable link,
                 # non-reddit host), so a wobbly verdict cannot import anything
                 # the rules would reject. It does mean the JSON-truncation retry

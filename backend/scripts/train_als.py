@@ -4,11 +4,11 @@ Train the ALS collaborative model and write app/data/als_item_factors.json.
 Data comes from two sources, kept honest and clearly labeled:
 
   1. Real outcomes from public.outcomes (every logged accepted/rejected/...
-     row). With one demo user this is a handful of rows — that's fine, it
+     row). With one demo user this is a handful of rows, that's fine, it
      grows with use, and retraining folds it in with more weight over time.
 
   2. A synthetic bootstrap cohort: seeded, simulated students whose outcome
-     behavior follows one simple rule — students succeed more often in
+     behavior follows one simple rule, students succeed more often in
      opportunities matching their interest fields. This exists only to give
      the latent space a sensible shape before real data accumulates (the
      classic cold-start move), and the artifact records exactly how many

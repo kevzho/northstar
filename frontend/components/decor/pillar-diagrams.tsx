@@ -1,5 +1,5 @@
 /**
- * Pillar diagrams — one small figure per waypoint on the landing page.
+ * Pillar diagrams, one small figure per waypoint on the landing page.
  *
  * Each figure is the SHAPE of the thing it sits beside, not an ornament: the
  * six bars are the six real trait keys from lib/scoring.ts, the three paths are
@@ -10,7 +10,7 @@
  *
  * Monochrome and palette-agnostic: everything is `currentColor` or a token, so
  * these render correctly in the night palette and inside the paper band.
- * Decorative in the accessibility tree — the prose beside them carries the
+ * Decorative in the accessibility tree, the prose beside them carries the
  * meaning, so announcing them twice would only add noise.
  */
 
@@ -105,7 +105,7 @@ export function ThreePaths({ className = "" }: { className?: string }) {
 }
 
 /**
- * 03 — Real opportunities. Ranked rows with a score and the reasons behind it,
+ * 03, Real opportunities. Ranked rows with a score and the reasons behind it,
  * which is the one claim the product makes loudest: nothing is a black box.
  */
 export function RankedReasons({ className = "" }: { className?: string }) {
@@ -158,7 +158,7 @@ export function RankedReasons({ className = "" }: { className?: string }) {
 }
 
 /**
- * 04 — Students on the same path. Two routes that converge on shared worlds.
+ * 04, Students on the same path. Two routes that converge on shared worlds.
  *
  * Deliberately NOT a pair of avatars: the product matches on path, fields and
  * working style, never on identity, and a figure showing two people would imply

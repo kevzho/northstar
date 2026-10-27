@@ -3,11 +3,11 @@ CTFtime -> candidate pool. Security capture-the-flag events an individual can en
 
 WHY THIS SOURCE. The shelf's problem was never total rows, it was rows a student
 can act on TODAY: of 55 high-school entries, four were open. Annual programmes
-cannot fix that — their deadlines cluster in winter by nature. Recurring
+cannot fix that, their deadlines cluster in winter by nature. Recurring
 competitions can, because something is always open.
 
 CTFtime's public API is the cleanest example: no auth, and it publishes the one
-field most sources omit — `restrictions`, which says who is allowed to enter.
+field most sources omit, `restrictions`, which says who is allowed to enter.
 
     Open (32)          anyone, including a 15-year-old with a laptop
     Casual (1)         same, informally run
@@ -54,7 +54,7 @@ USER_AGENT = "northstar-catalog/1.0 (student nonprofit opportunity map)"
 # deadline further away than this is not something a student acts on now.
 HORIZON_DAYS = 120
 
-# Ceiling per run. Not a rate limit — a relevance limit. See the field note above.
+# Ceiling per run. Not a rate limit, a relevance limit. See the field note above.
 MAX_IMPORT = 25
 
 # Entry restrictions an unaffiliated individual can satisfy.
@@ -112,7 +112,7 @@ def main() -> None:
         players = event.get("participants") or 0
         dur = event.get("duration") or {}
         hours = (dur.get("days") or 0) * 24 + (dur.get("hours") or 0)
-        # Long-running CTFs are real — some stay open for weeks — and "1680h"
+        # Long-running CTFs are real, some stay open for weeks, and "1680h"
         # is not a length a person can picture.
         span = (
             f"{round(hours / 24)} days" if hours >= 72
@@ -136,7 +136,7 @@ def main() -> None:
             # CTFs produced byte-identical text after the title, TF-IDF scored
             # them at exactly 0.4219, and a CS-focused student got six
             # interchangeable rows in a row. Identical inputs SHOULD score
-            # identically — the bug was feeding the matcher nothing to tell them
+            # identically, the bug was feeding the matcher nothing to tell them
             # apart. Duration, difficulty weight, venue and the organiser's own
             # description differentiate them, and they are what a student
             # actually chooses between: a 48-hour attack-defense event and a
@@ -166,7 +166,7 @@ def main() -> None:
             "field_guess": "cs",
             "type_guess": "competition",
             # Open CTFs genuinely accept high schoolers, and the high-school
-            # shelf is the one starved of open deadlines — but see the field
+            # shelf is the one starved of open deadlines, but see the field
             # note in the module docstring: this is capped for a reason.
             "audience_guess": "high_school",
             # public.location_scope takes us/international/global and nothing

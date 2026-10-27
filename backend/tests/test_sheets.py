@@ -1,5 +1,5 @@
 """
-Tests for app/sheets.py — the stdlib .xlsx reader.
+Tests for app/sheets.py, the stdlib .xlsx reader.
 
 It exists instead of openpyxl because this venv has no pip, so a new dependency
 could be neither installed nor tested here and would have landed first in the
@@ -109,7 +109,7 @@ def test_a_named_sheet_is_found_by_name_not_position(tmp_path) -> None:
     data = (f'<row r="1">{inline("A1","name")}</row>'
             f'<row r="2">{inline("A2","IOI")}</row>')
     path = tmp_path / "two.xlsx"
-    # Tab order: README first, Data second — but Data lives in sheet1.xml.
+    # Tab order: README first, Data second, but Data lives in sheet1.xml.
     build(path, {"README": readme, "Data": data}, ["sheet2", "sheet1"])
     assert read_rows(str(path), "Data") == [{"name": "IOI"}]
     assert read_rows(str(path), "README") == [{"note": "read me"}]
@@ -138,7 +138,7 @@ def test_trailing_blank_rows_are_dropped(tmp_path) -> None:
 
 def test_the_real_sheets_parse_if_present() -> None:
     """Against the actual files when they are on disk. Skipped in CI, where they
-    are not — they are a 70KB download, not repo content."""
+    are not, they are a 70KB download, not repo content."""
     real = pathlib.Path.home() / "Downloads" / "stem_competitions_1000.xlsx"
     if not real.exists():
         pytest.skip("curated sheet not present on this machine")
@@ -185,7 +185,7 @@ def test_only_a_known_cycle_yields_a_month() -> None:
 
 
 def test_prose_without_a_month_yields_nothing() -> None:
-    """886 of the 1,000 competition rows read "Via national team selection" —
+    """886 of the 1,000 competition rows read "Via national team selection" -
     which is entry-gate information, not timing, and must not be coerced."""
     from import_opportunity_sheet import recurrence_month_of
 

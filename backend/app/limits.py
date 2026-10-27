@@ -163,5 +163,5 @@ def record_event(sb, action: str, student: str | None) -> None:
         sb.table("rate_events").insert(
             {"action": action, "student_id": student}
         ).execute()
-    except Exception:  # noqa: BLE001 — see the docstring
+    except Exception:  # noqa: BLE001, see the docstring
         pass

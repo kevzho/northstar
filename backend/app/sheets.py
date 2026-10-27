@@ -5,7 +5,7 @@ WHY NOT openpyxl. The catalog is curated in a spreadsheet and re-exported as the
 list grows, so reading .xlsx belongs in the repo rather than in a one-off
 conversion someone has to remember to run. But this venv has no pip, so a new
 dependency could not be installed or tested here, and adding one to
-requirements.txt untested would land first in the nightly GitHub job — the exact
+requirements.txt untested would land first in the nightly GitHub job, the exact
 place a broken import is least visible. An .xlsx is a zip of XML; reading the
 handful of parts a flat export uses is about sixty lines, and those sixty lines
 can be tested against the real files right now.

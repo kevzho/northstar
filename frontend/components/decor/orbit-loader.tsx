@@ -1,12 +1,12 @@
 /**
- * Orbit loader — the one loading treatment for every in-app wait.
+ * Orbit loader, the one loading treatment for every in-app wait.
  *
  * A tiny system in transit: two faint rings, two planets on opposite
  * tracks, a softly breathing star at the center. Monochrome by the same
  * rule as everything else (currentColor; no data, no color), and
  * `prefers-reduced-motion` stills it via the global media query.
  *
- * Pages should not hand-roll "Loading..." text anymore — render
+ * Pages should not hand-roll "Loading..." text anymore, render
  * <LoadingSection label="..." /> inside a page body, or
  * <LoadingScreen label="..." /> when nothing else is on screen yet.
  */

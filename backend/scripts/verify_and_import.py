@@ -6,7 +6,7 @@ students see fresh opportunities. Walks unreviewed candidates, asks the
 verifier, and for each one that clears the guardrails (real opportunity,
 confident, usable link) upserts it into public.opportunities stamped
 added_by='ai'. Everything it rejects or is unsure about stays in the
-pool for scripts/review_candidates.py — the human path still exists for
+pool for scripts/review_candidates.py, the human path still exists for
 the borderline cases.
 
 Bounded and polite: caps per run, skips obviously-unpromising posts
@@ -71,7 +71,7 @@ FAIL_FAST_AFTER = 5       # consecutive errors that mean the provider, not the d
 
 # Wall-clock ceiling for the verify loop. Measured against NVIDIA NIM's free
 # tier on openai/gpt-oss-20b, a single verdict takes anywhere from 24s to 83s
-# — free capacity is shared and cold-starts are not rare. verify_candidate
+#, free capacity is shared and cold-starts are not rare. verify_candidate
 # retries twice on timeout, so a worst-case candidate can occupy several
 # minutes on its own, and a fixed count of 60 says nothing useful about how
 # long the run will take.
@@ -94,7 +94,7 @@ def promising(candidate: dict) -> bool:
     """Cheap pre-filter so we don't spend a token on obvious non-starters.
 
     Devpost entries are real hackathons on their own domain. Otherwise the
-    candidate must point at a real external site — every reddit-owned host
+    candidate must point at a real external site, every reddit-owned host
     (reddit.com AND the media CDNs i.redd.it / v.redd.it / redd.it) is a
     dead end for auto-import: an image or a discussion, never a program.
     """
@@ -112,14 +112,14 @@ def rank_key(candidate: dict) -> tuple:
     """Verify the likeliest opportunities first, not the top-upvoted memes.
 
     Structured-feed candidates first, then external links whose text actually
-    reads like an opportunity — so the per-run token budget is spent where it
+    reads like an opportunity, so the per-run token budget is spent where it
     pays off.
 
     KNOWN_REAL_SOURCES, not just devpost. When the ctftime and codeforces feeds
     were added they inherited the generic tier, which sounds harmless and is
     not: the pool holds 9,000+ reddit candidates, the per-run cap is 60, and
     ordering inside a tier falls back to pool order, which is score-descending
-    — and a structured feed has no upvotes, so its entries sort last of all.
+   , and a structured feed has no upvotes, so its entries sort last of all.
     The feeds would have run daily, written candidates nobody ever verified,
     and imported nothing, which is indistinguishable from working.
     """

@@ -6,7 +6,7 @@
  * Checks existing bookmarks on mount, then toggles via POST /bookmarks or
  * DELETE /bookmarks/:id. Renders a filled label when bookmarked, an outline
  * label when not. Errors are swallowed so a network hiccup never bricks the
- * detail page — the student can retry on the next visit.
+ * detail page, the student can retry on the next visit.
  */
 
 import { useEffect, useState } from "react";
@@ -26,7 +26,7 @@ export function BookmarkButton({ opportunityId }: { opportunityId: string }) {
           setBookmarked(list.some((b) => b.opportunity_id === opportunityId));
         }
       } catch {
-        // Network error — default to un-bookmarked; user can still toggle.
+        // Network error, default to un-bookmarked; user can still toggle.
       } finally {
         if (!cancelled) setLoading(false);
       }

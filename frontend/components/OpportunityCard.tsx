@@ -1,7 +1,7 @@
 /**
  * Opportunity card used on the opportunities list and the dashboard. Pure
  * presentational component over the Opportunity type; data fetch lives in
- * lib/api.ts. When `onDismiss` is provided the card offers "Not for me" —
+ * lib/api.ts. When `onDismiss` is provided the card offers "Not for me" -
  * the cheapest negative signal the profile can collect.
  */
 import Link from "next/link";
@@ -25,7 +25,7 @@ const fieldLabels: Record<OpportunityField, string> = {
  * How you get in, said as a verb.
  *
  * "Apply" and "qualify" are different answers to the only question a student
- * has — can I enter this? — and the card showed neither until now. A 9th grader
+ * has, can I enter this?, and the card showed neither until now. A 9th grader
  * scanning for something to do should be able to see, without opening anything,
  * that USAMO is not a thing you apply to.
  */
@@ -75,7 +75,7 @@ export function OpportunityCard({
     /*
      * min-w-0 is load-bearing, not tidying. A grid item defaults to
      * `min-width: auto`, so one unbreakable child sets the floor for the whole
-     * track — and these blurbs are scraped organiser copy that sometimes
+     * track, and these blurbs are scraped organiser copy that sometimes
      * contains a bare URL ("https://fortid.com/"). Measured on a 390px phone:
      * the grid track was a correct 342px and every card inside it was 368,
      * giving the page a horizontal scroll on the screen testers land on.

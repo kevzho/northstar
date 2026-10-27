@@ -1,5 +1,5 @@
 """
-Tests for app/llm.py — the provider-dialect negotiation.
+Tests for app/llm.py, the provider-dialect negotiation.
 
 Two providers are in play and they disagree about the request body. NVIDIA NIM
 takes `max_tokens` and `temperature: 0`. Azure AI Foundry's gpt-5.6 refuses
@@ -117,7 +117,7 @@ def test_both_disagreements_are_learned_in_one_call(monkeypatch) -> None:
 
 def test_what_was_learned_is_reused_for_the_next_call(monkeypatch) -> None:
     """Otherwise every verifier call in a 60-candidate run pays the extra
-    request — 60 wasted round trips a night."""
+    request, 60 wasted round trips a night."""
     tok = FakeResponse(400, {"error": {"message":
         "Use 'max_completion_tokens' instead."}})
     run(monkeypatch, [tok, FakeResponse(200, reply("first"))])
@@ -157,7 +157,7 @@ def test_a_reasoning_model_answer_is_read_from_the_other_field(monkeypatch) -> N
 
 def test_an_empty_message_raises_rather_than_returning_nothing(monkeypatch) -> None:
     """Returning "" would let a caller treat "no answer" as "answer was
-    nothing" — how a four-week outage reported success every day."""
+    nothing", how a four-week outage reported success every day."""
     with pytest.raises(llm.LLMUnavailable):
         run(monkeypatch, [FakeResponse(200, {"choices": [{"message": {"content": "  "}}]})])
 
@@ -242,7 +242,7 @@ def test_unpriced_rows_are_charged_rather_than_ignored() -> None:
 
     Rows written before 20260926190000 have no token counts, and some providers
     return no usage block. Counting those as zero would let an unmeasured
-    provider spend without limit — the budget would read 0 spent no matter how
+    provider spend without limit, the budget would read 0 spent no matter how
     many calls were made. This exercises the FALLBACK path, which runs when the
     aggregate RPC is absent because a deploy landed before the migration.
     """
@@ -308,7 +308,7 @@ def test_the_aggregate_rpc_is_preferred_over_scanning_rows() -> None:
 
 def test_a_truncated_fallback_scan_reads_as_over_budget() -> None:
     """If the ledger cannot be measured, the safe answer is "stop", not
-    "continue" — otherwise an unmeasurable day spends without a ceiling."""
+    "continue", otherwise an unmeasurable day spends without a ceiling."""
     from app import advisor
 
     class BigTable:

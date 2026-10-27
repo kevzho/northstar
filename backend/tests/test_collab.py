@@ -1,5 +1,5 @@
 """
-ALS collaborative filtering — math and blend behavior.
+ALS collaborative filtering, math and blend behavior.
 
 No credentials, no artifact file: training runs in-memory on toy matrices,
 and the blend tests inject factors through the loader's cache.

@@ -9,20 +9,20 @@ export type Archetype = {
    * Concrete things a person on this path has actually done.
    *
    * The summary is a description of a profession, and a 15-year-old cannot
-   * picture "quantitative economist" — they can picture "worked out whether a
+   * picture "quantitative economist", they can picture "worked out whether a
    * bus route change really cut commute times". These are what make a path
    * tangible enough to accept or reject, which is the whole decision the
    * futures page asks for.
    */
   examples: string[];
-  /** The opportunity fields this profession lives closest to — used to
+  /** The opportunity fields this profession lives closest to, used to
    * nudge rankings toward a signed-in student's stated interests. */
   fields: OpportunityField[];
   traits: Record<TraitKey, number>;
 };
 
 /**
- * Twelve professions spanning all six opportunity fields — builders,
+ * Twelve professions spanning all six opportunity fields, builders,
  * researchers, communicators, and field scientists, not just software
  * shapes. Trait vectors are hand-set on a 0–10 scale; they are the other
  * half of the cosine match in lib/scoring.ts.

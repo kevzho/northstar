@@ -1,8 +1,8 @@
 /**
- * Waypoints — the course-plot grammar for progress.
+ * Waypoints, the course-plot grammar for progress.
  *
  * Steps render as nodes on a course line: done is a filled star-white
- * node, upcoming is a hollow one, and the current step is Polaris — the
+ * node, upcoming is a hollow one, and the current step is Polaris, the
  * single warm light in an otherwise monochrome sky (--polaris, the one
  * color in the system that is not data). Connectors show travel: solid
  * behind you, dashed ahead.

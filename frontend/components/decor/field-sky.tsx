@@ -6,19 +6,19 @@
  * Ten fields as ten worlds, each sized by its share and coloured by the same
  * value it carries everywhere else in the product. A ranked list of ten bars
  * answers "which is biggest" and nothing else; the thing a student actually
- * wants to see is the SHAPE of their interests — whether they are concentrated
- * in one place or spread across the sky — and a list makes that work to read.
+ * wants to see is the SHAPE of their interests, whether they are concentrated
+ * in one place or spread across the sky, and a list makes that work to read.
  *
  * SIZE USES A PERCEPTUAL EXPONENT, AND HERE IS THE TRADE. Three options, run
  * against a real profile of 17/17/10/9/9/9/9/8/6/6:
  *
- *   radius ∝ share          2.83:1 biggest to smallest — but area then scales
+ *   radius ∝ share          2.83:1 biggest to smallest, but area then scales
  *                           with the SQUARE, so 2.8x the share draws 8x the
  *                           ink. That is not a bigger difference, it is a
  *                           wrong one.
- *   radius ∝ √share         1.68:1 — area exactly proportional, and honest,
+ *   radius ∝ √share         1.68:1, area exactly proportional, and honest,
  *                           but a flat profile reads as ten identical dots.
- *   radius ∝ share^0.7      2.07:1 — the proportional-symbol convention, which
+ *   radius ∝ share^0.7      2.07:1, the proportional-symbol convention, which
  *                           exists because the eye under-reads area and a
  *                           strictly area-true map looks flatter than the data.
  *
@@ -28,8 +28,8 @@
  * The old version was worse than any of these: a +24px floor on top of √ gave
  * 1.38:1, so the base constant was doing more of the work than the data.
  *
- * DETERMINISTIC PLACEMENT. A phyllotaxis spiral — the arrangement a sunflower
- * uses — ordered by share, so the largest sits at the centre and the rest fall
+ * DETERMINISTIC PLACEMENT. A phyllotaxis spiral, the arrangement a sunflower
+ * uses, ordered by share, so the largest sits at the centre and the rest fall
  * outward with even spacing and no overlap, identically on every visit. Random
  * scatter would collide the big ones and read differently each time.
  *
@@ -38,8 +38,8 @@
  * the real list sits beneath it carrying every field, its percentage and the
  * same coloured glyph. The visual is the summary; the list is the data.
  *
- * Labelling the worlds in place was tried twice — ten labels, then four, then
- * two — and every version crossed a neighbouring world, because the label is
+ * Labelling the worlds in place was tried twice, ten labels, then four, then
+ * two, and every version crossed a neighbouring world, because the label is
  * wider than the thing it names and the spiral packs them close. A label here
  * would duplicate the row three inches below it, so it buys collisions and
  * nothing else.
@@ -88,7 +88,7 @@ export function FieldSky({
             /* The name on hover. An in-picture label collides (see above), but
                a student pointing at the biggest world and asking "which one is
                that?" should not have to count down the list to find out. The
-               sky stays aria-hidden either way — the list below it is the
+               sky stays aria-hidden either way, the list below it is the
                accessible copy. */
             title={`${labels[field] ?? field} — ${share}%`}
             className="absolute -translate-x-1/2 -translate-y-1/2"

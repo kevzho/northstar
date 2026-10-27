@@ -88,7 +88,7 @@ def test_non_uuid_sub_is_401() -> None:
     """A signature-valid token whose `sub` is not a UUID is still refused.
 
     user.id reaches PostgREST filter strings, and postgrest-py does not
-    escape filter values — so the shape is a security boundary, not a
+    escape filter values, so the shape is a security boundary, not a
     formality.
     """
     token = jwt.encode({"sub": "abc),or(id.not.is.null"}, SECRET, algorithm="HS256")

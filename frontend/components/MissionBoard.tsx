@@ -7,7 +7,7 @@
  *  - Readiness: the gap between what the chosen archetype demands
  *    (traits on a 0-10 scale, normalized here to 0-100) and the
  *    student's current profile, plus the deadline-bearing matched
- *    opportunities in the path's fields — the "what to do about it".
+ *    opportunities in the path's fields, the "what to do about it".
  *  - Missions: three concrete real-world tasks per path; completing one
  *    writes evidence onto the student record (POST /missions/:id/complete),
  *    and takes it back again (DELETE), because a record nobody can amend is
@@ -15,7 +15,7 @@
  *    Missions whose trait focus matches an open gap are labelled as
  *    closing it.
  *
- * Signed out, mission fetches 401 — the board says so instead of
+ * Signed out, mission fetches 401, the board says so instead of
  * rendering nothing.
  */
 
@@ -74,7 +74,7 @@ export function MissionBoard({
    * Undo.
    *
    * Optimistic, and it puts the mission's own evidence back in the draft box
-   * rather than clearing it — someone un-ticking a mission is usually fixing
+   * rather than clearing it, someone un-ticking a mission is usually fixing
    * the evidence, not abandoning the work, and making them retype it is how
    * you teach people not to correct the record.
    */

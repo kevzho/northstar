@@ -1,11 +1,11 @@
 "use client";
 
 /**
- * Discover — find students who are exploring what you're exploring.
+ * Discover, find students who are exploring what you're exploring.
  *
  * The interest-based on-ramp to the social layer: peers are matched by
  * shared leading fields and chosen path, shown with the reason and their
- * public record, and connectable in one click. Learning by example —
+ * public record, and connectable in one click. Learning by example -
  * you can see what students like you are actually doing.
  *
  * Privacy: only students who opted their profile public appear here, and
@@ -39,7 +39,7 @@ const fieldLabels: Record<string, string> = {
 export default function DiscoverPage() {
   // Built from this student's own assessment, so it needs an account.
   // Signed out this used to render a heading and an empty shell while the
-  // API answered 401 — gated and broken look identical from there.
+  // API answered 401, gated and broken look identical from there.
   useRequireAuth();
   const [peers, setPeers] = useState<Peer[] | null>(null);
   const [failed, setFailed] = useState(false);
