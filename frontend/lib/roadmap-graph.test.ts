@@ -284,3 +284,61 @@ describe("firstActionable", () => {
     expect(firstActionable(buildRoadmapTree([]))).toBeNull();
   });
 });
+
+describe("branches attach to every kind of node", () => {
+  // The bug this pins: the branch loop ran before the canopy was built, so a
+  // breakdown on an application step could not find its parent and was
+  // dropped. The list showed the sub-steps and the diagram did not.
+  const steps: RoadmapStep[] = [
+    {
+      step_key: "spine:project",
+      title: "Build the thing",
+      category: "project",
+      due_in_months: 1,
+    } as RoadmapStep,
+    {
+      step_key: "apply:aaa",
+      title: "Apply to the programme",
+      category: "application",
+      due_in_months: 3,
+      opportunity_id: "aaa",
+    } as RoadmapStep,
+  ];
+
+  it.each([["spine:project"], ["apply:aaa"]])(
+    "draws a breakdown hanging off %s",
+    (parentKey) => {
+      const tree = buildRoadmapTree(steps, {
+        branches: {
+          [parentKey]: [
+            { title: "First move", detail: "d" },
+            { title: "Second move", detail: "d" },
+          ],
+        },
+      });
+      // By key prefix, not by parent: a real step can legitimately parent
+      // other steps (an application hangs off the trunk), and this is
+      // asserting the sub-steps specifically.
+      const kids = tree.nodes.filter((n) =>
+        n.key.startsWith(`${parentKey}::branch:`),
+      );
+      expect(kids.map((k) => k.title)).toEqual(["First move", "Second move"]);
+    },
+  );
+
+  it("draws a divergence hanging off an application too", () => {
+    const tree = buildRoadmapTree(steps, {
+      divergences: {
+        "apply:aaa": [
+          { title: "Or do this", detail: "d" },
+          { title: "Or that", detail: "d" },
+        ],
+      },
+    });
+    const forks = tree.nodes.filter((n) =>
+      n.key.startsWith("apply:aaa::diverge:"),
+    );
+    expect(forks).toHaveLength(2);
+    expect(forks[0].badge).toBe("OR");
+  });
+});

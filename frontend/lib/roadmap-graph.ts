@@ -301,6 +301,83 @@ export function buildRoadmapTree(
   // laid out on its parent's free side: the learn branch already uses the
   // right, so these take the left, which is empty now that missions are not
   // drawn here.
+  // The canopy: what the ladder is for. One column per programme, the gate
+  // stacked directly above the application it opens.
+  if (applications.length) {
+    const gated = applications.some((a) => preps.has(a.opportunity_id ?? ""));
+    const gateRow = row;
+    const applyRow = gated ? row + 1 : row;
+    applications.forEach((application, index) => {
+      const x = canopyX(index, applications.length);
+      const prep = preps.get(application.opportunity_id ?? "");
+      if (prep) {
+        push({
+          key: prep.step_key,
+          title: prep.title,
+          nodeKind: "gate",
+          row: gateRow,
+          x,
+          weight: "branch",
+          parent: trunk,
+          edge: "common",
+          step: prep,
+          opportunityId: prep.opportunity_id,
+          field: colour(prep),
+          note: prep.edge_note,
+        });
+      }
+      push({
+        key: application.step_key,
+        title: application.title,
+        nodeKind: "apply",
+        row: applyRow,
+        x,
+        weight: "branch",
+        parent: prep ? prep.step_key : trunk,
+        // The gate is a rule the programme published. Everything else about
+        // reaching an application is us generalising.
+        edge: prep ? "required" : "common",
+        step: application,
+        opportunityId: application.opportunity_id,
+        field: colour(application),
+        note: application.edge_note,
+      });
+    });
+    row = applyRow + 1;
+  }
+
+  // Locked programmes. Drawn with no edge at all, because there is no step that
+  // reaches them, only a birthday.
+  const horizon = (options.horizon ?? []).slice(0, 4);
+  if (horizon.length) {
+    const horizonRow = row;
+    horizon.forEach((item, index) => {
+      push({
+        key: `horizon:${item.opportunity_id}`,
+        title: item.title,
+        nodeKind: "horizon",
+        row: horizonRow,
+        x: canopyX(index, horizon.length),
+        weight: "branch",
+        parent: null,
+        edge: null,
+        step: null,
+        opportunityId: item.opportunity_id,
+        field: fieldOf(item.opportunity_id) ?? null,
+        note: item.edge_note,
+        badge: `Grade ${item.opens_at_grade}`,
+      });
+    });
+    row = horizonRow + 1;
+  }
+
+  // AFTER THE CANOPY, and that is the whole point.
+  //
+  // These ran before it, so a breakdown hanging off an application step could
+  // not find its parent -- the canopy nodes did not exist yet -- and was
+  // dropped. The step list rendered the sub-steps and the diagram did not,
+  // which reads as a cosmetic glitch and is actually a missing node.
+  // Everything a branch can hang off now exists before this runs.
   // A sub-step can be broken down too, so a parent here may itself be a branch
   // node created by an earlier pass. Object key order is not guaranteed to put
   // a parent before its child, so iterate by DEPTH: every node at depth n
@@ -377,76 +454,6 @@ export function buildRoadmapTree(
       });
     });
     row = Math.max(row, parent.row + forks.length);
-  }
-
-  // The canopy: what the ladder is for. One column per programme, the gate
-  // stacked directly above the application it opens.
-  if (applications.length) {
-    const gated = applications.some((a) => preps.has(a.opportunity_id ?? ""));
-    const gateRow = row;
-    const applyRow = gated ? row + 1 : row;
-    applications.forEach((application, index) => {
-      const x = canopyX(index, applications.length);
-      const prep = preps.get(application.opportunity_id ?? "");
-      if (prep) {
-        push({
-          key: prep.step_key,
-          title: prep.title,
-          nodeKind: "gate",
-          row: gateRow,
-          x,
-          weight: "branch",
-          parent: trunk,
-          edge: "common",
-          step: prep,
-          opportunityId: prep.opportunity_id,
-          field: colour(prep),
-          note: prep.edge_note,
-        });
-      }
-      push({
-        key: application.step_key,
-        title: application.title,
-        nodeKind: "apply",
-        row: applyRow,
-        x,
-        weight: "branch",
-        parent: prep ? prep.step_key : trunk,
-        // The gate is a rule the programme published. Everything else about
-        // reaching an application is us generalising.
-        edge: prep ? "required" : "common",
-        step: application,
-        opportunityId: application.opportunity_id,
-        field: colour(application),
-        note: application.edge_note,
-      });
-    });
-    row = applyRow + 1;
-  }
-
-  // Locked programmes. Drawn with no edge at all, because there is no step that
-  // reaches them, only a birthday.
-  const horizon = (options.horizon ?? []).slice(0, 4);
-  if (horizon.length) {
-    const horizonRow = row;
-    horizon.forEach((item, index) => {
-      push({
-        key: `horizon:${item.opportunity_id}`,
-        title: item.title,
-        nodeKind: "horizon",
-        row: horizonRow,
-        x: canopyX(index, horizon.length),
-        weight: "branch",
-        parent: null,
-        edge: null,
-        step: null,
-        opportunityId: item.opportunity_id,
-        field: fieldOf(item.opportunity_id) ?? null,
-        note: item.edge_note,
-        badge: `Grade ${item.opens_at_grade}`,
-      });
-    });
-    row = horizonRow + 1;
   }
 
   return { nodes, rows: row };

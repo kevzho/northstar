@@ -49,6 +49,8 @@ type Props = {
   }) => void;
   diverging?: string | null;
   forks?: Record<string, BranchStep[]>;
+  onExtend?: (step: { step_key: string; title: string; category: string }) => void;
+  extending?: string | null;
   depth: number;
 };
 
@@ -91,6 +93,8 @@ export function SubSteps({
   onDiverge,
   diverging,
   forks = {},
+  onExtend,
+  extending,
   depth,
 }: Props) {
   const mine = branches[stepKey];
@@ -175,6 +179,17 @@ export function SubSteps({
               {diverging === stepKey ? "Looking…" : "Or do something else"}
             </button>
           ) : null}
+          {/* Forward. The list stops at six, where the server stops it. */}
+          {onExtend && mine.length < 6 ? (
+            <button
+              type="button"
+              onClick={() => onExtend({ step_key: stepKey, title, category })}
+              disabled={extending === stepKey}
+              className={BUTTON}
+            >
+              {extending === stepKey ? "Adding…" : "Extend this branch"}
+            </button>
+          ) : null}
         </div>
       ) : null}
       <Forks items={forks[stepKey]} />
@@ -223,6 +238,8 @@ export function SubSteps({
                   branchError={branchError}
                   onBreakDown={onBreakDown}
                   onToggle={onToggle}
+                  onExtend={onExtend}
+                  extending={extending}
                   depth={depth + 1}
                 />
                 </div>

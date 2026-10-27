@@ -1289,11 +1289,14 @@ def create_app() -> FastAPI:
         # which is which.
         plan["branches"] = {}
         plan["divergences"] = {}
+        plan["extension"] = []
         for row in saved:
             key, steps = row.get("parent_step_key") or "", row.get("steps")
             if not isinstance(steps, list) or not steps:
                 continue
-            if key.endswith("::diverge"):
+            if key == "plan::extend":
+                plan["extension"] = steps
+            elif key.endswith("::diverge"):
                 plan["divergences"][key[: -len("::diverge")]] = steps
             else:
                 plan["branches"][key] = steps
@@ -1628,6 +1631,179 @@ def create_app() -> FastAPI:
             on_conflict="user_id,parent_step_key",
         ).execute()
         return {"parent_step_key": step_key, "paths": paths}
+
+    @app.post("/roadmap/extend")
+    def extend_path(body: dict | None = None, user: CurrentUser = RequireUser) -> dict:
+        """What comes after. Forward, where /branch goes in and /diverge goes sideways.
+
+        TWO SCOPES.
+          scope="branch"  continue one breakdown. Appends to the list rather
+                          than replacing it, because the moves already there
+                          may be done and ticked.
+          scope="path"    continue the whole plan. A roadmap ends at its
+                          application steps and a student who has shipped and
+                          applied gets nothing further; this writes the next
+                          lap. Stored under "plan::extend".
+
+        BOUNDED. app/extension.py caps any one list at MAX_TOTAL, because a
+        list that can always take two more is an outline that grows until
+        nobody reads it. The refusal names the cap rather than failing quietly.
+
+        Shares the branch allowance, like /diverge: same provider, same page.
+        """
+        from .advisor import budget_block, record_call
+        from .db import get_supabase
+        from .extension import (
+            MAX_TOTAL,
+            SYSTEM_PROMPT,
+            build_prompt,
+            parse_extension,
+            room_left,
+        )
+        from .limits import limit_block, record_event
+
+        data = body or {}
+        scope = "path" if str(data.get("scope") or "branch").strip() == "path" else "branch"
+        step_key = str(data.get("step_key") or "").strip()[:120]
+        anchor_title = str(data.get("step_title") or "").strip()[:400]
+        reason = str(data.get("reason") or "").strip()[:300]
+
+        if scope == "branch" and (not step_key or not anchor_title):
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="A step_key and step_title are required.",
+            )
+        row_key = "plan::extend" if scope == "path" else step_key
+        if scope == "path" and not anchor_title:
+            anchor_title = "Learn, build, publish, then apply."
+
+        sb = get_supabase()
+        prof = (
+            sb.table("students")
+            .select("id, grade, trait_scores, field_scores")
+            .eq("id", user.id)
+            .maybe_single()
+            .execute()
+        )
+        student = prof.data if prof else None
+        if not student:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Student profile not found.",
+            )
+
+        existing_row = (
+            sb.table("roadmap_branches")
+            .select("steps")
+            .eq("user_id", user.id)
+            .eq("parent_step_key", row_key)
+            .maybe_single()
+            .execute()
+        )
+        existing = (existing_row.data or {}).get("steps") if existing_row else None
+        existing = existing if isinstance(existing, list) else []
+        if room_left(existing) <= 0:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=(
+                    f"That list is {MAX_TOTAL} moves long, which is as far as "
+                    "it goes. If there is more after this, it is a different "
+                    "step."
+                ),
+            )
+
+        refused = limit_block(sb, "branch", user.id)
+        if refused:
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=refused
+            )
+        blocked = budget_block(
+            sb, user.id, per_student=False, what="step breakdown"
+        )
+        if blocked:
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=blocked
+            )
+        record_event(sb, "branch", user.id)
+
+        from .llm import LLMUnavailable, chat as llm_chat
+
+        user_prompt = build_prompt(anchor_title, existing, student, scope, reason)
+        more = None
+        for attempt in range(2):
+            messages = [
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": user_prompt},
+            ]
+            if attempt:
+                messages.append(
+                    {
+                        "role": "user",
+                        "content": (
+                            "Your last reply was not usable. Reply with the "
+                            'JSON object only -- {"steps": [{"title": "...", '
+                            '"detail": "..."}]} -- and nothing before or after '
+                            "it. What comes AFTER, not pieces of it."
+                        ),
+                    }
+                )
+            try:
+                result = llm_chat(
+                    base=settings.llm_api_base,
+                    key=settings.llm_api_key,
+                    model=settings.llm_model,
+                    messages=messages,
+                    max_tokens=1600,
+                    temperature=0.5,
+                    response_format={"type": "json_object"},
+                    reasoning_effort="none",
+                )
+            except LLMUnavailable:
+                raise HTTPException(
+                    status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                    detail=(
+                        "Could not reach the model just now. Your plan is "
+                        "unchanged."
+                    ),
+                )
+            record_call(
+                sb, user.id, f"extend:{user.id}:{row_key}:{attempt}", anchor_title,
+                result.text[:2000], [],
+                (result.prompt_tokens, result.completion_tokens, result.total_tokens),
+            )
+            more = parse_extension(result.text, existing)
+            if more:
+                break
+
+        if not more:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=(
+                    "That came back as something we will not put in a plan: a "
+                    "link we have not checked, work you already have, or a "
+                    "re-cut of the last step rather than what follows it. Your "
+                    "plan is unchanged."
+                ),
+            )
+
+        # Appended, never replacing: the moves already there may be ticked.
+        merged = (existing + more)[:MAX_TOTAL]
+        sb.table("roadmap_branches").upsert(
+            {
+                "user_id": user.id,
+                "parent_step_key": row_key,
+                "steps": merged,
+                "model": settings.llm_model,
+            },
+            on_conflict="user_id,parent_step_key",
+        ).execute()
+        return {
+            "parent_step_key": row_key,
+            "scope": scope,
+            "steps": merged,
+            "added": len(more),
+            "room_left": room_left(merged),
+        }
 
     @app.post("/roadmap/branch/complete")
     def complete_sub_step(body: dict | None = None, user: CurrentUser = RequireUser) -> dict:

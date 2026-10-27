@@ -2044,6 +2044,55 @@
         "summary": "Diverge Step"
       }
     },
+    "/roadmap/extend": {
+      "post": {
+        "description": "What comes after. Forward, where /branch goes in and /diverge goes sideways.\n\nTWO SCOPES.\n  scope=\"branch\"  continue one breakdown. Appends to the list rather\n                  than replacing it, because the moves already there\n                  may be done and ticked.\n  scope=\"path\"    continue the whole plan. A roadmap ends at its\n                  application steps and a student who has shipped and\n                  applied gets nothing further; this writes the next\n                  lap. Stored under \"plan::extend\".\n\nBOUNDED. app/extension.py caps any one list at MAX_TOTAL, because a\nlist that can always take two more is an outline that grows until\nnobody reads it. The refusal names the cap rather than failing quietly.\n\nShares the branch allowance, like /diverge: same provider, same page.",
+        "operationId": "extend_path_roadmap_extend_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Extend Path Roadmap Extend Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Extend Path"
+      }
+    },
     "/roadmap/spine": {
       "post": {
         "description": "Write this student a different path, because they said so.\n\nA student turning a plan down is the most useful signal this system\ngets, better than any trait score, because they are telling you\ndirectly, so the rejected plan and their reason go into the prompt and\nthe model is told not to repeat it. Without that, a regenerate button is\na dice roll that can hand back the same idea reworded.\n\nRefusal is still a success path. If the model picks a skill rung with no\nresources, writes a url, or returns prose that will not parse, the\nstudent keeps what they had and is told so plainly. See\napp/spine_generation.py.\n\nCharged against the advisor budget, because it is the same provider and\nthe same wallet, and a regenerate button with no ceiling is the one\ncontrol a bored student will hold down.",

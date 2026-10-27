@@ -403,6 +403,38 @@ export async function divergeStep(input: {
   return body.paths ?? [];
 }
 
+/**
+ * What comes after, where branchStep goes in and divergeStep goes sideways.
+ *
+ * scope "branch" continues one breakdown; scope "path" continues the whole
+ * plan past its application steps. Appends rather than replaces, and the
+ * server caps any one list, returning how much room is left.
+ */
+export async function extendPath(input: {
+  scope: "branch" | "path";
+  stepKey?: string;
+  stepTitle?: string;
+}): Promise<{ steps: BranchStep[]; added: number; roomLeft: number }> {
+  const response = await authedFetch("/roadmap/extend", {
+    method: "POST",
+    body: JSON.stringify({
+      scope: input.scope,
+      step_key: input.stepKey ?? "",
+      step_title: input.stepTitle ?? "",
+    }),
+  });
+  const body = (await response.json()) as {
+    steps?: BranchStep[];
+    added?: number;
+    room_left?: number;
+  };
+  return {
+    steps: body.steps ?? [],
+    added: body.added ?? 0,
+    roomLeft: body.room_left ?? 0,
+  };
+}
+
 export async function completeSubStep(input: {
   stepKey: string;
   index: number;
@@ -784,6 +816,8 @@ export type Roadmap = {
    * `branches`: these replace a step rather than sit inside it.
    */
   divergences: Record<string, BranchStep[]>;
+  /** The next lap, written past the end of the plan. Empty until asked for. */
+  extension: BranchStep[];
 };
 
 /** The build/publish steps rewritten for one student. */

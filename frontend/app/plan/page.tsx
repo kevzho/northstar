@@ -20,6 +20,7 @@ import {
   autoGenerateSpine,
   branchStep,
   divergeStep,
+  extendPath,
   completeSubStep,
   fetchMatches,
   fetchResources,
@@ -223,6 +224,48 @@ export default function PlanPage() {
       }));
     } finally {
       setDiverging(null);
+    }
+  }
+
+  /**
+   * Forward: what comes after. Scope "branch" continues one breakdown,
+   * scope "path" continues the whole plan past its application steps.
+   */
+  const [extending, setExtending] = useState<string | null>(null);
+  const [localExtension, setLocalExtension] = useState<BranchStep[] | null>(null);
+  const extension = localExtension ?? roadmap?.extension ?? [];
+
+  async function extend(step?: { step_key: string; title: string; category: string }) {
+    const token = step?.step_key ?? "plan::extend";
+    setExtending(token);
+    setBranchError((e) => ({ ...e, [token]: "" }));
+    try {
+      const result = await extendPath(
+        step
+          ? { scope: "branch", stepKey: step.step_key, stepTitle: step.title }
+          : {
+              scope: "path",
+              stepTitle: roadmap?.phases
+                .flatMap((phase) => phase.steps)
+                .map((s) => s.title)
+                .slice(-3)
+                .join(" / "),
+            },
+      );
+      if (step) {
+        setLocalBranches((current) => ({ ...current, [step.step_key]: result.steps }));
+      } else {
+        setLocalExtension(result.steps);
+      }
+      setSavedAt(Date.now());
+    } catch (caught) {
+      setBranchError((e) => ({
+        ...e,
+        [token]:
+          caught instanceof Error ? caught.message : "Could not extend that just now.",
+      }));
+    } finally {
+      setExtending(null);
     }
   }
 
@@ -628,6 +671,8 @@ export default function PlanPage() {
                                 onDiverge={diverge}
                                 diverging={diverging}
                                 forks={forks}
+                                onExtend={(step) => extend(step)}
+                                extending={extending}
                                 depth={0}
                               />
                               {step.edge_note ? (
@@ -740,6 +785,64 @@ export default function PlanPage() {
                     });
                   }}
                 />
+              ) : null}
+
+              {/* PAST THE END.
+                  A roadmap stops at its application steps, so a student who
+                  has shipped and applied reached the bottom of the page and
+                  found nothing. This writes the next lap: harder version,
+                  same direction. Separate from "write me a new path", which
+                  throws away the one they have. */}
+              {roadmap && roadmap.phases.length > 0 ? (
+                <div className="mt-6 border-t border-border pt-5">
+                  {extension.length ? (
+                    <>
+                      <p className="eyebrow">After this</p>
+                      <ol className="mt-3 grid max-w-3xl gap-2 border-l border-dashed border-aurora-dim/40 pl-3">
+                        {extension.map((next, i) => (
+                          <li key={next.title}>
+                            <p className="text-sm leading-6 text-foreground">
+                              <span className="font-mono text-xs text-aurora">
+                                {i + 1}.
+                              </span>{" "}
+                              {next.title}
+                            </p>
+                            <p className="text-xs leading-5 text-muted-foreground">
+                              {next.detail}
+                            </p>
+                          </li>
+                        ))}
+                      </ol>
+                    </>
+                  ) : (
+                    <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+                      This plan ends at its applications. When you have done
+                      it, ask what the harder version looks like.
+                    </p>
+                  )}
+                  {extension.length < 6 ? (
+                    <button
+                      type="button"
+                      onClick={() => extend()}
+                      disabled={extending === "plan::extend"}
+                      className="mt-3 border border-border bg-panel-raised px-3 py-1.5 text-xs font-medium text-foreground transition hover:border-foreground disabled:opacity-60"
+                    >
+                      {extending === "plan::extend"
+                        ? "Writing the next lap…"
+                        : extension.length
+                          ? "Extend it further"
+                          : "Extend the path"}
+                    </button>
+                  ) : null}
+                  {branchError["plan::extend"] ? (
+                    <p
+                      aria-live="polite"
+                      className="mt-2 text-xs leading-5 text-foreground"
+                    >
+                      {branchError["plan::extend"]}
+                    </p>
+                  ) : null}
+                </div>
               ) : null}
               </div>
             </section>
