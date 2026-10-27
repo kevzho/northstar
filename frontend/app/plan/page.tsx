@@ -84,6 +84,8 @@ export default function PlanPage() {
   // still renders something, minus the application steps.
   const [roadmap, setRoadmap] = useState<Roadmap | null>(null);
   const [roadmapSettled, setRoadmapSettled] = useState(false);
+  /** Which view of the same plan is showing. See the tablist below. */
+  const [planView, setPlanView] = useState<"route" | "order">("route");
 
   useEffect(() => {
     let cancelled = false;
@@ -446,18 +448,75 @@ export default function PlanPage() {
                 sits on step one. That is honest rather than decorative, a map
                 that claimed progress it cannot observe would be worse than one
                 that shows the start. */}
-            {tree && tree.nodes.length > 1 ? (
-              <section className="mt-10 border-y border-border py-8">
-                <p className="eyebrow">Your route</p>
-                <h2 className="h-display mt-2 text-xl text-foreground">
-                  What unlocks what.
-                </h2>
-                <p className="mt-2 max-w-2xl text-sm leading-7 text-muted-foreground">
+            {/* ONE SECTION, TWO VIEWS.
+                The diagram and the list are the same plan and they were
+                stacked, so reading a step meant scrolling past a full-width
+                diagram, and a step's controls sat two screens from the node
+                they belong to. Tabs put them in one place and make it a
+                choice rather than a journey.
+
+                The route is the default: a student opening this page should
+                see where they are before reading anything. */}
+            <section className="relative mt-10 border-y border-border py-8">
+              <p className="eyebrow">Your route</p>
+              <h2 className="h-display mt-2 text-xl text-foreground">
+                What unlocks what.
+              </h2>
+
+              <div
+                role="tablist"
+                aria-label="How to view your plan"
+                className="mt-5 inline-flex border border-border"
+                onKeyDown={(event) => {
+                  // Arrow keys move between tabs, which is what a tablist is
+                  // expected to do. Without it the only way across is to tab
+                  // through every control in the open panel first.
+                  if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+                  event.preventDefault();
+                  setPlanView((v) => (v === "route" ? "order" : "route"));
+                }}
+              >
+                {(
+                  [
+                    ["route", "The route"],
+                    ["order", "In order"],
+                  ] as const
+                ).map(([value, label]) => (
+                  <button
+                    key={value}
+                    type="button"
+                    role="tab"
+                    id={`plan-tab-${value}`}
+                    aria-selected={planView === value}
+                    aria-controls={`plan-panel-${value}`}
+                    tabIndex={planView === value ? 0 : -1}
+                    onClick={() => setPlanView(value)}
+                    className={`px-4 py-2 text-sm font-semibold transition ${
+                      planView === value
+                        ? "bg-panel-raised text-foreground"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+
+              <div
+                role="tabpanel"
+                id="plan-panel-route"
+                aria-labelledby="plan-tab-route"
+                hidden={planView !== "route"}
+              >
+                {tree && tree.nodes.length > 1 ? (
+                  <>
+                <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground">
                   The trunk is the work that compounds: learn it, build with it,
                   put it somewhere people can see. The branches are work nothing
                   is stopping you starting today. The columns at the bottom are
                   the programmes this is all for, each with the thing that gets
-                  you in stacked above it. Tap any node to jump to its step.
+                  you in stacked above it. Click any node to break that step into the
+                  moves inside it.
                 </p>
                 <p className="mt-2 max-w-2xl text-sm leading-7 text-muted-foreground">
                   The learn steps come off{" "}
@@ -474,15 +533,16 @@ export default function PlanPage() {
                   branching={branching}
                   branches={branches}
                 />
-              </section>
-            ) : null}
+                  </>
+                ) : null}
+              </div>
 
-            {/* Travelling together. The matcher behind /teamup already pairs on
-                chosen_archetype, chosen_kind and field_scores, the same signals
-                that built this plan, so the students it surfaces are on this
-                journey, not merely on this website. It was reachable only from
-                the nav, which is why nobody used it. */}
-            <section className="relative mt-10">
+              <div
+                role="tabpanel"
+                id="plan-panel-order"
+                aria-labelledby="plan-tab-order"
+                hidden={planView !== "order"}
+              >
               {/* THE ROADMAP. This replaced a list of plain strings that
                   generatePlan() built client-side. Steps now come from
                   GET /roadmap, which sequences four kinds of work, learn,
@@ -681,7 +741,14 @@ export default function PlanPage() {
                   }}
                 />
               ) : null}
+              </div>
             </section>
+
+            {/* Travelling together. The matcher behind /teamup already pairs on
+                chosen_archetype, chosen_kind and field_scores, the same signals
+                that built this plan, so the students it surfaces are on this
+                journey, not merely on this website. It was reachable only from
+                the nav, which is why nobody used it. */}
 
             {/* THE STEP LIST, under the tree rather than beside it.
                 This used to carry its own dashed rail and a scroll-driven
