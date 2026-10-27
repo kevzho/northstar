@@ -1,2 +1,6 @@
 .vercel
 .env*
+
+# The example is documentation, not a secret, and the README tells people
+# to copy it.
+!.env.example

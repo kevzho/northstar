@@ -1,137 +1,173 @@
 # Northstar
 
-Personalized opportunity map for high school students. A project of Minorities
-in STEM, a fiscally sponsored non-profit. Live at
-[northstar.study](https://northstar.study).
+**A STEM opportunity catalog and planner for US high school students who don't have a college counselor.**
 
-## Development
+Live at **[northstar.study](https://northstar.study)** · A project of [Minorities in STEM](https://northstar.study), a fiscally sponsored non-profit · Apache-2.0
 
-### Frontend
+---
 
-```bash
-cd frontend
-npm install      # if not already
-npm run dev      # http://localhost:3000
+Research internships, olympiads and scholarships mostly reach students whose
+families already know the names. Northstar is an attempt to close that gap with
+software: a hand-verified catalog of **361 opportunities** (353 of them free to
+apply to, 351 open to a 10th grader), and a sequenced plan telling a student
+what to learn, build and publish *before* an application is worth sending.
+
+What makes it different from a list of links is that it is built to refuse:
+
+- **The language model never ranks anything.** Scores come from a deterministic
+  TF-IDF engine with a semantic retrieval supplement. Every match carries a
+  reason a student can read and argue with. The model writes prose and
+  classifies candidates; it has no authority over what appears where.
+- **Nothing enters the catalog unverified.** Scraped candidates pass a verifier
+  that may only classify, never invent a programme or a deadline. Free-resource
+  claims carry a verbatim quote from the source page.
+- **Dead programmes are retired, never deleted.** Rows get a `retired_at` stamp
+  and a reason, so a student can see what changed. A 404 alone does not retire
+  anything — a moved deep link is not a dead programme.
+- **Entry gates are recorded honestly.** "Open to all" usually isn't: 40 of the
+  361 need a teacher nomination or a qualifying round first, and the card says
+  so.
+
+## Architecture
+
+```
+northstar.study              northstar-api               Supabase
+Next.js 16 · React 19   →    FastAPI · Python 3.11   →   Postgres + pgvector
+Vercel                       Vercel (root: backend/)     27 tables, RLS on
+                                      ↓
+                             NVIDIA NIM (OpenAI-compatible)
+                             nemotron-3.5-bolt-e4b
 ```
 
-### Backend
+The browser never queries a table directly. Every read and write goes through
+the API on the service-role key, which is what lets row-level security deny all
+client access outright rather than trying to express the rules twice.
+
+| Module | What it does |
+| --- | --- |
+| `backend/app/match.py` | TF-IDF scoring over the student profile. Sole authority on ranking. |
+| `backend/app/embeddings.py` | pgvector semantic retrieval, supplements TF-IDF. |
+| `backend/app/collab.py` | ALS matrix factorization, hand-implemented. Stays out of ranking until a student has logged outcomes. |
+| `backend/app/roadmap.py` | Sequences steps learn → build → publish → apply, on grade progression. |
+| `backend/app/branch_generation.py` | Breaks one plan step into the moves inside it, recursively. |
+| `backend/app/verifier.py` | Screens scraped candidates. May classify, may not invent. |
+| `backend/app/robots.py` | RFC 9309 robots.txt, fails closed on 5xx. |
+| `backend/app/link_health.py` | alive / dead / moved. Only DNS death retires a row. |
+| `backend/app/limits.py` | DB-backed sliding-window rate limits, per action. |
+| `backend/scripts/` | Scrapers and maintenance jobs. `scrape_all.py` runs the daily refresh. |
+
+**Tests:** 451 backend (pytest, no Supabase credentials needed) and 99 frontend
+(vitest). CI runs lint → typecheck → both suites → build on every push.
+
+## Quick start
+
+Requires Node 20, Python 3.11 and a Supabase project.
 
 ```bash
-cd backend
-pip install -r requirements.txt
-uvicorn main:app --reload   # http://localhost:8000
-pytest -q                   # 181 tests, no Supabase credentials needed
+git clone https://github.com/kevzho/northstar.git
+cd northstar
 ```
 
-### Database
-
-The API reads and writes Supabase, so a fresh clone needs the schema applied
-before any signed-in route works. From the repo root, with the Supabase CLI
-installed and the project linked:
+**Database** — apply the schema first; signed-in routes fail without it.
 
 ```bash
 supabase link --project-ref <your-project-ref>
-supabase db push            # applies supabase/migrations/ in order
+supabase db push          # applies supabase/migrations/ in order
 ```
 
-That creates every table, row-level-security policy and index, and seeds the
-opportunity catalog (68 curated rows). Without it, `GET /me` and `GET /match`
-return errors and the dashboard stays empty.
+This creates every table, RLS policy and index, and seeds the catalog.
 
-## Environment
+**Backend**
 
-Two files, both gitignored. `frontend/.env.example` ships with the repo and
-documents the variables both sides read; copy the relevant half into each.
-
-**`frontend/.env.local`** — read by the browser:
-
-```
-NEXT_PUBLIC_API_URL=http://localhost:8000
-NEXT_PUBLIC_SUPABASE_URL=https://<project>.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<anon key>
+```bash
+cd backend
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env      # fill in the values below
+uvicorn app.main:app --reload     # http://localhost:8000
+pytest -q                          # 451 tests, no credentials needed
 ```
 
-`NEXT_PUBLIC_API_URL` is required. Without it `lib/api.ts` falls back to `""`
-and every API call is issued against the Next.js server instead of FastAPI.
-
-**`backend/.env`** — loaded by `backend/app/settings.py`; process env wins, so
-this file is ignored on Render/Railway:
-
-```
-SUPABASE_URL=https://<project>.supabase.co
-SUPABASE_SECRET_KEY=<service-role key>
-SUPABASE_JWT_SECRET=<JWT secret>
-FRONTEND_URL=http://localhost:3000
-```
-
-Where to find each value in the Supabase dashboard: `SUPABASE_URL` and
-`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` are under Project Settings → API (the
-publishable key is the `anon` key). `SUPABASE_SECRET_KEY` is the `service_role`
-key on the same page — it bypasses row-level security, so it belongs only in
-the backend's environment, never in the frontend project.
-`SUPABASE_JWT_SECRET` is under Project Settings → API → JWT Settings.
-
-## Deploy
-
-### Frontend (Vercel)
+**Frontend**
 
 ```bash
 cd frontend
-vercel          # produces a preview URL
-vercel --prod   # production deployment (after `vercel link`)
+npm install
+cp .env.example .env.local
+npm run dev               # http://localhost:3000
 ```
 
-Set these env vars in the Vercel project dashboard (or via `vercel env add`):
+## Configuration
 
-- `NEXT_PUBLIC_API_URL` — the deployed backend URL, e.g.
-  `https://northstar-api-theta.vercel.app`
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+Two files, both gitignored.
 
-Those three are all the frontend reads. Do **not** put `SUPABASE_SECRET_KEY` or
-`SUPABASE_JWT_SECRET` in the Vercel project — nothing in `frontend/` uses them,
-and the service-role key bypasses row-level security. They belong only in the
-backend host's dashboard, below.
+**`frontend/.env.local`** — read by the browser, so nothing secret belongs here.
 
-### Backend (Vercel)
+| Variable | Notes |
+| --- | --- |
+| `NEXT_PUBLIC_API_URL` | Required. Without it `lib/api.ts` falls back to `""` and every call hits the Next.js server instead of FastAPI. |
+| `NEXT_PUBLIC_SUPABASE_URL` | Project Settings → API |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | The `anon` key, same page |
 
-Production runs the FastAPI app as a Vercel serverless function:
-`backend/vercel.json` rewrites every path to `backend/api/index.py`, which
-re-exports `app` from `backend/app/main.py`.
+**`backend/.env`** — loaded by `app/settings.py`; real process env wins, so the
+file is ignored in hosted environments.
 
-The `northstar-api` project is connected to this repository (root directory
-`backend`, production branch `main`), so a push to `main` deploys it. That was
-not always true, and the gap cost real debugging time twice: for its first 44
-days the project had **no git connection at all** and only ever deployed from
-four manual CLI runs. Code would be committed, pushed, and simply not be live,
-while Vercel kept serving the last good build — so the symptom was old
-behaviour rather than an error, which is the hardest kind to notice.
+| Variable | Notes |
+| --- | --- |
+| `SUPABASE_URL` | Project Settings → API |
+| `SUPABASE_SECRET_KEY` | The `service_role` key. **Bypasses RLS — backend only, never in the frontend project.** |
+| `SUPABASE_JWT_SECRET` | Project Settings → API → JWT Settings |
+| `FRONTEND_URL` | Must match the backend CORS allow-list |
+| `LLM_API_BASE` | Optional. Defaults to `https://integrate.api.nvidia.com/v1` |
+| `LLM_API_KEY` | Optional. Without it the advisor returns 503 and no profile embeddings are written; everything else works. |
+| `LLM_MODEL` | Optional. Defaults to `nvidia/nemotron-3.5-bolt-e4b` |
 
-Check which commit is actually answering before concluding anything about a
+## Deploying
+
+Both projects deploy from `main` via Vercel's GitHub integration. The backend
+project uses root directory `backend`, so **`vercel --prod` from inside
+`backend/` fails** — Vercel applies the root directory on top of what you
+upload and looks for `backend/backend`. Push to `main`, or redeploy from the
+dashboard.
+
+Confirm which build is actually answering before drawing conclusions about a
 backend change:
 
 ```bash
 curl -s https://northstar-api-theta.vercel.app/health
-# {"status":"ok","commit":"60015a9","semantic":"available"}
-git rev-parse --short=7 HEAD    # must match `commit`
+# {"status":"ok","commit":"e944c9b","semantic":"available",
+#  "advisor":"available","model":"nvidia/nemotron-3.5-bolt-e4b"}
+
+git rev-parse --short=7 HEAD    # must match "commit"
 ```
 
-`semantic` reports whether `app/embeddings.py` imported, since the matching
-layer is the part most likely to be live in the frontend and missing from the
-API. A manual deploy still works and still stamps the SHA:
+`semantic` and `advisor` report whether those features can actually *run*, not
+whether their modules imported — both need `LLM_API_KEY`, and a health check
+that goes green on the outage it exists to catch is worse than none.
+
+`backend/render.yaml` is an unused fallback for a non-serverless host.
+
+## Contributing
+
+Issues and pull requests are welcome. Before opening a PR:
 
 ```bash
-cd backend
-vercel --prod
+cd backend  && pytest -q
+cd frontend && npm run lint && npx tsc --noEmit && npx vitest run && npm run build
 ```
 
-`backend/render.yaml` is kept as an unused fallback for a non-serverless host;
-nothing currently deploys from it, and no frontend environment points at
-Render.
+Two things CI enforces that are easy to trip over:
 
-Required env vars in the Vercel project for the backend:
+- `backend/app/spines.py` and `frontend/lib/api-schema.json` are **generated**.
+  Run `python scripts/sync_spines.py` and `python scripts/export_openapi.py`
+  rather than editing them.
+- Scrapers must respect `robots.txt` via `app/robots.py`, and anything entering
+  the catalog must go through `app/verifier.py`.
 
-- `SUPABASE_URL`
-- `SUPABASE_SECRET_KEY`
-- `SUPABASE_JWT_SECRET`
-- `FRONTEND_URL` (the production frontend URL — matches backend CORS allow-list)
+If you are adding to the catalog, the bar is that a claim can be checked: a
+real URL, a real deadline, and an entry gate that reflects what the programme
+actually requires.
+
+## License
+
+Apache License 2.0 — see [LICENSE](LICENSE).
