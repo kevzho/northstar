@@ -19,6 +19,7 @@ import { Planet } from "@/components/decor/voyage";
 import {
   autoGenerateSpine,
   branchStep,
+  divergeStep,
   completeSubStep,
   fetchMatches,
   fetchResources,
@@ -189,6 +190,41 @@ export default function PlanPage() {
   }
 
   /**
+   * Other directions out of a step.
+   *
+   * Same wallet and same refusal handling as breakDown, separate spinner so
+   * the two controls on one card do not both read as busy.
+   */
+  const [localForks, setLocalForks] = useState<Record<string, BranchStep[]>>({});
+  const [diverging, setDiverging] = useState<string | null>(null);
+  const forks = useMemo(
+    () => ({ ...(roadmap?.divergences ?? {}), ...localForks }),
+    [roadmap?.divergences, localForks],
+  );
+
+  async function diverge(step: { step_key: string; title: string; category: string }) {
+    setDiverging(step.step_key);
+    setBranchError((e) => ({ ...e, [step.step_key]: "" }));
+    try {
+      const paths = await divergeStep({
+        stepKey: step.step_key,
+        stepTitle: step.title,
+        stepCategory: step.category,
+      });
+      setLocalForks((current) => ({ ...current, [step.step_key]: paths }));
+      setSavedAt(Date.now());
+    } catch (caught) {
+      setBranchError((e) => ({
+        ...e,
+        [step.step_key]:
+          caught instanceof Error ? caught.message : "Could not do that just now.",
+      }));
+    } finally {
+      setDiverging(null);
+    }
+  }
+
+  /**
    * Ticking a sub-step.
    *
    * Optimistic, then reconciled with what the server wrote back. A checkbox
@@ -276,7 +312,12 @@ export default function PlanPage() {
   const tree = roadmap
     ? buildRoadmapTree(
         roadmap.phases.flatMap((phase) => phase.steps),
-        { fieldOf: (id) => fieldById.get(id), horizon: roadmap.horizon, branches },
+        {
+          fieldOf: (id) => fieldById.get(id),
+          horizon: roadmap.horizon,
+          branches,
+          divergences: forks,
+        },
       )
     : null;
 
@@ -524,6 +565,9 @@ export default function PlanPage() {
                                 branchError={branchError}
                                 onBreakDown={breakDown}
                                 onToggle={toggleSubStep}
+                                onDiverge={diverge}
+                                diverging={diverging}
+                                forks={forks}
                                 depth={0}
                               />
                               {step.edge_note ? (

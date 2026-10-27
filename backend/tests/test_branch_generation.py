@@ -240,3 +240,45 @@ def test_a_regenerated_breakdown_comes_back_unticked() -> None:
             "parse_branch grew a field; a regenerated breakdown may now carry "
             "completion state across from a different list of steps"
         )
+
+
+def test_divergence_refuses_a_breakdown_wearing_a_costume() -> None:
+    """The one failure mode that matters for the sideways move.
+
+    A model asked for alternatives will happily return the steps inside the
+    original instead, which is the other endpoint's job and would draw a
+    decomposition on a dotted "or" edge. A sequenced opener is the tell, and
+    it is cheaper to refuse here than to explain on the diagram.
+    """
+    from app.divergence import parse_divergence
+
+    def paths(items):
+        return json.dumps({"paths": items})
+
+    good = [
+        {"title": "Build a shift scheduler for the same business",
+         "detail": "Same owner, same spreadsheet maths, a different thing on their desk."},
+        {"title": "Run the calculator as a workshop for three owners",
+         "detail": "Teaching it surfaces the assumptions you skipped building it."},
+    ]
+    assert parse_divergence(paths(good)) is not None
+
+    for opener in ("First, sketch the three screens", "Then write the formula",
+                   "Start by listing the fixed costs", "Once you have the inputs"):
+        bad = [{"title": opener, "detail": "x" * 40}, good[0]]
+        assert parse_divergence(paths(bad)) is None, f"{opener!r} slipped through"
+
+
+def test_divergence_keeps_the_same_refusals_as_a_breakdown() -> None:
+    from app.divergence import parse_divergence
+
+    def paths(items):
+        return json.dumps({"paths": items})
+
+    ok = {"title": "Build a shift scheduler", "detail": "A different thing to make."}
+    assert parse_divergence(paths([ok])) is None, "one alternative is not a fork"
+    assert parse_divergence(paths([ok, ok])) is None, "duplicates"
+    assert parse_divergence(paths([
+        {"title": "Visit example.com for ideas", "detail": "no"}, ok
+    ])) is None, "a url"
+    assert parse_divergence("not json") is None

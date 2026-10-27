@@ -1282,11 +1282,21 @@ def create_app() -> FastAPI:
             ).data or []
         except Exception:
             saved = []
-        plan["branches"] = {
-            row["parent_step_key"]: row["steps"]
-            for row in saved
-            if isinstance(row.get("steps"), list) and row["steps"]
-        }
+        # Two namespaces in one table. "<step>::diverge" holds alternatives to
+        # a step; everything else holds the moves inside one. They are the same
+        # shape and the same lifecycle, so they share storage, but the client
+        # draws them differently and must not have to parse keys to find out
+        # which is which.
+        plan["branches"] = {}
+        plan["divergences"] = {}
+        for row in saved:
+            key, steps = row.get("parent_step_key") or "", row.get("steps")
+            if not isinstance(steps, list) or not steps:
+                continue
+            if key.endswith("::diverge"):
+                plan["divergences"][key[: -len("::diverge")]] = steps
+            else:
+                plan["branches"][key] = steps
         return plan
 
     @app.post("/roadmap/branch")
@@ -1474,6 +1484,150 @@ def create_app() -> FastAPI:
             on_conflict="user_id,parent_step_key",
         ).execute()
         return {"parent_step_key": step_key, "steps": steps}
+
+    @app.post("/roadmap/diverge")
+    def diverge_step(body: dict | None = None, user: CurrentUser = RequireUser) -> dict:
+        """Other directions out of the same step.
+
+        The sideways move to /roadmap/branch's inward one. A generated path is
+        one route written once from a twenty-question profile; a student who
+        reads it and thinks "not quite me" could previously only accept it or
+        throw the whole thing away and regenerate. This keeps the path and
+        forks one step of it.
+
+        STORED IN roadmap_branches, under "<step_key>::diverge". Same shape,
+        same one-row-per-key replacement, and no new table: a divergence is
+        the same thing as a breakdown as far as storage is concerned -- a short
+        list of {title, detail} hanging off one step of one student's plan.
+
+        SHARES THE BRANCH ALLOWANCE on purpose. Both spend the same provider
+        on the same page, and two separate 25-a-day ceilings would make the
+        real limit fifty while reading as twenty-five.
+        """
+        from .advisor import budget_block, record_call
+        from .db import get_supabase
+        from .divergence import SYSTEM_PROMPT, build_prompt, parse_divergence
+        from .limits import limit_block, record_event
+
+        data = body or {}
+        step_key = str(data.get("step_key") or "").strip()[:120]
+        step_title = str(data.get("step_title") or "").strip()[:400]
+        step_category = str(data.get("step_category") or "step").strip()[:40]
+        reason = str(data.get("reason") or "").strip()[:300]
+        if not step_key or not step_title:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="A step_key and step_title are required.",
+            )
+        # A fork of a fork of a fork is a different plan, not a plan.
+        if step_key.count("::diverge") >= 1:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=(
+                    "You can break an alternative into steps, but not fork it "
+                    "again. If none of these fit, ask for a different path."
+                ),
+            )
+
+        sb = get_supabase()
+        prof = (
+            sb.table("students")
+            .select("id, grade, trait_scores, field_scores")
+            .eq("id", user.id)
+            .maybe_single()
+            .execute()
+        )
+        student = prof.data if prof else None
+        if not student:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Student profile not found.",
+            )
+
+        refused = limit_block(sb, "branch", user.id)
+        if refused:
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=refused
+            )
+        blocked = budget_block(
+            sb, user.id, per_student=False, what="step breakdown"
+        )
+        if blocked:
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=blocked
+            )
+        record_event(sb, "branch", user.id)
+
+        from .llm import LLMUnavailable, chat as llm_chat
+
+        user_prompt = build_prompt(step_title, step_category, student, reason)
+        paths = None
+        for attempt in range(2):
+            messages = [
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": user_prompt},
+            ]
+            if attempt:
+                messages.append(
+                    {
+                        "role": "user",
+                        "content": (
+                            "Your last reply was not usable. Reply with the "
+                            'JSON object only -- {"paths": [{"title": "...", '
+                            '"detail": "..."}]} -- and nothing before or after '
+                            "it. Alternatives, not smaller pieces."
+                        ),
+                    }
+                )
+            try:
+                result = llm_chat(
+                    base=settings.llm_api_base,
+                    key=settings.llm_api_key,
+                    model=settings.llm_model,
+                    messages=messages,
+                    max_tokens=1600,
+                    temperature=0.6,
+                    response_format={"type": "json_object"},
+                    reasoning_effort="none",
+                )
+            except LLMUnavailable:
+                raise HTTPException(
+                    status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                    detail=(
+                        "Could not reach the model just now. Your plan is "
+                        "unchanged."
+                    ),
+                )
+            record_call(
+                sb, user.id, f"diverge:{user.id}:{step_key}:{attempt}", step_title,
+                result.text[:2000], [],
+                (result.prompt_tokens, result.completion_tokens, result.total_tokens),
+            )
+            paths = parse_divergence(result.text)
+            if paths:
+                break
+
+        if not paths:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=(
+                    "That came back as something we will not put in a plan \u2014 "
+                    "a link we have not checked, a programme we cannot verify, "
+                    "or smaller pieces of the step rather than alternatives to "
+                    "it. Your plan is unchanged."
+                ),
+            )
+
+        sb.table("roadmap_branches").upsert(
+            {
+                "user_id": user.id,
+                "parent_step_key": f"{step_key}::diverge",
+                "steps": paths,
+                "model": settings.llm_model,
+            },
+            on_conflict="user_id,parent_step_key",
+        ).execute()
+        return {"parent_step_key": step_key, "paths": paths}
 
     @app.post("/roadmap/branch/complete")
     def complete_sub_step(body: dict | None = None, user: CurrentUser = RequireUser) -> dict:

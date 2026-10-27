@@ -126,6 +126,7 @@ export function buildRoadmapTree(
      * trunk nodes and never adopt the applications.
      */
     branches?: Record<string, { title: string; detail: string }[]>;
+    divergences?: Record<string, { title: string; detail: string }[]>;
   } = {},
 ): RoadmapTree {
   const fieldOf = options.fieldOf ?? (() => undefined);
@@ -343,6 +344,39 @@ export function buildRoadmapTree(
       });
     });
     row = Math.max(row, parent.row + subSteps.length);
+  }
+
+  // Forks: other directions out of a step, drawn beside it rather than under
+  // it. Dotted, the weakest edge the tree has, because nothing here is
+  // required and nobody has measured that students take it. Placed on the
+  // parent's own side so a fork reads as "instead of this" rather than
+  // "after this", which is what the sub-steps opposite already say.
+  const divergences = options.divergences ?? {};
+  for (const [parentKey, forks] of Object.entries(divergences)) {
+    const parent = nodes.find((n) => n.key === parentKey);
+    if (!parent || !forks.length) continue;
+    forks.slice(0, 3).forEach((fork, index) => {
+      nodes.push({
+        key: `${parentKey}::diverge:${index}`,
+        title: fork.title,
+        nodeKind: "step",
+        row: parent.row + index,
+        x: parent.x === TRUNK_X
+          ? LEFT_X
+          : parent.x < TRUNK_X
+            ? Math.max(4, parent.x - 11)
+            : Math.min(96, parent.x + 11),
+        weight: "branch",
+        parent: parentKey,
+        edge: "anytime",
+        step: null,
+        opportunityId: null,
+        field: parent.field,
+        note: fork.detail,
+        badge: "OR",
+      });
+    });
+    row = Math.max(row, parent.row + forks.length);
   }
 
   // The canopy: what the ladder is for. One column per programme, the gate

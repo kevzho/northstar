@@ -377,6 +377,32 @@ export async function branchStep(input: {
  * server rebuilds the row on every write and the client must not keep its own
  * idea of what is in it. Cheap: no model call, so this is not metered.
  */
+/**
+ * Other directions out of the same step.
+ *
+ * The sideways move to branchStep's inward one: alternatives you could take
+ * INSTEAD of a step, not the pieces inside it. Shares the same daily
+ * allowance, because both spend the same provider from the same page.
+ */
+export async function divergeStep(input: {
+  stepKey: string;
+  stepTitle: string;
+  stepCategory: string;
+  reason?: string;
+}): Promise<BranchStep[]> {
+  const response = await authedFetch("/roadmap/diverge", {
+    method: "POST",
+    body: JSON.stringify({
+      step_key: input.stepKey,
+      step_title: input.stepTitle,
+      step_category: input.stepCategory,
+      reason: input.reason ?? "",
+    }),
+  });
+  const body = (await response.json()) as { paths?: BranchStep[] };
+  return body.paths ?? [];
+}
+
 export async function completeSubStep(input: {
   stepKey: string;
   index: number;
@@ -753,6 +779,11 @@ export type Roadmap = {
    * living only in the tab that requested it.
    */
   branches: Record<string, BranchStep[]>;
+  /**
+   * Alternatives to a step, keyed by the step they fork from. Distinct from
+   * `branches`: these replace a step rather than sit inside it.
+   */
+  divergences: Record<string, BranchStep[]>;
 };
 
 /** The build/publish steps rewritten for one student. */

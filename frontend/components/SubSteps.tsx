@@ -41,8 +41,43 @@ type Props = {
     category: string;
   }) => void;
   onToggle: (stepKey: string, index: number, done: boolean) => void;
+  /** Omitted below the top level: a fork of a fork is a different plan. */
+  onDiverge?: (step: {
+    step_key: string;
+    title: string;
+    category: string;
+  }) => void;
+  diverging?: string | null;
+  forks?: Record<string, BranchStep[]>;
   depth: number;
 };
+
+/**
+ * Alternatives to a step, as opposed to the moves inside it.
+ *
+ * Deliberately styled as asides rather than as a list of things to do: these
+ * are not in the plan, they are directions the plan could have taken. Picking
+ * one is a conversation with a teacher, not a button, which is why there is
+ * nothing to click here.
+ */
+function Forks({ items }: { items?: BranchStep[] }) {
+  if (!items?.length) return null;
+  return (
+    <ul className="mt-3 grid gap-2 border-l border-dashed border-border pl-3">
+      {items.map((fork) => (
+        <li key={fork.title}>
+          <p className="text-sm leading-6 text-foreground">
+            <span className="font-mono text-[0.6rem] uppercase tracking-[0.14em] text-muted-foreground">
+              or
+            </span>{" "}
+            {fork.title}
+          </p>
+          <p className="text-xs leading-5 text-muted-foreground">{fork.detail}</p>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export function SubSteps({
   stepKey,
@@ -53,6 +88,9 @@ export function SubSteps({
   branchError,
   onBreakDown,
   onToggle,
+  onDiverge,
+  diverging,
+  forks = {},
   depth,
 }: Props) {
   const mine = branches[stepKey];
@@ -85,6 +123,17 @@ export function SubSteps({
               ? "Break this into steps"
               : "Break this down further"}
         </button>
+        {depth === 0 && onDiverge ? (
+          <button
+            type="button"
+            onClick={() => onDiverge({ step_key: stepKey, title, category })}
+            disabled={diverging === stepKey}
+            className={`mt-3 ml-2 ${BUTTON}`}
+          >
+            {diverging === stepKey ? "Looking…" : "Or do something else"}
+          </button>
+        ) : null}
+        <Forks items={forks[stepKey]} />
         {error ? (
           <p
             aria-live="polite"
@@ -116,8 +165,19 @@ export function SubSteps({
           >
             {busy ? "Rewriting…" : "Break it down differently"}
           </button>
+          {onDiverge ? (
+            <button
+              type="button"
+              onClick={() => onDiverge({ step_key: stepKey, title, category })}
+              disabled={diverging === stepKey}
+              className={BUTTON}
+            >
+              {diverging === stepKey ? "Looking…" : "Or do something else"}
+            </button>
+          ) : null}
         </div>
       ) : null}
+      <Forks items={forks[stepKey]} />
       <ol className="mt-3 grid gap-2 border-l border-aurora-dim/40 pl-3">
         {mine.map((sub, i) => {
           const childKey = `${stepKey}::branch:${i}`;
