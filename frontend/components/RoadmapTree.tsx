@@ -30,6 +30,7 @@
 import { useEffect, useRef } from "react";
 import { FieldPlanet } from "@/components/decor/field-planets";
 import { Ship } from "@/components/decor/voyage";
+import { BRANCH_MAX_DEPTH } from "@/components/SubSteps";
 import { fieldColor } from "@/lib/field-colors";
 import type { EdgeKind, NodeKind, RoadmapTree as Tree, TreeNode } from "@/lib/roadmap-graph";
 import type { OpportunityField } from "@/lib/types";
@@ -42,7 +43,11 @@ import type { OpportunityField } from "@/lib/types";
  * real gap between a full-height node and the next row instead of the 18px
  * that made two neighbouring cards read as one box.
  */
-const ROW_H = 132;
+// 132 before the nodes carried a "+ steps" hint. That line is ~19px, which
+// put a three-line trunk title at ~117px inside a 132px row: no overlap, but
+// 7px of clearance, and the last time a node outgrew its row LEARN and BUILD
+// drew as one merged box. Headroom is cheaper than that bug.
+const ROW_H = 146;
 /** Canvas floor. Four canopy columns need this much room before they collide. */
 const MIN_W = "46rem";
 
@@ -100,7 +105,22 @@ function elbow(parent: TreeNode, child: TreeNode): string {
   return `M ${parent.x} ${from} V ${bus} H ${child.x} V ${to}`;
 }
 
-function Node({ node, here }: { node: TreeNode; here: boolean }) {
+type BreakDown = {
+  /** null when this node cannot be broken down: root, horizon, or at the cap. */
+  onBreak: (() => void) | null;
+  busy: boolean;
+  hasBranches: boolean;
+};
+
+function Node({
+  node,
+  here,
+  breakdown,
+}: {
+  node: TreeNode;
+  here: boolean;
+  breakdown: BreakDown;
+}) {
   const trunk = node.weight === "trunk";
   const colour = node.field ? fieldColor(node.field) : undefined;
   const planet = (node.field as OpportunityField | null) ?? KIND_PLANET[node.nodeKind];
@@ -164,7 +184,41 @@ function Node({ node, here }: { node: TreeNode; here: boolean }) {
         /* Ship sets aria-hidden itself; "you are here" is aria-current above. */
         <Ship className="absolute -top-5 left-1/2 h-4 w-3 -translate-x-1/2 text-star" />
       ) : null}
-      {node.step ? (
+      {/* CLICK THE NODE.
+          The branches already draw on this diagram, so the diagram is where a
+          student expects to open one. Before this the only way in was a
+          control in the text list below, past the fold, and the author of the
+          feature could not find it on his own page.
+
+          A button, not a link to the anchor: the anchor scrolled away from
+          the thing just clicked. Nodes that cannot be broken down (the root,
+          the horizon markers, anything at the depth cap) fall back to the
+          anchor so the diagram stays navigable. */}
+      {breakdown.onBreak ? (
+        <button
+          type="button"
+          onClick={breakdown.onBreak}
+          disabled={breakdown.busy}
+          aria-label={
+            breakdown.hasBranches
+              ? `Rewrite the steps inside: ${node.title}`
+              : `Break into steps: ${node.title}`
+          }
+          title={node.title}
+          className={`${shell} w-full ${
+            breakdown.busy ? "animate-pulse border-star" : "hover:border-star"
+          }`}
+        >
+          {body}
+          <span className="mt-1.5 block font-mono text-[0.55rem] uppercase tracking-[0.14em] text-aurora">
+            {breakdown.busy
+              ? "breaking down…"
+              : breakdown.hasBranches
+                ? "+ again"
+                : "+ steps"}
+          </span>
+        </button>
+      ) : node.step ? (
         <a href={`#step-${node.step.step_key}`} className={shell} title={node.title}>
           {body}
         </a>
@@ -181,10 +235,21 @@ export function RoadmapTree({
   tree,
   hereKey,
   className = "",
+  onBreakDown,
+  branching = null,
+  branches = {},
 }: {
   tree: Tree;
   hereKey?: string | null;
   className?: string;
+  /** Omit and the diagram is read-only, which is what signed-out callers want. */
+  onBreakDown?: (step: {
+    step_key: string;
+    title: string;
+    category: string;
+  }) => void;
+  branching?: string | null;
+  branches?: Record<string, unknown[]>;
 }) {
   /**
    * Centre the canvas on the trunk once it exists.
@@ -244,9 +309,37 @@ export function RoadmapTree({
             })}
           </svg>
           <ol className="absolute inset-0 list-none">
-            {tree.nodes.map((node) => (
-              <Node key={node.key} node={node} here={node.key === hereKey} />
-            ))}
+            {tree.nodes.map((node) => {
+              // Mirrors SubSteps: the root and the horizon markers are not
+              // steps, and nothing past the cap may be opened. Counting
+              // "::branch:" is the same depth rule the server enforces.
+              const depth = node.key.split("::branch:").length - 1;
+              const openable =
+                Boolean(onBreakDown) &&
+                node.nodeKind !== "root" &&
+                node.nodeKind !== "horizon" &&
+                depth < BRANCH_MAX_DEPTH;
+              return (
+                <Node
+                  key={node.key}
+                  node={node}
+                  here={node.key === hereKey}
+                  breakdown={{
+                    onBreak:
+                      openable && onBreakDown
+                        ? () =>
+                            onBreakDown({
+                              step_key: node.key,
+                              title: node.title,
+                              category: node.step?.category ?? "step",
+                            })
+                        : null,
+                    busy: branching === node.key,
+                    hasBranches: Boolean(branches[node.key]),
+                  }}
+                />
+              );
+            })}
           </ol>
         </div>
       </div>

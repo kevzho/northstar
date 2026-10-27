@@ -429,6 +429,9 @@ export default function PlanPage() {
                   className="mt-6"
                   tree={tree}
                   hereKey={firstActionable(tree)}
+                  onBreakDown={breakDown}
+                  branching={branching}
+                  branches={branches}
                 />
               </section>
             ) : null}
@@ -438,41 +441,6 @@ export default function PlanPage() {
                 that built this plan, so the students it surfaces are on this
                 journey, not merely on this website. It was reachable only from
                 the nav, which is why nobody used it. */}
-            <section
-              aria-label="Find students on the same path"
-              className="mt-10 border border-border bg-panel-raised p-5"
-            >
-              <p className="eyebrow">Nobody does this alone</p>
-              <h2 className="h-display mt-2 text-xl text-foreground">
-                Other students are on this same path.
-              </h2>
-              <p className="mt-2 max-w-2xl text-sm leading-7 text-muted-foreground">
-                Team-up matches on the same signals that built this plan: your
-                path, your fields, how you work. The people it finds are working
-                through the same steps you are. Compare plans, split a
-                project, or just have someone to ask.
-              </p>
-              <div className="mt-4 flex flex-wrap gap-3">
-                <Button render={<Link href="/teamup" />} className="h-10 px-5">
-                  Find students on this path
-                </Button>
-                <Button
-                  variant="outline"
-                  render={<Link href="/friends" />}
-                  className="h-10 px-5"
-                >
-                  Compare with a friend
-                </Button>
-              </div>
-            </section>
-
-            {/* THE STEP LIST, under the tree rather than beside it.
-                This used to carry its own dashed rail and a scroll-driven
-                rocket, which was the whole picture back when the plan was a
-                list. The roadmap tree above is now that picture, and two
-                dotted spines on one page read as one diagram overlapping
-                another. The rail is gone; the planets stay, because they are
-                what tells you which phase you are reading. */}
             <section className="relative mt-10">
               {/* THE ROADMAP. This replaced a list of plain strings that
                   generatePlan() built client-side. Steps now come from
@@ -669,6 +637,41 @@ export default function PlanPage() {
                   }}
                 />
               ) : null}
+            </section>
+
+            {/* THE STEP LIST, under the tree rather than beside it.
+                This used to carry its own dashed rail and a scroll-driven
+                rocket, which was the whole picture back when the plan was a
+                list. The roadmap tree above is now that picture, and two
+                dotted spines on one page read as one diagram overlapping
+                another. The rail is gone; the planets stay, because they are
+                what tells you which phase you are reading. */}
+            <section
+              aria-label="Find students on the same path"
+              className="mt-10 border border-border bg-panel-raised p-5"
+            >
+              <p className="eyebrow">Nobody does this alone</p>
+              <h2 className="h-display mt-2 text-xl text-foreground">
+                Other students are on this same path.
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm leading-7 text-muted-foreground">
+                Team-up matches on the same signals that built this plan: your
+                path, your fields, how you work. The people it finds are working
+                through the same steps you are. Compare plans, split a
+                project, or just have someone to ask.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <Button render={<Link href="/teamup" />} className="h-10 px-5">
+                  Find students on this path
+                </Button>
+                <Button
+                  variant="outline"
+                  render={<Link href="/friends" />}
+                  className="h-10 px-5"
+                >
+                  Compare with a friend
+                </Button>
+              </div>
             </section>
           </>
         )}
