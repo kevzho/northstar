@@ -407,15 +407,22 @@ export function RoadmapTree({
         }`}
         style={{ maxHeight: "min(70vh, 720px)" }}
       >
+        {/* TWO DIVS, AND BOTH ARE LOAD-BEARING.
+            transform: scale() paints at a new size without changing layout,
+            so the scroll container still measured the unscaled box: zooming
+            in cropped the diagram and there was nothing to drag into. The
+            outer div carries the SCALED dimensions, which is what makes the
+            scrollable area real in both axes; the inner one does the scaling. */}
         <div
-          className="relative origin-top-left"
           style={{
-            minWidth: MIN_W,
-            height,
-            transform: `scale(${zoom})`,
-            width: `${100 / zoom}%`,
+            width: `calc(max(${MIN_W}px, 100%) * ${zoom})`,
+            height: height * zoom,
           }}
         >
+          <div
+            className="relative origin-top-left"
+            style={{ minWidth: MIN_W, height, width: `${100 / zoom}%` , transform: `scale(${zoom})` }}
+          >
           <svg
             aria-hidden="true"
             className="absolute inset-0 h-full w-full"
@@ -480,6 +487,7 @@ export function RoadmapTree({
               );
             })}
           </ol>
+          </div>
         </div>
       </div>
 

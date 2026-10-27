@@ -840,6 +840,12 @@ export default function PlanPage() {
                 />
               ) : null}
 
+              </div>
+              {/* OUTSIDE BOTH PANELS, on purpose. This lived inside the "In
+                  order" panel, so on the route tab -- which is the default --
+                  the page had no extend control on it at all. What comes after
+                  the plan is a fact about the plan, not about the view you
+                  happen to be reading it in. */}
               {/* PAST THE END.
                   A roadmap stops at its application steps, so a student who
                   has shipped and applied reached the bottom of the page and
@@ -897,7 +903,6 @@ export default function PlanPage() {
                   ) : null}
                 </div>
               ) : null}
-              </div>
             </section>
 
             {/* Travelling together. The matcher behind /teamup already pairs on
