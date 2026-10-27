@@ -22,15 +22,17 @@ import { useState } from "react";
 import { StarGlyph } from "@/components/decor/star-glyph";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import Link from "next/link";
 import { askAdvisor, isApiError } from "@/lib/api";
+import { answerFromFaq, type FaqAnswer } from "@/lib/faq";
 import { parseBlocks } from "@/lib/plain-text";
 
 type Exchange = Awaited<ReturnType<typeof askAdvisor>>;
 
 const SUGGESTED = [
+  "Where do I see my plan?",
   "What unusual routes fit how I actually think?",
   "How could I combine my top two fields into one direction?",
-  "What would a non-obvious college major look like for me?",
 ];
 
 /** Model prose -> elements. Never HTML: the model writes the occasional bold
@@ -83,6 +85,15 @@ function Answer({ text }: { text: string }) {
 export function AdvisorConsole({ compact = false }: { compact?: boolean }) {
   const [question, setQuestion] = useState("");
   const [exchange, setExchange] = useState<Exchange | null>(null);
+  /**
+   * A product question, answered from lib/faq.ts without a model call.
+   *
+   * Asked "where do I see my map?", the advisor answered from the only corpus
+   * it has -- matched opportunities -- and said the student had no plan, then
+   * recommended three summer programmes. Correct retrieval, wrong corpus. A
+   * question about the website is answered by the website.
+   */
+  const [faq, setFaq] = useState<FaqAnswer | null>(null);
   const [state, setState] = useState<
     "idle" | "asking" | "off" | "failed" | "limited"
   >("idle");
@@ -92,8 +103,20 @@ export function AdvisorConsole({ compact = false }: { compact?: boolean }) {
 
   async function ask(text: string) {
     if (!text.trim()) return;
-    setState("asking");
     setExchange(null);
+    setFaq(null);
+
+    // Free, instant, and cannot invent an opportunity. Only questions that
+    // are plainly about the product get this far; anything else falls
+    // through to the model untouched.
+    const local = answerFromFaq(text);
+    if (local) {
+      setFaq(local);
+      setState("idle");
+      return;
+    }
+
+    setState("asking");
     try {
       setExchange(await askAdvisor(text.trim()));
       setState("idle");
@@ -169,6 +192,26 @@ export function AdvisorConsole({ compact = false }: { compact?: boolean }) {
         <p className={`${text} text-muted-foreground`}>
           That call failed — sign in first, or try again in a moment.
         </p>
+      ) : faq ? (
+        <div className="border-t border-border pt-3">
+          <p className={`${text} text-foreground`}>{faq.answer}</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {faq.links.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="border border-border px-2.5 py-1.5 text-xs font-semibold text-foreground transition hover:border-foreground"
+              >
+                {link.label} &rarr;
+              </Link>
+            ))}
+          </div>
+          {/* Said plainly. A student who thinks a model answered will trust
+              this differently from how they should, in both directions. */}
+          <p className="mt-3 text-[0.65rem] leading-4 text-muted-foreground">
+            Answered from the guide, not the model. Nothing was spent.
+          </p>
+        </div>
       ) : exchange ? (
         <div
           className={
@@ -217,8 +260,9 @@ export function AdvisorConsole({ compact = false }: { compact?: boolean }) {
       ) : (
         <p className={`${text} text-muted-foreground`}>
           <StarGlyph className="mr-1 inline-block h-2 w-2 text-star" />
-          Answers come from your profile and your verified matches, and show
-          which ones they used. It never ranks or predicts.
+          Ask where something is and the guide answers. Ask about directions
+          and the model does, from your profile and your verified matches,
+          showing which ones it used. Neither ranks or predicts.
         </p>
       )}
     </div>
