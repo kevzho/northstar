@@ -217,3 +217,26 @@ def test_the_cap_matches_the_ui() -> None:
     found = re.search(r"BRANCH_MAX_DEPTH\s*=\s*(\d+)", ui)
     assert found, "SubSteps.tsx no longer declares BRANCH_MAX_DEPTH"
     assert int(found.group(1)) == BRANCH_MAX_DEPTH
+
+
+def test_a_regenerated_breakdown_comes_back_unticked() -> None:
+    """Asking for a different breakdown clears the ticks, and that is correct.
+
+    Completion is stored inside the steps jsonb, so the question "what happens
+    to my ticks when I regenerate" is answered by what parse_branch emits. It
+    emits title and detail and nothing else, so the replacement row has no
+    `done` anywhere in it.
+
+    This is the honest result rather than an oversight: the new list is a
+    different set of moves, and carrying a tick across from "write the formula"
+    to "build the calculator" would claim the student had done something they
+    have not. Asserted here because it would be easy to "fix" by merging the
+    old flags in, and that fix would be a lie.
+    """
+    steps = parse_branch(reply(GOOD))
+    assert steps is not None
+    for step in steps:
+        assert set(step) == {"title", "detail"}, (
+            "parse_branch grew a field; a regenerated breakdown may now carry "
+            "completion state across from a different list of steps"
+        )

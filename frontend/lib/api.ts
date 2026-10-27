@@ -336,7 +336,7 @@ export async function deleteAccount(confirm: string): Promise<void> {
 }
 
 /** Two or three moves inside one step of a plan. */
-export type BranchStep = { title: string; detail: string };
+export type BranchStep = { title: string; detail: string; done?: boolean };
 
 /**
  * Break one roadmap step into the moves it is made of.
@@ -364,6 +364,30 @@ export async function branchStep(input: {
       step_title: input.stepTitle,
       step_category: input.stepCategory,
       reason: input.reason ?? "",
+    }),
+  });
+  const body = (await response.json()) as { steps?: BranchStep[] };
+  return body.steps ?? [];
+}
+
+/**
+ * Tick or untick one sub-step.
+ *
+ * Returns the whole list back rather than an acknowledgement, because the
+ * server rebuilds the row on every write and the client must not keep its own
+ * idea of what is in it. Cheap: no model call, so this is not metered.
+ */
+export async function completeSubStep(input: {
+  stepKey: string;
+  index: number;
+  done: boolean;
+}): Promise<BranchStep[]> {
+  const response = await authedFetch("/roadmap/branch/complete", {
+    method: "POST",
+    body: JSON.stringify({
+      step_key: input.stepKey,
+      index: input.index,
+      done: input.done,
     }),
   });
   const body = (await response.json()) as { steps?: BranchStep[] };

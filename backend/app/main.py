@@ -1475,6 +1475,77 @@ def create_app() -> FastAPI:
         ).execute()
         return {"parent_step_key": step_key, "steps": steps}
 
+    @app.post("/roadmap/branch/complete")
+    def complete_sub_step(body: dict | None = None, user: CurrentUser = RequireUser) -> dict:
+        """Tick or untick one sub-step.
+
+        Lives inside the existing jsonb rather than a table of its own. A
+        sub-step has no identity apart from its position under its parent --
+        roadmap_branches already holds one row per (student, parent step) and
+        replaces it wholesale when a student asks for a different breakdown --
+        so a separate completions table would need a foreign key to a thing
+        that gets thrown away. Writing `done` into the step object means a
+        regenerated breakdown starts unticked, which is the honest result: it
+        is a different list of moves.
+
+        No model call, so no advisor budget and no branch allowance. The
+        per-student ceiling here is the size of their own plan.
+
+        Unticking matters as much as ticking. The first version of mission
+        completion could only go one way, and a student who mis-clicked was
+        stuck looking at a lie about their own progress.
+        """
+        from .db import get_supabase
+
+        data = body or {}
+        step_key = str(data.get("step_key") or "").strip()[:120]
+        try:
+            index = int(data.get("index"))
+        except (TypeError, ValueError):
+            index = -1
+        done = bool(data.get("done"))
+        if not step_key or index < 0:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="A step_key and a sub-step index are required.",
+            )
+
+        sb = get_supabase()
+        row = (
+            sb.table("roadmap_branches")
+            .select("steps")
+            .eq("user_id", user.id)
+            .eq("parent_step_key", step_key)
+            .maybe_single()
+            .execute()
+        )
+        steps = (row.data or {}).get("steps") if row else None
+        if not isinstance(steps, list) or not (0 <= index < len(steps)):
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="That sub-step is not part of your plan.",
+            )
+
+        # Rebuilt rather than mutated in place: the row is replaced on every
+        # regeneration, so the shape written here must be the shape the
+        # generator writes plus `done`, and nothing carried over from an
+        # older version of it.
+        updated = [
+            {
+                "title": str(s.get("title") or ""),
+                "detail": str(s.get("detail") or ""),
+                "done": bool(s.get("done")),
+            }
+            for s in steps
+            if isinstance(s, dict)
+        ]
+        updated[index]["done"] = done
+
+        sb.table("roadmap_branches").update({"steps": updated}).eq(
+            "user_id", user.id
+        ).eq("parent_step_key", step_key).execute()
+        return {"parent_step_key": step_key, "steps": updated}
+
     @app.post("/roadmap/spine/auto")
     def auto_generate_spine(user: CurrentUser = RequireUser) -> dict:
         """Write this student a first path, if nobody ever has.

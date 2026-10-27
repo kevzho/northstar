@@ -19,6 +19,7 @@ import { Planet } from "@/components/decor/voyage";
 import {
   autoGenerateSpine,
   branchStep,
+  completeSubStep,
   fetchMatches,
   fetchResources,
   fetchRoadmap,
@@ -171,6 +172,7 @@ export default function PlanPage() {
         stepCategory: step.category,
       });
       setLocalBranches((current) => ({ ...current, [step.step_key]: steps }));
+      setSavedAt(Date.now());
     } catch (caught) {
       // Every refusal from that endpoint is one to read: out of allowance,
       // out of budget, model unreachable, or a breakdown that tried to put an
@@ -185,6 +187,42 @@ export default function PlanPage() {
       setBranching(null);
     }
   }
+
+  /**
+   * Ticking a sub-step.
+   *
+   * Optimistic, then reconciled with what the server wrote back. A checkbox
+   * that waits on a round trip before it moves feels broken, and this write
+   * costs nothing -- no model call, no allowance. On failure the box goes
+   * back, because showing a tick that did not persist is the one outcome
+   * worse than a slow one.
+   */
+  async function toggleSubStep(stepKey: string, index: number, done: boolean) {
+    const before = branches[stepKey];
+    if (!before) return;
+    const after = before.map((s, i) => (i === index ? { ...s, done } : s));
+    setLocalBranches((current) => ({ ...current, [stepKey]: after }));
+    try {
+      const saved = await completeSubStep({ stepKey, index, done });
+      setLocalBranches((current) => ({ ...current, [stepKey]: saved }));
+    } catch {
+      setLocalBranches((current) => ({ ...current, [stepKey]: before }));
+    }
+  }
+
+  /**
+   * "Saved" only ever appears after the server said so.
+   *
+   * The sub-steps persist and always did, but silently, so a student had no
+   * reason to believe the page would still know tomorrow. This is the only
+   * thing that says it, which means it must never be optimistic.
+   */
+  const [savedAt, setSavedAt] = useState(0);
+  useEffect(() => {
+    if (!savedAt) return;
+    const timer = setTimeout(() => setSavedAt(0), 4000);
+    return () => clearTimeout(timer);
+  }, [savedAt]);
 
   const askedForSpine = useRef(false);
   useEffect(() => {
@@ -517,6 +555,7 @@ export default function PlanPage() {
                                 branching={branching}
                                 branchError={branchError}
                                 onBreakDown={breakDown}
+                                onToggle={toggleSubStep}
                                 depth={0}
                               />
                               {step.edge_note ? (
@@ -665,6 +704,22 @@ export default function PlanPage() {
         </section>
 
       </div>
+
+      {/* Says what just happened, then gets out of the way. role="status"
+          rather than an alert: a screen reader should hear it at the next
+          pause, not be interrupted mid-sentence by good news. */}
+      {savedAt ? (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 border border-aurora-dim/50 bg-panel-raised px-4 py-2.5 text-sm text-foreground shadow-xl sm:left-auto sm:right-6 sm:translate-x-0"
+        >
+          <span aria-hidden="true" className="mr-2 text-aurora">
+            &#10003;
+          </span>
+          Saved. Pick up right where you left off.
+        </div>
+      ) : null}
     </main>
   );
 }

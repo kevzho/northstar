@@ -40,6 +40,7 @@ type Props = {
     title: string;
     category: string;
   }) => void;
+  onToggle: (stepKey: string, index: number, done: boolean) => void;
   depth: number;
 };
 
@@ -51,6 +52,7 @@ export function SubSteps({
   branching,
   branchError,
   onBreakDown,
+  onToggle,
   depth,
 }: Props) {
   const mine = branches[stepKey];
@@ -91,17 +93,37 @@ export function SubSteps({
           const childKey = `${stepKey}::branch:${i}`;
           return (
             <li key={childKey}>
-              <p className="text-sm leading-6 text-foreground">
-                <span className="font-mono text-xs text-aurora">{i + 1}.</span>{" "}
-                {sub.title}
-              </p>
-              <p className="text-xs leading-5 text-muted-foreground">
+              {/* The box is the whole label, so the tap target is the text and
+                  not an 8px square. Ticking is a plain checkbox rather than a
+                  styled div because a student using a keyboard or a screen
+                  reader gets space-to-toggle and a announced state for free. */}
+              <label className="flex cursor-pointer items-start gap-2">
+                <input
+                  type="checkbox"
+                  checked={Boolean(sub.done)}
+                  onChange={(event) =>
+                    onToggle(stepKey, i, event.target.checked)
+                  }
+                  className="mt-1.5 h-3.5 w-3.5 shrink-0 cursor-pointer accent-aurora"
+                />
+                <span
+                  className={
+                    sub.done
+                      ? "text-sm leading-6 text-muted-foreground line-through decoration-aurora-dim"
+                      : "text-sm leading-6 text-foreground"
+                  }
+                >
+                  {sub.title}
+                </span>
+              </label>
+              <p className="ml-[1.375rem] text-xs leading-5 text-muted-foreground">
                 {sub.detail}
               </p>
               {/* The whole feature: this sub-step is itself a step. Stop
                   offering it once the cap is reached rather than letting a
                   student press a button that the server will refuse. */}
               {depth + 1 < BRANCH_MAX_DEPTH ? (
+                <div className="ml-[1.375rem]">
                 <SubSteps
                   stepKey={childKey}
                   title={sub.title}
@@ -110,8 +132,10 @@ export function SubSteps({
                   branching={branching}
                   branchError={branchError}
                   onBreakDown={onBreakDown}
+                  onToggle={onToggle}
                   depth={depth + 1}
                 />
+                </div>
               ) : null}
             </li>
           );
