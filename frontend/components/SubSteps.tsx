@@ -59,6 +59,17 @@ export function SubSteps({
   const busy = branching === stepKey;
   const error = branchError[stepKey];
 
+  /* A button at the top level, a quiet inline link below it. The control was
+     the same underlined link at every depth, which made the main action on
+     the page the smallest thing on the step card -- findable only by someone
+     who already knew it was there. */
+  const BUTTON =
+    "border border-border bg-panel-raised px-3 py-1.5 text-xs font-medium " +
+    "text-foreground transition hover:border-foreground disabled:opacity-60";
+  const LINK =
+    "text-xs font-medium text-aurora underline decoration-border " +
+    "underline-offset-4 hover:text-foreground disabled:opacity-60";
+
   if (!mine?.length) {
     return (
       <>
@@ -66,7 +77,7 @@ export function SubSteps({
           type="button"
           onClick={() => onBreakDown({ step_key: stepKey, title, category })}
           disabled={busy}
-          className="mt-3 text-xs font-medium text-aurora underline decoration-border underline-offset-4 hover:text-foreground disabled:opacity-60"
+          className={depth === 0 ? `mt-3 ${BUTTON}` : `mt-2 ${LINK}`}
         >
           {busy
             ? "Breaking it down…"
@@ -88,6 +99,25 @@ export function SubSteps({
 
   return (
     <>
+      {/* Both controls sit above the list, the way the breakdown reads: the
+          action you took, then the way to take it again. "Break this into
+          steps" stays on screen as the state marker -- it is done, and the
+          live control beside it is the one that changes anything. */}
+      {depth === 0 ? (
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <span className={`${BUTTON} cursor-default opacity-60`}>
+            Break this into steps
+          </span>
+          <button
+            type="button"
+            onClick={() => onBreakDown({ step_key: stepKey, title, category })}
+            disabled={busy}
+            className={BUTTON}
+          >
+            {busy ? "Rewriting…" : "Break it down differently"}
+          </button>
+        </div>
+      ) : null}
       <ol className="mt-3 grid gap-2 border-l border-aurora-dim/40 pl-3">
         {mine.map((sub, i) => {
           const childKey = `${stepKey}::branch:${i}`;
@@ -141,20 +171,18 @@ export function SubSteps({
           );
         })}
       </ol>
-      {/* ASKING AGAIN. Before this, the control vanished the moment a step had
-          sub-steps, so a bad breakdown was permanent -- the one row per
-          (student, step) is replaced on request precisely so a student can say
-          "not that". */}
-      <div className="mt-2 flex flex-wrap items-center gap-3">
+      {/* Nested levels keep their regenerate control below their own list;
+          only the top level has room for a button row. */}
+      {depth > 0 ? (
         <button
           type="button"
           onClick={() => onBreakDown({ step_key: stepKey, title, category })}
           disabled={busy}
-          className="text-xs text-muted-foreground underline decoration-border underline-offset-4 transition hover:text-foreground disabled:opacity-60"
+          className={`mt-2 ${LINK} text-muted-foreground`}
         >
           {busy ? "Rewriting…" : "Break it down differently"}
         </button>
-      </div>
+      ) : null}
       {error ? (
         <p aria-live="polite" className="mt-2 text-xs leading-5 text-foreground">
           {error}
