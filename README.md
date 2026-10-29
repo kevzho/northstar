@@ -2,6 +2,8 @@
 
 **A STEM opportunity catalog and planner for US high school students who don't have a college counselor.**
 
+**Note: We are expanding access for internationals. Updates forthcoming.**
+
 Live at **[northstar.study](https://northstar.study)** · A project of [Minorities in STEM](https://northstar.study), a fiscally sponsored non-profit · Apache-2.0
 
 ---
