@@ -45,7 +45,7 @@ jobs:
       # empty string, and os.getenv returns "" instead of its default for a
       # variable that is set-but-empty — which would break the verifier.
       LLM_API_BASE: ${{ secrets.LLM_API_BASE || 'https://integrate.api.nvidia.com/v1' }}
-      LLM_MODEL: ${{ secrets.LLM_MODEL || 'openai/gpt-oss-20b' }}
+      LLM_MODEL: ${{ secrets.LLM_MODEL || 'nvidia/nemotron-3.5-bolt-e4b' }}
       # Optional per-job override for the VERIFIER only. Unset, it falls back to
       # LLM_* above and nothing changes. Set, the nightly verify+import runs on
       # Azure AI Foundry while /advisor stays on NIM — which matters because the
