@@ -33,8 +33,11 @@ jobs:
           echo "$body" | grep -qi "northstar" || { echo "homepage did not mention Northstar"; exit 1; }
       - name: Backend healthy
         run: |
-          status=$(curl -sf --max-time 20 https://northstar-api-theta.vercel.app/health | tr -d ' ')
-          [ "$status" = '{"status":"ok"}' ] || { echo "unexpected /health: $status"; exit 1; }
+          # Check the status field, not the whole body: /health also reports
+          # commit, model and subsystem availability, and an exact match on
+          # '{"status":"ok"}' failed every run once those fields were added.
+          body=$(curl -sf --max-time 20 https://northstar-api-theta.vercel.app/health)
+          [ "$(echo "$body" | jq -r .status)" = "ok" ] || { echo "unexpected /health: $body"; exit 1; }
       - name: Auth gate holds
         run: |
           code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 https://northstar-api-theta.vercel.app/match)
