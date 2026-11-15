@@ -31,6 +31,7 @@
  */
 
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { FieldPlanet } from "@/components/decor/field-planets";
 import { StarGlyph } from "@/components/decor/star-glyph";
@@ -113,6 +114,19 @@ export function AppNav({
     SECTIONS.find((s) => pathname.startsWith(s.match))?.href ??
     null;
 
+  // On a phone the links scroll, and "Profile" and "People" start off the
+  // right edge. Bring the current one into the strip so a student can see
+  // where they are. scrollLeft, not scrollIntoView: the latter can also move
+  // the page, and this must only ever move the strip.
+  const navRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const nav = navRef.current;
+    const current = nav?.querySelector<HTMLElement>('[aria-current="page"]');
+    if (!nav || !current || nav.scrollWidth <= nav.clientWidth) return;
+    const offset = current.getBoundingClientRect().left - nav.getBoundingClientRect().left;
+    nav.scrollLeft += offset - (nav.clientWidth - current.offsetWidth) / 2;
+  }, [active, loading]);
+
   return (
     /*
       FLUSH TO THE TOP, AND IT STAYS THERE.
@@ -131,7 +145,14 @@ export function AppNav({
       shipped; every other page just never got it.
     */
     <div className="bleed-bg sticky top-0 z-40 -mt-8 flex flex-wrap items-center justify-between gap-y-3 py-4">
-      <div className="flex items-center gap-6">
+      {/* BELOW md THE LINKS GET THEIR OWN ROW, AND IT SCROLLS.
+          Six links with their planets are ~560px and the wordmark another
+          ~130, so on a 390px phone this row was 693px wide and every signed-in
+          page panned sideways. `contents` lifts the wordmark and the nav into
+          the wrapping row above, the nav drops to a full-width line of its
+          own, and that line scrolls instead of the page. From md up it is the
+          single row it always was. */}
+      <div className="contents md:flex md:items-center md:gap-6">
         <Link href={homeHref} className="flex items-center gap-2 text-foreground">
           <StarGlyph className="h-3.5 w-3.5 text-star" />
           <span className="h-display text-xl">Northstar</span>
@@ -141,7 +162,11 @@ export function AppNav({
             state on every hard refresh, the same reason use-require-auth
             waits before redirecting. */}
         {!loading ? (
-          <nav aria-label="Sections" className="flex items-center gap-1">
+          <nav
+            ref={navRef}
+            aria-label="Sections"
+            className="order-last -mx-2 flex w-[calc(100%+1rem)] items-center gap-1 overflow-x-auto [scrollbar-width:none] md:order-none md:mx-0 md:w-auto md:overflow-visible [&::-webkit-scrollbar]:hidden"
+          >
             {SECTIONS.filter((section) => signedIn || section.open).map((section) => {
               const current = active === section.href;
               return (
@@ -151,8 +176,8 @@ export function AppNav({
                   aria-current={current ? "page" : undefined}
                   className={
                     current
-                      ? "flex items-center gap-1.5 border-b-2 border-star px-2 py-1 text-sm font-semibold text-foreground"
-                      : "flex items-center gap-1.5 border-b-2 border-transparent px-2 py-1 text-sm font-medium text-muted-foreground hover:text-foreground"
+                      ? "flex shrink-0 items-center gap-1.5 whitespace-nowrap border-b-2 border-star px-2 py-1 text-sm font-semibold text-foreground"
+                      : "flex shrink-0 items-center gap-1.5 whitespace-nowrap border-b-2 border-transparent px-2 py-1 text-sm font-medium text-muted-foreground hover:text-foreground"
                   }
                 >
                   <FieldPlanet
@@ -170,7 +195,7 @@ export function AppNav({
         ) : null}
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         {right}
         {/* Account controls belong next to each other and on every page.
             "Edit profile" was a card three screens down the dashboard and
