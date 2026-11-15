@@ -17,6 +17,7 @@ Usage:
 
 from __future__ import annotations
 
+import html
 import json
 import pathlib
 import sys
@@ -75,6 +76,82 @@ def parse_deadline(window: str) -> str | None:
         return None
 
 
+# Each hackathon page carries a "Who can participate" list Devpost builds from
+# fixed settings, so the wording is stable: "Ages 13+ only", "Above legal age
+# of majority in country of residence", "Students only", and so on.
+ELIGIBILITY_LIST = re.compile(r'(?s)<ul id="eligibility-list"[^>]*>(.*?)</ul>')
+LIST_ITEM = re.compile(r"(?s)<li>(.*?)</li>")
+
+# A minimum age at or below this admits a ninth grader. 16+ or 17+ would admit
+# only some juniors and seniors, and the shelf is per audience, not per grade.
+HIGH_SCHOOL_MAX_MIN_AGE = 14
+
+ADULT_ONLY = re.compile(r"legal age of majority|ages? (1[7-9]|[2-9]\d)\+")
+MIN_AGE = re.compile(r"ages? (\d{1,2})(?:\+| to \d{1,2})")
+HIGH_SCHOOL_ONLY = re.compile(r"high ?school")
+
+# Lines that restrict entry without excluding a high schooler. Anything not
+# matched here, "Georgia Tech Students Only", "Only UBC participants", is a
+# restriction we cannot judge, and an unjudged restriction keeps the row off
+# the high-school shelf.
+HARMLESS = re.compile(
+    r"^(students only"
+    r"|companies/professional organizations excluded.*"
+    r"|team required.*"
+    r"|.*countries/territories.*"
+    r"|us only)$"
+)
+
+
+def parse_eligibility(page_html: str) -> list[str]:
+    """The "Who can participate" lines from one hackathon page, as plain text."""
+    match = ELIGIBILITY_LIST.search(page_html or "")
+    if not match:
+        return []
+    lines = []
+    for item in LIST_ITEM.findall(match.group(1)):
+        text = html.unescape(re.sub(r"\s+", " ", re.sub(r"(?s)<[^>]+>", " ", item))).strip()
+        if text:
+            lines.append(text)
+    return lines
+
+
+def audience_from_eligibility(lines: list[str]) -> str | None:
+    """'high_school' or 'college' from the page's own rules, None if it is silent on age."""
+    lowered = [line.lower() for line in lines]
+    if any(HIGH_SCHOOL_ONLY.search(line) for line in lowered):
+        return "high_school"
+    if any(ADULT_ONLY.search(line) for line in lowered):
+        return "college"
+    ages = [int(m.group(1)) for line in lowered if (m := MIN_AGE.search(line))]
+    if not ages:
+        return None
+    if min(ages) > HIGH_SCHOOL_MAX_MIN_AGE:
+        return "college"
+    others = [line for line in lowered if not MIN_AGE.search(line)]
+    if all(HARMLESS.match(line) for line in others):
+        return "high_school"
+    return "college"
+
+
+def audience_from_title(title: str, themes: list[str]) -> str:
+    """The fallback when the page states no age: title and theme markers, else college."""
+    haystack = f"{title} {' '.join(themes)}".lower()
+    markers = ("high school", "highschool", "teen", "k-12", "grades 9")
+    return "high_school" if any(marker in haystack for marker in markers) else "college"
+
+
+def fetch_eligibility(url: str) -> list[str]:
+    """The eligibility lines for one hackathon, or [] if the page cannot be read."""
+    try:
+        response = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=20)
+        response.raise_for_status()
+    except requests.RequestException as error:
+        print(f"  {url}: eligibility unread ({error})")
+        return []
+    return parse_eligibility(response.text)
+
+
 def field_for(themes: list[str]) -> str:
     for theme in themes:
         mapped = THEME_FIELDS.get(theme.lower())
@@ -112,6 +189,8 @@ def main() -> None:
             title = (h.get("title") or "").strip()
             themes = [t.get("name", "") for t in h.get("themes", [])]
             deadline = parse_deadline(h.get("submission_period_dates", ""))
+            eligibility = fetch_eligibility(url)
+            time.sleep(REQUEST_DELAY_S)
             pool[canonical_url(url)] = {
                 "source": "devpost",
                 "reddit_permalink": "",
@@ -122,41 +201,32 @@ def main() -> None:
                 "blurb": (
                     f"Open hackathon on Devpost — themes: {', '.join(themes[:4])}."
                     + (f" Submissions close {deadline}." if deadline else "")
+                    + (f" Who can participate: {'; '.join(eligibility)}." if eligibility else "")
                 ),
                 "deadline_guess": deadline,
                 "field_guess": field_for(themes),
                 "type_guess": "competition",
-                # AUDIENCE IS A CONSERVATIVE GUESS, AND DELIBERATELY SO.
+                # AUDIENCE COMES FROM THE PAGE'S OWN RULES WHEN IT HAS THEM.
                 #
-                # Devpost's JSON gives titles, URLs, themes and deadlines, no
-                # eligibility text. So there is nothing here to determine
-                # whether a hackathon accepts a 15-year-old, and the verifier
-                # cannot tell either: it is handed this blurb, which says only
-                # "Open hackathon, themes: X, Y".
+                # Devpost's JSON has no eligibility text, so this used to guess
+                # from the title alone, and 134 of 138 AI-imported rows landed
+                # on the college shelf: a title almost never says "high school",
+                # even when the rules do. Each hackathon page does list who can
+                # participate, so that list is read and judged here
+                # (audience_from_eligibility). The title and themes are only the
+                # fallback when the page says nothing about age.
                 #
-                # This used to check the title alone, which is why 134 of 138
-                # AI-imported rows landed on the college shelf: a title almost
-                # never says "high school", even when the rules do. The signal
-                # is now widened to the themes as well.
-                #
-                # But the DEFAULT stays college, on purpose. Of the nine seeded
+                # The DEFAULT stays college, on purpose. Of the nine seeded
                 # opportunities retired after an audit, four were retired
                 # precisely because high schoolers could not apply, NSF REU,
-                # CERN, Jackson Lab, Broadcom MASTERS. Guessing high_school here
-                # would repeat that error across 134 rows at once. Hiding a
-                # hackathon a student could have entered is a real cost; sending
-                # them to one that will reject them is a worse one.
-                #
-                # The honest fix is to capture each hackathon's eligibility text
-                # and judge it. That is scraper work, tracked separately.
+                # CERN, Jackson Lab, Broadcom MASTERS. Hiding a hackathon a
+                # student could have entered is a real cost; sending them to one
+                # that will reject them is a worse one. So a row reaches the
+                # high-school shelf only when the page admits a ninth grader and
+                # every other restriction on it is one we recognise.
                 "audience_guess": (
-                    "high_school"
-                    if any(
-                        marker in haystack
-                        for haystack in (title.lower(), " ".join(themes).lower())
-                        for marker in ("high school", "highschool", "teen", "k-12", "grades 9")
-                    )
-                    else "college"
+                    audience_from_eligibility(eligibility)
+                    or audience_from_title(title, themes)
                 ),
                 "location_guess": "global",
                 "needs_review": True,
