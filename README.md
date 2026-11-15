@@ -58,8 +58,10 @@ client access outright rather than trying to express the rules twice.
 | `backend/app/limits.py` | DB-backed sliding-window rate limits, per action. |
 | `backend/scripts/` | Scrapers and maintenance jobs. `scrape_all.py` runs the daily refresh. |
 
-**Tests:** 451 backend (pytest, no Supabase credentials needed) and 99 frontend
-(vitest). CI runs lint → typecheck → both suites → build on every push.
+**Tests:** 459 backend (pytest, no Supabase credentials needed), 115 frontend
+unit (vitest), and end-to-end flows plus a phone-width layout check
+(Playwright, backend mocked in `frontend/e2e/mock-api.ts`). CI runs lint →
+typecheck → unit suites → build → end-to-end on every push.
 
 ## Quick start
 
@@ -87,7 +89,7 @@ python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env      # fill in the values below
 uvicorn app.main:app --reload     # http://localhost:8000
-pytest -q                          # 451 tests, no credentials needed
+pytest -q                          # 459 tests, no credentials needed
 ```
 
 **Frontend**
@@ -156,6 +158,8 @@ Issues and pull requests are welcome. Before opening a PR:
 ```bash
 cd backend  && pytest -q
 cd frontend && npm run lint && npx tsc --noEmit && npx vitest run && npm run build
+# end-to-end: build with the placeholder env in playwright.config.ts, then
+cd frontend && npx playwright install chromium && npm run e2e
 ```
 
 Two things CI enforces that are easy to trip over:

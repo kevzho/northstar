@@ -15,6 +15,7 @@ npm install
 npm run dev     # http://localhost:3000
 npm run lint
 npm test        # vitest — scoring invariants and copy-count guards
+npm run e2e     # playwright — main flows + phone layout (build first; see playwright.config.ts)
 npm run build
 ```
 

@@ -36,6 +36,11 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
           NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: placeholder-anon-key
           NEXT_PUBLIC_API_URL: http://localhost:8000
+      # End-to-end flows and the phone-width layout check, against the build
+      # above. The backend is mocked in e2e/mock-api.ts, which answers the same
+      # placeholder URLs the build was given, so this needs no secrets.
+      - run: npx playwright install --with-deps chromium
+      - run: npm run e2e
 
   backend:
     runs-on: ubuntu-latest
